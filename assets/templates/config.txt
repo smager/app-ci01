@@ -1,6 +1,4 @@
 [
  {"name": "bsLabelInput", "url":"../assets/templates/bsLabelInput.txt"}
 ,{"name": "bsButton", "url":"../assets/templates/bsButton.txt"}
-,{"name": "entry", "url":"../assets/templates/entry.txt"}
-,{"name": "template", "url":"../assets/templates/template.txt"}	  
 ]
