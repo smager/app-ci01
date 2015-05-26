@@ -5,36 +5,43 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
 <meta charset="utf-8">
 <title>Snippet: Form</title>
-	
+<script src="<?php echo base_url('assets/js/jquery-1.11.3.min.js');?>"></script>   
+<script src="<?php echo base_url('assets/js/handlebars-v3.0.0.js');?>"></script>   
+<script src="<?php echo base_url('assets/js/zsi.bswriter.js');?>"></script>   
+<link href="<?php echo base_url('assets/css/bss.bootstrap.min.css');?>" rel="stylesheet">        
 </head>
 <body>
 
 <div id="container">
-    
-    
-<form action="update" method="post">
-    <div class="form-group">
-      <label class=" col-xs-1 control-label">Snippet Name</label>
-      <div class=" col-xs-4">
-        <input type="text" name="p_snippet_name" id="p_snippet_name" class="form-control input-sm ">
-      </div>
-    </div>
-
-
-    <div class="form-group">
-      <label class=" col-xs-1 control-label">Snippet Content</label>
-      <div class=" col-xs-4">
-        <input type="text" name="p_snippet_content" id="p_snippet_content" class="form-control input-sm ">
-      </div>
-    </div>
-
-    <button type="submit" class="btn btn-primary btn-sm" id="btnSubmit">
-    <span class="glyphicon glyphicon-floppy-disk"></span> Save
-    </button>    
-
-</form>
-    
+    <form action="update" method="post"  class="bswform"></form>
 </div>
+    
 
+<script>
+var w = new zsi.bsWriter({
+         hasNoConfigFile:false
+	     ,url:"../assets/templates/config.txt"
+		,targetClass:"bswform"
+		,SizeType:"xs"
+});
+
+w.write(function(){	
+	this.div({class:"form-horizontal"})
+		.div({class:"form-group"})
+			.bsLabelInput({labelsize:2,caption:"Snippet Name",inputsize:3,name:"p_snippet_name"})
+		.div({class:"form-group",parentClass:"form-horizontal"})
+			.bsLabelInput({labelsize:2,caption:"Snippet Content",inputsize:3,name:"p_snippet_content"})
+		.div({class:"col-xs-12 buttonGroup",parentClass:"form-horizontal"})
+            .bsButton({id:"btnSave", type:"submit", class:"btn-primary btn-sm",caption:"Save",classicon:"glyphicon-floppy-disk" })	
+            .bsButton({id:"btnClose", type:"button", class:"btn-primary btn-sm",caption:"Close",classicon:"glyphicon-off" })	
+    
+	.end();	
+
+});
+		 
+ 
+
+</script>    
+<script src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>     
 </body>
 </html>
