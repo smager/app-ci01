@@ -2,6 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
+if ( ! function_exists('get_dhtmlx_path'))
+{   function get_dhtmlx_path(){
+          return base_url('assets/dhtmlx3.6'); 
+    }
+}
+
+
 if ( ! function_exists('getRowItems'))
 {
 
@@ -24,9 +31,10 @@ if ( ! function_exists('toDHTMLXData'))
             $ctrl =0;
             foreach ($query->result() as $row)
             {
-                $data[$ctrl]['row'] = getRowItems($row); 
+                $data[$ctrl]['id'] = $ctrl;                 
+                $data[$ctrl]['data'] = getRowItems($row); 
                 $ctrl++;
             }
-            return $data;
+            return array("rows"=> $data);
         }
 }
