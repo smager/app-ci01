@@ -15,7 +15,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <?php
     headerInclude($p_dlayout='Y',$p_dwin ='Y', $p_dgrid ='Y');
-    $l_dhtmlx_sort="";
+    $l_dhtmlx_sort="na,int,str,str";
+
+    
 ?> 
     
 </head>
@@ -25,10 +27,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <table class="dhtmlxGrid" gridWidth="99.5%" gridHeight="500px" id="gridbox1">
     <tr valign="bottom">
+        <th align="center" width="34px"><input type="checkbox" /> </th>
         <th nowrap align="center" width="80px">Snippet Id</th>
         <th nowrap width="100px">Snippet Name</th>
         <th nowrap width="500px">Content</th>
-        <th align="center" width="60px">Delete</th>
     </tr>
 </table>
     
