@@ -451,15 +451,15 @@ CREATE TABLE IF NOT EXISTS `supplies` (
 *** All about banks ***
 
 CREATE TABLE IF NOT EXISTS `bank_ref` (
-  `bank_acctno` varchar(30) NOT NULL default '',
-  `bank_name` varchar(50) NOT NULL default '',
+ `bank_acctno` varchar(30) NOT NULL default '',
+ `bank_acctname` varchar(50) NOT NULL default '', 
+ `bank_name` varchar(50) NOT NULL default '',
   `active` int(5) NOT NULL default '1', 
   `created_by` int(5),
   `created_date` datetime,
   `updated_by` int(5),
   `updated_date` datetime,
-  PRIMARY KEY `bank_ref_pk` (`bank_acctno` ),
-  UNIQUE KEY `bank_ref_uk` (`bank_name`)
+  PRIMARY KEY `bank_ref_pk` (`bank_acctno` )
 )
   COMMENT='Bank Accounts Reference'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
