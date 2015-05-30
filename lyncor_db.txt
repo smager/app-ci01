@@ -1,0 +1,533 @@
+host: oracleexpertscebu.com
+database: zsi_sims
+user/pwd: zsi / lyncor@tan
+
+CREATE TABLE IF NOT EXISTS `systems` (
+  `system_id` int(5) unsigned NOT NULL auto_increment,
+  `system_name` varchar(64) NOT NULL default '',
+  `system_desc` varchar(100) NOT NULL default '',
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY  `systems_pk`  (`system_id`),
+  UNIQUE KEY  `systems_uk` (`system_name`)
+)
+  COMMENT='Systems'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+CREATE TABLE IF NOT EXISTS `menu_types` (
+  `menu_type_id` int(5) unsigned NOT NULL auto_increment,
+  `menu_type` varchar(64) NOT NULL default '',
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY  `menu_types_pk`  (`menu_type_id`),
+  UNIQUE KEY  `menu_types_uk` (`menu_type`)
+)
+  COMMENT='Menu Types'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+
+CREATE TABLE IF NOT EXISTS `menus` (
+  `menu_id` int(5) unsigned NOT NULL auto_increment,
+  `menu_name` varchar(64) NOT NULL default '',
+  `menu_type_id` int(5),
+  `system_id` int(5),
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `menus_pk`  (`menu_id`),
+  UNIQUE KEY `menus_uk` (`menu_name`)
+)
+  COMMENT='Menus'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+CREATE TABLE IF NOT EXISTS `proc_types` (
+  `proc_type_id` int(5) unsigned NOT NULL auto_increment,
+  `proc_type` varchar(64) NOT NULL default '',
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY  `proc_types_pk`  (`proc_type_id`),
+  UNIQUE KEY  `proc_types_uk` (`proc_type`)
+)
+  COMMENT='Procedure Types'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+CREATE TABLE IF NOT EXISTS `procs` (
+  `proc_id` int(5) unsigned NOT NULL auto_increment,
+  `proc_name` varchar(64) NOT NULL default '',
+  `proc_url` varchar(64) NOT NULL default '',
+  `proc_type_id` int(5), 
+  `menu_default` int(5) NOT NULL default '0',  
+  `menu_id` int(5), 
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `procs_pk`  (`proc_id`),
+  UNIQUE KEY `procs_uk` (`proc_name`)
+)
+  COMMENT='Procedures'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+
+
+CREATE TABLE IF NOT EXISTS `denomination_ref` (
+  `denomination`   decimal(5,2),
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `denomination_pk` (`denomination`)
+)
+  COMMENT='Money Denomination Reference'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+   CREATE TABLE IF NOT EXISTS `store_daily_cash_ref` (
+  `store_daily_cash_ref_id`           int(5) unsigned NOT NULL auto_increment,
+  `store_loc_id`                 int(5),
+  `denomination`                          decimal(7,2),
+  `denomination_qty`                                 int(5),
+  `cash_amount`                          decimal(7,2),
+  `created_by`          int(5),
+  `created_date`      datetime,
+  `updated_by`        int(5),
+  `updated_date`     datetime,
+  PRIMARY KEY `store_daily_cash_ref_pk`  (`store_daily_cash_ref_id`),
+  UNIQUE KEY `store_daily_cash_ref_uk` (`store_loc_id`,`denomination`)
+)
+  COMMENT='Store Daily Cash Details'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+  CREATE TABLE IF NOT EXISTS `store_daily_cash` (
+  `store_daily_cash_id`           int(5) unsigned NOT NULL auto_increment,
+  `store_loc_id`                     int(5),
+  `cash_date`                        datetime,
+  `posted` int(5) NOT NULL default '0',  
+  `created_by`          int(5),
+  `created_date`      datetime,
+  `updated_by`        int(5),
+  `updated_date`     datetime,
+  PRIMARY KEY `store_daily_cash_pk`  (`store_daily_cash_id`),
+  UNIQUE KEY `store_daily_cash_uk` (`store_loc_id`,`cash_date`)
+)
+  COMMENT='Store Daily Cash Header'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+
+   CREATE TABLE IF NOT EXISTS `store_daily_cash_dtl` (
+  `store_daily_cash_dtl_id`           int(5) unsigned NOT NULL auto_increment,
+  `store_daily_cash_id`                 int(5),
+  `denomination`                          decimal(7,2),
+  `denomination_qty`                    int(5),
+  `cash_amount`                          decimal(7,2),
+  `created_by`          int(5),
+  `created_date`      datetime,
+  `updated_by`        int(5),
+  `updated_date`     datetime,
+  PRIMARY KEY `store_daily_cash_dtl_pk`  (`store_daily_cash_dtl_id`),
+  UNIQUE KEY `store_daily_cash_dtl_uk` (`store_daily_cash_id`,`cash_id`)
+)
+  COMMENT='Store Daily Cash Details'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+CREATE TABLE IF NOT EXISTS `roles` (
+  `role_id` int(5) unsigned NOT NULL auto_increment,
+  `role_desc` varchar(64) NOT NULL default '',
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `roles_pk`  (`role_id`),
+  UNIQUE KEY `roles_uk` (`role_desc`)
+)
+  COMMENT='Menus'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+
+CREATE TABLE IF NOT EXISTS `role_menus` (
+  `role_menu_id` int(5) unsigned NOT NULL auto_increment, 
+  `menu_id` int(5),
+  `role_id` int(5),
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `role_menus_pk` (`role_menu_id`),
+  UNIQUE KEY `role_menus_uk` (`role_id`,`menu_id`)
+)
+  COMMENT='role_menus'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+CREATE TABLE IF NOT EXISTS `role_procs` (
+  `role_proc_id` int(5) unsigned NOT NULL auto_increment, 
+  `proc_id` int(5),
+  `role_id` int(5),
+  `allow_write` int(5) NOT NULL default '0',  
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `role_procs_pk` (`role_proc_id`),
+  UNIQUE KEY `role_procs_uk` (`role_id`,`proc_id`)
+)
+  COMMENT='Role Procedure Access'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+
+CREATE TABLE IF NOT EXISTS `stores` (
+  `store_id` int(5) unsigned NOT NULL auto_increment,
+  `store_name` varchar(100) NOT NULL default '',
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `stores_pk`  (`store_id`),
+  UNIQUE KEY `stores_uk` (`store_name`)
+)
+  COMMENT='stores'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+CREATE TABLE IF NOT EXISTS `store_loc` (
+  `store_loc_id` int(5) unsigned NOT NULL auto_increment,
+  `store_loc` varchar(100) NOT NULL default '',
+  `store_id` int(5),
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `store_loc_pk`  (`store_loc_id`),
+  UNIQUE KEY `store_loc_uk` (`store_loc`,`store_id`)
+)
+  COMMENT='store_loc'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `user_id` int(5) unsigned NOT NULL auto_increment,
+  `empl_name` varchar(64) NOT NULL default '',
+  `user_password` varchar(64) NOT NULL default'',
+  `user_name` varchar(64) NOT NULL default '',
+  `user_password` varchar(64) NOT NULL default '',
+  `role_id` int(5),
+  `store_loc_id` int(5),
+  `active` int(5) NOT NULL default '1', 
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `user_pk` (`user_id`),
+  UNIQUE KEY `users_uk` (`user_name`)
+)
+  COMMENT='Users'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+CREATE TABLE IF NOT EXISTS `suppliers` (
+  `supplier_id`     int(5) unsigned NOT NULL auto_increment,
+  `supplier_name`   varchar(64) NOT NULL default '',
+  `active` int(5) NOT NULL default '1',   
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `suppliers_pk`  (`supplier_id`),
+  UNIQUE KEY `suppliers_uk` (`supplier_name`)
+)
+  COMMENT='suppliers'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+
+CREATE TABLE IF NOT EXISTS `supply_types` (
+  `supply_type_id` int(5) unsigned NOT NULL auto_increment,
+  `supply_type` varchar(64) NOT NULL default '',
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY  `supply_types_pk`  (`supply_type_id`),
+  UNIQUE KEY  `supply_types_uk` (`supplyc_type`)
+)
+  COMMENT='Types of Supply'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin; 
+
+  
+CREATE TABLE IF NOT EXISTS `supplies` (
+  `supply_id`     int(5) unsigned NOT NULL auto_increment,
+  `supply_desc`   varchar(64) NOT NULL default '',
+  `supply_type_id` int(5),
+  `compute_sales` int(5) NOT NULL default '1',   
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `supplies_pk`  (`supply_id`),
+  UNIQUE KEY `supplies_uk` (`supply_desc`)
+)
+  COMMENT='supplies'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+ CREATE TABLE IF NOT EXISTS `supplier_drs` (
+  `supplier_dr_id` int(5) unsigned NOT NULL auto_increment,
+  `dr_no`  int(5),
+  `dr_date` datetime,
+  `supplier_id`  int(5),
+  `store_loc_id` int(5),
+  `posted` int(5) NOT NULL default '0',     
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `supplier_drs_pk`  (`supplier_dr_id`),
+  UNIQUE KEY `supplier_drs_uk` (`dr_no`, `store_loc_id`,`supplier_id`)
+)
+  COMMENT='Supplier supplies delivery header'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
+
+ CREATE TABLE IF NOT EXISTS `supplier_dr_dtls` (
+  `supplier_dr_dtls_id` int(5) unsigned NOT NULL auto_increment,
+  `supplier_dr_id` int(5),
+  `supply_id`    int(5),
+  `dr_qty`       decimal(5,2),
+  `unit_id`      int(5),
+  `unit_price`   decimal(5,2),
+  `created_by`  int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `supplier_dr_dtls_pk`  (`supplier_dr_dtls_id`),
+  UNIQUE KEY `supplier_dr_dtls_uk` (`supplier_dr_id`,`supply_id`)
+)
+  COMMENT='Supplier supplies delivery details'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+  
+ CREATE TABLE IF NOT EXISTS `store_supply_ref` (
+  `store_supply_ref_id` int(5) unsigned NOT NULL auto_increment,
+  `store_loc_id` int(5),
+  `supply_id`    int(5),
+  `supply_qty`   decimal(5,2),
+  `unit_id`      int(5),
+  `supply_srp`   decimal(5,2),
+  `stock_qty`    decimal(5,2),
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `store_supply_ref_pk`  (`store_supply_ref_id`),
+  UNIQUE KEY `store_supply_ref_uk` (`store_loc_id`,`supply_id`)
+)
+  COMMENT='Store supplies reference'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
+  
+ 
+  CREATE TABLE IF NOT EXISTS `supply_is` (
+   `supply_is_id`   int(5) unsigned NOT NULL auto_increment,
+   `is_no`  int(5),
+   `is_date` datetime,
+   `store_loc_id`  int(5),
+   `posted` int(5) NOT NULL default '0',     
+   `created_by`    int(5),
+   `created_date`  datetime,
+   `updated_by`    int(5),
+   `updated_date`  datetime,
+   PRIMARY KEY `supply_is_pk`  (`supply_is_id`),
+   UNIQUE KEY `supply_is_uk` (`is_no`,`store_loc_id`)
+ )
+   COMMENT='Stock Issuance header to stores'
+   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+  CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
+   `supply_is_dtls`   int(5) unsigned NOT NULL auto_increment,
+   `is_no`     int(5),
+   `supply_id`     int(5),
+   `supply_qty`    decimal(5,2),
+   `unit_id`       int(5),
+   `created_by`    int(5),
+   `created_date`  datetime,
+   `updated_by`    int(5),
+   `updated_date`  datetime,
+   PRIMARY KEY `supply_is_dtls_pk`  (`supply_is_dtls`),
+   UNIQUE KEY `supply_is_dtls_uk` (`is_no`,`supply_id`)
+ )
+   COMMENT='Stock Issuance details to stores'
+   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+ CREATE TABLE IF NOT EXISTS `sales_daily` (
+  `sales_daily_id` int(5) unsigned NOT NULL auto_increment,
+  `sales_date`     datetime,
+  `store_loc_id` int(5),
+  `posted` int(5) NOT NULL default '0',  
+  `created_by`   int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `sls_daily_pk`  (`sales_daily_id`),
+  UNIQUE KEY `sls_daily_uk` (`sales_date`,`store_loc_id`)
+)
+  COMMENT='Daily store supplies usage/sales'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
+
+
+ CREATE TABLE IF NOT EXISTS `sales_daily_dtl` (
+  `sales_daily_dtl_id` int(5) unsigned NOT NULL auto_increment,
+  `sales_daily_id`    int(5),
+  `store_loc_id`  int(5),
+  `supply_id`     int(5),
+  `supply_start_qty` decimal(5,2),
+  `supply_used_qty`  decimal(5,2),
+  `supply_bal_qty`   decimal(5,2),
+  `unit_id`      int(5),
+  `supply_srp`   decimal(8,2),
+  `sales_amount`  decimal(8,2),
+  `created_by`   int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `sales_daily_dtl_pk`  (`sales_daily_dtl_id`),
+  UNIQUE KEY `sales_daily_dtl_uk` (`sales_daily_id`,`store_loc_id`,`supply_id`)
+)
+  COMMENT='Daily store supplies usage/sales detail'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+ CREATE TABLE IF NOT EXISTS `inv_summ` (
+  `inv_summ_id`           int(5) unsigned NOT NULL auto_increment,
+  `inv_summ_year`       int(5),
+  `inv_summ_month`    int(5),
+  `store_loc_id`           int(5),
+  `supply_id`               int(5),
+  `beg_qty`                decimal(5,2),
+  `dr_qty`                  decimal(5,2),
+  `sales_qty`              decimal(5,2),
+  `end_qty`               decimal(5,2),
+  `created_by`          int(5),
+  `created_date`      datetime,
+  `updated_by`        int(5),
+  `updated_date`     datetime,
+  PRIMARY KEY `inv_summ_pk`  (`inv_summ_id`),
+  UNIQUE KEY `inv_summ_uk` (`inv_summ_year`,`inv_summ_month`,`store_loc_id`,`supply_id`)
+)
+  COMMENT='Inventory Summary'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+
+ CREATE TABLE IF NOT EXISTS `sales_summ` (
+  `sales_summ_id`           int(5) unsigned NOT NULL auto_increment,
+  `sales_summ_year`       int(5),
+  `sales_summ_month`    int(5),
+ `store_loc_id`               int(5),
+  `sales_amount`            decimal(10,2),
+  `created_by`               int(5),
+  `created_date`           datetime,
+  `updated_by`        int(5),
+  `updated_date`     datetime,
+  PRIMARY KEY `sales_summ_pk`  (`sales_summ_id`),
+  UNIQUE KEY `sales_summ_uk` (`sales_summ_year`,`sales_summ_month`,`store_loc_id`)
+)
+  COMMENT='Store Sales Summary'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+
+ CREATE TABLE IF NOT EXISTS `sales_supply_summ` (
+  `sales_supply_id`           int(5) unsigned NOT NULL auto_increment,
+  `sales_supply_year`       int(5),
+  `sales_supply_month`    int(5),
+  `store_loc_id`               int(5),
+  `supply_id`                   int(5),
+  `sales_amount`            decimal(10,2),
+  `created_by`                int(5),
+  `created_date`             datetime,
+  `updated_by`              int(5),
+  `updated_date`          datetime,
+  PRIMARY KEY `sales_supply_pk`  (`sales_supply_id`),
+  UNIQUE KEY `sales_supply_uk` (`sales_supply_year`,`sales_supply_month`,`store_loc_id`, `supply_id`)
+)
+  COMMENT='Store Sales Summary per Supply'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+*** All about banks ***
+
+CREATE TABLE IF NOT EXISTS `bank_ref` (
+  `bank_acctno` varchar(30) NOT NULL default '',
+  `bank_name` varchar(50) NOT NULL default '',
+  `active` int(5) NOT NULL default '1', 
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `bank_ref_pk` (`bank_acctno` ),
+  UNIQUE KEY `bank_ref_uk` (`bank_name`)
+)
+  COMMENT='Bank Accounts Reference'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+ 
+   CREATE TABLE IF NOT EXISTS `store_bank_depo` (
+  `store_bank_depo_id`     int(5) unsigned NOT NULL auto_increment,
+  `store_loc_id`                 int(5),
+  `bank_acctno`                varchar(30),
+  `tran_no`                       varchar(50),
+  `depo_date`                  datetime,  
+  `depo_amount`              decimal(7,2),
+  `posted` int(5) NOT NULL default '0',      
+  `created_by`          int(5),
+  `created_date`      datetime,
+  `updated_by`        int(5),
+  `updated_date`     datetime,
+  PRIMARY KEY `store_bank_depo_pk`  (`store_bank_depo_id`),
+  UNIQUE KEY `store_bank_depo_uk` (`store_loc_id`,`bank_acctno`,`depo_date`)
+)
+  COMMENT='Store Bank Deposits'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+   CREATE TABLE IF NOT EXISTS `store_bank_wd` (
+  `store_bank_wd_id`     int(5) unsigned NOT NULL auto_increment,
+  `store_loc_id`               int(5),
+  `bank_acctno`              varchar(30),
+  `tran_no`                      varchar(50),
+  `wd_date`                    datetime,  
+  `wd_amount`                decimal(7,2),
+  `posted` int(5) NOT NULL default '0',      
+  `created_by`          int(5),
+  `created_date`      datetime,
+  `updated_by`        int(5),
+  `updated_date`     datetime,
+  PRIMARY KEY `store_bank_wd_pk`  (`store_bank_wd_id`),
+  UNIQUE KEY `store_bank_wd_uk` (`store_loc_id`,`bank_acctno`,`wd_date`)
+)
+  COMMENT='Store Bank Withdraws'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+ CREATE TABLE IF NOT EXISTS `store_bank_depo_summ` (
+  `bank_depo_summ_id`           int(5) unsigned NOT NULL auto_increment,
+  `bank_depo_summ_year`       int(5),
+  `bank_depo_summ_month`    int(5),
+ `store_loc_id`               int(5),
+  `depo_amount`            decimal(10,2),
+  `created_by`               int(5),
+  `created_date`           datetime,
+  `updated_by`        int(5),
+  `updated_date`     datetime,
+  PRIMARY KEY `bank_depo_summ_pk`  (`bank_depo_summ_id`),
+  UNIQUE KEY `bank_depo_summ_uk` (`bank_depo_summ_year`,`bank_depo_summ_month`,`store_loc_id`)
+)
+  COMMENT='Store Bank Deposits Summary'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+ CREATE TABLE IF NOT EXISTS `store_bank_wd_summ` (
+  `bank_wd_summ_id`           int(5) unsigned NOT NULL auto_increment,
+  `bank_wd_summ_year`       int(5),
+  `bank_wd_summ_month`    int(5),
+ `store_loc_id`               int(5),
+  `wd_amount`            decimal(10,2),
+  `created_by`               int(5),
+  `created_date`           datetime,
+  `updated_by`        int(5),
+  `updated_date`     datetime,
+  PRIMARY KEY `bank_wd_summ_pk`  (`bank_wd_summ_id`),
+  UNIQUE KEY `bank_wd_summ_uk` (`bank_wd_summ_year`,`bank_wd_summ_month`,`store_loc_id`)
+)
+  COMMENT='Store Bank Withdrawal Summary'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
