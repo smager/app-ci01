@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 if ( ! function_exists('get_dhtmlx_path'))
 {   function get_dhtmlx_path(){
-          return base_url('assets/dhtmlx3.6'); 
+          return base_url('assets/dhtmlx36'); 
     }
 }
 
