@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <div id="container">
 
-<table>    
+<table class="table">    
     <tr>
         <th></th>
         <th>Acct. No</th>

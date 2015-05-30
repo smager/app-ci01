@@ -9,7 +9,12 @@ function headerInclude($p_dlayout='N',$p_dwin ='N', $p_dgrid ='N'){
 <script src="<?php echo base_url('assets/js/handlebars-v3.0.0.js');?>"></script>   
 <script src="<?php echo base_url('assets/js/zsi.bswriter.js');?>"></script>   
 <script src="<?php echo base_url('assets/js/zsi.lib.js');?>"></script>   
-<link href="<?php echo base_url('assets/css/bss.bootstrap.min.css');?>" rel="stylesheet">
+<link href="<?php echo base_url('assets/css/bootstrap.css');?>" rel="stylesheet">
+<link href="<?php echo base_url('assets/css/bootstrap-theme.min.css');?>" rel="stylesheet">
+
+
+
+<link href="<?php echo base_url('assets/css/zsi_style.css');?>" rel="stylesheet">
 <?php
 
     
