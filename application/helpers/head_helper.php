@@ -1,8 +1,17 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-if ( ! function_exists('headerInclude')){
-function headerInclude($p_dlayout='N',$p_dwin ='N', $p_dgrid ='N'){
+if ( ! function_exists('headerInclude')){    
+function headerInclude($p_dlayout='N',$p_dwin ='N', $p_dgrid ='N'){    
    $l_dhtmlx_path =  base_url('assets/dhtmlx3.6');
+
+?>
+<script src="<?php echo base_url('assets/js/jquery-1.11.3.min.js');?>"></script>   
+<script src="<?php echo base_url('assets/js/handlebars-v3.0.0.js');?>"></script>   
+<script src="<?php echo base_url('assets/js/zsi.bswriter.js');?>"></script>   
+<script src="<?php echo base_url('assets/js/zsi.lib.js');?>"></script>   
+<link href="<?php echo base_url('assets/css/bss.bootstrap.min.css');?>" rel="stylesheet">
+<?php
+
     
    if (strtoupper($p_dlayout) == 'Y') {
 ?>
@@ -46,10 +55,7 @@ if (strtoupper($p_dgrid) == 'Y') {
 <script type="text/javascript" src="<?php echo $l_dhtmlx_path; ?>/dhtmlxWindows/codebase/dhtmlxcommon.js"></script>
 <?php
    }
-   else{
 ?>
-<script type="text/javascript" src="<?php echo $l_dhtmlx_path; ?>/dhtmlxGrid/codebase/dhtmlxcommon.js"></script>
-<?php } ?>
 
 <?php
    if (strtoupper($p_dlayout) == 'Y') {
