@@ -127,7 +127,7 @@ function initDatePicker(){
    var inputDate =$('[id*=date]');
 
    inputDate.attr("placeholder","mm/dd/yyyy");
-     console.log( inputDate.css("width") ) ;
+     //console.log( inputDate.css("width") ) ;
    
    
    if(inputDate.length > 0){

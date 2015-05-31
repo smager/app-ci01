@@ -7,8 +7,6 @@ class bank_ref extends CI_Controller {
         $this->load->database();
         $this->load->model('bank_ref_model'); 
         $this->load->helper(array('url','zsi','include'));
-
-        
     }
     
 	public function index()
@@ -37,41 +35,18 @@ class bank_ref extends CI_Controller {
     }
     
     
-    
-    
-    public function form()
+    public function update()
 	{
-        $this->load->view('bank_ref_form');
-	}
-    
-    
-  public function update()
-	{
-      
-
-        $this->bank_ref_model->submit($this->input->post());
-
+        $this->bank_ref_model->update($this->input->post());
         redirect( base_url("bank_ref") );
       
 	}    
-/*    
-     public function update()
-	{
-        $data = array(
-             'bank_acctno' => $this->input->post('p_bank_acctno')
-            ,'bank_acctname' => $this->input->post('p_bank_acctname')
-            ,'active' => $this->input->post('p_active')
-        );
-
-                        
-        $this->bank_ref_model->form_insert($data);
-        $data['message'] = 'Data Inserted Successfully';         
-         echo "<p>updated.</p>";
-        //$this->load->view('bank_ref_form',$data);
-        redirect("bank_ref/index");
-
-	}
-*/       
    
+
+    public function delete()
+	{
+        
+        $this->bank_ref_model->delete($this->input->post());
+	}   
     
 }

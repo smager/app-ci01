@@ -35,7 +35,7 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
     <tr>
         
             <td><input type="hidden" name="p_bank_ref_id[]" value="<?php echo $d[$x]->bank_ref_id; ?>">
-                <?php checkbox( array( 'name'=>'select[]','value'=>$d[$x]->bank_ref_id  )); ?> </td>
+                <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->bank_ref_id  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"bank_acctno[]",'value'=>$d[$x]->bank_acctno  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>'bank_acctname[]','value'=>$d[$x]->bank_acctname  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>'bank_name[]','value'=>$d[$x]->bank_name  )); ?> </td>
@@ -64,11 +64,13 @@ for ($x = 0; $x < 5; $x++) {
 } 
 ?>
 </table>    
+
+<div class="buttonGroup">
 <?php 
-   // Button(array('name'=>'Save','onclick'=>'return submitData();'));    
     Button(array('name'=>'Save','type'=>'submit'));    
-    
+    Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("bank_ref/delete")  . "');"));        
 ?>    
+</div>
 
 </form>    
     
@@ -76,19 +78,26 @@ for ($x = 0; $x < 5; $x++) {
     
 
 <script type="text/javascript">
+
+function checkDelete(l_cmd) {
+   var l_stmt=[], l_count;
     
-function submitData(){
-    var str = $("#frm").serialize();
-    console.log(str);
-    $.post("bank_ref/update?" + str
-    , function(){
-        alert("date submitted");
-    
-    });
-    
-    return false;
-    
-}
+   var data = zsi.table.getCheckBoxesValues("input[name='p_cb[]']:checked");
+    for(var x=0;x<data.length; x++){
+        l_stmt.push( { name:"p_del_id[]",value : data[x] }  ); 
+    }
+   if (l_stmt!="") {
+      if(confirm("Are you sure you want to delete selected items?")) {
+      $.post( l_cmd , l_stmt, function(d){
+            window.location.reload();
+            //console.log(d);
+         }).fail(function(d) {
+            alert("Sorry, the curent transaction is not successfull.");
+        });
+      }
+   }
+return false;
+}   
     
 </script>    
 

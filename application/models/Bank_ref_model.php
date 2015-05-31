@@ -10,7 +10,7 @@ class bank_ref_model extends CI_Model{
         return $query;    
     }
     
-    function submit($post){
+    function update($post){
     //print_r($post);
         
         for ($x = 0; $x < sizeof($post['p_bank_acctno']); $x++) {
@@ -49,6 +49,11 @@ class bank_ref_model extends CI_Model{
      } //end of loop
 
     }        
+    
+    function delete($post){        
+        $this->load->model('common_model'); 
+        $this->common_model->delete($this->input->post(),"bank_ref","bank_ref_id");        
+    }    
 
 }
 ?>
