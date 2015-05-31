@@ -107,14 +107,14 @@ CREATE TABLE IF NOT EXISTS `denomination_ref` (
   CREATE TABLE IF NOT EXISTS `store_daily_cash` (
   `store_daily_cash_id`           int(5) unsigned NOT NULL auto_increment,
   `store_loc_id`                     int(5),
-  `cash_date`                        datetime,
+  `tran_date`                        datetime,
   `posted` int(5) NOT NULL default '0',  
   `created_by`          int(5),
   `created_date`      datetime,
   `updated_by`        int(5),
   `updated_date`     datetime,
   PRIMARY KEY `store_daily_cash_pk`  (`store_daily_cash_id`),
-  UNIQUE KEY `store_daily_cash_uk` (`store_loc_id`,`cash_date`)
+  UNIQUE KEY `store_daily_cash_uk` (`store_loc_id`,`tran_date`)
 )
   COMMENT='Store Daily Cash Header'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
@@ -451,15 +451,19 @@ CREATE TABLE IF NOT EXISTS `supplies` (
 *** All about banks ***
 
 CREATE TABLE IF NOT EXISTS `bank_ref` (
+ `bank_ref_id`           int(5) unsigned NOT NULL auto_increment,
  `bank_acctno` varchar(30) NOT NULL default '',
  `bank_acctname` varchar(50) NOT NULL default '', 
  `bank_name` varchar(50) NOT NULL default '',
+ `acct_amount`              decimal(10,2),
   `active` int(5) NOT NULL default '1', 
   `created_by` int(5),
   `created_date` datetime,
   `updated_by` int(5),
   `updated_date` datetime,
-  PRIMARY KEY `bank_ref_pk` (`bank_acctno` )
+  PRIMARY KEY `bank_ref_pk` (`bank_acctno` ),
+ UNIQUE KEY `bank_ref_pk_uk` (`bank_acctno`)
+
 )
   COMMENT='Bank Accounts Reference'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
@@ -467,7 +471,7 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
    CREATE TABLE IF NOT EXISTS `store_bank_depo` (
   `store_bank_depo_id`     int(5) unsigned NOT NULL auto_increment,
   `store_loc_id`                 int(5),
-  `bank_acctno`                varchar(30),
+  `bank_ref_id`                 int(5),
   `tran_no`                       varchar(50),
   `depo_date`                  datetime,  
   `depo_amount`              decimal(7,2),
@@ -477,7 +481,7 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
   `updated_by`        int(5),
   `updated_date`     datetime,
   PRIMARY KEY `store_bank_depo_pk`  (`store_bank_depo_id`),
-  UNIQUE KEY `store_bank_depo_uk` (`store_loc_id`,`bank_acctno`,`depo_date`)
+  UNIQUE KEY `store_bank_depo_uk` (`store_loc_id`,`bank_ref_id`,`depo_date`)
 )
   COMMENT='Store Bank Deposits'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
@@ -485,8 +489,9 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
    CREATE TABLE IF NOT EXISTS `store_bank_wd` (
   `store_bank_wd_id`     int(5) unsigned NOT NULL auto_increment,
   `store_loc_id`               int(5),
-  `bank_acctno`              varchar(30),
+  `bank_ref_id`              int(5),
   `tran_no`                      varchar(50),
+  `cheque_no`                 varchar(50),
   `wd_date`                    datetime,  
   `wd_amount`                decimal(7,2),
   `posted` int(5) NOT NULL default '0',      
@@ -495,7 +500,7 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
   `updated_by`        int(5),
   `updated_date`     datetime,
   PRIMARY KEY `store_bank_wd_pk`  (`store_bank_wd_id`),
-  UNIQUE KEY `store_bank_wd_uk` (`store_loc_id`,`bank_acctno`,`wd_date`)
+  UNIQUE KEY `store_bank_wd_uk` (`store_loc_id`,`bank_ref_id`,`wd_date`)
 )
   COMMENT='Store Bank Withdraws'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
@@ -504,14 +509,15 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
   `bank_depo_summ_id`           int(5) unsigned NOT NULL auto_increment,
   `bank_depo_summ_year`       int(5),
   `bank_depo_summ_month`    int(5),
- `store_loc_id`               int(5),
+  `bank_ref_id`              int(5),
+  `store_loc_id`               int(5),
   `depo_amount`            decimal(10,2),
   `created_by`               int(5),
   `created_date`           datetime,
   `updated_by`        int(5),
   `updated_date`     datetime,
   PRIMARY KEY `bank_depo_summ_pk`  (`bank_depo_summ_id`),
-  UNIQUE KEY `bank_depo_summ_uk` (`bank_depo_summ_year`,`bank_depo_summ_month`,`store_loc_id`)
+  UNIQUE KEY `bank_depo_summ_uk` (`bank_depo_summ_year`,`bank_depo_summ_month`,`bank_ref_id`,`store_loc_id`)
 )
   COMMENT='Store Bank Deposits Summary'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
@@ -520,6 +526,7 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
   `bank_wd_summ_id`           int(5) unsigned NOT NULL auto_increment,
   `bank_wd_summ_year`       int(5),
   `bank_wd_summ_month`    int(5),
+  `bank_ref_id`              int(5),
  `store_loc_id`               int(5),
   `wd_amount`            decimal(10,2),
   `created_by`               int(5),
@@ -527,7 +534,7 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
   `updated_by`        int(5),
   `updated_date`     datetime,
   PRIMARY KEY `bank_wd_summ_pk`  (`bank_wd_summ_id`),
-  UNIQUE KEY `bank_wd_summ_uk` (`bank_wd_summ_year`,`bank_wd_summ_month`,`store_loc_id`)
+  UNIQUE KEY `bank_wd_summ_uk` (`bank_wd_summ_year`,`bank_wd_summ_month`,`bank_ref_id`,`store_loc_id`)
 )
   COMMENT='Store Bank Withdrawal Summary'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
