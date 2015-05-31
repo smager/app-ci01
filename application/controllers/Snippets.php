@@ -6,7 +6,7 @@ class Snippets extends CI_Controller {
         parent::__construct();
         $this->load->database();
         $this->load->model('snippets_model'); 
-        $this->load->helper(array('url','zsi','head'));
+        $this->load->helper(array('url','zsi','include'));
 
         
     }

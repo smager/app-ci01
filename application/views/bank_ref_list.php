@@ -6,13 +6,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <meta charset="utf-8">
 <title>bank_ref:List</title>
 <?php
-    headerInclude();    
+    includeHeader();    
 ?> 
     
 </head>
 <body>
-
-<div id="container">
+<?php menu(); ?> 
+    
+<div class="container page">
 
 <table class="table">    
     <tr>

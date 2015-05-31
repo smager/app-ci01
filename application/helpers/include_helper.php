@@ -1,10 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-if ( ! function_exists('headerInclude')){    
-function headerInclude($p_dlayout='N',$p_dwin ='N', $p_dgrid ='N'){    
-   $l_dhtmlx_path =  base_url('assets/dhtmlx3.6');
+if ( ! function_exists('includeHeader')){    
+function includeHeader($p_dlayout='N',$p_dwin ='N', $p_dgrid ='N'){    
+   $l_dhtmlx_path =  base_url('assets/dhtmlx36');
 
 ?>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="<?php echo base_url('assets/js/jquery-1.11.3.min.js');?>"></script>   
 <script src="<?php echo base_url('assets/js/handlebars-v3.0.0.js');?>"></script>   
 <script src="<?php echo base_url('assets/js/zsi.bswriter.js');?>"></script>   
@@ -88,6 +89,52 @@ if (strtoupper($p_dgrid) == 'Y') {
 }
     
     
+
+}}
+
+
+
+
+if ( ! function_exists('menu')){    
+function menu(){    
+?>
+
+<div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="../" class="navbar-brand">LynCor.biz</a>
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Manage <span class="caret"></span></a>
+              <ul class="dropdown-menu" aria-labelledby="themes">
+                <li><a href="#">Menu Item</a></li>
+                <li><a href="#">Menu Item</a></li>
+                <li><a href="#">Menu Item</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="download">Trasactions <span class="caret"></span></a>
+              <ul class="dropdown-menu" aria-labelledby="download">
+                <li><a href="#">Menu Item</a></li>
+                <li><a href="#">Menu Item</a></li>
+                <li><a href="#">Menu Item</a></li>
+              </ul>
+            </li>
+          </ul>
+
+
+        </div>
+      </div>
+</div>
+
+<?php
 
 }}
 

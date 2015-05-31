@@ -5,19 +5,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <head>
 <meta charset="utf-8">
 <title>Snippet:List</title>
-<script src="<?php echo base_url('assets/js/jquery-1.11.3.min.js');?>"></script>   
-<script src="<?php echo base_url('assets/js/handlebars-v3.0.0.js');?>"></script>   
-<script src="<?php echo base_url('assets/js/zsi.bswriter.js');?>"></script>   
-<script src="<?php echo base_url('assets/js/zsi.lib.js');?>"></script>   
-
-<link href="<?php echo base_url('assets/css/bss.bootstrap.min.css');?>" rel="stylesheet">
-    
-
 <?php
-    headerInclude($p_dlayout='Y',$p_dwin ='Y', $p_dgrid ='Y');
+    includeHeader($p_dlayout='Y',$p_dwin ='Y', $p_dgrid ='Y');
     $l_dhtmlx_sort="na,int,str,str";
-
-    
 ?> 
     
 </head>

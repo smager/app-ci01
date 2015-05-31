@@ -6,7 +6,7 @@ class bank_ref extends CI_Controller {
         parent::__construct();
         $this->load->database();
         $this->load->model('bank_ref_model'); 
-        $this->load->helper(array('url','zsi','head'));
+        $this->load->helper(array('url','zsi','include'));
 
         
     }
