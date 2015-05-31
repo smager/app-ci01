@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php menu(); ?> 
     
 <div class="container page">
-
+<form id="frm" action="<?php echo base_url('bank_ref/update');?>" method="post" >
 <table class="table">    
     <tr>
         <th></th>
@@ -25,15 +25,37 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         
     </tr>
 <?php
+
+ $q=$this->bank_ref_model->getdata();
+ $d=$q->result();
+
+
+for ($x = 0; $x < $q->num_rows(); $x++) {
+?>
+    <tr>
+        
+            <td><input type="hidden" name="p_bank_ref_id[]" value="<?php echo $d[$x]->bank_ref_id; ?>">
+                <?php checkbox( array( 'name'=>'select[]','value'=>$d[$x]->bank_ref_id  )); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"bank_acctno[]",'value'=>$d[$x]->bank_acctno  )); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>'bank_acctname[]','value'=>$d[$x]->bank_acctname  )); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>'bank_name[]','value'=>$d[$x]->bank_name  )); ?> </td>
+            <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N','value'=>$d[$x]->active )); ?> </td>
+            </td>
+    </tr>        
+
+<?php    
+}
+
 for ($x = 0; $x < 5; $x++) {
 ?>
     <tr>
         
-            <td><?php checkbox( array( 'name'=>'select')); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>'bank_acctno')); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>'bank_acctname')); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>'bank_name')); ?> </td>
-            <td><?php yes_no(array('name'=>'active','mandatory'=>'N')); ?> </td>
+            <td><input type="hidden" name="p_bank_ref_id[]">
+                <?php checkbox( array( 'name'=>'select[]')); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"bank_acctno[]")); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>'bank_acctname[]')); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>'bank_name[]')); ?> </td>
+            <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N')); ?> </td>
             </td>
     </tr>
     
@@ -42,14 +64,32 @@ for ($x = 0; $x < 5; $x++) {
 } 
 ?>
 </table>    
+<?php 
+   // Button(array('name'=>'Save','onclick'=>'return submitData();'));    
+    Button(array('name'=>'Save','type'=>'submit'));    
     
+?>    
+
+</form>    
     
 </div>
     
 
 <script type="text/javascript">
     
-
+function submitData(){
+    var str = $("#frm").serialize();
+    console.log(str);
+    $.post("bank_ref/update?" + str
+    , function(){
+        alert("date submitted");
+    
+    });
+    
+    return false;
+    
+}
+    
 </script>    
 
     

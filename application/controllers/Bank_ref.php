@@ -37,11 +37,24 @@ class bank_ref extends CI_Controller {
     }
     
     
+    
+    
     public function form()
 	{
         $this->load->view('bank_ref_form');
 	}
     
+    
+  public function update()
+	{
+      
+
+        $this->bank_ref_model->submit($this->input->post());
+
+        redirect( base_url("bank_ref") );
+      
+	}    
+/*    
      public function update()
 	{
         $data = array(
@@ -58,7 +71,7 @@ class bank_ref extends CI_Controller {
         redirect("bank_ref/index");
 
 	}
-       
+*/       
    
     
 }

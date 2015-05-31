@@ -68,7 +68,7 @@ if ( ! function_exists('inputTextBox'))
 
         if (isset($p["inputSize"]) ) $l_inputSize =' col-' . $default_label_size_type . '-' . $p["inputSize"];
 
-        if (isset($p["inputValue"]) )  $l_inputValue =' value="' . $p["inputValue"] . '"';
+        if (isset($p["value"]) )  $l_inputValue =' value="' . $p["value"] . '"';
 
         if (isset($p["type"]) ) $l_type =' type="' . $p["type"] . '"';
         
@@ -191,4 +191,78 @@ if ( ! function_exists('checkbox'))
 
             
     }
+}
+
+
+
+if ( ! function_exists('Button'))
+{    
+
+  function Button($p){
+      
+      /*
+      parameters:
+        name,type,onclick,data_toggle,data_target       
+      */
+      
+    $default_button_size      ='sm';
+
+    $l_onclick = '';
+    $l_data_toggle   = '';
+    $l_data_target   = '';
+    $l_text   	      = $p["name"];
+    $l_type          ='';
+
+    if(isset($p["type"]) ) $l_type = ' type="' . $p['type'] . '"';
+
+
+    if(isset($p["onclick"]) )  $l_onclick = ' onclick="' . $p['onclick'] . '"';
+
+    if(isset($p["data_toggle"]) ) $l_data_toggle = ' data-toggle="' . $p['data_toggle'] . '"';
+
+    if(isset($p["data_target"]) ) $l_data_target = ' data-target="' . $p['data_target'] . '"';
+
+
+    echo '<button id="btn' . $p['name'] . '" class="btn btn-primary btn-'. $default_button_size .'"' . $l_type . $l_onclick . $l_data_toggle . $l_data_target . '  >';
+    echo GetIcon($p['name']) . $p['name'];
+    echo '</button>';
+
+   }
+   
+    
+}
+
+
+
+
+
+if ( ! function_exists('GetIcon'))
+{    
+   function GetIcon($name){
+      $l_icon 	='<span class="glyphicon glyphicon-';
+      $l_text 	='';
+
+      if( strtoupper($name)=='SEARCH' ){
+            $l_text= $l_icon .  'search"></span> ';
+      }
+      if( strtoupper($name)=='ADD' ){
+            $l_text= $l_icon .  'plus-sign"></span> ';
+      }
+      if( strtoupper($name)=='DELETE' ){
+            $l_text= $l_icon .  'trash"></span> ';
+      }
+      if( strtoupper($name)=='CLOSE' ){
+            $l_text= $l_icon .  'off"></span> ';
+      }
+      if( strtoupper($name)=='SAVE' ){
+            $l_text= $l_icon .  'floppy-disk"></span> ';
+          
+      }
+      if( strtoupper($name)=='RESET' ){
+            $l_text= $l_icon .  'retweet"></span> ';
+      }
+
+      return $l_text;
+
+   }
 }
