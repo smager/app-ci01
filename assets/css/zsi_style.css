@@ -3,12 +3,19 @@
 
 
 body{
- font-family: Verdana,Arial,"Verdana","Helvetica",Sans-serif;
- margin-left:1px; 
- margin-right:1px;  
- margin-top:0px; 
- margin-bottom:0px;
- background:#f5f6f6;
+    font-family: Verdana,Arial,"Verdana","Helvetica",Sans-serif;
+    margin-left:1px; 
+    margin-right:1px;  
+    margin-top:0px; 
+    margin-bottom:0px;
+    background:#f5f6f6;
+    margin-top: 55px;
+}
+.page {
+    background: #fff none repeat scroll 0 0;
+    border: 1pt solid #e5e5e5;
+    min-height: 500px;
+    padding-top: 5px;
 }
 ul
 {
