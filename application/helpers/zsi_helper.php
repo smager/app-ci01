@@ -120,7 +120,7 @@ if ( ! function_exists('selectBox'))
 
     echo $l_label;
 
-    echo ' <select  class="form-control input-sm" id="' . $p["name"] . '" name="' . $p["name"] . '" ' . $l_attributes . '></select>';
+    echo ' <select  class="form-control input-sm" id="p_' . $p["name"] . '" name="p_' . $p["name"] . '" ' . $l_attributes . '></select>';
             
     }
 }

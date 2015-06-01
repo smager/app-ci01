@@ -39,9 +39,9 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
             <td><?php inputTextBox( array( 'name'=>"seq_no[]",'value'=>$d[$x]->seq_no  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"menu_name[]",'value'=>$d[$x]->menu_name  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"menu_url[]",'value'=>$d[$x]->menu_url  )); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>'menu_type_id[]','value'=>$d[$x]->menu_type_id  )); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>'system_id[]','value'=>$d[$x]->system_id  )); ?> </td>
-            </td>
+            <td><?php selectBox( array( 'name'=>'menu_type_id[]','value'=>$d[$x]->menu_type_id )); ?> </td>
+            <td><?php selectBox( array( 'name'=>'system_id[]','value'=>$d[$x]->system_id  )); ?> </td>
+            
     </tr>        
 
 <?php    
@@ -56,9 +56,9 @@ for ($x = 0; $x < 5; $x++) {
             <td><?php inputTextBox( array( 'name'=>"seq_no[]")); ?> </td>
             <td><?php inputTextBox( array( 'name'=>'menu_name[]')); ?> </td>
             <td><?php inputTextBox( array( 'name'=>'menu_url[]')); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>'menu_type_id[]')); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>'system_id[]')); ?> </td>
-            </td>
+            <td><?php selectBox( array( 'name'=>'menu_type_id[]')); ?> </td>
+            <td><?php selectBox( array( 'name'=>'system_id[]')); ?> </td>
+            
     </tr>
     
     
@@ -80,6 +80,13 @@ for ($x = 0; $x < 5; $x++) {
     
 
 <script type="text/javascript">
+var ctrlSel = zsi.control.SelectList;  
+    
+$(document).ready(function(){
+    
+ //ctrlSel("select[name=p_tran_type]","","N","ON_CREDIT_TYPES_V","sele_value","displayed_text","ORDER BY displayed_text");
+ ctrlSel( base_url + "common/get_select_data","select[name='p_menu_type_id[]']","","N","menu_types","menu_type_id","menu_type","");
+});    
 
 function checkDelete(l_cmd) {
    var l_stmt=[], l_count;
@@ -102,9 +109,7 @@ return false;
 }   
     
 </script>    
-
-    
-
 <script src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>     
+    
 </body>
 </html>
