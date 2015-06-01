@@ -107,7 +107,8 @@ if ( ! function_exists('selectBox'))
     $l_selectSize=' col-' . $default_label_size_type . '-' . $default_label_size;
     $l_labelSize =' col-' . $default_label_size_type . '-' . $default_input_size;
     $l_attributes='';            
-    $l_label='';
+    $l_label='';    
+    $l_selectedValue='';
 
     if(isset($p["selectSize"])) $l_selectSize =' col-' . $default_label_size_type . '-' . $p["selectSize"];
 
@@ -117,10 +118,10 @@ if ( ! function_exists('selectBox'))
 
     if(isset($p["labelName"]))  $l_label='  <label class="' . $l_labelSize .' control-label" >' . $p["labelName"] . '</label>';
 
-
+    if(isset($p["selectedValue"])) $l_selectedValue=' selectedvalue="' . $p["selectedValue"] . '"';
     echo $l_label;
 
-    echo ' <select  class="form-control input-sm" id="p_' . $p["name"] . '" name="p_' . $p["name"] . '" ' . $l_attributes . '></select>';
+    echo ' <select  class="form-control input-sm" id="p_' . $p["name"] . '" name="p_' . $p["name"] . '" ' . $l_selectedValue . ' ' . $l_attributes . '></select>';
             
     }
 }
