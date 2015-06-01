@@ -39,8 +39,8 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
             <td><?php inputTextBox( array( 'name'=>"seq_no[]",'value'=>$d[$x]->seq_no  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"menu_name[]",'value'=>$d[$x]->menu_name  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"menu_url[]",'value'=>$d[$x]->menu_url  )); ?> </td>
-            <td><?php selectBox( array( 'name'=>'menu_type_id[]','value'=>$d[$x]->menu_type_id )); ?> </td>
-            <td><?php selectBox( array( 'name'=>'system_id[]','value'=>$d[$x]->system_id  )); ?> </td>
+            <td><?php selectBox( array( 'name'=>'menu_type_id[]','value'=>$d[$x]->menu_type_id,'selectedValue'=>$d[$x]->menu_type_id  )); ?> </td>
+            <td><?php selectBox( array( 'name'=>'system_id[]','value'=>$d[$x]->system_id,'selectedValue'=>$d[$x]->system_id  )); ?> </td>
             
     </tr>        
 
@@ -86,6 +86,7 @@ $(document).ready(function(){
     
  //ctrlSel("select[name=p_tran_type]","","N","ON_CREDIT_TYPES_V","sele_value","displayed_text","ORDER BY displayed_text");
  ctrlSel( base_url + "common/get_select_data","select[name='p_menu_type_id[]']","","N","menu_types","menu_type_id","menu_type","");
+ ctrlSel( base_url + "common/get_select_data","select[name='p_system_id[]']","","N","systems","system_id","system_name","");
 });    
 
 function checkDelete(l_cmd) {
