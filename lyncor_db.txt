@@ -30,19 +30,20 @@ CREATE TABLE IF NOT EXISTS `menu_types` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 
-CREATE TABLE IF NOT EXISTS `menus` (
+CREATE TABLE IF NOT EXISTS `menu` (
   `menu_id` int(5) unsigned NOT NULL auto_increment,
   `menu_name` varchar(64) NOT NULL default '',
   `menu_type_id` int(5),
   `system_id` int(5),
+  `seq_no` int(5),
   `created_by` int(5),
   `created_date` datetime,
   `updated_by` int(5),
   `updated_date` datetime,
-  PRIMARY KEY `menus_pk`  (`menu_id`),
-  UNIQUE KEY `menus_uk` (`menu_name`)
+  PRIMARY KEY `menu_pk`  (`menu_id`),
+  UNIQUE KEY `menu_uk` (`menu_name`)
 )
-  COMMENT='Menus'
+  COMMENT='Menu'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `proc_types` (
