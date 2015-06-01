@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>bank_ref:List</title>
+<title>Lyncor</title>
 <?php
     includeHeader();    
 ?> 
@@ -17,17 +17,42 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<h1>Welcome to Sales Inventory Monitoring System</h1>
 
-	<div id="body">
-		<p>The page you are looking at is being generated dynamically by CodeIgniter.</p>
-
-
-		<p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="user_guide/">User Guide</a>.</p>
-	</div>
+    <div class="bswform">  </div>
     
 </div>
+<script>
+var w = new zsi.bsWriter({
+         hasNoConfigFile:false
+	     ,url:"../assets/templates/config.txt"
+		,targetClass:"bswform"
+		,SizeType:"xs"
+});
+
+w.write(function(){	
+	this.div({class:"form-horizontal"})
+		.div({class:"form-group"})
+			.bsLabelInput({labelsize:2,caption:"Login Name",inputsize:3,name:"p_name"})
+		.div({class:"form-group",parentClass:"form-horizontal"})
+			.bsLabelInput({labelsize:2,caption:"Password",inputsize:3,name:"p_pwd",type:"password"})
+		.div({class:"col-xs-12 buttonGroup",parentClass:"form-horizontal"})
+            .bsButton({id:"btnSave", type:"submit", class:"btn-primary btn-sm",caption:"Save",classicon:"glyphicon-floppy-disk" })	
+            .bsButton({id:"btnClose", type:"button", class:"btn-primary btn-sm",caption:"Close",classicon:"glyphicon-off" })	
     
+	.end();	
+
+});
+		 
  
+
+function test(){
     
+console.log( zsi.bsWriter); 
+ 
+}    
+    
+</script>        
+ 
+ <input type="button" onclick="test();" value="test" >   
 
  <script src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>     
 </body>
