@@ -97,6 +97,10 @@ if (strtoupper($p_dgrid) == 'Y') {
 
 if ( ! function_exists('menu')){    
 function menu(){    
+    $ci =& get_instance();
+    $ci->load->model('menu_model');
+    $ci->load->model('menu_types_model');
+    
 ?>
 
 <div class="navbar navbar-default navbar-fixed-top">
@@ -110,26 +114,34 @@ function menu(){
           </button>
         </div>
         <div class="navbar-collapse collapse" id="navbar-main">
-          <ul class="nav navbar-nav">
-            <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Manage <span class="caret"></span></a>
-              <ul class="dropdown-menu" aria-labelledby="themes">
-                <li><a href="#">Menu Item</a></li>
-                <li><a href="#">Menu Item</a></li>
-                <li><a href="#">Menu Item</a></li>
-              </ul>
-            </li>
-            <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="download">Transactions <span class="caret"></span></a>
-              <ul class="dropdown-menu" aria-labelledby="download">
-                <li><a href="#">Menu Item</a></li>
-                <li><a href="#">Menu Item</a></li>
-                <li><a href="#">Menu Item</a></li>
-              </ul>
-            </li>
-          </ul>
+<?php 
+        $q=$ci->menu_types_model->getdata();
+        $d=$q->result();
+        echo '<ul class="nav navbar-nav">'; 
+        foreach($d as $i){
+            
+             $q_mi=$ci->menu_model->getSubMenuItem($i->menu_type_id);            
+            if($q_mi->num_rows() > 0){
+                echo  '<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">' . $i->menu_type . ' <span class="caret"></span></a>';            
+            }else{
+                echo  '<li class="dropdown"><a href="#">' . $i->menu_type . '</a>';                        
+            }
+            
+            if($q_mi->num_rows() > 0){
+                echo '<ul class="dropdown-menu">'; 
+                foreach($q_mi->result() as $subM){                    
+                     echo '<li><a href="#">' . $subM->menu_name . '</a></li>';
+                }
+                echo '</ul>';              
+             }
 
 
+            echo '</li>'; 
+
+        }
+        echo '</ul>';                 
+            
+?>
         </div>
       </div>
 </div>
