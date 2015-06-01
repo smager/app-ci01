@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>menu:List</title>
+<title>denomination_ref:List</title>
 <?php
     includeHeader();    
 ?> 
@@ -14,19 +14,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php menu(); ?> 
     
 <div class="container page">
-<form id="frm" action="<?php echo base_url('menu/update');?>" method="post" >
+<form id="frm" action="<?php echo base_url('denomination_ref/update');?>" method="post" >
 <table class="table">    
     <tr>
         <th></th>
-        <th>Seq#</th>
-        <th>Menu</th>
-        <th>URL</th>
-        <th>Type</th>  
-        <th>System</th>
+        <th>Denomination</th>    
     </tr>
 <?php
 
- $q=$this->menu_model->getdata();
+ $q=$this->denomination_ref_model->getdata();
  $d=$q->result();
 
 
@@ -34,13 +30,9 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
 ?>
     <tr>
         
-            <td><input type="hidden" name="p_menu_id[]" value="<?php echo $d[$x]->menu_id; ?>">
-                <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->menu_id  )); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>"seq_no[]",'value'=>$d[$x]->seq_no  )); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>"menu_name[]",'value'=>$d[$x]->menu_name  )); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>"menu_url[]",'value'=>$d[$x]->menu_url  )); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>'menu_type_id[]','value'=>$d[$x]->menu_type_id  )); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>'system_id[]','value'=>$d[$x]->system_id  )); ?> </td>
+            <td><input type="hidden" name="p_denomination_ref_id[]" value="<?php echo $d[$x]->denomination; ?>">
+                <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->denomination_ref_id  )); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"p_denomination[]",'value'=>$d[$x]->denomination  )); ?> </td>
             </td>
     </tr>        
 
@@ -51,13 +43,9 @@ for ($x = 0; $x < 5; $x++) {
 ?>
     <tr>
         
-            <td><input type="hidden" name="p_menu_id[]">
+            <td><input type="hidden" name="p_denomination_ref_id[]">
                 <?php checkbox( array( 'name'=>'select[]')); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>"seq_no[]")); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>'menu_name[]')); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>'menu_url[]')); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>'menu_type_id[]')); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>'system_id[]')); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"p_denomination[]")); ?> </td>
             </td>
     </tr>
     
@@ -70,7 +58,7 @@ for ($x = 0; $x < 5; $x++) {
 <div class="buttonGroup">
 <?php 
     Button(array('name'=>'Save','type'=>'submit'));    
-    Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("menu/delete")  . "');"));        
+    Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("denomination_ref/delete")  . "');"));        
 ?>    
 </div>
 

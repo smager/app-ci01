@@ -130,7 +130,7 @@ function menu(){
             if($q_mi->num_rows() > 0){
                 echo '<ul class="dropdown-menu">'; 
                 foreach($q_mi->result() as $subM){                    
-                     echo '<li><a href="#">' . $subM->menu_name . '</a></li>';
+                     echo '<li><a href="'. $subM->menu_url. '">' . $subM->menu_name . '</a></li>';
                 }
                 echo '</ul>';              
              }

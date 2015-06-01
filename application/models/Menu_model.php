@@ -59,6 +59,7 @@ class menu_model extends CI_Model{
                 $data = array(
                      'menu_name' => $menu_name
                     ,'seq_no' => $post['p_seq_no'][$x]
+                    ,'menu_url' => $post['p_menu_url'][$x]
                     ,'menu_type_id' => $post['p_menu_type_id'][$x]
                     ,'system_id' => $post['p_system_id'][$x]
                 );

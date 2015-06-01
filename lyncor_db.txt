@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `systems` (
 CREATE TABLE IF NOT EXISTS `menu_types` (
   `menu_type_id` int(5) unsigned NOT NULL auto_increment,
   `menu_type` varchar(64) NOT NULL default '',
+  `seq_no` int(5),
   `created_by` int(5),
   `created_date` datetime,
   `updated_by` int(5),
@@ -33,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `menu_types` (
 CREATE TABLE IF NOT EXISTS `menu` (
   `menu_id` int(5) unsigned NOT NULL auto_increment,
   `menu_name` varchar(64) NOT NULL default '',
+  `menu_url` varchar(100) NOT NULL default '',
   `menu_type_id` int(5),
   `system_id` int(5),
   `seq_no` int(5),
@@ -45,38 +47,6 @@ CREATE TABLE IF NOT EXISTS `menu` (
 )
   COMMENT='Menu'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
-
-CREATE TABLE IF NOT EXISTS `proc_types` (
-  `proc_type_id` int(5) unsigned NOT NULL auto_increment,
-  `proc_type` varchar(64) NOT NULL default '',
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
-  PRIMARY KEY  `proc_types_pk`  (`proc_type_id`),
-  UNIQUE KEY  `proc_types_uk` (`proc_type`)
-)
-  COMMENT='Procedure Types'
-  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
-
-CREATE TABLE IF NOT EXISTS `procs` (
-  `proc_id` int(5) unsigned NOT NULL auto_increment,
-  `proc_name` varchar(64) NOT NULL default '',
-  `proc_url` varchar(64) NOT NULL default '',
-  `proc_type_id` int(5), 
-  `menu_default` int(5) NOT NULL default '0',  
-  `menu_id` int(5), 
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
-  PRIMARY KEY `procs_pk`  (`proc_id`),
-  UNIQUE KEY `procs_uk` (`proc_name`)
-)
-  COMMENT='Procedures'
-  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
-
-
 
 CREATE TABLE IF NOT EXISTS `denomination_ref` (
   `denomination`   decimal(5,2),
