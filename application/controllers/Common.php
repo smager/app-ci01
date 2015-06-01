@@ -9,7 +9,7 @@ class common extends CI_Controller {
         
     }    
 
-	public function get_select_data($table,$text,$value)
+	public function get_select_data($table,$text,$value,$condition)
 	{
         $query = $this->db->query("SELECT $text as text, $value as value  FROM $table");        
         

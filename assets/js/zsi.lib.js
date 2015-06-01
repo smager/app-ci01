@@ -373,13 +373,7 @@ zsi.page.DisplayRecordPage   = function(p_page_no,p_rows,p_numrec){
   SelectList("common/get_select_data","#p_vaccine_code","=l_vaccine_code","N","S004_T08005","vaccine_code","vaccine_name","");
 */
 zsi.control.SelectList = function(p_url,p_selector,p_selval,p_req, p_table,p_value,p_text,p_con,p_onLoadComplete){
-   var param ='?';
-
-   param += 'p_table=' + p_table;
-   param += '&p_value_field=' + p_value;
-   param += '&p_display_field=' + p_text;
-   param += '&p_condition=' + p_con;
-
+   var param = p_table + '/' +  p_text + '/' +  p_value + '/' +  p_con ;
    $.getJSON(p_url + param, function( data ) {
       if(p_selector instanceof jQuery)
          p_selector.fillSelect(data,p_selval,p_req,p_onLoadComplete);
