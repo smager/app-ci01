@@ -78,8 +78,7 @@ if ( ! function_exists('inputTextBox'))
 
         if (isset($p["attributes"] ) )  $l_attributes =' ' . $p["attributes"];
 
-        if (isset($p["labelName"])) 
-            $l_label='  <label class="' . $p["labelSize"] .' control-label" >' . $p["labelName"] . '</label>';
+        if (isset($p["labelName"])) $l_label='  <label class="' . $p["labelSize"] .' control-label" >' . $p["labelName"] . '</label>';
 
         echo '<input ' . $l_type . ' class="form-control input-sm ' .  $l_inputclass .  '" id="p_' . $p["name"] . '" name="p_' . $p["name"] . '" ' . $l_inputValue . $l_placeholder . $l_attributes . '>';
 
@@ -87,6 +86,47 @@ if ( ! function_exists('inputTextBox'))
             
     }
 }
+
+
+
+
+
+if ( ! function_exists('selectBox'))
+{    
+    function selectBox($p){
+   	 /*
+       labelName, Name, labelSize , selectSize 
+       , $p["attributes  
+       */
+
+    $default_label_size_type  ='xs';
+    $default_label_size       ='2';
+    $default_input_size       ='10';
+    $default_button_size      ='sm';
+        
+    $l_selectSize=' col-' . $default_label_size_type . '-' . $default_label_size;
+    $l_labelSize =' col-' . $default_label_size_type . '-' . $default_input_size;
+    $l_attributes='';            
+    $l_label='';
+
+    if(isset($p["selectSize"])) $l_selectSize =' col-' . $default_label_size_type . '-' . $p["selectSize"];
+
+    if(isset($p["labelSize"]))  $l_labelSize =' col-' . $default_label_size_type . '-' . $p["labelSize"];
+
+    if(isset($p["attributes"]))  $l_attributes =' ' . $p["attributes"];
+
+    if(isset($p["labelName"]))  $l_label='  <label class="' . $l_labelSize .' control-label" >' . $p["labelName"] . '</label>';
+
+
+    echo $l_label;
+
+    echo ' <select  class="form-control input-sm" id="' . $p["name"] . '" name="' . $p["name"] . '" ' . $l_attributes . '></select>';
+            
+    }
+}
+
+
+
 
 
 if ( ! function_exists('yes_no'))
