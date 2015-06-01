@@ -31,8 +31,8 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
     <tr>
         
             <td><input type="hidden" name="p_denomination_ref_id[]" value="<?php echo $d[$x]->denomination; ?>">
-                <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->denomination_ref_id  )); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>"p_denomination[]",'value'=>$d[$x]->denomination  )); ?> </td>
+                <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->denomination  )); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"denomination[]",'value'=>$d[$x]->denomination  )); ?> </td>
             </td>
     </tr>        
 
@@ -45,7 +45,7 @@ for ($x = 0; $x < 5; $x++) {
         
             <td><input type="hidden" name="p_denomination_ref_id[]">
                 <?php checkbox( array( 'name'=>'select[]')); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>"p_denomination[]")); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"denomination[]")); ?> </td>
             </td>
     </tr>
     
