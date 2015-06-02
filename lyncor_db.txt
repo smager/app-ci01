@@ -168,6 +168,7 @@ CREATE TABLE IF NOT EXISTS `store_loc` (
   `store_loc_id` int(5) unsigned NOT NULL auto_increment,
   `store_loc` varchar(100) NOT NULL default '',
   `store_id` int(5),
+  `active` int(5) NOT NULL default '1', 
   `created_by` int(5),
   `created_date` datetime,
   `updated_by` int(5),
