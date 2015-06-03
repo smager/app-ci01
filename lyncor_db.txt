@@ -267,6 +267,7 @@ CREATE TABLE IF NOT EXISTS `supply_types` (
  
 CREATE TABLE IF NOT EXISTS `supplies` (
   `supply_id`     int(5) unsigned NOT NULL auto_increment,
+  `supply_code`   varchar(10) NOT NULL default '',
   `supply_desc`   varchar(64) NOT NULL default '',
   `supply_type_id` int(5),
   `compute_sales` int(5) NOT NULL default '1',   

@@ -18,9 +18,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <table class="table">    
     <tr>
         <th></th>
-        <th>Supply</th>
+        <th>Code</th>
+        <th>Description</th>
         <th>Type</th>      
-        <th>Compute Sales</th>
+        <th>SRPrice</th>
         
     </tr>
 <?php
@@ -35,9 +36,10 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
         
             <td align="right"><input type="hidden" name="p_supply_id[]" value="<?php echo $d[$x]->supply_id; ?>">
                 <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->supply_id  )); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"supply_code[]",'value'=>$d[$x]->supply_code  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"supply_desc[]",'value'=>$d[$x]->supply_desc  )); ?> </td>
-            <td><?php selectBox( array( 'name'=>'supply_type_id[]','value'=>$d[$x]->store_id,'selectedValue'=>$d[$x]->supply_type_id   )); ?> </td>
-            <td><?php yes_no(array('name'=>'compute_sales[]','mandatory'=>'N','value'=>$d[$x]->active )); ?> </td>
+            <td><?php selectBox( array( 'name'=>'supply_type_id[]','value'=>$d[$x]->supply_type_id,'selectedValue'=>$d[$x]->supply_type_id   )); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"supply_srp[]",'value'=>$d[$x]->supply_srp  )); ?> </td>
     </tr>        
 
 <?php    
@@ -49,9 +51,10 @@ for ($x = 0; $x < 5; $x++) {
         
             <td align="right"><input type="hidden" name="p_supply_id[]">
                 <?php checkbox( array( 'name'=>'select[]')); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"supply_code[]")); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"supply_desc[]")); ?> </td>
             <td><?php selectBox( array( 'name'=>'supply_type_id[]')); ?> </td>
-            <td><?php yes_no(array('name'=>'compute_sales[]','mandatory'=>'N')); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"supply_srp[]")); ?> </td>
     </tr>
     
     

@@ -1,29 +1,27 @@
 <?php
-class supplies_model extends CI_Model{
+class suppliers_model extends CI_Model{
     function __construct() {
         parent::__construct();
 
     }
     
     function getdata(){
-        $query = $this->db->query("SELECT * FROM supplies");
+        $query = $this->db->query("SELECT * FROM suppliers");
         return $query;    
     }
     
     function update($post){
     //print_r($post);
         
-        for ($x = 0; $x < sizeof($post['p_supply_id']); $x++) {
-            $id = $post['p_supply_id'][$x];
-            $supply_code = $post['p_supply_code'][$x];
+        for ($x = 0; $x < sizeof($post['p_supplier_name']); $x++) {
+            $id = $post['p_supplier_id'][$x];
+            $supplier_name = $post['p_supplier_name'][$x];
             
-            if($supply_code !='') {        
+            if($supplier_name !='') {        
 
                 $data = array(
-                     'supply_code' => $supply_code
-                    ,'supply_desc' => $post['p_supply_desc'][$x]
-                    ,'supply_type_id' => $post['p_supply_type_id'][$x]
-                    ,'supply_srp' => $post['p_supply_srp'][$x]
+                     'supplier_name' => $supplier_name
+                     ,'active' => $post['p_active'][$x]
                 );
                 
                 
@@ -32,14 +30,14 @@ class supplies_model extends CI_Model{
                     //insert        
                     $data['created_by'] =1;
                     $this->db->set('created_date', 'NOW()', FALSE);
-                    $this->db->insert('supplies', $data);
+                    $this->db->insert('suppliers', $data);
 
                 }else{
                     //update                        
                     $data['updated_by'] =1;
                     $this->db->set('updated_date', 'NOW()', FALSE);
-                    $this->db->where('supply_id', $id);
-                    $this->db->update('supplies', $data);
+                    $this->db->where('supplier_id', $id);
+                    $this->db->update('suppliers', $data);
                 } 
                 
             }//end of no data 
@@ -52,7 +50,7 @@ class supplies_model extends CI_Model{
     
     function delete($post){        
         $this->load->model('common_model'); 
-        $this->common_model->delete($this->input->post(),"supplies","supply_id");        
+        $this->common_model->delete($this->input->post(),"suppliers","supplier_id");        
     }    
 
 }
