@@ -223,6 +223,34 @@ CREATE TABLE IF NOT EXISTS `suppliers` (
   COMMENT='suppliers'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
+CREATE TABLE IF NOT EXISTS `units` (
+  `unit_id` int(5) unsigned NOT NULL auto_increment,
+  `unit_sdesc` varchar(10) NOT NULL default '',
+  `unit_desc` varchar(64) NOT NULL default '',
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY  `units_pk`  (`unit_id`),
+  UNIQUE KEY  `units_uk` (`unit_desc`)
+)
+  COMMENT='Unit of Measures'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin; 
+
+CREATE TABLE IF NOT EXISTS `conv_units` (
+  `conv_id` int(5) unsigned NOT NULL auto_increment,
+  `from_unit_id` varchar(64) NOT NULL default '',
+  `conv_unit_id` varchar(64) NOT NULL default '',
+  `conv_unit_qty`  decimal(5,2),
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY  `conv_units_pk`  (`conv_id`),
+  UNIQUE KEY  `conv_units_uk` (`from_unit_id`,`conv_unit_id`,`conv_unit_qty` )
+)
+  COMMENT='Unit of Measures Conversions'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin; 
 
 CREATE TABLE IF NOT EXISTS `supply_types` (
   `supply_type_id` int(5) unsigned NOT NULL auto_increment,
@@ -236,8 +264,7 @@ CREATE TABLE IF NOT EXISTS `supply_types` (
 )
   COMMENT='Types of Supply'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin; 
-
-  
+ 
 CREATE TABLE IF NOT EXISTS `supplies` (
   `supply_id`     int(5) unsigned NOT NULL auto_increment,
   `supply_desc`   varchar(64) NOT NULL default '',
