@@ -1,4 +1,4 @@
 <label class="{{labelsize}} control-label">{{caption}}</label>
   <div class="{{inputsize}}">
-  <input class="form-control input-sm" id="{{id}}" name="{{name}}" type="{{type}}" >
+  <input class="form-control input-sm" id="p_{{id}}" name="p_{{name}}" type="{{type}}" >
 </div>

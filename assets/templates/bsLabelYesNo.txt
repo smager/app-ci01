@@ -1,0 +1,12 @@
+<label class="{{labelsize}} control-label">{{caption}}</label>
+ 
+<div class="{{selectsize}}">
+    
+<select name="p_{{id}}" id="p_{{id}}" class="form-control input-sm">
+<option value=""></option>
+<option value="0">No</option>
+<option value="1">Yes</option>
+</select>
+  
+</div>
+
