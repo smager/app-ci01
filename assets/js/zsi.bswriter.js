@@ -38,6 +38,7 @@ zsi.bsWriter = function(config){
 				
 				if(info.labelsize) info.labelsize = "col-" + config.SizeType + "-" + info.labelsize
 				if(info.inputsize) info.inputsize = "col-" + config.SizeType + "-" + info.inputsize
+				if(info.selectsize) info.selectsize = "col-" + config.SizeType + "-" + info.selectsize
 
 				return bsw.__compile(unescape(ts[i].html),info);						
 			}		

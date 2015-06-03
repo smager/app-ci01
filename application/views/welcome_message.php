@@ -47,9 +47,9 @@ var w = new zsi.bsWriter({
 w.write(function(){	
 	this.div({class:"form-horizontal"})
 		.div({class:"form-group"})
-			.bsLabelInput({labelsize:4,caption:"Login Name",inputsize:7,name:"p_name"})
+			.bsLabelInput({labelsize:4,caption:"Login Name",inputsize:7,name:"user_name"})
 		.div({class:"form-group",parentClass:"form-horizontal"})
-			.bsLabelInput({labelsize:4,caption:"Password",inputsize:7,name:"p_pwd",type:"password"})
+			.bsLabelInput({labelsize:4,caption:"Password",inputsize:7,name:"password",type:"password"})
 		.div({class:"buttonGroup col-xs-offset-4",parentClass:"form-horizontal"})
             .bsButton({id:"btnLogin", type:"submit", class:"btn-primary btn-sm",caption:"Login",classicon:"glyphicon glyphicon-log-in" })	
     
@@ -59,6 +59,6 @@ w.write(function(){
  
 </script>        
  
- <script src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>     
+<?php includeFooter(); ?> 
 </body>
 </html>

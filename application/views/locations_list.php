@@ -88,9 +88,6 @@ return false;
 }   
     
 </script>    
-
-    
-
-<script src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>     
+<?php includeFooter(); ?>  
 </body>
 </html>

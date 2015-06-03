@@ -90,6 +90,13 @@ if (strtoupper($p_dgrid) == 'Y') {
 ?>
 
 
+<?php
+if ( ! function_exists('includeFooter')){    
+function includeFooter(){    
+?>
+<script src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>   <?php   
+}}
+?>
 
 
 <?php
@@ -101,7 +108,6 @@ function includeBSWriter(){
 <?php   
 }}
 ?>
-
 
 <?php
 if ( ! function_exists('menu')){    
