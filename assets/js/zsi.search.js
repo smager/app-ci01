@@ -1,7 +1,3 @@
-
-
-
-
 zsi.search =  function(info){
    if(!info.panel) info.panel = {id:"panel", class:"SearchPanel"};
    if(!info.grid) info.grid = {id:"grid", class:"SearchGrid"};       
@@ -11,7 +7,6 @@ zsi.search =  function(info){
    var __OnSelectedItem = info.onSelectedItem;
    var __url = info.url;
    var __columnIndexes = info.column_indexes; 
-
       
    zsi.search.data=null;      
    zsi.search.timer;   
@@ -195,7 +190,6 @@ zsi.search =  function(info){
    }
    
    
-   
    function setTRClickEvent(){
       zsi.search.Grid.find('tbody > tr').each(function(){
           $(this).click(function(){
@@ -216,9 +210,6 @@ zsi.search =  function(info){
  
 
 };
-
-
-
 
 
 function setPanelPosition(obj){
@@ -242,7 +233,6 @@ function showBox(input){
       if(zsi.search.data.rows.length>0) zsi.search.Panel.show(true);
    }               
 }
-
 
 $(document).click(function(event){
    var et=$(event.target); 
