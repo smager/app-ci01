@@ -1,29 +1,27 @@
 <?php
-class store_loc_model extends CI_Model{
+class locations_model extends CI_Model{
     function __construct() {
         parent::__construct();
 
     }
     
     function getdata(){
-        $query = $this->db->query("SELECT * FROM store_loc");
+        $query = $this->db->query("SELECT * FROM locations");
         return $query;    
     }
     
     function update($post){
     //print_r($post);
         
-        for ($x = 0; $x < sizeof($post['p_store_loc']); $x++) {
-            $id = $post['p_store_loc_id'][$x];
-            $acct_no = $post['p_store_loc'][$x];
+        for ($x = 0; $x < sizeof($post['p_location']); $x++) {
+            $id = $post['p_loc_id'][$x];
+            $location = $post['p_location'][$x];
             
-            if($acct_no !='') {        
+            if($location !='') {        
 
                 $data = array(
-                     'store_loc' => $acct_no
-                    ,'loc_id' => $post['p_loc_id'][$x]
-                    ,'store_id' => $post['p_store_id'][$x]
-                    ,'active' => $post['p_active'][$x]
+                     'location' => $location
+
                 );
                 
                 
@@ -32,14 +30,14 @@ class store_loc_model extends CI_Model{
                     //insert        
                     $data['created_by'] =1;
                     $this->db->set('created_date', 'NOW()', FALSE);
-                    $this->db->insert('store_loc', $data);
+                    $this->db->insert('locations', $data);
 
                 }else{
                     //update                        
                     $data['updated_by'] =1;
                     $this->db->set('updated_date', 'NOW()', FALSE);
-                    $this->db->where('store_loc_id', $id);
-                    $this->db->update('store_loc', $data);
+                    $this->db->where('loc_id', $id);
+                    $this->db->update('locations', $data);
                 } 
                 
             }//end of no data 
@@ -52,7 +50,7 @@ class store_loc_model extends CI_Model{
     
     function delete($post){        
         $this->load->model('common_model'); 
-        $this->common_model->delete($this->input->post(),"store_loc","store_loc_id");        
+        $this->common_model->delete($this->input->post(),"locations","loc_id");        
     }    
 
 }

@@ -18,11 +18,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <table class="table">    
     <tr>
         <th></th>
-        <th>Employee Name</th>
+        <th>Employee</th>
         <th>User Name</th>
         <th>Password</th>
         <th>Role</th>
-        <th>Store Location</th>
+        <th>Area</th>
         <th>Active?</th>
     </tr>
 <?php
@@ -35,13 +35,13 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
 ?>
     <tr>
         
-            <td><input type="hidden" name="p_user_id[]" value="<?php echo $d[$x]->user_id; ?>">
+            <td align="right"><input type="hidden" name="p_user_id[]" value="<?php echo $d[$x]->user_id; ?>">
                 <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->user_id  )); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>"empl_name[]",'value'=>$d[$x]->empl_name  )); ?> </td>
+            <td><?php selectBox( array( 'name'=>'empl_id[]','value'=>$d[$x]->empl_id,'selectedValue'=>$d[$x]->empl_id  )); ?> </td>    
             <td><?php inputTextBox( array( 'name'=>"user_name[]",'value'=>$d[$x]->user_name  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"user_password[]",'value'=>$d[$x]->user_password  )); ?> </td>
-            <td><?php selectBox( array( 'name'=>'role_id[]','value'=>$d[$x]->role_id,'selectedValue'=>$d[$x]->role_id  )); ?> </td>        
-            <td><?php selectBox( array( 'name'=>'store_loc_id[]','value'=>$d[$x]->store_loc_id,'selectedValue'=>$d[$x]->store_loc_id  )); ?> </td>        
+            <td><?php selectBox( array( 'name'=>'role_id[]','value'=>$d[$x]->role_id,'selectedValue'=>$d[$x]->role_id  )); ?> </td> 
+            <td><?php selectBox( array( 'name'=>'loc_id[]','value'=>$d[$x]->loc_id,'selectedValue'=>$d[$x]->loc_id  )); ?> </td>         
             <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N','value'=>$d[$x]->active )); ?> </td>
         
     </tr>        
@@ -53,13 +53,13 @@ for ($x = 0; $x < 5; $x++) {
 ?>
     <tr>
         
-            <td><input type="hidden" name="p_user_id[]">
+            <td align="right"><input type="hidden" name="p_user_id[]">
                 <?php checkbox( array( 'name'=>'select[]')); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>"empl_name[]")); ?> </td>
+            <td><?php selectBox( array( 'name'=>'empl_id[]')); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"user_name[]")); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"user_password[]")); ?> </td>
-             <td><?php selectBox( array( 'name'=>'role_id[]')); ?> </td>
-             <td><?php selectBox( array( 'name'=>'store_loc_id[]')); ?> </td>
+            <td><?php selectBox( array( 'name'=>'role_id[]')); ?> </td>
+            <td><?php selectBox( array( 'name'=>'loc_id[]')); ?> </td>
             <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N')); ?> </td>
     </tr>
     
@@ -86,9 +86,9 @@ for ($x = 0; $x < 5; $x++) {
 var ctrlSel = zsi.control.SelectList;  
     
 $(document).ready(function(){
-    
+ctrlSel( base_url + "common/get_select_data","select[name='p_empl_id[]']","","N","employees","empl_id","empl_name","");   
  ctrlSel( base_url + "common/get_select_data","select[name='p_role_id[]']","","N","roles","role_id","role_desc","");
- ctrlSel( base_url + "common/get_select_data","select[name='p_store_loc_id[]']","","N","store_loc","store_loc_id","store_loc","");
+ ctrlSel( base_url + "common/get_select_data","select[name='p_loc_id[]']","","N","locations","loc_id","location","");
 });    
 
     

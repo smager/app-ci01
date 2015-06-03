@@ -120,6 +120,19 @@ CREATE TABLE IF NOT EXISTS `roles` (
   COMMENT='Menus'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
+CREATE TABLE IF NOT EXISTS `positions` (
+  `position_id` int(5) unsigned NOT NULL auto_increment,
+  `position_desc` varchar(64) NOT NULL default '',
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `positions_pk`  (`position_id`),
+  UNIQUE KEY `positions_uk` (`position_desc`)
+)
+  COMMENT='Positions'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
 
 CREATE TABLE IF NOT EXISTS `role_menus` (
   `role_menu_id` int(5) unsigned NOT NULL auto_increment, 
@@ -135,21 +148,18 @@ CREATE TABLE IF NOT EXISTS `role_menus` (
   COMMENT='role_menus'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
-CREATE TABLE IF NOT EXISTS `role_procs` (
-  `role_proc_id` int(5) unsigned NOT NULL auto_increment, 
-  `proc_id` int(5),
-  `role_id` int(5),
-  `allow_write` int(5) NOT NULL default '0',  
+CREATE TABLE IF NOT EXISTS `locations` (
+  `loc_id` int(5) unsigned NOT NULL auto_increment,
+  `location` varchar(100) NOT NULL default '',
   `created_by` int(5),
   `created_date` datetime,
   `updated_by` int(5),
   `updated_date` datetime,
-  PRIMARY KEY `role_procs_pk` (`role_proc_id`),
-  UNIQUE KEY `role_procs_uk` (`role_id`,`proc_id`)
+  PRIMARY KEY `locations_pk`  (`loc_id`),
+  UNIQUE KEY `locations_uk` (`location`)
 )
-  COMMENT='Role Procedure Access'
+  COMMENT='Locations'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
-
 
 CREATE TABLE IF NOT EXISTS `stores` (
   `store_id` int(5) unsigned NOT NULL auto_increment,
@@ -167,6 +177,7 @@ CREATE TABLE IF NOT EXISTS `stores` (
 CREATE TABLE IF NOT EXISTS `store_loc` (
   `store_loc_id` int(5) unsigned NOT NULL auto_increment,
   `store_loc` varchar(100) NOT NULL default '',
+  `loc_id` int(5),
   `store_id` int(5),
   `active` int(5) NOT NULL default '1', 
   `created_by` int(5),
@@ -174,9 +185,25 @@ CREATE TABLE IF NOT EXISTS `store_loc` (
   `updated_by` int(5),
   `updated_date` datetime,
   PRIMARY KEY `store_loc_pk`  (`store_loc_id`),
-  UNIQUE KEY `store_loc_uk` (`store_loc`,`store_id`)
+  UNIQUE KEY `store_loc_uk` (`loc_id`,`store_id`, `store_loc`)
 )
-  COMMENT='store_loc'
+  COMMENT='Store locations'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+CREATE TABLE IF NOT EXISTS `employees` (
+  `empl_id` int(5) unsigned NOT NULL auto_increment,
+  `empl_name` varchar(64) NOT NULL default '',
+  `store_loc_id` int(5),
+  `position_id` int(5),
+  `active` int(5) NOT NULL default '1', 
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `employees_pk` (`empl_id`),
+  UNIQUE KEY `employees_uk` (`empl_name`)
+)
+  COMMENT='Employees'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `users` (
@@ -184,8 +211,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `empl_name` varchar(64) NOT NULL default '',
   `user_password` varchar(64) NOT NULL default'',
   `user_name` varchar(64) NOT NULL default '',
-  `user_password` varchar(64) NOT NULL default '',
   `role_id` int(5),
+  `loc_id` int(5),
   `store_loc_id` int(5),
   `active` int(5) NOT NULL default '1', 
   `created_by` int(5),
