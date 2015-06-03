@@ -7,8 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <title>bank_ref:List</title>
 <?php
     includeHeader();    
-?> 
-    
+?>     
 </head>
 <body>
 <?php menu(); ?> 
@@ -55,7 +54,6 @@ for ($x = 0; $x < 5; $x++) {
             <td><?php inputTextBox( array( 'name'=>'bank_acctname[]')); ?> </td>
             <td><?php inputTextBox( array( 'name'=>'bank_name[]')); ?> </td>
             <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N')); ?> </td>
-            </td>
     </tr>
     
     

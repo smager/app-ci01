@@ -45,7 +45,6 @@ for ($x = 0; $x < 5; $x++) {
             <td><input type="hidden" name="p_store_id[]">
                 <?php checkbox( array( 'name'=>'select[]')); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"store_name[]")); ?> </td>
-            </td>
     </tr>
     
     

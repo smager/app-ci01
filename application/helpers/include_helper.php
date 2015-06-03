@@ -88,13 +88,10 @@ if (strtoupper($p_dgrid) == 'Y') {
 <?php
 }
     
-    
-
 }}
+?>
 
-
-
-
+<?php
 if ( ! function_exists('menu')){    
 function menu(){    
     $ci =& get_instance();
@@ -145,9 +142,6 @@ function menu(){
         </div>
       </div>
 </div>
-
 <?php
-
 }}
-
 ?>
