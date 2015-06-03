@@ -17,6 +17,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div class="col-xs-8">
     <div class="form-horizontal ">
         <?php 
+
+            hiddenBox( array( 'name'=>'store_daily_cash_id'));          
             selectBox( array( 'labelName'=>'Location' , 'name'=>'store_loc_id', 'labelSize'=>1, 'selectSize'=>3));      
             inputTextBox( array( 'labelName'=>'Date' , 'name'=>'date', 'labelSize'=>1, 'inputSize'=>3)); 
             yes_no( array( 'labelName'=>'Posted' , 'name'=>'posted', 'labelSize'=>1, 'selectSize'=>3));      
@@ -39,15 +41,28 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 for ($x = 0; $x < $q->num_rows(); $x++) {
 ?>
     <tr>
-        <td style="text-align: right;padding-right: 5px"><?php echo $d[$x]->denomination; ?> </td>
-        <td ><?php inputTextBox( array( 'name'=>"qty[]")); ?> </td>      
-        <td ><?php inputTextBox( array( 'name'=>"amt[]")); ?> </td>    
+        <td style="text-align: right;padding-right: 5px">
+            <?php 
+            echo $d[$x]->denomination; 
+
+            hiddenBox( array( 'name'=>'store_daily_cash_dtl_id[]'));       
+            hiddenBox( array( 'name'=>'denomination[]','value'=>$d[$x]->denomination));   
+            ?> 
+        </td>
+        <td ><?php inputTextBox( array( 'name'=>"denomination_qty[]")); ?> </td>      
+        <td ><?php inputTextBox( array( 'name'=>"cash_amount[]")); ?> </td>    
     </tr>        
 
 <?php    
 }
 ?>
-</table>       
+</table>
+<div class="buttonGroup">
+<?php 
+    Button(array('name'=>'Save','type'=>'submit'));    
+?>    
+</div>    
+    
 </div>
 </form>    
     

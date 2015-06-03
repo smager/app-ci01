@@ -39,6 +39,16 @@ if ( ! function_exists('toDHTMLXData'))
         }
 }
 
+if ( ! function_exists('hiddenBox'))
+{    
+    function hiddenBox($p){
+        $l_value = '';
+        if(isset($p["value"])) $l_value =' value="' . $p["value"] . '"'; 
+        echo '<input type="hidden" id="p_' . $p["name"] . '" name="p_' . $p["name"] . '" ' . $l_value . '>';        
+    }
+}
+
+
 if ( ! function_exists('inputTextBox'))
 {    
     function inputTextBox($p){
