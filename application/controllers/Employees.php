@@ -22,7 +22,7 @@ class employees extends CI_Controller {
         $chkEnd = ");'' />";    
         $hid = "<input name=''p_sel'' type=''hidden'' />";
         
-        $query = $this->db->query("SELECT concat('$chkStart', s.employee_id,'$chkEnd','$hid') AS a,s.* FROM employees as s");
+        $query = $this->db->query("SELECT concat('$chkStart', s.empl_id,'$chkEnd','$hid') AS a,s.* FROM employees as s");
         $result=toDHTMLXData($query);
         
         $this->output
