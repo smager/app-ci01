@@ -21,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <th>Code</th>
         <th>Description</th>
         <th>Type</th>      
-        <th>SRPrice</th>
+        <th align="right">SRPrice</th>
         
     </tr>
 <?php
@@ -54,7 +54,7 @@ for ($x = 0; $x < 5; $x++) {
             <td><?php inputTextBox( array( 'name'=>"supply_code[]")); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"supply_desc[]")); ?> </td>
             <td><?php selectBox( array( 'name'=>'supply_type_id[]')); ?> </td>
-            <td><?php inputTextBox( array( 'name'=>"supply_srp[]")); ?> </td>
+            <td align="right"><?php inputTextBox( array( 'name'=>"supply_srp[]")); ?> </td>
     </tr>
     
     

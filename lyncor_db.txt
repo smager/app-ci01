@@ -270,13 +270,14 @@ CREATE TABLE IF NOT EXISTS `supplies` (
   `supply_code`   varchar(10) NOT NULL default '',
   `supply_desc`   varchar(64) NOT NULL default '',
   `supply_type_id` int(5),
+  `supply_srp`   decimal(5,2),
   `compute_sales` int(5) NOT NULL default '1',   
   `created_by` int(5),
   `created_date` datetime,
   `updated_by` int(5),
   `updated_date` datetime,
   PRIMARY KEY `supplies_pk`  (`supply_id`),
-  UNIQUE KEY `supplies_uk` (`supply_desc`)
+  UNIQUE KEY `supplies_uk` (`supply_code`)
 )
   COMMENT='supplies'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  

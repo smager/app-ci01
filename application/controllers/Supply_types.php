@@ -38,7 +38,7 @@ class supply_types extends CI_Controller {
     public function update()
 	{
         $this->supply_types_model->update($this->input->post());
-        redirect( base_url("supply_types") );
+         redirect( base_url("supply_types") );
       
 	}    
    
