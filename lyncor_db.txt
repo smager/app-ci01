@@ -59,22 +59,6 @@ CREATE TABLE IF NOT EXISTS `denomination_ref` (
   COMMENT='Money Denomination Reference'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
-   CREATE TABLE IF NOT EXISTS `store_daily_cash_ref` (
-  `store_daily_cash_ref_id`           int(5) unsigned NOT NULL auto_increment,
-  `store_loc_id`                 int(5),
-  `denomination`                          decimal(7,2),
-  `denomination_qty`                                 int(5),
-  `cash_amount`                          decimal(7,2),
-  `created_by`          int(5),
-  `created_date`      datetime,
-  `updated_by`        int(5),
-  `updated_date`     datetime,
-  PRIMARY KEY `store_daily_cash_ref_pk`  (`store_daily_cash_ref_id`),
-  UNIQUE KEY `store_daily_cash_ref_uk` (`store_loc_id`,`denomination`)
-)
-  COMMENT='Store Daily Cash Details'
-  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
-
   CREATE TABLE IF NOT EXISTS `store_daily_cash` (
   `store_daily_cash_id`           int(5) unsigned NOT NULL auto_increment,
   `store_loc_id`                     int(5),
@@ -102,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `denomination_ref` (
   `updated_by`        int(5),
   `updated_date`     datetime,
   PRIMARY KEY `store_daily_cash_dtl_pk`  (`store_daily_cash_dtl_id`),
-  UNIQUE KEY `store_daily_cash_dtl_uk` (`store_daily_cash_id`,`cash_id`)
+  UNIQUE KEY `store_daily_cash_dtl_uk` (`store_daily_cash_id`,`denomination`)
 )
   COMMENT='Store Daily Cash Details'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
