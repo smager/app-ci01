@@ -12,6 +12,7 @@ class Config extends CI_Controller {
 	{
          $result = array(         
              array('name'=>'bsLabelInput','url'=> base_url('assets/templates/bsLabelInput.txt'))
+            ,array('name'=>'bsLabelSelect','url'=>base_url('assets/templates/bsLabelSelect.txt'))
             ,array('name'=>'bsButton','url'=>base_url('assets/templates/bsButton.txt'))
          );
         

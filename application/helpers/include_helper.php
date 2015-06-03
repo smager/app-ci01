@@ -10,9 +10,7 @@ function includeHeader($p_dlayout='N',$p_dwin ='N', $p_dgrid ='N'){
   var base_url ="<?php echo base_url('');?>";
 </script>   
 <script src="<?php echo base_url('assets/js/jquery-1.11.3.min.js');?>"></script>   
-<script src="<?php echo base_url('assets/js/handlebars-v3.0.0.js');?>"></script>   
 <script src="<?php echo base_url('assets/js/zsi.lib.js');?>"></script>   
-<script src="<?php echo base_url('assets/js/zsi.bswriter.js');?>"></script>   
 <link href="<?php echo base_url('assets/css/bootstrap.css');?>" rel="stylesheet">
 <link href="<?php echo base_url('assets/css/bootstrap-theme.min.css');?>" rel="stylesheet">
 <link href="<?php echo base_url('assets/css/zsi_style.css');?>" rel="stylesheet">
@@ -90,6 +88,20 @@ if (strtoupper($p_dgrid) == 'Y') {
     
 }}
 ?>
+
+
+
+
+<?php
+if ( ! function_exists('includeBSWriter')){    
+function includeBSWriter(){    
+?>
+<script src="<?php echo base_url('assets/js/handlebars-v3.0.0.js');?>"></script>   
+<script src="<?php echo base_url('assets/js/zsi.bswriter.js');?>"></script>   
+<?php   
+}}
+?>
+
 
 <?php
 if ( ! function_exists('menu')){    

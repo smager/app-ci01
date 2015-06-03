@@ -35,6 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="login-form">  </div>
     </div>
 </div>
+<?php includeBSWriter(); ?>    
 <script>
 var w = new zsi.bsWriter({
          hasNoConfigFile:false
