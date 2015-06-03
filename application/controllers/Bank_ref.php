@@ -24,14 +24,7 @@ class bank_ref extends CI_Controller {
         
         $query = $this->db->query("SELECT concat('$chkStart', s.snippet_id,'$chkEnd','$hid') AS a,s.* FROM bank_ref as s");
         $result=toDHTMLXData($query);
-        
-        $this->output
-        ->set_status_header(200)
-        ->set_content_type('application/json', 'utf-8')
-        ->set_output(json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))
-        ->_display();
-
-        exit;    
+        jsonOut($result);  
     }
     
     

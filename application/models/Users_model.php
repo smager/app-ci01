@@ -10,6 +10,15 @@ class users_model extends CI_Model{
         return $query;    
     }
     
+    function authenticate($p){
+        $str = "SELECT count(*) as value FROM users WHERE lower(user_name)=lower('" . $p["p_login"] . "') and user_password='"  . $p["p_pwd"] . "'";        
+        $query = $this->db->query($str);         
+        $result =false;
+        if ($query->row()->value > 0 )  $result = true;
+        return $result;
+    }
+    
+    
     function update($post){
     //print_r($post);
         

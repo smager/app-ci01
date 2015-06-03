@@ -99,23 +99,36 @@ if ( ! function_exists('inputTextBox'))
 }
 
 
-if ( ! function_exists('OpenFormGroup'))
+if ( ! function_exists('openFormGroup'))
 {    
-    function OpenFormGroup($p_additional_class=''   ){
+    function openFormGroup($p_additional_class=''   ){
       $l_additional_class ='';
       if(isset($p_additional_class)) $l_additional_class = ' ' . $p_additional_class;
       echo "<div class='form-group $l_additional_class'>";            
     }
 }
 
-if ( ! function_exists('CloseFormGroup'))
+if ( ! function_exists('closeFormGroup'))
 {    
-    function CloseFormGroup(){
+    function closeFormGroup(){
        echo '</div>';            
     }
 }
 
 
+
+if ( ! function_exists('jsonOut'))
+{    
+    function jsonOut($p){
+        $ci =& get_instance();
+        $ci->output
+        ->set_status_header(200)
+        ->set_content_type('application/json', 'utf-8')
+        ->set_output(json_encode($p, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))
+        ->_display();
+        exit; 
+    }
+}
 
 
 
@@ -310,9 +323,6 @@ if ( ! function_exists('Button'))
 }
 
 
-
-
-
 if ( ! function_exists('GetIcon'))
 {    
    function GetIcon($name){
@@ -338,7 +348,10 @@ if ( ! function_exists('GetIcon'))
       if( strtoupper($name)=='RESET' ){
             $l_text= $l_icon .  'retweet"></span> ';
       }
-
+      if( strtoupper($name)=='LOGIN' ){
+            $l_text= $l_icon .  'log-in"></span> ';
+      }
+       
       return $l_text;
 
    }

@@ -32,31 +32,41 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <div class="login-panel col-md-12">
         <h1>LynCor  </h1>
         <h2>Sales Inventory Monitoring System</h2>
-        <div class="login-form">  </div>
+        <form class="login-form">  
+            <div class="form-horizontal">
+                <?php 
+                    openFormGroup(); 
+                       inputTextBox( array( 'labelName'=>'Login Name' , 'name'=>'login', 'labelSize'=>4, 'inputSize'=>7)); 
+                    closeFormGroup(); 
+                    openFormGroup(); 
+                       inputTextBox( array( 'labelName'=>'Password' , 'name'=>'pwd', 'labelSize'=>4, 'inputSize'=>7, 'type'=>'password')); 
+                    closeFormGroup(); 
+                ?>
+                <div class="buttonGroup col-xs-offset-4">
+                <?php 
+                    Button(array('name'=>'Login','type'=>'button'));    
+                ?>    
+                </div>            
+            </div>
+        
+        </form>
     </div>
 </div>
-<?php includeBSWriter(); ?>    
 <script>
-var w = new zsi.bsWriter({
-         hasNoConfigFile:false
-	     ,url:"<?php echo base_url("config"); ?>"
-		,targetClass:"login-form"
-		,SizeType:"xs"
-});
 
-w.write(function(){	
-	this.div({class:"form-horizontal"})
-		.div({class:"form-group"})
-			.bsLabelInput({labelsize:4,caption:"Login Name",inputsize:7,name:"user_name"})
-		.div({class:"form-group",parentClass:"form-horizontal"})
-			.bsLabelInput({labelsize:4,caption:"Password",inputsize:7,name:"password",type:"password"})
-		.div({class:"buttonGroup col-xs-offset-4",parentClass:"form-horizontal"})
-            .bsButton({id:"btnLogin", type:"submit", class:"btn-primary btn-sm",caption:"Login",classicon:"glyphicon glyphicon-log-in" })	
+$("#btnLogin").click(function(){
+    var param = $(".login-form").serializeArray();
+  
+    $.post("users/login" , param, function(d){
+       console.log(d);
+    }).fail(function(d) {
+       alert("Sorry, login is not successfull.");
+    });
+      
+                     
     
-	.end();	
-
-});
- 
+});    
+    
 </script>        
  
 <?php includeFooter(); ?> 

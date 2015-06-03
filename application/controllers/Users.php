@@ -15,6 +15,14 @@ class users extends CI_Controller {
 		$this->load->view('users_list');
 	}
     
+	public function login()
+	{
+
+        $isSuccess = $this->users_model->authenticate($this->input->post());
+        $result ='{"value":false}';
+        if ($isSuccess==true )  $result  = '{"value":true}';
+        jsonOut($result);
+	}    
     
     
     public function getjson(){    
@@ -24,14 +32,7 @@ class users extends CI_Controller {
         
         $query = $this->db->query("SELECT concat('$chkStart', s.user_id,'$chkEnd','$hid') AS a,s.* FROM users as s");
         $result=toDHTMLXData($query);
-        
-        $this->output
-        ->set_status_header(200)
-        ->set_content_type('application/json', 'utf-8')
-        ->set_output(json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))
-        ->_display();
-
-        exit;    
+        jsonOut($result);
     }
     
     

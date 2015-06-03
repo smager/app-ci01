@@ -7,7 +7,7 @@ class Welcome extends CI_Controller {
         $this->load->database();
         $this->load->model('menu_model'); 
         $this->load->model('menu_types_model');       
-        $this->load->helper(array('url','include'));
+        $this->load->helper(array('url','include','zsi'));
     }    
 	public function index()
 	{
