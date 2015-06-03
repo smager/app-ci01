@@ -316,23 +316,36 @@ CREATE TABLE IF NOT EXISTS `supplies` (
   COMMENT='Supplier supplies delivery details'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
-  
- CREATE TABLE IF NOT EXISTS `store_supply_ref` (
-  `store_supply_ref_id` int(5) unsigned NOT NULL auto_increment,
+ CREATE TABLE IF NOT EXISTS `store_supplies` (
+  `store_supply_id` int(5) unsigned NOT NULL auto_increment,
+  `store_id` int(5),
+  `supply_id`    int(5),
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `store_supplies_pk`  (`store_supply_id`),
+  UNIQUE KEY `store_supplies_uk` (`store_id`,`supply_id`)
+)
+  COMMENT='Store supplies reference'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;     
+
+
+ CREATE TABLE IF NOT EXISTS `store_loc_supply_ref` (
+  `store_loc_supply_ref_id` int(5) unsigned NOT NULL auto_increment,
   `store_loc_id` int(5),
   `supply_id`    int(5),
   `supply_qty`   decimal(5,2),
   `unit_id`      int(5),
-  `supply_srp`   decimal(5,2),
   `stock_qty`    decimal(5,2),
   `created_by` int(5),
   `created_date` datetime,
   `updated_by` int(5),
   `updated_date` datetime,
-  PRIMARY KEY `store_supply_ref_pk`  (`store_supply_ref_id`),
-  UNIQUE KEY `store_supply_ref_uk` (`store_loc_id`,`supply_id`)
+  PRIMARY KEY `store_loc_supply_ref_pk`  (`store_loc_supply_ref_id`),
+  UNIQUE KEY `store_loc_supply_ref_uk` (`store_loc_id`,`supply_id`)
 )
-  COMMENT='Store supplies reference'
+  COMMENT='Store Location Supplies reference'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
   
  
