@@ -207,12 +207,12 @@ if ( ! function_exists('yes_no'))
                 echo '<option value="1" selected>Yes</option>';
                 echo '<option value="0">No</option>';
             }else{
-                echo '<option value="1">Yes</option>';
                 echo '<option value="0" selected>No</option>';
+                echo '<option value="1">Yes</option>';
             }
         }else{
-            echo '<option value="1">Yes</option>';
             echo '<option value="0">No</option>';
+            echo '<option value="1">Yes</option>';
         }
 
         echo '</SELECT>';
