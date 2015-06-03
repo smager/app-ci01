@@ -40,7 +40,6 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
             <td><?php inputTextBox( array( 'name'=>'bank_acctname[]','value'=>$d[$x]->bank_acctname  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>'bank_name[]','value'=>$d[$x]->bank_name  )); ?> </td>
             <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N','value'=>$d[$x]->active )); ?> </td>
-            </td>
     </tr>        
 
 <?php    

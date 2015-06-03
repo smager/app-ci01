@@ -35,7 +35,6 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
                 <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->menu_type_id  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"seq_no[]",'value'=>$d[$x]->seq_no  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"menu_type[]",'value'=>$d[$x]->menu_type  )); ?> </td>
-           </td>
     </tr>        
 
 <?php    
@@ -49,7 +48,6 @@ for ($x = 0; $x < 5; $x++) {
                 <?php checkbox( array( 'name'=>'select[]')); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"seq_no[]")); ?> </td>
             <td><?php inputTextBox( array( 'name'=>'menu_type[]')); ?> </td>
-            </td>
     </tr>
     
     

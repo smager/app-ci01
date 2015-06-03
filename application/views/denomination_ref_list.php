@@ -33,7 +33,6 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
             <td><input type="hidden" name="p_denomination_ref_id[]" value="<?php echo $d[$x]->denomination; ?>">
                 <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->denomination  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"denomination[]",'value'=>$d[$x]->denomination  )); ?> </td>
-            </td>
     </tr>        
 
 <?php    

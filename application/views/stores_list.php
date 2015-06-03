@@ -33,7 +33,6 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
             <td><input type="hidden" name="p_store_id[]" value="<?php echo $d[$x]->store_id; ?>">
                 <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->store_id  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"store_name[]",'value'=>$d[$x]->store_name  )); ?> </td>
-            </td>
     </tr>        
 
 <?php    

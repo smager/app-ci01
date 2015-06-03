@@ -33,7 +33,6 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
             <td><input type="hidden" name="p_role_id[]" value="<?php echo $d[$x]->role_id; ?>">
                 <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->role_id  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"role_desc[]",'value'=>$d[$x]->role_desc  )); ?> </td>
-            </td>
     </tr>        
 
 <?php    
@@ -46,7 +45,6 @@ for ($x = 0; $x < 5; $x++) {
             <td><input type="hidden" name="p_role_id[]">
                 <?php checkbox( array( 'name'=>'select[]')); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"role_desc[]")); ?> </td>
-            </td>
     </tr>
     
     
