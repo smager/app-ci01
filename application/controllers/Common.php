@@ -12,7 +12,7 @@ class common extends CI_Controller {
 	public function get_select_data($table,$text,$value,$condition='')
 	{
         $query = $this->db->query("SELECT $text as text, $value as value  FROM $table");        
-        
+
         $this->output
         ->set_status_header(200)
         ->set_content_type('application/json', 'utf-8')
@@ -22,5 +22,20 @@ class common extends CI_Controller {
         exit;            
         
     }
+
     
+	public function checkDataExist($table,$field,$value)
+	{
+        $str = "SELECT count(*) as value FROM $table WHERE lower($field)=lower('$value')";
+        $query = $this->db->query($str);         
+        $result ='{"exist":false}';
+        if ($query->row()->value > 0 )  $result  = '{"exist":true}';
+
+        $this->output
+        ->set_status_header(200)
+        ->set_content_type('application/json', 'utf-8')
+        ->set_output($result)
+        ->_display();
+        exit;
+    }
 }

@@ -767,7 +767,7 @@ zsi.json.groupByColumnIndex = function(data,column_index){
 }  
 
 
-zsi.json.checkValueExist = function(p_target,p_table, p_field){  
+zsi.json.checkValueExist = function(p_url, p_target,p_table, p_field){  
    $(p_target).keyup(function(){
       var l_obj=this;
       if($.trim(this.value)==""){
@@ -775,11 +775,10 @@ zsi.json.checkValueExist = function(p_target,p_table, p_field){
          return false;
       }
       var l_value=$.trim(this.value);
-      l_value = "'" + escape(l_value.toLowerCase()) + "'"; 
       if(zsi.timer) clearTimeout(zsi.timer);
       zsi.timer = setTimeout(function(){              
          $(l_obj).addClass("loadIconR" );
-         $.getJSON("zsi_lib.value_exist?p_table=" + p_table + "&p_condition=lower("+ p_field +")=" +  l_value
+         $.getJSON(p_url + "/" + p_table + "/" +  p_field + "/" +  l_value
             , function(data) {
                   $(l_obj).removeClass("loadIconR" );
                   if(data.exist){

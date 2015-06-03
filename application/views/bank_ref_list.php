@@ -79,6 +79,9 @@ for ($x = 0; $x < 5; $x++) {
 
 <script type="text/javascript">
 
+ zsi.json.checkValueExist(base_url + "common/checkdataexist", "input[name='p_bank_acctno[]']","bank_ref","bank_acctno"); 
+    
+    
 function checkDelete(l_cmd) {
    var l_stmt=[], l_count;
     
