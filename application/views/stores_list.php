@@ -30,10 +30,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 for ($x = 0; $x < $q->num_rows(); $x++) {
     $ssq=$this->store_supplies_model->getdata($d[$x]->store_id);
     $ssd=$ssq->result();  
-   
-    $l_supplies;                                       
+
+    $l_supplies = '';  
+    $l_br = '<br />';
     for ($y = 0; $y < $ssq->num_rows(); $y++) { 
-        $l_supplies = $l_supplies . "<br/>" . $ssd[$y]->supply_desc;
+        $l_supplies = $l_supplies . $l_br . $ssd[$y]->supply_code;
+        $l_br = '<br />';
     }
 ?>
     <tr>
@@ -41,7 +43,7 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
             <td><input type="hidden" name="p_store_id[]" value="<?php echo $d[$x]->store_id; ?>">
                 <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->store_id  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"store_name[]",'value'=>$d[$x]->store_name  )); ?> </td>
-            <td><?php $l_supplies; ?></td>
+            <td><a href>Add/Remove Supplies</a><?php echo $l_supplies; ?></td>
         
     </tr>        
 

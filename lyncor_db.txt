@@ -563,3 +563,8 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
 )
   COMMENT='Store Bank Withdrawal Summary'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+CREATE OR REPLACE VIEW store_supplies_v AS
+select a.*, b.supply_desc
+from store_supplies a, supplies b
+WHERE a.supply_id = b.supply_id;

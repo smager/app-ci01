@@ -5,7 +5,7 @@ class stores extends CI_Controller {
     function __construct() {
         parent::__construct();
         $this->load->database();
-        $this->load->model('stores_model'); 
+        $this->load->model(array('stores_model','store_supplies_model')); 
         $this->load->helper(array('url','zsi','include'));
     }
     
