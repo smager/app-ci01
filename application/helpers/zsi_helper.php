@@ -207,9 +207,9 @@ if ( ! function_exists('yes_no'))
         }
        
         
-        if(isset($p["label_size"]) ) $l_label_size =' col-' . $l_default_label_size_type . '-' . p_label_size;
-        if(isset($p["select_size"]) ) $l_select_size ='col-' . $l_default_label_size_type . '-' . p_select_size;
-        if(isset($p["label_name"]) ) $l_label ='<label class="' . $l_label_size .' control-label" >' . p_label_name . '</label>';
+        if(isset($p["labelSize"]) ) $l_label_size =' col-' . $default_label_size_type . '-' . $p["labelSize"];
+        if(isset($p["selectSize"]) ) $l_select_size ='col-' . $default_label_size_type . '-' . $p["selectSize"];
+        if(isset($p["labelName"]) ) $l_label ='<label class="' . $l_label_size .' control-label" >' . $p["labelName"] . '</label>';
 
         $l_name = $p["name"];
         if(isset($p["attributes"]) )    $l_attributes   =$p["attributes"];

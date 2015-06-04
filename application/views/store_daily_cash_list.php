@@ -14,18 +14,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     
 <div class="container page">
 <form id="frm" action="<?php echo base_url('store_daily_cash/update');?>" method="post" >
-<div class="col-xs-8">
+<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
     <div class="form-horizontal ">
         <?php 
 
-            hiddenBox( array( 'name'=>'store_daily_cash_id'));          
+            hiddenBox( array( 'name'=>'store_daily_cash_id'));         
+            openFormGroup();
             selectBox( array( 'labelName'=>'Location' , 'name'=>'store_loc_id', 'labelSize'=>1, 'selectSize'=>3));      
             inputTextBox( array( 'labelName'=>'Date' , 'name'=>'tran_date', 'labelSize'=>1, 'inputSize'=>3)); 
             yes_no( array( 'labelName'=>'Posted' , 'name'=>'posted', 'labelSize'=>1, 'selectSize'=>3));      
+            closeFormGroup();
+
         ?> 
     </div>
 </div>    
-<div class="col-xs-8">    
+<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">    
 <table id="tblStoreDailyCash" class="table row" >    
     <tr>
         <th width="40" >Denomination</th>    
