@@ -8,11 +8,13 @@
    zsi.calendar      = {};
    zsi.url           = {};
    zsi.json          = {};    
-/* -------------------------------*/
 
+/* Prototypes */
+Date.prototype.isValid = function () {
+    return this.getTime() === this.getTime();
+};  
 
 /* Page Initialization */
-
 
 $(document).ready(function(){
 
