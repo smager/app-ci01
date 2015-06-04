@@ -260,7 +260,7 @@ CREATE TABLE IF NOT EXISTS `supply_types` (
   `updated_by` int(5),
   `updated_date` datetime,
   PRIMARY KEY  `supply_types_pk`  (`supply_type_id`),
-  UNIQUE KEY  `supply_types_uk` (`supplyc_type`)
+  UNIQUE KEY  `supply_types_uk` (`supply_type`)
 )
   COMMENT='Types of Supply'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin; 
