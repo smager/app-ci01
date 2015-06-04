@@ -15,10 +15,23 @@ class store_daily_cash extends CI_Controller {
   
 		$this->load->view('store_daily_cash_list');
 	}
+
+    public function get_json()
+	{  
+        $store_loc_id = $this->input->get("store_loc_id");
+        $tran_date = $this->input->get("tran_date");
+        jsonOut($this->store_daily_cash_model->getdata($store_loc_id,$tran_date)->result());
+      
+	}   
+    
+    public function get_detail_json($store_daily_cash_id)
+	{
+        jsonOut($this->store_daily_cash_model->getdata_detail($store_daily_cash_id)->result());
+      
+	}       
     
     
-    
-    public function getjson(){    
+    public function getdhtmlxjson(){    
         $chkStart = "<input type=''checkbox'' onclick=''zsi.table.setCheckBox(this,";
         $chkEnd = ");'' />";    
         $hid = "<input name=''p_sel'' type=''hidden'' />";
@@ -34,14 +47,5 @@ class store_daily_cash extends CI_Controller {
 	{
         $this->store_daily_cash_model->update($this->input->post());
         redirect( base_url("store_daily_cash") );
-      
 	}    
-   
-
-    public function delete()
-	{
-        
-        $this->store_daily_cash_model->delete($this->input->post());
-	}   
-    
 }

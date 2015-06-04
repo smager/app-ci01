@@ -15,9 +15,14 @@ class denomination_ref extends CI_Controller {
 		$this->load->view('denomination_ref_list');
 	}
     
+    public function get_json(){
+    
+        jsonOut($this->denomination_ref_model->getdata()->result());
+    }    
     
     
-    public function getjson(){    
+    
+    public function get_dhtmlx_json(){    
         $chkStart = "<input type=''checkbox'' onclick=''zsi.table.setCheckBox(this,";
         $chkEnd = ");'' />";    
         $hid = "<input name=''p_sel'' type=''hidden'' />";
