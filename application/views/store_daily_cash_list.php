@@ -7,7 +7,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <title>Store Daily Cash </title>
 <?php
     includeHeader();    
-?>     
+?>
+    
+<style>
+table tr#total td{
+    font-size:13px;
+}
+table tr#total td#totalTitle{
+    font-weight: bold;
+    text-align:right;
+    padding-right:10px;
+}
+
+#tblStoreDailyCash tr#total {
+    background-color: #dfecfa;
+}    
+    
+    
+    
+</style>    
 </head>
 <body>
 <?php menu(); ?> 
@@ -54,8 +72,36 @@ var p_store_daily_cash_id = $("#p_store_daily_cash_id");
 var p_store_loc_id        = $("#p_store_loc_id");
 var p_tran_date           = $("#p_tran_date"); 
 var l_timer;    
+
+
+function setChangeEvent(){    
+    var l_summaryTR = "<tr id='total'><td id='totalTitle' colspan='2'>Total = </td><td ><label id='lblSum'>0.00</label></td></tr>";
+     $("#tblStoreDailyCash").append(l_summaryTR);
+    computeTotal();
     
+    $("input[name='p_denomination_qty[]']").keyup(function(){
+        
+        var l_denomination = $(this.parentNode).prev().children("input[name='p_denomination[]']");
+        var l_tdAmount =$(this.parentNode).next();     
+        var l_amount = l_tdAmount.children("input[name='p_cash_amount[]']");
+        var l_lblamount = l_tdAmount.children("label");
+        var l_result =  this.value * l_denomination.val();
+        l_amount.val(l_result);
+        l_lblamount.text(l_result.toFixed(2));
+        computeTotal();
+    });
+}
     
+function computeTotal(){
+    var l_total=0;
+    $("input[name='p_cash_amount[]']").each(function(){
+        l_total  = (l_total + parseFloat(this.value)); 
+    });
+    
+    $("#lblSum").text(l_total.toFixed(2));
+}    
+    
+
 p_store_loc_id.change(function(){    
     if(this.value!='' && new Date(p_tran_date.val()).isValid()){    
         getStoreDailyCashData();
@@ -108,40 +154,42 @@ function getStoreDailyCashData(){
     );
         
 }
-            
+
     
 function getDenominationData(){ 
     p_store_daily_cash_id.val('');    
-    zsi.json.loadGrid(
-         "#tblStoreDailyCash"
-        ,base_url + "denomination_ref/get_json"
-        ,[ 
+    zsi.json.loadGrid({
+         table  : "#tblStoreDailyCash"
+        ,url    : base_url + "denomination_ref/get_json"
+        ,td_body: [ 
             function(d){
                 return '<input name="p_store_daily_cash_dtl_id[]" type="hidden">' 
                 + '<input name="p_denomination[]" value="' + d.denomination + '" type="hidden">' 
-                +  d.denomination                         
+                +  d.denomination;                         
             }
             ,function(d){
-                return '<input type="text" name="p_denomination_qty[]"  class="form-control input-sm ">'
+                return '<input type="text" name="p_denomination_qty[]"  class="form-control input-sm ">';
             }
             ,function(d){
-                return '<input type="text" name="p_cash_amount[]" class="form-control input-sm ">'
+                return '<input type="hidden" name="p_cash_amount[]" class="form-control input-sm "><label></label>';                         
+                
             }
         ]
-        ,
-        [
+        ,td_properties:[
             "style='text-align: right;padding-right: 5px'"    
-        ]
-                 
-    );
+        ]   
+        ,onComplete : function(){
+            setChangeEvent(); 
+        }
+    });
 }
     
  
 function getStoreDailyCashDetailData(){    
-    zsi.json.loadGrid(
-         "#tblStoreDailyCash"
-        ,base_url + "store_daily_cash/get_detail_json/" + p_store_daily_cash_id.val()
-        ,[ 
+    zsi.json.loadGrid({
+         table  :"#tblStoreDailyCash"
+        ,url    :base_url + "store_daily_cash/get_detail_json/" + p_store_daily_cash_id.val()
+        ,td_body:[ 
             function(d){
                 return '<input name="p_store_daily_cash_dtl_id[]" value="' + d.store_daily_cash_dtl_id + '" type="hidden">'
                 + '<input name="p_denomination[]" value="' + d.denomination + '" type="hidden">'                          
@@ -151,17 +199,20 @@ function getStoreDailyCashDetailData(){
                 return '<input type="text" name="p_denomination_qty[]" value="' + d.denomination_qty + '" class="form-control input-sm ">';                                                    
             }
             ,function(d){
-                return '<input type="text" name="p_cash_amount[]"  value="' + d.cash_amount + '" class="form-control input-sm ">';                                                    
+                return '<input type="hidden" name="p_cash_amount[]"  value="' + d.cash_amount + '" class="form-control input-sm" >'                                                    
+                +  '<label>' + d.cash_amount + '</label>';                         
             }
         ]
-        ,[
-            "style='text-align: right;padding-right: 5px'"   
+        ,td_properties:[
+                        "style='text-align: right;padding-right: 5px'"   
         ]
+        ,onComplete : function(){
+            setChangeEvent(); 
+        }
                  
-    );    
+    });    
 }
     
-
     
 $(document).ready(function(){
  ctrlSel( base_url + "common/get_select_data","select[name='p_store_loc_id']","","N","store_loc","store_loc_id","store_loc","");

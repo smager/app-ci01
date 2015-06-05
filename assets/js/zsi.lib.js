@@ -814,33 +814,29 @@ zsi.json.checkValueExist = function(p_url, p_target,p_table, p_field){
    }
 }
      
-zsi.json.loadGrid = function(){  
-    var l_table         = arguments[0];
-    var l_url           = arguments[1];
-    var l_td_body       = arguments[2];
-    var l_td_properties = arguments[3];
-    
-    var l_grid = $(l_table);
+zsi.json.loadGrid = function(o){           
+    var l_grid = $(o.table);
     l_grid.clearGrid();        
-    $.getJSON(l_url
+    $.getJSON(o.url
            ,function(data){
                  $.each(data, function () {
                     var r = ""
                     r +="<tr>";
-                        for(var x=0;x<l_td_body.length;x++){
+                        for(var x=0;x<o.td_body.length;x++){
                             var l_prop='';
-                            if (typeof l_td_properties !== "undefined"){
-                                if (typeof l_td_properties[x] !== "undefined") l_prop = l_td_properties[x]; 
+                            if (typeof o.td_properties !== "undefined"){
+                                if (typeof o.td_properties[x] !== "undefined") l_prop = o.td_properties[x]; 
                             } 
-                            r +="<td " + l_prop + " >" + l_td_body[x](this) + "</td>";                                                         
+                            r +="<td " + l_prop + " >" + o.td_body[x](this) + "</td>";                                                         
                         }
                     r +="</tr>";                         
 
                      l_grid.append(r);
                  });
+                if(o.onComplete) o.onComplete();
             }
     );    
-}    
+}
 
 /*----[ extended-JQuery Function ]--------------------------------------------------------------*/
 
