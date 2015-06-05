@@ -22,7 +22,7 @@ table tr#total td#totalTitle{
 #tblStoreDailyCash tr#total {
     background-color: #dfecfa;
 }    
-    
+  
     
     
 </style>    
@@ -75,7 +75,7 @@ var l_timer;
 
 
 function setChangeEvent(){    
-    var l_summaryTR = "<tr id='total'><td id='totalTitle' colspan='2'>Total = </td><td ><label id='lblSum'>0.00</label></td></tr>";
+    var l_summaryTR = "<tr id='total'><td id='totalTitle' colspan='2'>Total = </td><td style='text-align: right;padding-right: 10px'><label id='lblSum'>0.00</label></td></tr>";
      $("#tblStoreDailyCash").append(l_summaryTR);
     computeTotal();
     
@@ -95,7 +95,7 @@ function setChangeEvent(){
 function computeTotal(){
     var l_total=0;
     $("input[name='p_cash_amount[]']").each(function(){
-        l_total  = (l_total + parseFloat(this.value)); 
+        if(this.value) l_total  = (l_total + parseFloat(this.value)); 
     });
     
     $("#lblSum").text(l_total.toFixed(2));
@@ -171,12 +171,14 @@ function getDenominationData(){
                 return '<input type="text" name="p_denomination_qty[]"  class="form-control input-sm ">';
             }
             ,function(d){
-                return '<input type="hidden" name="p_cash_amount[]" class="form-control input-sm "><label></label>';                         
+                return '<input type="hidden" name="p_cash_amount[]" class="form-control input-sm "><label class="lblAmt"></label>';                         
                 
             }
         ]
         ,td_properties:[
-            "style='text-align: right;padding-right: 5px'"    
+            "style='text-align: right;padding-right: 5px'"   
+            ,""   
+            ,"style='text-align: right;padding-right: 10px'"               
         ]   
         ,onComplete : function(){
             setChangeEvent(); 
@@ -200,11 +202,13 @@ function getStoreDailyCashDetailData(){
             }
             ,function(d){
                 return '<input type="hidden" name="p_cash_amount[]"  value="' + d.cash_amount + '" class="form-control input-sm" >'                                                    
-                +  '<label>' + d.cash_amount + '</label>';                         
+                +  '<label class="lblAmt">' + d.cash_amount + '</label>';                         
             }
         ]
         ,td_properties:[
-                        "style='text-align: right;padding-right: 5px'"   
+            "style='text-align: right;padding-right: 5px'"   
+            ,""   
+            ,"style='text-align: right;padding-right: 10px'"   
         ]
         ,onComplete : function(){
             setChangeEvent(); 
