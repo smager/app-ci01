@@ -48,7 +48,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     
 </div>    
 <script type="text/javascript">
-
+var ctrlSel = zsi.control.SelectList;
+    
 var p_store_daily_cash_id = $("#p_store_daily_cash_id");
 var p_store_loc_id        = $("#p_store_loc_id");
 var p_tran_date           = $("#p_tran_date"); 
@@ -107,74 +108,60 @@ function getStoreDailyCashData(){
     );
         
 }
+            
     
+function getDenominationData(){ 
+    p_store_daily_cash_id.val('');    
+    zsi.json.loadGrid(
+         "#tblStoreDailyCash"
+        ,base_url + "denomination_ref/get_json"
+        ,[ 
+            function(d){
+                return '<input name="p_store_daily_cash_dtl_id[]" type="hidden">' 
+                + '<input name="p_denomination[]" value="' + d.denomination + '" type="hidden">' 
+                +  d.denomination                         
+            }
+            ,function(d){
+                return '<input type="text" name="p_denomination_qty[]"  class="form-control input-sm ">'
+            }
+            ,function(d){
+                return '<input type="text" name="p_cash_amount[]" class="form-control input-sm ">'
+            }
+        ]
+        ,
+        [
+            "style='text-align: right;padding-right: 5px'"    
+        ]
+                 
+    );
+}
     
-function getDenominationData(){        
-        p_store_daily_cash_id.val('');
-        var jsonGrid = $("#tblStoreDailyCash");
-        jsonGrid.clearGrid();        
-        $.getJSON(base_url + "denomination_ref/get_json"
-               ,function(d){
-                     $.each(d, function () {
-                        var r = ""
-                        r +="<tr>";
-                            r +="<td style='text-align: right;padding-right: 5px'>";
-                         
-                                r +='<input name="p_store_daily_cash_dtl_id[]" type="hidden">';
-                                r +='<input name="p_denomination[]" value="' + this.denomination + '" type="hidden">';                          
-                                r +="" +  this.denomination;
-                            r +="</td>";
-                            r +="<td >";
-                                r +='<input type="text" name="p_denomination_qty[]"  class="form-control input-sm ">';                                    
-                            r +="</td>";
-                            r +="<td >";
-                                r +='<input type="text" name="p_cash_amount[]" class="form-control input-sm ">';                                    
-                            r +="</td>";
-                        r +="</tr>";                         
-                     
-                         jsonGrid.append(r);
-                     });
-                         
-                }
-        );
+ 
+function getStoreDailyCashDetailData(){    
+    zsi.json.loadGrid(
+         "#tblStoreDailyCash"
+        ,base_url + "store_daily_cash/get_detail_json/" + p_store_daily_cash_id.val()
+        ,[ 
+            function(d){
+                return '<input name="p_store_daily_cash_dtl_id[]" value="' + d.store_daily_cash_dtl_id + '" type="hidden">'
+                + '<input name="p_denomination[]" value="' + d.denomination + '" type="hidden">'                          
+                +  d.denomination;                
+            }
+            ,function(d){
+                return '<input type="text" name="p_denomination_qty[]" value="' + d.denomination_qty + '" class="form-control input-sm ">';                                                    
+            }
+            ,function(d){
+                return '<input type="text" name="p_cash_amount[]"  value="' + d.cash_amount + '" class="form-control input-sm ">';                                                    
+            }
+        ]
+        ,[
+            "style='text-align: right;padding-right: 5px'"   
+        ]
+                 
+    );    
 }
     
 
-    
-function getStoreDailyCashDetailData(){        
-        var jsonGrid = $("#tblStoreDailyCash");
-        jsonGrid.clearGrid();
-    
-        $.getJSON(base_url + "store_daily_cash/get_detail_json/" + p_store_daily_cash_id.val()
-               ,function(d){
-                     $.each(d, function () {
-                        var r = ""
-                        r +="<tr>";
-                            r +="<td style='text-align: right;padding-right: 5px'>";
-                         
-                                r +='<input name="p_store_daily_cash_dtl_id[]" value="' + this.store_daily_cash_dtl_id + '" type="hidden">';
-                                r +='<input name="p_denomination[]" value="' + this.denomination + '" type="hidden">';                          
-                                r +="" +  this.denomination;
-                            r +="</td>";
-                            r +="<td >";
-                                r +='<input type="text" name="p_denomination_qty[]"   value="' + this.denomination_qty + '" class="form-control input-sm ">';                                    
-                            r +="</td>";
-                            r +="<td >";
-                                r +='<input type="text" name="p_cash_amount[]"  value="' + this.cash_amount + '" class="form-control input-sm ">';                                    
-                            r +="</td>";
-                        r +="</tr>";
-                         
-                         jsonGrid.append(r);
-                     });
-                         
-                }
-        );
-}
-    
-
-var ctrlSel = zsi.control.SelectList;  
-    
-    
     
 $(document).ready(function(){
  ctrlSel( base_url + "common/get_select_data","select[name='p_store_loc_id']","","N","store_loc","store_loc_id","store_loc","");
