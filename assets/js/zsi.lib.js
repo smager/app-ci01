@@ -23,7 +23,7 @@ $(document).ready(function(){
    initTabNavigation();
    initFormAdjust();
    initDeleteRecord();
-   initInputTypesAndFormats();
+   zsi.initInputTypesAndFormats();
 
 });
 
@@ -231,7 +231,7 @@ function initDeleteRecord(){
    });
 }
 
-function initInputTypesAndFormats(){
+zsi.initInputTypesAndFormats = function(){
    $(".numeric").keypress(function(event){
    
          return zsi.form.checkNumber(event,'.,');

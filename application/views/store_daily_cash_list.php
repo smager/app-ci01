@@ -74,11 +74,16 @@ var p_tran_date           = $("#p_tran_date");
 var l_timer;    
 
 
-function setChangeEvent(){    
+function setChangeEvent(){   
+    //add tr for summary total
     var l_summaryTR = "<tr id='total'><td id='totalTitle' colspan='2'>Total = </td><td style='text-align: right;padding-right: 10px'><label id='lblSum'>0.00</label></td></tr>";
      $("#tblStoreDailyCash").append(l_summaryTR);
     computeTotal();
+
+    //allow only numirec input
+    zsi.initInputTypesAndFormats();
     
+    //set input change event
     $("input[name='p_denomination_qty[]']").keyup(function(){
         
         var l_denomination = $(this.parentNode).prev().children("input[name='p_denomination[]']");
@@ -86,8 +91,12 @@ function setChangeEvent(){
         var l_amount = l_tdAmount.children("input[name='p_cash_amount[]']");
         var l_lblamount = l_tdAmount.children("label");
         var l_result =  this.value * l_denomination.val();
-        l_amount.val(l_result);
-        l_lblamount.text(l_result.toFixed(2));
+        l_amount.val(0);
+        l_lblamount.text('');
+        if( l_result > 0){
+            l_amount.val(l_result);
+            l_lblamount.text(l_result.toFixed(2));
+        }
         computeTotal();
     });
 }
@@ -168,7 +177,7 @@ function getDenominationData(){
                 +  d.denomination;                         
             }
             ,function(d){
-                return '<input type="text" name="p_denomination_qty[]"  class="form-control input-sm ">';
+                return '<input type="text" name="p_denomination_qty[]"  class="form-control input-sm numeric">';
             }
             ,function(d){
                 return '<input type="hidden" name="p_cash_amount[]" class="form-control input-sm "><label class="lblAmt"></label>';                         
@@ -198,11 +207,11 @@ function getStoreDailyCashDetailData(){
                 +  d.denomination;                
             }
             ,function(d){
-                return '<input type="text" name="p_denomination_qty[]" value="' + d.denomination_qty + '" class="form-control input-sm ">';                                                    
+                return '<input type="text" name="p_denomination_qty[]" value="' + (parseFloat(d.denomination_qty) > 0 ? d.denomination_qty : '') + '" class="form-control input-sm numeric">';                                                    
             }
-            ,function(d){
+            ,function(d){                
                 return '<input type="hidden" name="p_cash_amount[]"  value="' + d.cash_amount + '" class="form-control input-sm" >'                                                    
-                +  '<label class="lblAmt">' + d.cash_amount + '</label>';                         
+                +  '<label class="lblAmt">' + (parseFloat(d.cash_amount) > 0 ? d.cash_amount : '') + '</label>';                         
             }
         ]
         ,td_properties:[
