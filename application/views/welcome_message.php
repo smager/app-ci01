@@ -18,11 +18,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 .login-form{
     background-color: #f5f6f6;
     border: 1pt solid #3071a8;
-    margin: 30px auto 0;
+    margin: 10px auto 0;
     min-height: 127px;
     padding-top: 19px;
     width: 300px;
-}    
+} 
+
+.login-status{
+    margin: 30px auto 0;
+    width: 300px;
+}
+    
+.login-status > .alert {
+    padding:10px;
+}       
+.login-status > .alert-danger {
+    color:#000;
+}
 </style>    
 </head>
 <body>
@@ -32,7 +44,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <div class="login-panel col-md-12">
         <h1>LynCor  </h1>
         <h2>Sales Inventory Monitoring System</h2>
-        <form class="login-form">  
+<?php
+    if(isset($err_title)){
+        echo '<div class="login-status"><div class="alert alert-danger" role="alert">';
+                echo "<b>$err_title</b>";
+                echo $err_message;
+
+        echo '</div></div>';        
+    }
+
+    //check if not yet logged in
+    if( isset( $this->session->userdata['current_user'] ) ==false){
+?>        
+        <form class="login-form" action="<?php echo base_url("users/login") ?>" method="post">  
+        
             <div class="form-horizontal">
                 <?php 
                     openFormGroup(); 
@@ -44,30 +69,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 ?>
                 <div class="buttonGroup col-xs-offset-4">
                 <?php 
-                    Button(array('name'=>'Login','type'=>'button'));    
+                    Button(array('name'=>'Log In','type'=>'submit'));    
                 ?>    
                 </div>            
             </div>
         
         </form>
+<?php 
+ }
+?>        
     </div>
 </div>
-<script>
-
-$("#btnLogin").click(function(){
-    var param = $(".login-form").serializeArray();
-  
-    $.post("users/login" , param, function(d){
-       console.log(d);
-    }).fail(function(d) {
-       alert("Sorry, login is not successfull.");
-    });
-      
-                     
-    
-});    
-    
-</script>        
+       
  
 <?php includeFooter(); ?> 
 </body>

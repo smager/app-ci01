@@ -11,10 +11,13 @@ class users_model extends CI_Model{
     }
     
     function authenticate($p){
-        $str = "SELECT count(*) as value FROM users WHERE lower(user_name)=lower('" . $p["p_login"] . "') and user_password='"  . $p["p_pwd"] . "'";        
-        $query = $this->db->query($str);         
+        $str = "SELECT * FROM users WHERE lower(user_name)=lower('" . $p["p_login"] . "') and user_password='"  . $p["p_pwd"] . "'";        
+        $query = $this->db->query($str);
         $result =false;
-        if ($query->row()->value > 0 )  $result = true;
+        if ($query->num_rows() > 0 ){  
+            $result = true;
+            $this->session->set_userdata('current_user', $query->result()[0]);
+        }
         return $result;
     }
     

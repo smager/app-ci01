@@ -6,6 +6,7 @@ class users extends CI_Controller {
         parent::__construct();
         $this->load->database();
         $this->load->model('users_model'); 
+        $this->load->library('session');
         $this->load->helper(array('url','zsi','include'));
     }
     
@@ -19,10 +20,27 @@ class users extends CI_Controller {
 	{
 
         $isSuccess = $this->users_model->authenticate($this->input->post());
-        $result ='{"value":false}';
-        if ($isSuccess==true )  $result  = '{"value":true}';
-        jsonOut($result);
-	}    
+        
+        if ($isSuccess==false )  {
+            $data = array( 
+                 'err_title'=>"Please re-enter your password."
+                ,'err_message'=>"The password you entered is incorrect. Please try again (make sure your caps lock is off)."
+
+            );
+            
+            $this->load->view('welcome_message', $data);
+        }
+        else{
+            redirect( base_url("welcome") );        
+        }
+        
+        
+	}  
+	public function logout()
+	{
+        $this->session->unset_userdata('current_user');
+        redirect( base_url("welcome") );            
+    }
     
     
     public function getjson(){    

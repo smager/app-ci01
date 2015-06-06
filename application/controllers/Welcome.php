@@ -6,7 +6,8 @@ class Welcome extends CI_Controller {
         parent::__construct();
         $this->load->database();
         $this->load->model('menu_model'); 
-        $this->load->model('menu_types_model');       
+        $this->load->model('menu_types_model');    
+        $this->load->library('session');
         $this->load->helper(array('url','include','zsi'));
     }    
 	public function index()
