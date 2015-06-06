@@ -816,7 +816,7 @@ zsi.json.checkValueExist = function(p_url, p_target,p_table, p_field){
      
 zsi.json.loadGrid = function(o){           
     var l_grid = $(o.table);
-    l_grid.clearGrid();        
+    l_grid.children('tbody').html('');      
     $.getJSON(o.url
            ,function(data){
                  $.each(data, function () {

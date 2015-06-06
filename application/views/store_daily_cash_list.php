@@ -48,11 +48,13 @@ table tr#total td#totalTitle{
 </div>    
 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">    
 <table class="tblStoreDailyCash table row" >    
-    <tr>
-        <th width="40" >Denomination</th>    
-        <th  >Qty</th>    
-        <th  >Amount</th>    
-    </tr>    
+    <thead>
+        <tr>
+            <th width="40" >Denomination</th>    
+            <th  >Qty</th>    
+            <th  >Amount</th>    
+        </tr>  
+    </thead>        
 
 </table>
 <div class="buttonGroup">
