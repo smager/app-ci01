@@ -115,6 +115,7 @@ function menu(){
     $ci =& get_instance();
     $ci->load->model('menu_model');
     $ci->load->model('menu_types_model');
+    $ci->load->library('session');
     
 ?>
 
@@ -130,6 +131,8 @@ function menu(){
         </div>
         <div class="navbar-collapse collapse" id="navbar-main">
 <?php 
+ if( isset( $ci->session->userdata['current_user'] ) ==true ){    
+    
         $q=$ci->menu_types_model->getdata();
         $d=$q->result();
         echo '<ul class="nav navbar-nav">'; 
@@ -155,7 +158,7 @@ function menu(){
 
         }
         echo '</ul>';                 
-            
+ }
 ?>
         </div>
       </div>

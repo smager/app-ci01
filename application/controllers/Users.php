@@ -31,7 +31,7 @@ class users extends CI_Controller {
             $this->load->view('welcome_message', $data);
         }
         else{
-            redirect( base_url("welcome") );        
+            redirect( base_url() );        
         }
         
         
@@ -39,7 +39,7 @@ class users extends CI_Controller {
 	public function logout()
 	{
         $this->session->unset_userdata('current_user');
-        redirect( base_url("welcome") );            
+        redirect( base_url() );            
     }
     
     
