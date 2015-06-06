@@ -19,7 +19,7 @@ table tr#total td#totalTitle{
     padding-right:10px;
 }
 
-#tblStoreDailyCash tr#total {
+.tblStoreDailyCash tr#total {
     background-color: #dfecfa;
 }    
   
@@ -47,7 +47,7 @@ table tr#total td#totalTitle{
     </div>
 </div>    
 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">    
-<table id="tblStoreDailyCash" class="table row" >    
+<table class="tblStoreDailyCash table row" >    
     <tr>
         <th width="40" >Denomination</th>    
         <th  >Qty</th>    
@@ -77,7 +77,7 @@ var l_timer;
 function setChangeEvent(){   
     //add tr for summary total
     var l_summaryTR = "<tr id='total'><td id='totalTitle' colspan='2'>Total = </td><td style='text-align: right;padding-right: 10px'><label id='lblSum'>0.00</label></td></tr>";
-     $("#tblStoreDailyCash").append(l_summaryTR);
+     $(".tblStoreDailyCash").append(l_summaryTR);
     computeTotal();
 
     //allow only numirec input
@@ -168,7 +168,7 @@ function getStoreDailyCashData(){
 function getDenominationData(){ 
     p_store_daily_cash_id.val('');    
     zsi.json.loadGrid({
-         table  : "#tblStoreDailyCash"
+         table  : ".tblStoreDailyCash"
         ,url    : base_url + "denomination_ref/get_json"
         ,td_body: [ 
             function(d){
@@ -198,7 +198,7 @@ function getDenominationData(){
  
 function getStoreDailyCashDetailData(){    
     zsi.json.loadGrid({
-         table  :"#tblStoreDailyCash"
+         table  :".tblStoreDailyCash"
         ,url    :base_url + "store_daily_cash/get_detail_json/" + p_store_daily_cash_id.val()
         ,td_body:[ 
             function(d){
