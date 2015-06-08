@@ -109,6 +109,18 @@ function includeBSWriter(){
 }}
 ?>
 
+
+<?php
+if ( ! function_exists('includeHandleBars')){    
+function includeHandleBars(){    
+?>
+<script src="<?php echo base_url('assets/js/handlebars-v3.0.0.js');?>"></script>   
+<?php   
+}}
+?>
+
+
+
 <?php
 if ( ! function_exists('menu')){    
 function menu(){    
