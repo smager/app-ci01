@@ -31,7 +31,7 @@ table tr#total td#totalTitle{
 <?php menu(); ?> 
     
 <div class="container page">
-<form id="frm" action="<?php echo base_url('store_daily_cash/update');?>" method="post" >
+<form id="frm" >
 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
     <div class="form-horizontal ">
         <?php 
@@ -39,7 +39,7 @@ table tr#total td#totalTitle{
             hiddenBox( array( 'name'=>'store_daily_cash_id'));         
             openFormGroup();
             selectBox( array( 'labelName'=>'Location' , 'name'=>'store_loc_id', 'labelSize'=>1, 'selectSize'=>3));      
-            inputTextBox( array( 'labelName'=>'Date' , 'name'=>'tran_date', 'labelSize'=>1, 'inputSize'=>3)); 
+            inputTextBox( array( 'labelName'=>'Date' , 'name'=>'tran_date', 'labelSize'=>1, 'inputSize'=>3,'value'=>date('m/d/Y') )); 
             yes_no( array( 'labelName'=>'Posted' , 'name'=>'posted', 'labelSize'=>1, 'selectSize'=>3));      
             closeFormGroup();
 
@@ -59,7 +59,7 @@ table tr#total td#totalTitle{
 </table>
 <div class="buttonGroup">
 <?php 
-    Button(array('name'=>'Save','type'=>'submit'));    
+    Button(array('name'=>'Save','type'=>'button'));    
 ?>    
 </div>    
     
@@ -75,6 +75,15 @@ var p_store_loc_id        = $("#p_store_loc_id");
 var p_tran_date           = $("#p_tran_date"); 
 var l_timer;    
 
+
+$("#btnSave").click(function(){
+  
+  $.post (base_url + "store_daily_cash/update", $("#frm").serializeArray(), function(d){
+        getStoreDailyCashData();
+  });
+    
+});    
+    
 
 function setChangeEvent(){   
     //add tr for summary total
@@ -169,6 +178,7 @@ function getStoreDailyCashData(){
     
 function getDenominationData(){ 
     p_store_daily_cash_id.val('');    
+    
     zsi.json.loadGrid({
          table  : ".tblStoreDailyCash"
         ,url    : base_url + "denomination_ref/get_json"

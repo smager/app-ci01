@@ -46,6 +46,5 @@ class store_daily_cash extends CI_Controller {
     public function update()
 	{
         $this->store_daily_cash_model->update($this->input->post());
-        redirect( base_url("store_daily_cash") );
 	}    
 }
