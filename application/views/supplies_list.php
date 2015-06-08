@@ -20,8 +20,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <th></th>
         <th>Code</th>
         <th>Description</th>
-        <th>Type</th>      
-        <th align="right">SRPrice</th>
+        <th>Type</th>   
+        <th align="right">Unit Cost</th>
+        <th align="right">Unit Price</th>
         
     </tr>
 <?php
@@ -39,6 +40,7 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
             <td><?php inputTextBox( array( 'name'=>"supply_code[]",'value'=>$d[$x]->supply_code  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"supply_desc[]",'value'=>$d[$x]->supply_desc  )); ?> </td>
             <td><?php selectBox( array( 'name'=>'supply_type_id[]','value'=>$d[$x]->supply_type_id,'selectedValue'=>$d[$x]->supply_type_id   )); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"supply_cost[]",'value'=>$d[$x]->supply_cost  )); ?> </td>    
             <td><?php inputTextBox( array( 'name'=>"supply_srp[]",'value'=>$d[$x]->supply_srp  )); ?> </td>
     </tr>        
 
@@ -54,6 +56,7 @@ for ($x = 0; $x < 5; $x++) {
             <td><?php inputTextBox( array( 'name'=>"supply_code[]")); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"supply_desc[]")); ?> </td>
             <td><?php selectBox( array( 'name'=>'supply_type_id[]')); ?> </td>
+            <td align="right"><?php inputTextBox( array( 'name'=>"supply_cost[]")); ?> </td>
             <td align="right"><?php inputTextBox( array( 'name'=>"supply_srp[]")); ?> </td>
     </tr>
     

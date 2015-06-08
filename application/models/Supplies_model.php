@@ -23,6 +23,7 @@ class supplies_model extends CI_Model{
                      'supply_code' => $supply_code
                     ,'supply_desc' => $post['p_supply_desc'][$x]
                     ,'supply_type_id' => $post['p_supply_type_id'][$x]
+                    ,'supply_cost' => $post['p_supply_cost'][$x]
                     ,'supply_srp' => $post['p_supply_srp'][$x]
                 );
                 

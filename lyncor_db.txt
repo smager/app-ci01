@@ -270,6 +270,7 @@ CREATE TABLE IF NOT EXISTS `supplies` (
   `supply_code`   varchar(10) NOT NULL default '',
   `supply_desc`   varchar(64) NOT NULL default '',
   `supply_type_id` int(5),
+  `supply_cost`  decimal(5,2),
   `supply_srp`   decimal(5,2),
   `compute_sales` int(5) NOT NULL default '1',   
   `created_by` int(5),
