@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Menu Types:List</title>
+<title>Menu Types</title>
 <?php
     includeHeader();    
 ?> 

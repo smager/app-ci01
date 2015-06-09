@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>role:List</title>
+<title>Roles</title>
 <?php
     includeHeader();    
 ?> 
