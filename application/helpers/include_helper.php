@@ -10,7 +10,7 @@ function includeHeader($p_dlayout='N',$p_dwin ='N', $p_dgrid ='N'){
   var base_url ="<?php echo base_url('');?>";
 </script>   
 <script src="<?php echo base_url('assets/js/jquery-1.11.3.min.js');?>"></script>   
-<script src="<?php echo base_url('assets/js/zsi.lib.js?v=1');?>"></script>   
+<?php includePageJS("zsi_lib"); ?>
 <link href="<?php echo base_url('assets/css/bootstrap.css');?>" rel="stylesheet">
 <link href="<?php echo base_url('assets/css/bootstrap-theme.min.css');?>" rel="stylesheet">
 <link href="<?php echo base_url('assets/css/zsi_style.css');?>" rel="stylesheet">
@@ -92,9 +92,9 @@ if (strtoupper($p_dgrid) == 'Y') {
 
 <?php
 if ( ! function_exists('includePageJS')){        
-  function includePageJS(){
+  function includePageJS($url=''){
     $ci =& get_instance();
-    $url = $ci->router->fetch_class() . '/' . $ci->router->fetch_method();
+    if($url=='') $url = $ci->router->fetch_class() . '/' . $ci->router->fetch_method();
     $where ="where page_url='$url'";        
     $query = $ci->db->query("SELECT * FROM javascripts $where");
     $version="";  

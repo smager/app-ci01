@@ -13,6 +13,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 .modal-dialog {
     width: 95%;
 }
+    
+.alert{
+   position:absolute;
+   top:0px;
+   display:none; 
+   z-index:10000;
+ } 
+ 
   
 .ace_editor {
     min-height: 400px !important;
@@ -49,6 +57,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </form>    
     
 </div>
+    
+<div class="alert alert-success">
+   <p>Data has been saved.</p>
+</div>
+
+    
+    
  <div class="modal fade" id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="modalWindowLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -108,6 +123,11 @@ ace.require("ace/ext/language_tools");
            fontSize: "10pt"
     });
 
+$("#modalWindow").on('shown.bs.modal',function(){
+    $(document).off('focusin.bs.modal');
+});
+   
+    
 $(window).bind('keydown', function(e) {
     var isCtrlS = (e.ctrlKey && e.which == 83);
     if(isCtrlS){
@@ -119,7 +139,6 @@ $(window).bind('keydown', function(e) {
 });    
  
 $(document).ready(function(){
-
     displayDataToGrid();
 });
 
@@ -177,8 +196,10 @@ function submit(p_IsHide){
     
     var data = $("#frm_modalWindow").serializeArray();
     $.post(base_url + "javascripts/update",data,function(d){   
+        zsi.form.showAlert("alert");
         displayDataToGrid();
     });
+    
 }    
     
     

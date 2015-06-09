@@ -17,7 +17,7 @@ class store_supplies extends CI_Controller {
     
     public function getdata_json($id){
     
-        jsonOut($this->store_supplies_model->getdata($id)->result());
+        jsonOut($this->store_supplies_model->getdata_ad($id)->result());
         
     }
 
