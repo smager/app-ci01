@@ -341,7 +341,7 @@ if ( ! function_exists('GetIcon'))
       if( strtoupper($name)=='SEARCH' ){
             $l_text= $l_icon .  'search"></span> ';
       }
-      if( strtoupper($name)=='ADD' ){
+      if( strtoupper($name)=='ADD' || strtoupper($name)=='NEW' ){
             $l_text= $l_icon .  'plus-sign"></span> ';
       }
       if( strtoupper($name)=='DELETE' ){

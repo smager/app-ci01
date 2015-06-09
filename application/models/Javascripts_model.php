@@ -12,6 +12,13 @@ class javascripts_model extends CI_Model{
         return $query;    
     }
     
+    function getdata_by_url($url=''){
+        $where ="";        
+        if($url!='' )  $where ="where page_url='$url'";    
+        $query = $this->db->query("SELECT * FROM javascripts $where");
+        return $query;    
+    }
+        
     function update($post){
        $id=$post['p_js_id'];
         $data = array(

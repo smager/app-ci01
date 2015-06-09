@@ -91,6 +91,26 @@ if (strtoupper($p_dgrid) == 'Y') {
 
 
 <?php
+if ( ! function_exists('includePageJS')){        
+  function includePageJS(){
+    $ci =& get_instance();
+    $url = $ci->router->fetch_class() . '/' . $ci->router->fetch_method();
+    $where ="where page_url='$url'";        
+    $query = $ci->db->query("SELECT * FROM javascripts $where");
+    $version="";  
+    if($query->num_rows()>0){
+        $version = "&p_version=" . $query->result()[0]->version_id;
+    }
+    
+    echo '<script src="' . base_url("javascripts/source?p_url=$url$version") . '"></script> ';  
+  }    
+}
+?>
+
+
+
+
+<?php
 if ( ! function_exists('includeFooter')){    
 function includeFooter(){    
 ?>

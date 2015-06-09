@@ -13,8 +13,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 .modal-dialog {
     width: 95%;
 }
-#p_content{
-    min-height:400px;
+  
+.ace_editor {
+    min-height: 400px !important;
 }    
     
 </style>    
@@ -59,14 +60,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
       <div class="modal-body form-horizontal">
 
 <?php 
-    hiddenBox( array( 'name'=>'js_id'));     
+    hiddenBox( array( 'name'=>'js_id'));  
+    hiddenBox( array( 'name'=>'content'));  
     openFormGroup();
-        inputTextBox( array( 'name'=>"page_url",'labelName'=>"Page URL",'labelSize'=>1,'inputSize'=>3)); 
+        inputTextBox( array( 'name'=>"page_url",'labelName'=>"Page URL",'labelSize'=>2,'inputSize'=>3)); 
     closeFormGroup();
     openFormGroup();
-        inputTextBox( array( 'name'=>"content",'labelName'=>"Content",'labelSize'=>1,'inputSize'=>11,'type'=>'textarea')); 
+?>
+   <div class="form-group">
+     <label class=" col-xs-2 control-label">HTML Code :</label>
+   </div>      
+   <pre id="editor"></pre>
+<?php
     closeFormGroup();
-
 ?> 
           
           
@@ -83,8 +89,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     
     
-
-<script type="text/javascript">
+<script src="<?php echo base_url("assets/ace/src-noconflict/ace.js"); ?>"></script>
+<script src="<?php echo base_url("assets/ace/src-noconflict/ext-language_tools.js"); ?>"></script>
+    
+<script>
+    
+ace.require("ace/ext/language_tools");
+   var editor = ace.edit("editor");
+   editor.setTheme("ace/theme/monokai");   
+   editor.session.setMode("ace/mode/javascript");
+   editor.setAutoScrollEditorIntoView(true);
+   
+    editor.setOptions({
+           enableBasicAutocompletion: true,
+           enableSnippets: true,
+           enableLiveAutocompletion: false,
+           maxLines: 100,
+           fontSize: "10pt"
+    });
+    
+   
+    
 
 $(document).ready(function(){
 
@@ -116,16 +141,19 @@ function getInfo(p_id){
     $.getJSON(base_url + "javascripts/getdata_json/" + p_id
        ,function(data){
             var d = data[0];
+            
             $("#p_js_id").val(d.js_id);
             $("#p_page_url").val(d.page_url);
-            $("#p_content").val(d.content);
+            editor.getSession().setValue(unescape(d.content)); 
+        
             $("#modalWindow").modal("show");
         }
     );
    
 }   
     
-$("#btnNew").click(function(){       
+$("#btnNew").click(function(){    
+    editor.getSession().setValue('');     
     $("#p_js_id").val('');
     $("#p_page_url").val('');
     $("#p_content").val('');    
@@ -133,7 +161,9 @@ $("#btnNew").click(function(){
 });  
 
 $("#btnSave").click(function(){
-$("#modalWindow").modal("hide");
+    $("#p_content").val(editor.getSession().getValue());        
+    $("#modalWindow").modal("hide");
+    
     var data = $("#frm_modalWindow").serializeArray();
     $.post(base_url + "javascripts/update",data,function(d){   
         displayDataToGrid();
