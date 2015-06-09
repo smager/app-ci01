@@ -92,7 +92,16 @@ if ( ! function_exists('inputTextBox'))
 
         echo $l_label;
         if(isset($p["labelName"])) echo "<div  class='$l_inputSize'>";        
-        echo '<input ' . $l_type . ' class="form-control input-sm ' .  $l_inputclass .  '" id="p_' . $p["name"] . '" name="p_' . $p["name"] . '" ' . $l_inputValue . $l_placeholder . $l_attributes . '>';        
+
+        $input  = '<input ' . $l_type . ' class="form-control input-sm ' .  $l_inputclass .  '" id="p_' . $p["name"] . '" name="p_' . $p["name"] . '" ' . $l_inputValue . $l_placeholder . $l_attributes . '>';              
+        
+        if( isset($p["type"])  ){
+            if( strtolower($p["type"])=='textarea'){
+                $input = '<textarea class="form-control input-sm ' .  $l_inputclass .  '" id="p_' . $p["name"] . '" name="p_' . $p["name"] . '" ' . $l_placeholder . $l_attributes . '>' . $l_inputValue . '</textarea>';  
+            }
+        }
+        echo $input;
+        
         if(isset($p["labelName"])) echo "</div>";
     
     }
