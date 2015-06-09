@@ -73,41 +73,7 @@ for ($x = 0; $x < 5; $x++) {
 </form>    
     
 </div>
-    
-
-<script type="text/javascript">
-
-var ctrlSel = zsi.control.SelectList;  
-    
-$(document).ready(function(){
- ctrlSel( base_url + "common/get_select_data","select[name='p_position_id[]']","","N","positions","position_id","position_desc","");
- ctrlSel( base_url + "common/get_select_data","select[name='p_store_loc_id[]']","","N","store_loc","store_loc_id","store_loc","");
-});    
-
-    
-    
-function checkDelete(l_cmd) {
-   var l_stmt=[], l_count;
-    
-   var data = zsi.table.getCheckBoxesValues("input[name='p_cb[]']:checked");
-    for(var x=0;x<data.length; x++){
-        l_stmt.push( { name:"p_del_id[]",value : data[x] }  ); 
-    }
-   if (l_stmt!="") {
-      if(confirm("Are you sure you want to delete selected items?")) {
-      $.post( l_cmd , l_stmt, function(d){
-            window.store_location.reload();
-            //console.log(d);
-         }).fail(function(d) {
-            alert("Sorry, the curent transaction is not successfull.");
-        });
-      }
-   }
-return false;
-}   
-    
-</script>    
-
+<?php includePageJS(); ?>  
 <?php includeFooter(); ?>  
 </body>
 </html>
