@@ -15,7 +15,7 @@ class javascripts extends CI_Controller {
 		$this->load->view('javascripts_list');
 	}
 
-    public function get_json($js_id)
+    public function getdata_json($js_id=null)
 	{  
         jsonOut($this->javascripts_model->getdata($js_id)->result());
       
@@ -26,4 +26,9 @@ class javascripts extends CI_Controller {
 	{
         $this->javascripts_model->update($this->input->post());
 	}    
+    public function delete()
+	{
+        
+        $this->javascripts_model->delete($this->input->post());
+	}       
 }

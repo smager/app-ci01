@@ -7,50 +7,35 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <title>javascripts </title>
 <?php
     includeHeader();    
-?>     
+?>
+<style>
+    
+.modal-dialog {
+    width: 95%;
+}
+#p_content{
+    min-height:400px;
+}    
+    
+</style>    
 </head>
 <body>
 <?php menu(); ?> 
     
 <div class="container page">
 <form id="frm" action="<?php echo base_url('javascripts/update');?>" method="post" >
-<table class="table">    
+<table id="grid" class="table">  
+    <thead>
     <tr>
         <th></th>
-        <th>JS Id</th>
-        <th>Version Id</th>
         <th>Page URL</th>
+        <th>Version Id</th>
         <th>Create By</th>
         <th>Created Date</th>        
         <th>Updated By</th>
         <th>Updated Date</th>        
     </tr>
-<?php
-
- $q=$this->javascripts_model->getdata();
- $d=$q->result();
-
-
-for ($x = 0; $x < $q->num_rows(); $x++) {
-?>
-    <tr>
-        
-            <td><input type="hidden" name="p_js_id[]" value="<?php echo $d[$x]->js_id; ?>">
-                <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->js_id  )); ?> </td>
-            <td><?php echo $d[$x]->js_id; ?> </td>
-            <td><?php echo $d[$x]->version_id; ?> </td>
-            <td><?php echo $d[$x]->page_url; ?> </td>
-            <td><?php echo $d[$x]->created_by; ?> </td>
-            <td><?php echo $d[$x]->created_date; ?> </td>
-            <td><?php echo $d[$x]->updated_by; ?> </td>
-            <td><?php echo $d[$x]->updated_date; ?> </td>
-    </tr>        
-
-<?php    
-}
-
-
-?>
+    </thead>    
 </table>    
 
 <div class="buttonGroup">
@@ -76,10 +61,10 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
 <?php 
     hiddenBox( array( 'name'=>'js_id'));     
     openFormGroup();
-        inputTextBox( array( 'name'=>"page_url",'labelName'=>"Page URL",'labelSize'=>2,'inputSize'=>9)); 
+        inputTextBox( array( 'name'=>"page_url",'labelName'=>"Page URL",'labelSize'=>1,'inputSize'=>3)); 
     closeFormGroup();
     openFormGroup();
-        inputTextBox( array( 'name'=>"content",'labelName'=>"Content",'labelSize'=>2,'inputSize'=>9,'type'=>'textarea')); 
+        inputTextBox( array( 'name'=>"content",'labelName'=>"Content",'labelSize'=>1,'inputSize'=>11,'type'=>'textarea')); 
     closeFormGroup();
 
 ?> 
@@ -100,18 +85,61 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
     
 
 <script type="text/javascript">
+
+$(document).ready(function(){
+
+    displayDataToGrid();
+});
+
+function displayDataToGrid(){ 
     
-$("#btnNew").click(function(){    
-    
-/*    $.getJSON(base_url + "javascripts/get_json"
-       ,function(d){
-       
+    zsi.json.loadGrid({
+         table  : "#grid"
+        ,url    : base_url + "javascripts/getdata_json"
+        ,td_body: [ 
+            function(d){
+                return '<input id="p_cb[]" name="p_cb[]" class="" type="checkbox">'
+                + '<input id="p_hid_cb[]" name="p_hid_cb[]" value="' +  d.js_id + '" type="hidden">' 
+            }
+            ,function(d){ return '<a href="javascript:getInfo(' + d.js_id  + ');" >' + d.page_url + '</a>'; }
+            ,function(d){ return   d.version_id; }
+            ,function(d){ return   d.created_by; }
+            ,function(d){ return   d.created_date; }
+            ,function(d){ return   d.updated_by; }
+            ,function(d){ return   d.updated_date; }
+        ]
+
+    });
+}
+
+function getInfo(p_id){
+    $.getJSON(base_url + "javascripts/getdata_json/" + p_id
+       ,function(data){
+            var d = data[0];
+            $("#p_js_id").val(d.js_id);
+            $("#p_page_url").val(d.page_url);
+            $("#p_content").val(d.content);
+            $("#modalWindow").modal("show");
         }
     );
-*/    
+   
+}   
     
+$("#btnNew").click(function(){       
+    $("#p_js_id").val('');
+    $("#p_page_url").val('');
+    $("#p_content").val('');    
     $("#modalWindow").modal("show");
-});   
+});  
+
+$("#btnSave").click(function(){
+$("#modalWindow").modal("hide");
+    var data = $("#frm_modalWindow").serializeArray();
+    $.post(base_url + "javascripts/update",data,function(d){   
+        displayDataToGrid();
+    });
+});    
+    
     
 function checkDelete(l_cmd) {
    var l_stmt=[], l_count;
@@ -123,8 +151,7 @@ function checkDelete(l_cmd) {
    if (l_stmt!="") {
       if(confirm("Are you sure you want to delete selected items?")) {
       $.post( l_cmd , l_stmt, function(d){
-            window.location.reload();
-            //console.log(d);
+            displayDataToGrid();
          }).fail(function(d) {
             alert("Sorry, the curent transaction is not successfull.");
         });

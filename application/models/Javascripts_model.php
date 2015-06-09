@@ -5,19 +5,19 @@ class javascripts_model extends CI_Model{
 
     }
     
-    function getdata($id=0){
+    function getdata($id=null){
         $where ="";        
-        if(isset($id) || $id==0 )  $where ="where js_id=$id";        
+        if(isset($id) || $id!=null )  $where ="where js_id=$id";      
         $query = $this->db->query("SELECT * FROM javascripts $where");
         return $query;    
     }
     
     function update($post){
-       
+       $id=$post['p_js_id'];
         $data = array(
-             'p_js_id' =>$post['p_js_id']
-            ,'p_page_url' =>  $post['p_page_url']
-            ,'p_content' => $post['p_content']
+             'js_id' =>$id
+            ,'page_url' =>  $post['p_page_url']
+            ,'content' => $post['p_content']
         );
 
 
