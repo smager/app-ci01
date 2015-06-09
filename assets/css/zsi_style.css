@@ -167,6 +167,12 @@ ul
 .LeftAdjust-m3{
   margin-left:-3px
 }
+/*modal*/
+
+
+.modal-body {
+    overflow: auto;
+}
 
 
 /*Tabs*/
