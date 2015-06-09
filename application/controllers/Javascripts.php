@@ -24,7 +24,7 @@ class javascripts extends CI_Controller {
             ->set_content_type('application/javascript')
             ->set_output($source);
         }else{
-            $source = '//no source yet';
+            $source = '//This is system generated. new javascript created.';
             
             $data = array('page_url' =>  $url, 'content' => $source );
             $this->db->set('created_date', 'NOW()', FALSE);
