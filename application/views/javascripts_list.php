@@ -107,10 +107,17 @@ ace.require("ace/ext/language_tools");
            maxLines: 100,
            fontSize: "10pt"
     });
-    
-   
-    
 
+$(window).bind('keydown', function(e) {
+    var isCtrlS = (e.ctrlKey && e.which == 83);
+    if(isCtrlS){
+        submit(false);
+        e.preventDefault();
+        return false;
+    }
+    
+});    
+ 
 $(document).ready(function(){
 
     displayDataToGrid();
@@ -161,14 +168,18 @@ $("#btnNew").click(function(){
 });  
 
 $("#btnSave").click(function(){
+    submit(true);
+});    
+    
+function submit(p_IsHide){
     $("#p_content").val(editor.getSession().getValue());        
-    $("#modalWindow").modal("hide");
+    if(p_IsHide==true) $("#modalWindow").modal("hide");
     
     var data = $("#frm_modalWindow").serializeArray();
     $.post(base_url + "javascripts/update",data,function(d){   
         displayDataToGrid();
     });
-});    
+}    
     
     
 function checkDelete(l_cmd) {
