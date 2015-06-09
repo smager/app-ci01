@@ -38,7 +38,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <tr>
         <th></th>
         <th>Page URL</th>
-        <th>Version Id</th>
+        <th>Revision</th>
         <th>Create By</th>
         <th>Created Date</th>        
         <th>Updated By</th>

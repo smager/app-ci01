@@ -99,7 +99,7 @@ if ( ! function_exists('includePageJS')){
     $query = $ci->db->query("SELECT * FROM javascripts $where");
     $version="";  
     if($query->num_rows()>0){
-        $version = "&p_version=" . $query->result()[0]->version_id;
+        $version = "&p_revision=" . $query->result()[0]->version_id;
     }
     
     echo '<script src="' . base_url("javascripts/source?p_url=$url$version") . '"></script> ';  
