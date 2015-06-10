@@ -19,6 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <tr>
         <th></th>
         <th>Area/Location</th>
+        <th>Stocks</th>
     </tr>
 <?php
 
@@ -33,6 +34,7 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
             <td align="right"><input type="hidden" name="p_loc_id[]" value="<?php echo $d[$x]->loc_id; ?>">
                 <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->loc_id  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"location[]",'value'=>$d[$x]->location  )); ?> </td>
+            <td><a href="javascript:manageItems(<?php echo $d[$x]->loc_id; ?>);">Manage Items</a></td>
     </tr>        
 
 <?php    
@@ -45,6 +47,7 @@ for ($x = 0; $x < 5; $x++) {
             <td align="right"><input type="hidden" name="p_loc_id[]">
                 <?php checkbox( array( 'name'=>'select[]')); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"location[]")); ?> </td>
+            <td></td>
     </tr>
     
     
