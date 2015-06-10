@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <meta charset="utf-8">
 <title>Javascripts </title>
 <?php
-    includeHeader();    
+    includeHeader(array('window'=>true) );    
 ?>
 <style>
     
@@ -24,7 +24,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   
 .ace_editor {
     min-height: 400px !important;
+}   
+    
+.ace_search.right {
+    position: fixed !important;
+}
+.ace_search_field {
+    color:#000 !important;
+    background-color:#fff !important;
 }    
+    
+.dhtmlx_wins_body_inner > div[ida='dhxMainCont']{
+    overflow:auto !important;
+}
+    
+    
+    
     
 </style>    
 </head>
@@ -58,75 +73,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     
 </div>
     
-<div class="alert alert-success">
-   <p>Data has been saved.</p>
-</div>
-
-    
-    
- <div class="modal fade" id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="modalWindowLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    <form id="frm_modalWindow" >
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="modalWindowLabel">Add New Item</h4>
-      </div>
-      <div class="modal-body form-horizontal">
-
-<?php 
-    hiddenBox( array( 'name'=>'js_id'));  
-    hiddenBox( array( 'name'=>'content'));  
-    openFormGroup();
-        inputTextBox( array( 'name'=>"page_url",'labelName'=>"Page URL",'labelSize'=>2,'inputSize'=>3)); 
-    closeFormGroup();
-    openFormGroup();
-?>
-   <div class="form-group">
-     <label class=" col-xs-2 control-label">HTML Code :</label>
-   </div>      
-   <pre id="editor"></pre>
-<?php
-    closeFormGroup();
-?> 
-          
-          
-      </div>
-      <div class="modal-footer">
-<?php
-        Button(array('name'=>'Save','type'=>'button'));  
-?>
-      </div>
-    </form>                
-    </div>
-  </div>
-</div>    
-
     
     
 <script src="<?php echo base_url("assets/ace/src-noconflict/ace.js"); ?>"></script>
 <script src="<?php echo base_url("assets/ace/src-noconflict/ext-language_tools.js"); ?>"></script>
     
 <script>
-    
-ace.require("ace/ext/language_tools");
-   var editor = ace.edit("editor");
-   editor.setTheme("ace/theme/monokai");   
-   editor.session.setMode("ace/mode/javascript");
-   editor.setAutoScrollEditorIntoView(true);
-   
-    editor.setOptions({
-           enableBasicAutocompletion: true,
-           enableSnippets: true,
-           enableLiveAutocompletion: false,
-           maxLines: 100,
-           fontSize: "10pt"
-    });
+ var editor =null;  
+ var w1=null;
 
-$("#modalWindow").on('shown.bs.modal',function(){
-    $(document).off('focusin.bs.modal');
-});
-   
     
 $(window).bind('keydown', function(e) {
     var isCtrlS = (e.ctrlKey && e.which == 83);
@@ -141,7 +96,42 @@ $(window).bind('keydown', function(e) {
 $(document).ready(function(){
     displayDataToGrid();
 });
+    
+    
+function initAceEditor(){
 
+    ace.require("ace/ext/language_tools");
+    editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");   
+    editor.session.setMode("ace/mode/javascript");
+    editor.setAutoScrollEditorIntoView(true);
+   
+    editor.setOptions({
+           enableBasicAutocompletion: true,
+           enableSnippets: true,
+           enableLiveAutocompletion: false,
+           maxLines: 100,
+           fontSize: "10pt"
+    });    
+
+}    
+
+function createDhtmlxWindow(p){
+    if(typeof dhxWins === 'undefined') {
+        dhxWins = new dhtmlXWindows();
+        dhxWins.enableAutoViewport(false);
+    }        
+    dhxWins.attachViewportTo(p.parent);
+    dhxWins.setImagePath(p.imgUrl);    
+    if(typeof p.position === 'undefined') p.position = {x1:100,y1:50,x2:500,y2:1000};
+    w = dhxWins.createWindow(p.name, p.position.x1, p.position.y1, p.position.y2,p.position.x2);
+    w.setText(p.title);
+    if(typeof p.maximize !== 'undefined') { if (p.maximize==true) w.maximize(); }
+    if(typeof p.html !== 'undefined')  w.attachHTMLString(p.html);
+   
+    return w;
+}
+    
 function displayDataToGrid(){ 
     
     zsi.json.loadGrid({
@@ -168,38 +158,57 @@ function getInfo(p_id){
        ,function(data){
             var d = data[0];
             
-            $("#p_js_id").val(d.js_id);
-            $("#p_page_url").val(d.page_url);
-            editor.getSession().setValue(unescape(d.content)); 
+            showWindow(function(){
         
-            $("#modalWindow").modal("show");
+                $("#p_js_id").val(d.js_id);
+                $("#p_page_url").val(d.page_url);
+                editor.getSession().setValue(unescape(d.content)); 
+            });
         }
     );
    
 }   
     
-$("#btnNew").click(function(){    
-    editor.getSession().setValue('');     
-    $("#p_js_id").val('');
-    $("#p_page_url").val('');
-    $("#p_content").val('');    
-    $("#modalWindow").modal("show");
-});  
+$("#btnNew").click(function(){        
+    showWindow();
+});
+    
+function showWindow(onComplete){
+    $.get(base_url + "javascripts/form",function(html_data){
+            w1=createDhtmlxWindow({
+                 name : "w1"
+                ,title: "New Item"
+                ,parent: document.body
+                ,imgUrl: base_url + "assets/dhtmlx36/dhtmlxWindows/codebase/imgs/"    
+                ,html : html_data
+                ,maximize:true
+            });
+            initAceEditor();
+            if(onComplete) onComplete();
+            
+            //initiate window buttons.
+            $("#btnSubmit").click(function(){
+                submit(true);
+            });    
 
-$("#btnSave").click(function(){
-    submit(true);
-});    
+            $("#btnCloseWindow").click(function(){
+                w1.close();     
+            });                
+        
+    });
+}    
+
+
     
 function submit(p_IsHide){
-    $("#p_content").val(editor.getSession().getValue());        
-    if(p_IsHide==true) $("#modalWindow").modal("hide");
-    
-    var data = $("#frm_modalWindow").serializeArray();
+    $("#p_content").val(editor.getSession().getValue());            
+    var data = $("#frmWindow").serializeArray();
+    console.log(data);
+    if(p_IsHide==true) w1.close();        
     $.post(base_url + "javascripts/update",data,function(d){   
         zsi.form.showAlert("alert");
         displayDataToGrid();
-    });
-    
+    });    
 }    
     
     

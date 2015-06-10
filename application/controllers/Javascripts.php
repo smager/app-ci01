@@ -15,6 +15,14 @@ class javascripts extends CI_Controller {
 		$this->load->view('javascripts_list');
 	}
     
+    
+	public function form()
+	{
+  
+		$this->load->view('javascripts_form');
+	}
+    
+    
     function source(){
         $url =$this->input->get("p_url");
         $query= $this->javascripts_model->getdata_by_url(strtolower($url));
