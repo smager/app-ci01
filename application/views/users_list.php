@@ -22,7 +22,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <th>User Name</th>
         <th>Password</th>
         <th>Role</th>
-        <th>Area</th>
         <th>Active?</th>
     </tr>
 <?php
@@ -40,8 +39,7 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
             <td><?php selectBox( array( 'name'=>'empl_id[]','value'=>$d[$x]->empl_id,'selectedValue'=>$d[$x]->empl_id  )); ?> </td>    
             <td><?php inputTextBox( array( 'name'=>"user_name[]",'value'=>$d[$x]->user_name  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"user_password[]",'value'=>$d[$x]->user_password  )); ?> </td>
-            <td><?php selectBox( array( 'name'=>'role_id[]','value'=>$d[$x]->role_id,'selectedValue'=>$d[$x]->role_id  )); ?> </td> 
-            <td><?php selectBox( array( 'name'=>'loc_id[]','value'=>$d[$x]->loc_id,'selectedValue'=>$d[$x]->loc_id  )); ?> </td>         
+            <td><?php selectBox( array( 'name'=>'role_id[]','value'=>$d[$x]->role_id,'selectedValue'=>$d[$x]->role_id  )); ?> </td>         
             <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N','value'=>$d[$x]->active )); ?> </td>
         
     </tr>        
@@ -59,7 +57,6 @@ for ($x = 0; $x < 5; $x++) {
             <td><?php inputTextBox( array( 'name'=>"user_name[]")); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"user_password[]")); ?> </td>
             <td><?php selectBox( array( 'name'=>'role_id[]')); ?> </td>
-            <td><?php selectBox( array( 'name'=>'loc_id[]')); ?> </td>
             <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N')); ?> </td>
     </tr>
     

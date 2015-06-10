@@ -24,6 +24,7 @@ class employees_model extends CI_Model{
                      'empl_name' =>  $empl_name
                     ,'position_id '=>  $post['p_position_id'][$x]
                     ,'daily_rate'=>  $post['p_daily_rate'][$x]
+                    ,'loc_id'=>  $post['p_loc_id'][$x]
                     ,'store_loc_id' =>  $post['p_store_loc_id'][$x]
                     ,'active'    =>  $post['p_active'][$x]                
                 );

@@ -37,7 +37,6 @@ class users_model extends CI_Model{
                     ,'user_password '=>  $post['p_user_password'][$x]
                     ,'empl_id' =>  $post['p_empl_id'][$x]
                     ,'role_id' =>  $post['p_role_id'][$x]
-                    ,'loc_id'=>  $post['p_loc_id'][$x]
                     ,'active'    =>  $post['p_active'][$x]                
                 );
                 
