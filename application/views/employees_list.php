@@ -20,6 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <th></th>
         <th>Employee</th>
         <th>Position</th>
+        <th>Daily Rate</th>
         <th>Store Location</th>
         <th>Active?</th>
     </tr>
@@ -37,6 +38,7 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
                 <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->empl_id  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"empl_name[]",'value'=>$d[$x]->empl_name  )); ?> </td>
             <td><?php selectBox( array( 'name'=>'position_id[]','value'=>$d[$x]->position_id,'selectedValue'=>$d[$x]->position_id  )); ?> </td> 
+            <td><?php inputTextBox( array( 'name'=>"daily_rate[]",'value'=>$d[$x]->daily_rate  )); ?> </td>
             <td><?php selectBox( array( 'name'=>'store_loc_id[]','value'=>$d[$x]->store_loc_id,'selectedValue'=>$d[$x]->store_loc_id  )); ?> </td>         
             <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N','value'=>$d[$x]->active )); ?> </td>
         
@@ -53,6 +55,7 @@ for ($x = 0; $x < 5; $x++) {
                 <?php checkbox( array( 'name'=>'select[]')); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"empl_name[]")); ?> </td>
             <td><?php selectBox( array( 'name'=>'position_id[]')); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"daily_rate[]")); ?> </td>
             <td><?php selectBox( array( 'name'=>'store_loc_id[]')); ?> </td>
             <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N')); ?> </td>
     </tr>

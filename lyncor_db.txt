@@ -179,6 +179,7 @@ CREATE TABLE IF NOT EXISTS `employees` (
   `empl_name` varchar(64) NOT NULL default '',
   `store_loc_id` int(5),
   `position_id` int(5),
+  `daily_rate` decimal(7,2),
   `active` int(5) NOT NULL default '1', 
   `created_by` int(5),
   `created_date` datetime,
@@ -207,6 +208,19 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `users_uk` (`user_name`)
 )
   COMMENT='Users'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+CREATE TABLE IF NOT EXISTS `brands` (
+  `brand_id` int(5) unsigned NOT NULL auto_increment,
+  `brand_name` varchar(64) NOT NULL default '',
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY  `brands_pk`  (`brand_id`),
+  UNIQUE KEY  `brands_uk` (`brand_name`)
+)
+  COMMENT='Brands'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `suppliers` (
@@ -270,9 +284,9 @@ CREATE TABLE IF NOT EXISTS `supplies` (
   `supply_code`   varchar(10) NOT NULL default '',
   `supply_desc`   varchar(64) NOT NULL default '',
   `supply_type_id` int(5),
+  `unit_id` int(5),  
   `supply_cost`  decimal(5,2),
   `supply_srp`   decimal(5,2),
-  `compute_sales` int(5) NOT NULL default '1',   
   `created_by` int(5),
   `created_date` datetime,
   `updated_by` int(5),
@@ -283,39 +297,139 @@ CREATE TABLE IF NOT EXISTS `supplies` (
   COMMENT='supplies'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
- CREATE TABLE IF NOT EXISTS `supplier_drs` (
-  `supplier_dr_id` int(5) unsigned NOT NULL auto_increment,
-  `dr_no`  int(5),
-  `dr_date` datetime,
-  `supplier_id`  int(5),
-  `store_loc_id` int(5),
+CREATE TABLE IF NOT EXISTS `supply_brands` (
+  `supply_brand_id` int(5) unsigned NOT NULL auto_increment,
+  `brand_id` int(5),
+  `supply_id` int(5),
+  `supply_cost`  decimal(5,2),
+  `supply_srp`   decimal(5,2),
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `supply_brands_pk`  (`supply_brand_id`),
+  UNIQUE KEY `supply_brands_uk` (`brand_id`,`supply_id`)
+)
+  COMMENT='Supply Brands'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+CREATE TABLE IF NOT EXISTS `loc_supplies` (
+  `loc_supply_id` int(5) unsigned NOT NULL auto_increment,
+  `loc_id` int(5),
+  `supply_id` int(5),
+  `stock_qty` int(5),
+  `reorder_level` int(5),
+  `max_level` int(5),
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `loc_supplies_pk`  (`loc_supply_id`),
+  UNIQUE KEY `loc_supplies_uk` (`loc_id`,`supply_id`)
+)
+  COMMENT='Location Supplies'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+ CREATE TABLE IF NOT EXISTS `po` (
+  `po_id` int(5) unsigned NOT NULL auto_increment,
+  `po_no`  int(5),
+  `po_date` datetime,
+  `loc_id` int(5),
+  `supplier_id` int(5),
   `posted` int(5) NOT NULL default '0',     
   `created_by` int(5),
   `created_date` datetime,
   `updated_by` int(5),
   `updated_date` datetime,
-  PRIMARY KEY `supplier_drs_pk`  (`supplier_dr_id`),
-  UNIQUE KEY `supplier_drs_uk` (`dr_no`, `store_loc_id`,`supplier_id`)
+  PRIMARY KEY `receiving_pk`  (`supplier_dr_id`),
+  UNIQUE KEY `receiving_uk` (`dr_no`, `loc_id`,`po_id`)
 )
-  COMMENT='Supplier supplies delivery header'
+  COMMENT='order header'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
 
- CREATE TABLE IF NOT EXISTS `supplier_dr_dtls` (
-  `supplier_dr_dtls_id` int(5) unsigned NOT NULL auto_increment,
-  `supplier_dr_id` int(5),
-  `supply_id`    int(5),
-  `dr_qty`       decimal(5,2),
-  `unit_id`      int(5),
+ CREATE TABLE IF NOT EXISTS `po_dtls` (
+  `po_dtls_id` int(5) unsigned NOT NULL auto_increment,
+  `po_id`               int(5),
+  `supply_id`         int(5),
+  `po_qty`             int(5),
+  `bal_qty`            int(5),
+  `unit_conv_id`    int(5),
   `unit_price`   decimal(5,2),
   `created_by`  int(5),
   `created_date` datetime,
   `updated_by` int(5),
   `updated_date` datetime,
-  PRIMARY KEY `supplier_dr_dtls_pk`  (`supplier_dr_dtls_id`),
-  UNIQUE KEY `supplier_dr_dtls_uk` (`supplier_dr_id`,`supply_id`)
+  PRIMARY KEY `po_dtls_pk`  (`po_dtls_id`),
+  UNIQUE KEY `po_dtls_uk` (`po_id`,`supply_id`)
 )
-  COMMENT='Supplier supplies delivery details'
+  COMMENT='Receving of orders details'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+ CREATE TABLE IF NOT EXISTS `receiving` (
+  `receiving_id` int(5) unsigned NOT NULL auto_increment,
+  `dr_no`  int(5),
+  `dr_date` datetime,
+  `po_id`  int(5),
+  `loc_id` int(5),
+  `posted` int(5) NOT NULL default '0',     
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `receiving_pk`  (`supplier_dr_id`),
+  UNIQUE KEY `receiving_uk` (`dr_no`, `loc_id`,`po_id`)
+)
+  COMMENT='Receiving of orders header'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
+
+ CREATE TABLE IF NOT EXISTS `receiving_dtls` (
+  `receiving_dtls_id` int(5) unsigned NOT NULL auto_increment,
+  `receiving_id` int(5),
+  `po_dtl_id`    int(5),
+  `dr_qty`       decimal(5,2),
+  `created_by`  int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `receiving_dtls_pk`  (`receiving_dtls_id`),
+  UNIQUE KEY `receiving_dtls_uk` (`receiving_id`,`po_dtl_id`)
+)
+  COMMENT='Receving of orders details'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+ CREATE TABLE IF NOT EXISTS `adj_types` (
+  `adj_type_id` int(5) unsigned NOT NULL auto_increment,
+  `adj_type`      varchar(20) NOT NULL default '',
+  `adj_math`      varchar(1) NOT NULL default '',
+  `posted` int(5) NOT NULL default '0',     
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `adj_types_pk`  (`adj_type_id`),
+  UNIQUE KEY `adj_types_uk` (`adj_type`)
+)
+  COMMENT='Supply Adjustment'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
+
+ CREATE TABLE IF NOT EXISTS `supply_adj` (
+  `supply_adj_id` int(5) unsigned NOT NULL auto_increment,
+  `adj_date` datetime,
+  `loc_id` int(5),
+  `adj_type_id` int(5),
+  `adj_remarks`      varchar(200) NOT NULL default '',
+  `supply_id` int(5),
+  `adj_qty` decimal(5,2),
+  `posted` int(5) NOT NULL default '0',     
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `adj_pk`  (`supply_adj_id`)
+)
+  COMMENT='Supply Adjustment'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
+
 
  CREATE TABLE IF NOT EXISTS `store_supplies` (
   `store_supply_id` int(5) unsigned NOT NULL auto_increment,
@@ -349,6 +463,22 @@ CREATE TABLE IF NOT EXISTS `supplies` (
   COMMENT='Store Location Supplies reference'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
   
+  CREATE TABLE IF NOT EXISTS `store_loc_exp` (
+   `store_loc_exp_id`   int(5) unsigned NOT NULL auto_increment,
+   `store_loc_id`  int(5),
+   `exp_date` datetime,
+   `posted` int(5) NOT NULL default '0',     
+   `created_by`    int(5),
+   `created_date`  datetime,
+   `updated_by`    int(5),
+   `updated_date`  datetime,
+   PRIMARY KEY `store_loc_pk`  (`store_loc_exp_id`),
+   UNIQUE KEY `store_loc_uk` (`exp_date`,`store_loc_id`)
+ )
+   COMMENT='Store Location Expenses'
+   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+
  
   CREATE TABLE IF NOT EXISTS `supply_is` (
    `supply_is_id`   int(5) unsigned NOT NULL auto_increment,
@@ -423,18 +553,20 @@ CREATE TABLE IF NOT EXISTS `supplies` (
   `inv_summ_id`           int(5) unsigned NOT NULL auto_increment,
   `inv_summ_year`       int(5),
   `inv_summ_month`    int(5),
-  `store_loc_id`           int(5),
+  `loc_id`           int(5),
   `supply_id`               int(5),
   `beg_qty`                decimal(5,2),
   `dr_qty`                  decimal(5,2),
-  `sales_qty`              decimal(5,2),
+  `used_qty`              decimal(5,2),
+  `adj_plus_qty`        decimal(5,2),
+  `adj_minus_qty`     decimal(5,2),
   `end_qty`               decimal(5,2),
   `created_by`          int(5),
   `created_date`      datetime,
   `updated_by`        int(5),
   `updated_date`     datetime,
   PRIMARY KEY `inv_summ_pk`  (`inv_summ_id`),
-  UNIQUE KEY `inv_summ_uk` (`inv_summ_year`,`inv_summ_month`,`store_loc_id`,`supply_id`)
+  UNIQUE KEY `inv_summ_uk` (`inv_summ_year`,`inv_summ_month`,`loc_id`,`supply_id`)
 )
   COMMENT='Inventory Summary'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
@@ -444,7 +576,7 @@ CREATE TABLE IF NOT EXISTS `supplies` (
   `sales_summ_id`           int(5) unsigned NOT NULL auto_increment,
   `sales_summ_year`       int(5),
   `sales_summ_month`    int(5),
- `store_loc_id`               int(5),
+  `store_loc_id`               int(5),
   `sales_amount`            decimal(10,2),
   `created_by`               int(5),
   `created_date`           datetime,
@@ -482,6 +614,7 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
  `bank_acctname` varchar(50) NOT NULL default '', 
  `bank_name` varchar(50) NOT NULL default '',
  `acct_amount`              decimal(10,2),
+ `depo_pct_share`         int(5),
   `active` int(5) NOT NULL default '1', 
   `created_by` int(5),
   `created_date` datetime,
