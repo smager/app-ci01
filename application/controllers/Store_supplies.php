@@ -8,13 +8,7 @@ class store_supplies extends CI_Controller {
         $this->load->model('store_supplies_model'); 
         $this->load->helper(array('url','zsi','include'));
     }
-    
-	public function select()
-	{
-  
-		$this->load->view('store_supplies_select');
-	}
-    
+        
     public function getdata_json($id){
     
         jsonOut($this->store_supplies_model->getdata_ad($id)->result());

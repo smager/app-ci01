@@ -68,7 +68,7 @@ table tr#total td#totalTitle{
     
 </div>    
 <?php includePageJS(); ?>        
-<script type="text/javascript" src="/assets/js/bootstrap-datepicker.js"></script>    
+<script type="text/javascript" src="<?php echo base_url("assets/js/bootstrap-datepicker.js"); ?>"></script>    
 <?php includeFooter(); ?>    
 </body>
 </html>
