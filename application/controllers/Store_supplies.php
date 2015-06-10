@@ -20,5 +20,10 @@ class store_supplies extends CI_Controller {
         jsonOut($this->store_supplies_model->getdata_ad($id)->result());
         
     }
+    
+    
+    public function update(){
+        $this->store_supplies_model->update($this->input->post());    
+    }
 
 }

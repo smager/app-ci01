@@ -203,7 +203,6 @@ function showWindow(onComplete){
 function submit(p_IsHide){
     $("#p_content").val(editor.getSession().getValue());            
     var data = $("#frmWindow").serializeArray();
-    console.log(data);
     if(p_IsHide==true) w1.close();        
     $.post(base_url + "javascripts/update",data,function(d){   
         zsi.form.showAlert("alert");
