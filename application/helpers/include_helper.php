@@ -1,9 +1,17 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 if ( ! function_exists('includeHeader')){    
-function includeHeader($p_dlayout='N',$p_dwin ='N', $p_dgrid ='N'){    
+function includeHeader($p=null){
+    $l_layout=false;
+    $l_win=false;
+    $l_grid=false;
+    if( $p!==null){        
+        if(isset($p["layout"])) $l_layout = $p["layout"]; 
+        if(isset($p["window"])) $l_win = $p["window"]; 
+        if(isset($p["grid"])) $l_grid = $p["grid"];     
+    }
+    
    $l_dhtmlx_path =  base_url('assets/dhtmlx36');
-
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
@@ -17,14 +25,14 @@ function includeHeader($p_dlayout='N',$p_dwin ='N', $p_dgrid ='N'){
 <?php
 
     
-   if (strtoupper($p_dlayout) == 'Y') {
+   if ($l_layout == true) {
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $l_dhtmlx_path; ?>/dhtmlxLayout/codebase/dhtmlxlayout.css">
 <link rel="stylesheet" type="text/css" href="<?php echo $l_dhtmlx_path; ?>/dhtmlxLayout/codebase/skins/dhtmlxlayout_dhx_skyblue.css">
 <?php
 }
 
-if (strtoupper($p_dgrid) == 'Y') {
+if ($l_grid == true) {
 
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $l_dhtmlx_path; ?>/dhtmlxGrid/codebase/dhtmlxgrid.css">
@@ -37,24 +45,24 @@ if (strtoupper($p_dgrid) == 'Y') {
 <?php
 }
 
-   if (strtoupper($p_dwin) == 'Y') {
+   if ($l_win == true) {
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $l_dhtmlx_path; ?>/dhtmlxWindows/codebase/dhtmlxwindows.css">
 <link rel="stylesheet" type="text/css" href="<?php echo $l_dhtmlx_path; ?>/dhtmlxWindows/codebase/skins/dhtmlxwindows_dhx_skyblue.css">
 <?php } ?>
 
 <?php
-   if ( strtoupper($p_dgrid) == 'Y' AND strtoupper($p_dwin) == 'N' AND strtoupper($p_dlayout) == 'N') {
+   if ( $l_grid == true &&  $l_win == false && $l_layout == false) {
 ?>
 <script type="text/javascript" src="<?php echo $l_dhtmlx_path; ?>/dhtmlxGrid/codebase/dhtmlxcommon.js"></script>
 <?php
    }
-   else if (strtoupper($p_dgrid) == 'N' AND strtoupper($p_dwin) == 'Y' AND strtoupper($p_dlayout) == 'N') {
+   else if ($l_grid ==false && $l_win == true && $l_layout == false) {
 ?>
 <script type="text/javascript" src="<?php echo $l_dhtmlx_path; ?>/dhtmlxLayout/codebase/dhtmlxcommon.js"></script>
 <?php
    }
-   else if (strtoupper($p_dgrid) == 'N' AND strtoupper($p_dwin) == 'N' AND strtoupper($p_dlayout) == 'Y') {
+   else if ($l_grid == false && $l_win == false && $l_layout == true) {
 ?>
 <script type="text/javascript" src="<?php echo $l_dhtmlx_path; ?>/dhtmlxWindows/codebase/dhtmlxcommon.js"></script>
 <?php
@@ -62,14 +70,14 @@ if (strtoupper($p_dgrid) == 'Y') {
 ?>
 
 <?php
-   if (strtoupper($p_dlayout) == 'Y') {
+   if ($l_layout == true) {
 ?>
 <script type="text/javascript" src="<?php echo $l_dhtmlx_path; ?>/dhtmlxLayout/codebase/dhtmlxlayout.js"></script>
 <script type="text/javascript" src="<?php echo $l_dhtmlx_path; ?>/dhtmlxLayout/codebase/dhtmlxcontainer.js"></script>
 <?php
    }
 
-   if (strtoupper($p_dgrid) == 'Y') {
+   if ($l_grid == true) {
 ?>
 <script type="text/javascript" src="<?php echo $l_dhtmlx_path; ?>/dhtmlxGrid/codebase/dhtmlxgrid.js"></script>
 <script type="text/javascript" src="<?php echo $l_dhtmlx_path; ?>/dhtmlxGrid/codebase/dhtmlxgridcell.js"></script>
@@ -79,7 +87,7 @@ if (strtoupper($p_dgrid) == 'Y') {
 <?php
 }
 
-   if (strtoupper($p_dwin) == 'Y') {
+   if ($l_win == true) {
 ?>
 <script type="text/javascript" src="<?php echo $l_dhtmlx_path; ?>/dhtmlxWindows/codebase/dhtmlxwindows.js"></script>
 <script type="text/javascript" src="<?php echo $l_dhtmlx_path; ?>/dhtmlxWindows/codebase/dhtmlxcontainer.js"></script>
