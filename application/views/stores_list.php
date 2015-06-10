@@ -69,7 +69,7 @@ for ($x = 0; $x < 5; $x++) {
 <div class="buttonGroup">
 <?php 
     Button(array('name'=>'Save','type'=>'submit'));    
-    Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("store/delete")  . "');"));        
+    Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("stores/delete")  . "');"));        
 ?>    
 </div>
 
