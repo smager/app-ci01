@@ -711,9 +711,90 @@ CREATE TABLE IF NOT EXISTS `javascripts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 CREATE OR REPLACE VIEW store_supplies_v AS
-select a.*, b.supply_desc
+select a.*, b.supply_code
 from store_supplies a, supplies b
 WHERE a.supply_id = b.supply_id;
+
+CREATE OR REPLACE VIEW store_supplies_ad AS
+SELECT
+    `store_supplies_v` . `store_id` AS `store_id` ,
+    `store_supplies_v` . `store_supply_id` AS `store_supply_id` ,
+    `store_supplies_v` . `supply_id` AS `supply_id` ,
+    `store_supplies_v` . `supply_code` AS `supply_code`
+FROM
+     `store_supplies_v`
+UNION SELECT
+    '' AS `store_id` ,
+    '' AS `store_supply_id` ,
+    `a` . `supply_id` AS `supply_id` ,
+    `a` . `supply_code` AS `supply_code`
+FROM
+     `supplies` `a`
+WHERE
+    (
+        NOT(
+            EXISTS(
+                SELECT
+                    `b` . `supply_id`
+                FROM
+                     `store_supplies_v` `b`
+                WHERE
+                    (
+                        `b` . `supply_id` = `a` . `supply_id`
+                    AND b.store_id=''
+                    )
+            )
+        )
+    )
+
+
+CREATE OR REPLACE VIEW loc_supplies_v AS
+select a.*, b.supply_code
+from loc_supplies a, supplies b
+WHERE a.supply_id = b.supply_id;
+
+CREATE OR REPLACE VIEW loc_supplies_ad as
+SELECT
+    `loc_supplies_v` . `loc_id` AS `loc_id` ,
+    `loc_supplies_v` . `loc_supply_id` AS `loc_supply_id` ,
+    `loc_supplies_v` . `supply_id` AS `supply_id` ,
+    `loc_supplies_v` . `supply_code` AS `supply_code`
+FROM
+    `zsi_sims` . `loc_supplies_v`
+UNION SELECT
+    '' AS `loc_id` ,
+    '' AS `loc_supply_id` ,
+    `a` . `supply_id` AS `supply_id` ,
+    `a` . `supply_code` AS `supply_code`
+FROM
+    `zsi_sims` . `supplies` `a`
+WHERE
+    (
+        NOT(
+            EXISTS(
+                SELECT
+                    `b` . `supply_id`
+                FROM
+                    `zsi_sims` . `loc_supplies_v` `b`
+                WHERE
+                    (
+                        `b` . `supply_id` = `a` . `supply_id`
+                    )
+            )
+        )
+    )
+    
+----
+/******FUNCTIONS
+
+create function  getUnitSDesc(p_unit_id int) RETURNS VARCHAR(100)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl varchar(100);
+    SELECT unit_sdesc INTO lvl FROM units WHERE unit_id=p_unit_id;
+ RETURN (lvl);
+END;
+
 
 
 
