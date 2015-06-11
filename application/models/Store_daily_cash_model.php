@@ -27,14 +27,14 @@ class store_daily_cash_model extends CI_Model{
 
         if($store_daily_cash_id==''){
             //insert        
-            $data['created_by'] =1;
+            $data['created_by'] =current_user()->empl_id;
             $this->db->set('created_date', 'NOW()', FALSE);
             $this->db->insert('store_daily_cash', $data);
              $store_daily_cash_id = $this->db->insert_id();
 
         }else{
             //update                        
-            $data['updated_by'] =1;
+            $data['updated_by'] =current_user()->empl_id;
             $this->db->set('updated_date', 'NOW()', FALSE);
             $this->db->where('store_daily_cash_id', $store_daily_cash_id);
             $this->db->update('store_daily_cash', $data);
@@ -53,13 +53,13 @@ class store_daily_cash_model extends CI_Model{
                 
                 if($id==''){
                     //insert        
-                    $data['created_by'] =1;
+                    $data['created_by'] =current_user()->empl_id;
                     $this->db->set('created_date', 'NOW()', FALSE);
                     $this->db->insert('store_daily_cash_dtl', $data);
 
                 }else{
                     //update                        
-                    $data['updated_by'] =1;
+                    $data['updated_by'] =current_user()->empl_id;
                     $this->db->set('updated_date', 'NOW()', FALSE);
                     $this->db->where('store_daily_cash_dtl_id', $id);
                     $this->db->update('store_daily_cash_dtl', $data);

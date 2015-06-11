@@ -31,7 +31,7 @@ class javascripts_model extends CI_Model{
 
         if($id==''){
             //insert        
-            $data['created_by'] =1;
+            $data['created_by'] =current_user()->empl_id;
             $this->db->set('created_date', 'NOW()', FALSE);
             $this->db->insert('javascripts', $data);
 
@@ -40,7 +40,7 @@ class javascripts_model extends CI_Model{
             //get version id        
             $info = $this->db->query("SELECT version_id FROM javascripts where js_id=" . $post['p_js_id'] )->result()[0];
 
-            $data['updated_by'] =1;
+            $data['updated_by'] =current_user()->empl_id;
             $this->db->set('updated_date', 'NOW()', FALSE);
             $this->db->set('version_id', intval($info->version_id) + 1, FALSE);
             $this->db->where('js_id', $id);

@@ -28,7 +28,7 @@ class loc_supplies_model extends CI_Model{
                             ,'supply_id' => $supply_id
                         );
 
-                        $data['created_by'] =1;
+                        $data['created_by'] =current_user()->empl_id;
                         $this->db->set('created_date', 'NOW()', FALSE);
                         $this->db->insert('loc_supplies', $data);
 

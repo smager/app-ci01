@@ -6,7 +6,7 @@ class snippets_model extends CI_Model{
     }
 
     function form_insert($data){                    
-        $data['created_by'] =1;
+        $data['created_by'] =current_user()->empl_id;
         $this->db->set('created_date', 'NOW()', FALSE);
         $this->db->insert('snippets', $data);
     }

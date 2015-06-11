@@ -365,3 +365,15 @@ if ( ! function_exists('GetIcon'))
 
    }
 }
+
+
+if ( ! function_exists('current_user'))
+{    
+    function current_user(){
+        $ci =& get_instance();
+        $ci->load->library('session');
+        $cu = $ci->session->userdata('current_user');
+        if($cu=="") redirect(base_url());             
+        return $cu;
+    }
+}

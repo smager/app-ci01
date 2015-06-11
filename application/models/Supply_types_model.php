@@ -28,13 +28,13 @@ class supply_types_model extends CI_Model{
                 
                 if($id==''){
                     //insert        
-                    $data['created_by'] =1;
+                    $data['created_by'] =current_user()->empl_id;
                     $this->db->set('created_date', 'NOW()', FALSE);
                     $this->db->insert('supply_types', $data);
 
                 }else{
                     //update                        
-                    $data['updated_by'] =1;
+                    $data['updated_by'] =current_user()->empl_id;
                     $this->db->set('updated_date', 'NOW()', FALSE);
                     $this->db->where('supply_type_id', $id);
                     $this->db->update('supply_types', $data);

@@ -28,13 +28,13 @@ class roles_model extends CI_Model{
                 
                 if($id==''){
                     //insert        
-                    $data['created_by'] =1;
+                    $data['created_by'] =current_user()->empl_id;
                     $this->db->set('created_date', 'NOW()', FALSE);
                     $this->db->insert('roles', $data);
 
                 }else{
                     //update                        
-                    $data['updated_by'] =1;
+                    $data['updated_by'] =current_user()->empl_id;
                     $this->db->set('updated_date', 'NOW()', FALSE);
                     $this->db->where('role_id', $id);
                     $this->db->update('roles', $data);
