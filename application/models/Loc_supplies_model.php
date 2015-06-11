@@ -10,7 +10,7 @@ class loc_supplies_model extends CI_Model{
         return $query;    
     }
     function getdata_ad($sid){
-        $query = $this->db->query("SELECT * FROM loc_supplies_ad_v where loc_id='' or loc_id=".$sid);
+        $query = $this->db->query("SELECT * FROM loc_supplies_v where loc_id=".$sid." UNION SELECT * FROM supplies2_v a WHERE NOT EXISTS(SELECT b.supply_id FROM loc_supplies_v b WHERE b.loc_id=".$sid." AND b.supply_id = a.supply_id)" );
         return $query;    
     }    
     
