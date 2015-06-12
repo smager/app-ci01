@@ -7,8 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <title>Stores</title>
 <?php
     includeHeader();    
-?> 
-    
+?>
 </head>
 <body>
 <?php menu(); ?> 
@@ -32,18 +31,25 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
     $ssd=$ssq->result();  
 
     $l_supplies = '';  
-    $l_br = '<br />';
+    $l_br = '';
+ 
     for ($y = 0; $y < $ssq->num_rows(); $y++) { 
         $l_supplies = $l_supplies . $l_br . $ssd[$y]->supply_code;
         $l_br = '<br />';
     }
+ 
 ?>
     <tr>
         
             <td><input type="hidden" name="p_store_id[]" value="<?php echo $d[$x]->store_id; ?>">
                 <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->store_id  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"store_name[]",'value'=>$d[$x]->store_name  )); ?> </td>
-            <td><a href="javascript:manageItems(<?php echo $d[$x]->store_id; ?>);">Manage Items</a><?php echo $l_supplies; ?></td>
+            <td><a href="javascript:manageItems(<?php echo $d[$x]->store_id; ?>);">Manage Items</a>
+                | <a href="javascript:void(0)" onclick="collapseList(this,'prodlist<?php echo $x; ?>');">Show</a>  
+                <div style="display: none;" id='prodlist<?php echo $x; ?>'>
+                <?php echo $l_supplies; ?>
+                </div>
+            </td>
         
     </tr>        
 
@@ -74,8 +80,6 @@ for ($x = 0; $x < 5; $x++) {
 </div>
 
 </form>    
-
-    
 
 </div> <!---end of container-page-->
 <?php includeHandleBars(); ?>    
