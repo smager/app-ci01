@@ -11,7 +11,7 @@ class supply_types extends CI_Controller {
     
 	public function index()
 	{
-  
+        check_login();
 		$this->load->view('supply_types_list');
 	}
     

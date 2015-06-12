@@ -13,14 +13,8 @@ class Snippets extends CI_Controller {
     
 	public function index()
 	{
-        //$query = $this->db->query('SELECT snippet_name FROM snippets');
-        
-        /*foreach ($query->result() as $row)
-        {
-                echo $row->snippet_name;
-        }
-        */
 
+        check_login();
 		$this->load->view('snippets_list');
 	}
     

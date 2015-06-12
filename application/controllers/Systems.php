@@ -11,7 +11,7 @@ class systems extends CI_Controller {
     
 	public function index()
 	{
-  
+        check_login();
 		$this->load->view('systems_list');
 	}
     

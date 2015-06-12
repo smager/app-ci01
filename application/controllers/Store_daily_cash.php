@@ -12,7 +12,7 @@ class store_daily_cash extends CI_Controller {
     
 	public function index()
 	{
-  
+        check_login();
 		$this->load->view('store_daily_cash_list');
 	}
 

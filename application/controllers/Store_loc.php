@@ -11,7 +11,7 @@ class store_loc extends CI_Controller {
     
 	public function index()
 	{
-  
+        check_login();
 		$this->load->view('store_loc_list');
 	}
     

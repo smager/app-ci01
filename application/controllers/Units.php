@@ -11,7 +11,7 @@ class units extends CI_Controller {
     
 	public function index()
 	{
-  
+        check_login();
 		$this->load->view('units_list');
 	}
     

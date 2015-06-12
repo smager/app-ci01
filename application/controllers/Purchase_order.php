@@ -11,7 +11,7 @@ class purchase_order extends CI_Controller {
     
 	public function index()
 	{
-  
+        check_login();
 		$this->load->view('purchase_order_list');
 	}
     

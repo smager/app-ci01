@@ -11,7 +11,7 @@ class roles extends CI_Controller {
     
 	public function index()
 	{
-  
+        check_login();
 		$this->load->view('roles_list');
 	}
     

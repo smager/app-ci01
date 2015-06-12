@@ -12,7 +12,7 @@ class users extends CI_Controller {
     
 	public function index()
 	{
-  
+        check_login();
 		$this->load->view('users_list');
 	}
     

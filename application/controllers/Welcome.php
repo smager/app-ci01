@@ -12,15 +12,7 @@ class Welcome extends CI_Controller {
     }    
 	public function index()
 	{
+        check_login();
 		$this->load->view('welcome_message');
-	}
-    
-	public function test()
-	{
-		echo "test";
-	}    
-	public function test2()
-	{
-		$this->load->view('test_form');
-	}      
+	} 
 }

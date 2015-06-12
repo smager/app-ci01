@@ -370,13 +370,7 @@ if ( ! function_exists('GetIcon'))
 if ( ! function_exists('check_login'))
 {    
     function check_login(){
-        $ci =& get_instance();
-        $ci->load->library('session');
-        $cu = $ci->session->userdata('current_user');
-        if($cu==""){ 
-            echo "illegal access.";
-            exit;
-        }
+        current_user();
     }
 }
 

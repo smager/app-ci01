@@ -12,7 +12,7 @@ class menu extends CI_Controller {
     
 	public function index()
 	{
-                
+        check_login();        
 		$this->load->view('menu_list');
 	}
     

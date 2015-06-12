@@ -11,7 +11,7 @@ class denomination_ref extends CI_Controller {
     
 	public function index()
 	{
-  
+        check_login();
 		$this->load->view('denomination_ref_list');
 	}
     

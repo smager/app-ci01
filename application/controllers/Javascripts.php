@@ -11,14 +11,14 @@ class javascripts extends CI_Controller {
     
 	public function index()
 	{
-  
+        check_login();
 		$this->load->view('javascripts_list');
 	}
     
     
 	public function form()
 	{
-  
+        check_login();
 		$this->load->view('javascripts_form');
 	}
     

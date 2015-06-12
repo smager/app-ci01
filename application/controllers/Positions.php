@@ -11,7 +11,7 @@ class positions extends CI_Controller {
     
 	public function index()
 	{
-  
+        check_login();
 		$this->load->view('positions_list');
 	}
     
