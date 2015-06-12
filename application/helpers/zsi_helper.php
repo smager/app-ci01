@@ -129,6 +129,7 @@ if ( ! function_exists('closeFormGroup'))
 if ( ! function_exists('jsonOut'))
 {    
     function jsonOut($p){
+        check_login();
         $ci =& get_instance();
         $ci->output
         ->set_status_header(200)
@@ -366,6 +367,18 @@ if ( ! function_exists('GetIcon'))
    }
 }
 
+if ( ! function_exists('check_login'))
+{    
+    function check_login(){
+        $ci =& get_instance();
+        $ci->load->library('session');
+        $cu = $ci->session->userdata('current_user');
+        if($cu==""){ 
+            echo "illegal access.";
+            exit;
+        }
+    }
+}
 
 if ( ! function_exists('current_user'))
 {    
