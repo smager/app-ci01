@@ -20,14 +20,16 @@ class loc_supplies_model extends CI_Model{
             $id = $post['p_loc_supply_id'][$x];
             $supply_id = $post['p_supply_id'][$x];
             $isCheck =  $post['p_isCheck'][$x];
+ 
+            $data = array(
+                 'loc_id'  => $loc_id
+                ,'supply_id' => $supply_id
+                ,'reorder_level' => $post['p_reorder_level'][$x]
+                ,'max_level' => $post['p_max_level'][$x]
+            );
             
                 if($isCheck==1 && $id=='')  {            
                         //insert        
-                        $data = array(
-                             'loc_id'  => $loc_id
-                            ,'supply_id' => $supply_id
-                        );
-
                         $data['created_by'] =current_user()->empl_id;
                         $this->db->set('created_date', 'NOW()', FALSE);
                         $this->db->insert('loc_supplies', $data);
