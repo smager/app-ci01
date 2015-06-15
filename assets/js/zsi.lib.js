@@ -371,17 +371,18 @@ zsi.page.DisplayRecordPage   = function(p_page_no,p_rows,p_numrec){
 }
 /*------------------------------------------------------------------------------------------*/
 /*Example:
-  SelectList("common/get_select_data","#p_vaccine_code","=l_vaccine_code","N","S004_T08005","vaccine_code","vaccine_name","");
+  SelectList("common/get_select_data","#p_vaccine_code","=l_vaccine_code","N");
 */
-zsi.control.SelectList = function(p_url,p_selector,p_selval,p_req, p_table,p_value,p_text,p_con,p_onLoadComplete){
-   var param = '/' + p_table + '/' +  p_text + '/' +  p_value + '/' +  p_con ;
-   $.getJSON(p_url + param, function( data ) {
+
+zsi.control.SelectList = function(p_url,p_selector,p_selval,p_req,p_onLoadComplete){
+   $.getJSON(p_url, function( data ) {
       if(p_selector instanceof jQuery)
          p_selector.fillSelect(data,p_selval,p_req,p_onLoadComplete);
       else
          $(p_selector).fillSelect(data,p_selval,p_req,p_onLoadComplete);
    });
 }
+
 /*--[zsi.calendar]------------------------------------------------------------------------------*/
 zsi.calendar.LoadMonths = function(p_select){
    p_select.add(new Option(" ", ""),null);
