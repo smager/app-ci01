@@ -15,6 +15,19 @@ class common extends CI_Controller {
         jsonOut($query->result());
         
     }
+    
+	public function select_data()        
+	{
+        $l_condition="";
+        $d=$this->input->get();
+        
+        if(isset($d['p_con']))  $l_condition="where " . $d['p_con'];
+        $sql = "SELECT  " . $d['p_text'] . " as text, " . $d['p_value'] . " as value  FROM " . $d['p_table'] . " " . $l_condition;        
+        $query = $this->db->query( $sql);        
+        jsonOut($query->result());
+        
+    }
+    
 
     
 	public function checkDataExist($table,$field,$value)
