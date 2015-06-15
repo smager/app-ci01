@@ -884,6 +884,7 @@ zsi.bs.ctrl = function(o){
     var l_endTag="";
     var l_value="";
     var l_in_value="";
+    var l_selected_value="";
 
     if(typeof o.class!=="undefined") l_class=' class="' + o.class + '"';         
     if(typeof o.value!=="undefined") l_value=' value="' + o.value + '"';
@@ -899,13 +900,17 @@ zsi.bs.ctrl = function(o){
         if(t=='select' || t =='textarea'){
             l_type="";
             l_endTag='</' + l_tag + '>';
+            if(t=='select' && typeof o.value!=="undefined") 
+                l_selected_value = " selectedvalue=" + o.value;
+                
+            if(o.type =='textarea' && typeof o.value!=="undefined"){
+                l_value="";
+                l_in_value=o.value;
+            }             
         }
-        if(o.type =='textarea' && typeof o.value!=="undefined"){
-            l_value="";
-            l_in_value=o.value;
-        } 
+
     }
-   return '<' + l_tag + l_name + l_type + l_class + l_value +'>' + l_in_value + l_endTag;
+   return '<' + l_tag + l_name + l_type + l_class + l_value + l_selected_value + '>' + l_in_value + l_endTag;
 }    
   
   
