@@ -913,6 +913,31 @@ zsi.bs.ctrl = function(o){
    return '<' + l_tag + l_name + l_type + l_class + l_value + l_selected_value + '>' + l_in_value + l_endTag;
 }    
   
+zsi.bs.button =function(p){
+    var l_icon ='';
+    var l_class =' class="btn btn-primary btn-sm"';
+    var l_type =' type="button"';
+    var l_onclick='';
+    
+    if(typeof p.type !== "undefined") l_type = ' type="' + p.type + '"';
+    if(typeof p.class !== "undefined") l_class = ' class="' + p.class + '"';
+    if(typeof p.onclick !== "undefined") l_onclick = ' onclick="' + p.onclick + '"';
+    switch(p.name.toLowerCase()){
+        case 'search': l_icon='search';break;
+        case 'add': 
+        case 'new': l_icon='plus-sign';break;
+        case 'delete': l_icon='trash';break;
+        case 'close': l_icon='off';break;
+        case 'save': l_icon='floppy-disk';break;
+        case 'reset': l_icon='retweet';break;
+        case 'login': l_icon='log-in';break;
+        default:break;
+    }
+    
+    var l_span ='<span class="glyphicon glyphicon-' + l_icon + '"></span>';
+    var result = '<button id="btn' + p.name + '" ' + l_class +  l_type + l_onclick + '>' + l_span + ' ' + p.name + '</button>';
+    return result;
+}
   
 
 /*----[ extended-JQuery Function ]--------------------------------------------------------------*/
