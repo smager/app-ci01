@@ -321,6 +321,7 @@ CREATE TABLE IF NOT EXISTS `supply_brands` (
   `supply_brand_id` int(5) unsigned NOT NULL auto_increment,
   `brand_id` int(5),
   `supply_id` int(5),
+  `unit_id` int(5),
   `supply_cost`  decimal(5,2),
   `supply_srp`   decimal(5,2),
   `created_by` int(5),
@@ -741,7 +742,6 @@ from store_supplies a, supplies b
 WHERE a.supply_id = b.supply_id;
 
 
-
 CREATE OR REPLACE VIEW store_supplies_v AS
 select store_id, store_supply_id, supply_id, b.supply_code
 from store_supplies a, supplies b
@@ -753,12 +753,24 @@ select a.loc_id, a.loc_supply_id, a.supply_id, b.supply_code, a.reorder_level, a
 from loc_supplies a, supplies b
 WHERE a.supply_id = b.supply_id;
 
-
 CREATE OR REPLACE VIEW user_locations_v AS
 select a.user_loc_id, a.loc_id, a.user_id, b.location
 from user_locations a, locations b
 WHERE a.loc_id = b.loc_id;
 
+CREATE OR REPLACE VIEW user_locations2_v AS
+select "" as user_loc_id, b.loc_id, "" as .user_id, b.location
+from user_locations a, locations b
+WHERE a.loc_id = b.loc_id;
+
+CREATE OR REPLACE VIEW supply_brands_v AS
+select a.supply_brand_id, a.supply_id, a.brand_id, b.brand_name, a.unit_id, a.supply_cost, a.supply_srp
+from supply_brands a, brands b
+WHERE a.brand_id = b.brand_id;
+
+CREATE OR REPLACE VIEW supply_brands2_v AS
+select "" as supply_brand_id, "" as supply_id, brand_id,  brand_name, "" as unit_id, "" as supply_cost, "" as supply_srp
+from  brands;
 
     
 ----
