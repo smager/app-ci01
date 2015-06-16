@@ -41,17 +41,13 @@ class users extends CI_Controller {
         $this->session->unset_userdata('current_user');
         redirect( base_url() );            
     }
+
+    public function getdata_json(){
     
-    
-    public function getjson(){    
-        $chkStart = "<input type=''checkbox'' onclick=''zsi.table.setCheckBox(this,";
-        $chkEnd = ");'' />";    
-        $hid = "<input name=''p_sel'' type=''hidden'' />";
+        jsonOut($this->users_model->getdata()->result());
         
-        $query = $this->db->query("SELECT concat('$chkStart', s.user_id,'$chkEnd','$hid') AS a,s.* FROM users as s");
-        $result=toDHTMLXData($query);
-        jsonOut($result);
-    }
+    }    
+    
     
     
     public function update()
