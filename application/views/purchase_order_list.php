@@ -13,7 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php menu(); ?> 
     
 <div class="container page">
-<form id="frm" >
+<form id="frm" action="<?php echo base_url('purchase_order/update');?>" method="post" >
     
 
 <div >

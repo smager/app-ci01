@@ -14,7 +14,12 @@ class purchase_order extends CI_Controller {
         check_login();
 		$this->load->view('purchase_order_list');
 	}
+
+      public function getdata_json(){
     
+        jsonOut($this->purchase_order_model->getdata()->result());
+        
+    }    
         
     public function update()
 	{

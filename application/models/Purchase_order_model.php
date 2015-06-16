@@ -9,6 +9,15 @@ class purchase_order_model extends CI_Model{
         $query = $this->db->query("SELECT * FROM po");
         return $query;    
     }
+
+    function getdata_dtls(){
+        $query = $this->db->query("SELECT * FROM po_dtls");
+        return $query;    
+    }
+
+    
+        
+        
     
     function update($post){
 
