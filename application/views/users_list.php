@@ -23,6 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <th>Password</th>
         <th>Role</th>
         <th>Active?</th>
+        <th>Location Access</th>
     </tr>
 <?php
 
@@ -41,13 +42,14 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
             <td><?php inputTextBox( array( 'name'=>"user_password[]",'value'=>$d[$x]->user_password  )); ?> </td>
             <td><?php selectBox( array( 'name'=>'role_id[]','value'=>$d[$x]->role_id,'selectedValue'=>$d[$x]->role_id  )); ?> </td>         
             <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N','value'=>$d[$x]->active )); ?> </td>
+            <td><a href="javascript:manageUserLoc(<?php echo $d[$x]->user_loc_id; ?>);">Manage User Locations</a></td>
         
     </tr>        
 
 <?php    
 }
 
-for ($x = 0; $x < 5; $x++) {
+for ($x = 0; $x < 5; $x++ ) {
 ?>
     <tr>
         
@@ -58,6 +60,7 @@ for ($x = 0; $x < 5; $x++) {
             <td><?php inputTextBox( array( 'name'=>"user_password[]")); ?> </td>
             <td><?php selectBox( array( 'name'=>'role_id[]')); ?> </td>
             <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N')); ?> </td>
+            <td></td>
     </tr>
     
     

@@ -104,6 +104,8 @@ CREATE TABLE IF NOT EXISTS `roles` (
   COMMENT='Menus'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
+
+
 CREATE TABLE IF NOT EXISTS `positions` (
   `position_id` int(5) unsigned NOT NULL auto_increment,
   `position_desc` varchar(64) NOT NULL default '',
@@ -135,6 +137,7 @@ CREATE TABLE IF NOT EXISTS `role_menus` (
 CREATE TABLE IF NOT EXISTS `locations` (
   `loc_id` int(5) unsigned NOT NULL auto_increment,
   `location` varchar(100) NOT NULL default '',
+  `loc_group_id` int(5),
   `created_by` int(5),
   `created_date` datetime,
   `updated_by` int(5),
@@ -209,6 +212,22 @@ CREATE TABLE IF NOT EXISTS `users` (
 )
   COMMENT='Users'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
+CREATE TABLE IF NOT EXISTS `user_locations` (
+  `user_loc_id` int(5) unsigned NOT NULL auto_increment,
+  `user_id` int(5),
+  `loc_id` int(5),
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `user_locations_pk`  (`user_loc_id`),
+  UNIQUE KEY `user_locations_uk` (`user_id`,`loc_id`)
+)
+  COMMENT='User Locations Access'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+  
+  
 
 CREATE TABLE IF NOT EXISTS `brands` (
   `brand_id` int(5) unsigned NOT NULL auto_increment,
