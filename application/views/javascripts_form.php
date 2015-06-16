@@ -10,12 +10,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     hiddenBox( array( 'name'=>'js_id'));  
     hiddenBox( array( 'name'=>'content'));  
     openFormGroup();
-        inputTextBox( array( 'name'=>"page_url",'labelName'=>"Page URL",'labelSize'=>1,'inputSize'=>3)); 
+        inputTextBox( array( 'name'=>"page_url",'labelName'=>"Page URL",'labelSize'=>2,'inputSize'=>3)); 
     closeFormGroup();
     openFormGroup();
 ?>
    <div class="form-group">
-     <label class="col-xs-1 control-label">HTML Code :</label>
+     <label class="col-xs-2 control-label">JavaScript Code:</label>
    </div>      
    <pre id="editor"></pre>
 <?php
