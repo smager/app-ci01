@@ -97,6 +97,27 @@ if ($l_grid == true) {
 }}
 ?>
 
+<?php
+if ( ! function_exists('includePageTemplate')){        
+  function includePageTemplate($url=''){
+    $ci =& get_instance();
+    if($url=='') $url = $ci->router->fetch_class() . '/' . $ci->router->fetch_method();
+    $where ="where page_url='$url'";        
+    $query = $ci->db->query("SELECT * FROM page_templates $where");
+    if($query->num_rows()>0){
+        echo $query->result()[0]->content;
+    }
+    else{ 
+        $data = array('page_url' =>  $url, 'content' => '' );
+        $ci->db->set('created_date', 'NOW()', FALSE);
+        $ci->db->insert('page_templates', $data);              
+    }
+      
+  }    
+}
+?>
+
+
 
 <?php
 if ( ! function_exists('includePageJS')){        

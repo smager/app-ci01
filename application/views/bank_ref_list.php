@@ -13,6 +13,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php menu(); ?> 
     
 <div class="container page">
+<?php includePageTemplate(); ?>  
+    
 <form id="frm" action="<?php echo base_url('bank_ref/update');?>" method="post" >
 <table class="table">    
     <tr>
