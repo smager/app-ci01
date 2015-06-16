@@ -16,16 +16,8 @@ class supplies extends CI_Controller {
 	}
     
     
-    
-    public function getjson(){    
-        $chkStart = "<input type=''checkbox'' onclick=''zsi.table.setCheckBox(this,";
-        $chkEnd = ");'' />";    
-        $hid = "<input name=''p_sel'' type=''hidden'' />";
-        
-        $query = $this->db->query("SELECT concat('$chkStart', s.snippet_id,'$chkEnd','$hid') AS a,s.* FROM supplies as s");
-        $result=toDHTMLXData($query);
-        jsonOut($result);  
-
+    public function getdata_json(){    
+        jsonOut($this->supplies_model->getdata()->result());        
     }
     
     

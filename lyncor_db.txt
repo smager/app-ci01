@@ -231,7 +231,8 @@ CREATE TABLE IF NOT EXISTS `user_locations` (
 
 CREATE TABLE IF NOT EXISTS `brands` (
   `brand_id` int(5) unsigned NOT NULL auto_increment,
-  `brand_name` varchar(64) NOT NULL default '',
+  `brand_name` varchar(64) NOT NULL default '', 
+ `brand_name` varchar(64) NOT NULL default '',
   `created_by` int(5),
   `created_date` datetime,
   `updated_by` int(5),
@@ -751,6 +752,13 @@ CREATE OR REPLACE VIEW loc_supplies_v AS
 select a.loc_id, a.loc_supply_id, a.supply_id, b.supply_code, a.reorder_level, a.max_level, a.stock_qty
 from loc_supplies a, supplies b
 WHERE a.supply_id = b.supply_id;
+
+
+CREATE OR REPLACE VIEW user_locations_v AS
+select a.user_loc_id, a.loc_id, a.user_id, b.location
+from user_locations a, locations b
+WHERE a.loc_id = b.loc_id;
+
 
     
 ----

@@ -17,6 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php includePageTemplate(); ?>             
 </div>
 <?php includeHandleBars(); ?>  
+<?php includeHandleBars(); ?>     
 <?php includePageJS(); ?>      
 <?php includeFooter(); ?>     
 </body>
