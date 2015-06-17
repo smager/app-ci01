@@ -519,16 +519,15 @@ CREATE TABLE IF NOT EXISTS `loc_supplies` (
 
   CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
    `supply_is_dtls`   int(5) unsigned NOT NULL auto_increment,
-   `is_no`     int(5),
-   `supply_id`     int(5),
-   `supply_qty`    decimal(5,2),
-   `unit_id`       int(5),
+   `supply_is_id`     int(5),
+   `supply_is_qty`    decimal(5,2),
+   `supply_brand_id`  int(5),
    `created_by`    int(5),
    `created_date`  datetime,
    `updated_by`    int(5),
    `updated_date`  datetime,
    PRIMARY KEY `supply_is_dtls_pk`  (`supply_is_dtls`),
-   UNIQUE KEY `supply_is_dtls_uk` (`is_no`,`supply_id`)
+   UNIQUE KEY `supply_is_dtls_uk` (`supply_is_id`,`supply_brand_id`)
  )
    COMMENT='Stock Issuance details to stores'
    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
