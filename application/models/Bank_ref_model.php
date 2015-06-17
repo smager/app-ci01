@@ -23,6 +23,7 @@ class bank_ref_model extends CI_Model{
                      'bank_acctno' => $acct_no
                     ,'bank_acctname' => $post['p_bank_acctname'][$x]
                     ,'bank_name' => $post['p_bank_name'][$x]
+                    ,'depo_pct_share' => $post['p_depo_pct_share'][$x]
                     ,'active' => $post['p_active'][$x]
                 );
                 

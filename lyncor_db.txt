@@ -763,6 +763,12 @@ select "" as user_loc_id, b.loc_id, "" as .user_id, b.location
 from user_locations a, locations b
 WHERE a.loc_id = b.loc_id;
 
+CREATE OR REPLACE VIEW supply_v AS
+select a.supply_brand_id, a.supply_id, a.brand_id, b.brand_name, a.unit_id, a.supply_cost, a.supply_srp, if(a.brand_id=1,c.supply_code, concat(c.supply_code ,' ', b.brand_name)) as supply 
+from supply_brands a, brands b, supplies c
+WHERE a.brand_id = b.brand_id
+AND a.supply_id = c.supply_id
+
 CREATE OR REPLACE VIEW supply_brands_v AS
 select a.supply_brand_id, a.supply_id, a.brand_id, b.brand_name, a.unit_id, a.supply_cost, a.supply_srp
 from supply_brands a, brands b
@@ -772,6 +778,11 @@ CREATE OR REPLACE VIEW supply_brands2_v AS
 select "" as supply_brand_id, "" as supply_id, brand_id,  brand_name, "" as unit_id, "" as supply_cost, "" as supply_srp
 from  brands;
 
+CREATE OR REPLACE VIEW conv_units_v AS
+select a.conv_unit_id, if(a.from_unit_id=a.conv_unit_id, b.unit_sdesc, concat(conv_unit_qty, ' ', c.unit_sdesc, ' per ',  b.unit_sdesc)) as cu_desc
+FROM conv_units a, units b, units c
+WHERE a.from_unit_id = b.unit_id
+AND a.conv_unit_id = c.unit_id
     
 ----
 /******FUNCTIONS
