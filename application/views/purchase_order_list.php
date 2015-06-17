@@ -7,7 +7,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <title>Purchase Order</title>
 <?php
     includeHeader();    
-?>     
+?>
+<style>
+.poLeftBox {    
+    margin-top: 10px;
+}
+.poLeftBox .panel-body{
+    height: 400px;
+    overflow:auto;
+}
+    
+</style>    
 </head>
 <body>
 <?php menu(); ?> 
@@ -32,8 +42,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
 </div>    
     
+<div class="col-xs-2 poLeftBox">
 
+<div class="panel panel-default">
+  <div class="panel-heading">Unposted P.O #</div>
+  <div class="panel-body">
+
+        <div class="list-group">
+ 
+           
+        </div>
     
+   </div>
+</div>
+    
+</div>
+<div class="col-xs-10">    
 <table id="grid" class="table">
     <thead>
         <tr>
@@ -42,17 +66,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <th>Unit</th>
             <th>Item</th>
             <th>Unit Price</th>
+            <th>Total</th>
 
         </tr>
     </thead>        
 </table>    
-
 <div class="buttonGroup">
 <?php 
-    Button(array('name'=>'Save','type'=>'submit'));    
-    Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("purchase_order/delete")  . "');"));        
+Button(array('name'=>'Save','type'=>'submit'));    
+Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("purchase_order/delete")  . "');"));        
 ?>    
 </div>
+</div>
+
 
 </form>    
     
