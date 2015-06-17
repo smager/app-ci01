@@ -886,11 +886,31 @@ zsi.bs.ctrl = function(o){
     var l_in_value="";
     var l_selected_value="";
 
+    var yesno = function(p){
+        var v = 0;
+        var str ='';
+        var cls = 'class="form-control input-sm"';
+        
+        if (typeof p.class !=="undefined") cls = 'class="' + p.class + '"';
+        str +='<select name="p_' + p.name + '" id="p_' + p.name + '" ' + cls +   '>';
+        if (typeof p.value !=="undefined") v = p.value;
+        if(typeof p.mandatory !=="undefined"){
+            if(p.mandatory.toLowerCase()=='n') str += '<option value=""></option>';
+        }
+        str += '<option ' + (v==1 ? 'selected':'' ) +  ' value="1">Yes</option>';
+        str += '<option ' + (v==0 ? 'selected':'' ) +  ' value="0">No</option>';
+        str += '</select>';
+        return str;
+    }    
+
     if(typeof o.class!=="undefined") l_class=' class="' + o.class + '"';         
     if(typeof o.value!=="undefined") l_value=' value="' + o.value + '"';
     
     if(typeof o.type!=="undefined"){
         var t = o.type.toLowerCase();
+        
+        if(t=='yesno') return yesno(o);
+        
         l_type=' type="' + o.type + '"';
 
         if(t=="hidden") l_class='';
@@ -900,13 +920,13 @@ zsi.bs.ctrl = function(o){
         if(t=='select' || t =='textarea'){
             l_type="";
             l_endTag='</' + l_tag + '>';
-            if(t=='select' && typeof o.value!=="undefined") 
+            if(t=='select' && typeof o.value!=="undefined"){ 
                 l_selected_value = " selectedvalue=" + o.value;
-                
+            }
             if(o.type =='textarea' && typeof o.value!=="undefined"){
                 l_value="";
                 l_in_value=o.value;
-            }             
+            }
         }
 
     }
