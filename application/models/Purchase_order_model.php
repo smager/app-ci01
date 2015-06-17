@@ -10,8 +10,8 @@ class purchase_order_model extends CI_Model{
         return $query;    
     }
 
-    function getdata_dtls(){
-        $query = $this->db->query("SELECT * FROM po_dtls");
+    function getdata_dtls($id){
+        $query = $this->db->query("SELECT * FROM po_dtls where po_id=" . $id);
         return $query;    
     }
 
