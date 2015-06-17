@@ -130,8 +130,8 @@ if ( ! function_exists('includePageJS')){
     if($query->num_rows()>0){
         $version = "&p_revision=" . $query->result()[0]->version_id;
     }
-    
-    echo '<script src="' . base_url("javascripts/source?p_url=$url$version") . '"></script> ';  
+    echo '<script src="' . base_url("javascripts/source?p_url=$url$version") . '"></script>';  
+    echo "\r\n";      
   }    
 }
 ?>
@@ -191,39 +191,16 @@ function menu(){
           </button>
         </div>
         <div class="navbar-collapse collapse" id="navbar-main">
-<?php 
- if( isset( $ci->session->userdata['current_user'] ) ==true ){    
-    
-        $q=$ci->menu_types_model->getdata();
-        $d=$q->result();
-        echo '<ul class="nav navbar-nav">'; 
-        foreach($d as $i){
-            
-             $q_mi=$ci->menu_model->getSubMenuItem($i->menu_type_id);            
-            if($q_mi->num_rows() > 0){
-                echo  '<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">' . $i->menu_type . ' <span class="caret"></span></a>';            
-            }else{
-                echo  '<li class="dropdown"><a href="#">' . $i->menu_type . '</a>';                        
-            }
-            
-            if($q_mi->num_rows() > 0){
-                echo '<ul class="dropdown-menu">'; 
-                foreach($q_mi->result() as $subM){                    
-                     echo '<li><a href="'. $subM->menu_url. '">' . $subM->menu_name . '</a></li>';
-                }
-                echo '</ul>';              
-             }
-
-
-            echo '</li>'; 
-
-        }
-        echo '</ul>';                 
- }
-?>
         </div>
       </div>
 </div>
+
+<?php 
+ if( isset( $ci->session->userdata['current_user'] ) ==true ){    
+     includePageJS('loadmenu');  
+ }    
+?>
+
 <?php
 }}
 ?>

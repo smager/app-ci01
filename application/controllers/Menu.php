@@ -18,16 +18,12 @@ class menu extends CI_Controller {
     
     
     
-    public function getjson(){    
-        $chkStart = "<input type=''checkbox'' onclick=''zsi.table.setCheckBox(this,";
-        $chkEnd = ");'' />";    
-        $hid = "<input name=''p_sel'' type=''hidden'' />";
+    public function getdata_json($menu_type_id){
+    
+        jsonOut($this->menu_model->getSubMenuItem($menu_type_id)->result());
         
-        $query = $this->db->query("SELECT concat('$chkStart', s.snippet_id,'$chkEnd','$hid') AS a,s.* FROM menu as s");
-        $result=toDHTMLXData($query);
-        jsonOut($result);  
-
-    }
+    }        
+    
     
     
     public function update()

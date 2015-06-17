@@ -15,18 +15,16 @@ class menu_types extends CI_Controller {
 		$this->load->view('menu_types_list');
 	}
     
-    
-    
-    public function getjson(){    
-        $chkStart = "<input type=''checkbox'' onclick=''zsi.table.setCheckBox(this,";
-        $chkEnd = ");'' />";    
-        $hid = "<input name=''p_sel'' type=''hidden'' />";
-        
-        $query = $this->db->query("SELECT concat('$chkStart', s.snippet_id,'$chkEnd','$hid') AS a,s.* FROM menu_types as s");
-        $result=toDHTMLXData($query);
-        jsonOut($result);  
-
-    }
+    public function getdata_json(){
+        $this->load->model('menu_model'); 
+        $q=$this->menu_types_model->getdata_idname();
+        $d=$q->result();
+        foreach($d as $i){            
+             $q_mi=$this->menu_model->getSubMenuItem($i->id);            
+             $i->subMenus=$q_mi->result();
+        }        
+        jsonOut($d);        
+    }        
     
     
     public function update()
