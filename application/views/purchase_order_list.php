@@ -30,7 +30,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <div class="form-horizontal ">
         <?php 
 
-            //hiddenBox( array( 'name'=>'store_daily_cash_id'));         
+            hiddenBox( array( 'name'=>'po_id'));         
             openFormGroup();
             inputTextBox( array( 'labelName'=>'P.O. #' , 'name'=>'po_no', 'labelSize'=>1, 'inputSize'=>2)); 
             inputTextBox( array( 'labelName'=>'Date' , 'name'=>'po_date', 'labelSize'=>1, 'inputSize'=>2,'value'=>date('m/d/Y') )); 
@@ -63,8 +63,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <tr>
             <th></th>
             <th>Qty</th>
-            <th>Unit</th>
             <th>Item</th>
+            <th>Unit</th>
             <th>Unit Price</th>
             <th>Total</th>
 

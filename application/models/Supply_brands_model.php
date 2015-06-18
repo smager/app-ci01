@@ -9,6 +9,12 @@ class supply_brands_model extends CI_Model{
         $query = $this->db->query("SELECT * FROM supply_brands_v where supply_id=".$sid);
         return $query;    
     }
+    
+    function getDataSupplyBrands(){
+        $query = $this->db->query("SELECT * FROM supply_brands_v ");
+        return $query;    
+    }
+    
     function getdata_ad($sid){
         $query = $this->db->query(
             
@@ -19,6 +25,8 @@ class supply_brands_model extends CI_Model{
         );       
         return $query;    
     }    
+    
+ 
     
     function update($post){ //zsi.form.displayLOV
         

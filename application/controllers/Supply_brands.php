@@ -13,7 +13,9 @@ class supply_brands extends CI_Controller {
         jsonOut($this->supply_brands_model->getdata_ad($id)->result());        
     }
     
-    
+    public function getdata_supply_brands_json(){    
+        jsonOut($this->supply_brands_model->getDataSupplyBrands()->result());        
+    }
     public function update(){
         $this->supply_brands_model->update($this->input->post());    
     }
