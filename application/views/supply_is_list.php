@@ -37,7 +37,7 @@ table tr#total td#totalTitle{
         <?php 
             hiddenBox( array( 'name'=>'supply_is_id'));         
             openFormGroup();
-            selectBox( array( 'labelName'=>'Location' , 'name'=>'store_loc_id', 'labelSize'=>1, 'selectSize'=>3));      
+            selectBox( array( 'labelName'=>'Send To' , 'name'=>'store_loc_id', 'labelSize'=>1, 'selectSize'=>3));      
             inputTextBox( array( 'labelName'=>'IS#' , 'name'=>'is_no', 'labelSize'=>1, 'inputSize'=>2 )); 
             inputTextBox( array( 'labelName'=>'Date' , 'name'=>'is_date', 'labelSize'=>1, 'inputSize'=>2,'value'=>date('m/d/Y') )); 
             yes_no( array( 'labelName'=>'Posted' , 'name'=>'posted', 'labelSize'=>1, 'selectSize'=>1));      

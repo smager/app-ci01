@@ -22,6 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <th>Location</th>
         <th>Area</th>       
         <th>Active?</th>
+        <th>Daily Stocks Ref.</th>
         
     </tr>
 <?php
@@ -40,6 +41,7 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
             <td><?php inputTextBox( array( 'name'=>"store_loc[]",'value'=>$d[$x]->store_loc  )); ?> </td>
             <td><?php selectBox( array( 'name'=>'loc_id[]','value'=>$d[$x]->store_id,'selectedValue'=>$d[$x]->loc_id   )); ?> </td>
             <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N','value'=>$d[$x]->active )); ?> </td>
+            <td><a href="javascript:manageItems(<?php echo $d[$x]->store_loc_id; ?>);">Manage Items</a></td>
     </tr>        
 
 <?php    
@@ -55,6 +57,7 @@ for ($x = 0; $x < 5; $x++) {
             <td><?php inputTextBox( array( 'name'=>"store_loc[]")); ?> </td>
             <td><?php selectBox( array( 'name'=>'loc_id[]')); ?> </td>
             <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N')); ?> </td>
+            <td></td>
     </tr>
     
     
