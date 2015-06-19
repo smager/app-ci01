@@ -550,7 +550,7 @@ for(var x=0;x<om.groupNames.length;x++){
 
 var e;
 
-setTimeout(function(){
+//setTimeout(function(){
    for(var gn=0;gn< om.groupNames.length;gn++){  /*loop per groupNames*/
       e = om.groupNames[gn].names;
 
@@ -600,7 +600,7 @@ setTimeout(function(){
       }
    } /* end of group loop */
 
-},3000);
+//},3000);
 
    function changeborder(o,border){
       jo = $(o);
@@ -1027,6 +1027,7 @@ $.fn.fillSelect = function(data,p_selval,p_req,p_onLoadComplete) {
                      $(ddl).children("option").each(function(i){
                         if (selval==this.value){
                            ddl.selectedIndex = i;
+                           $(ddl).change();
                            return false;
                         }
                      });
