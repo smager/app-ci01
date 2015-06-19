@@ -490,6 +490,7 @@ zsi.form.__objMandatoryGroupIndexValues[groupIndex]="N";
       for(var x=0;x<e.length;x++){
          var l_obj = document.getElementsByName(e[x]);
          if(l_obj.length > 1){
+            //console.log(l_irecords.length);
             for(var i=0;i<l_irecords.length;i++){
                if(l_obj[l_irecords[i]].type!="hidden"){
                   if($.trim(l_obj[l_irecords[i]].value)=="") {
@@ -699,18 +700,26 @@ zsi.form.showAlert= function(p_class){
 
 zsi.form.displayLOV = function(p){
     var td_data = [];
+    var td_prop;
+    if(typeof p.td_properties!=="undefined") td_prop = p.td_properties;
+    if(typeof p.show_checkbox==="undefined") p.show_checkbox=true;
     td_data.push(function(d){
-                return '<input name="p_' + p.params[0] + '[]"  type="hidden"  value="' + d[p.params[0]] + '">' 
+                var inputs= '<input name="p_' + p.params[0] + '[]"  type="hidden"  value="' + d[p.params[0]] + '">' 
                      + '<input name="p_' + p.params[1] + '[]" type="hidden" value="' + d[p.params[1]] + '" >'    
-                     + '<input name="p_cb[]" onclick="clickCB(this);" class="" type="checkbox" ' + ((d[p.params[0]])? 'checked':'') + '>'
-                     + '<input name="p_isCheck[]" type="hidden" value="' +  ((d[p.params[0]])? 1:0)  + '" >';    
-            });
+                     + '<input name="p_isCheck[]" type="hidden" value="' +  ((d[p.params[0]])? 1:0)  + '" >';
+                if(p.show_checkbox==true)  
+                    inputs +='<input name="p_cb[]" onclick="clickCB(this);" class="" type="checkbox" ' + ((d[p.params[0]])? 'checked':'') + '>'
+                return inputs;     
+                     
+    });
+    
     td_data = td_data.concat(p.column_data);        
     zsi.json.loadGrid({
-         table  : p.table
-        ,url    : p.url
-        ,td_body: td_data
-        ,onComplete : function(){
+         table          : p.table
+        ,url            : p.url
+        ,td_body        : td_data
+        ,td_properties  : td_prop
+        ,onComplete     : function(){
             if(p.onComplete) p.onComplete();
         }
     });
