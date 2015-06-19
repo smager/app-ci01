@@ -33,9 +33,9 @@ class store_loc_model extends CI_Model{
                     $data['created_by'] =current_user()->empl_id;
                     $this->db->set('created_date', 'NOW()', FALSE);
                     $this->db->insert('store_loc', $data);
-                    
-                    // insert into store_loc_supplies -- select * from store_supplies where store_id = store_id
-                    
+                    $last_id = $this->db->insert_id();
+                    $proc="call store_loc_supplies_ins(" . $last_id  . "," . $post['p_store_id'][$x] . ")";            
+                    $this->db->query($proc);                 
 
                 }else{
                     //update                        
