@@ -20,31 +20,22 @@ class store_loc_supplies_model extends CI_Model{
     }    
     
     function update($post){ //zsi.form.displayLOV
-        $store_id = $post['p_store_id'];
+       
         for ($x = 0; $x < sizeof($post['p_store_loc_supply_id']); $x++) {
             $id = $post['p_store_loc_supply_id'][$x];
-        
-           $data = array(
-                 'stock_daily_qty'  => $post['p_stock_daily_qty']
+           $data = array( 
+                 'stock_daily_qty'  => $post['p_stock_daily_qty'][$x]
             );
-            
-            if($id!='')  {
-                
                         $data['updated_by'] =current_user()->empl_id;
                         $this->db->set('updated_date', 'NOW()', FALSE);
                         $this->db->where('store_loc_supply_id', $id);
-                        $this->db->delete('store_loc_supplies');
-                }
-                
+                        $this->db->update('store_loc_supplies', $data); 
+  
             
         } //end of loop
 
     }        
-    
-    function delete($post){        
-        $this->load->model('common_model'); 
-        $this->common_model->delete($this->input->post(),"store_loc_supplies","store_loc_supply_id");        
-    }    
+      
 
 }
 ?>

@@ -10,7 +10,7 @@ body{
     margin-top: 10px;
 }
 
-table.table tbody tr td {
+.modal-body > table.table tbody tr td {
     padding-right:10px;
 }
 
