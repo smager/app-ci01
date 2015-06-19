@@ -25,8 +25,7 @@ class store_loc_model extends CI_Model{
                     ,'store_id' => $post['p_store_id'][$x]
                     ,'active' => $post['p_active'][$x]
                 );
-                
-                
+                                
                 
                 if($id==''){
                     //insert        
