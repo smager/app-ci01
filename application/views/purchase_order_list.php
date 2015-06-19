@@ -62,9 +62,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <thead>
         <tr>
             <th></th>
-            <th>Qty</th>
             <th>Item</th>
             <th>Unit</th>
+            <th>Qty</th>
             <th>Unit Price</th>
             <th>Total</th>
 
@@ -73,6 +73,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </table>    
 <div class="buttonGroup">
 <?php 
+Button(array('name'=>'New','type'=>'button'));    
 Button(array('name'=>'Save','type'=>'submit'));    
 Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("purchase_order/delete")  . "');"));        
 ?>    
