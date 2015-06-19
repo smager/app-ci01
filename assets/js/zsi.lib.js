@@ -863,7 +863,10 @@ zsi.json.loadGrid = function(o){
 
         l_grid.append(r);    
     }
-        
+    if(typeof o.isNew !== "undefined"){
+        if(o.isNew==true) l_grid.children('tbody').html('');   
+    } 
+    
     if(o.url){
         l_grid.children('tbody').html('');      
         $.getJSON(o.url, function(data){
