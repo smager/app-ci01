@@ -32,7 +32,7 @@ function includeHeader($p=null){
 <?php
    if ($ci->isShowDatePicker == true) {
 ?>
-    <link href="<?php echo base_url('assets/css/datepicker.css');?>" rel="stylesheet">
+    <link href="<?php echo base_url('assets/css/bootstrap-datepicker.min.css');?>" rel="stylesheet">
 <?php
 }
    if ($l_layout == true) {
@@ -157,7 +157,7 @@ function includeFooter(){
     $ci =& get_instance();
     if ( $ci->isShowDatePicker == true) {
 ?>
-<script type="text/javascript" src="<?php echo base_url("assets/js/bootstrap-datepicker.js"); ?>"></script>   
+<script type="text/javascript" src="<?php echo base_url("assets/js/bootstrap-datepicker.min.js"); ?>"></script>   
 <?php                
     }
 ?>
