@@ -11,3 +11,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |	http://codeigniter.com/user_guide/general/hooks.html
 |
 */
+
+$hook['pre_system'][] = array(
+	'class'    => 'CI_Autoloader',
+	'function' => 'register',
+	'filename' => 'CI_Autoloader.php',
+	'filepath' => 'hooks',
+	'params'   => array(APPPATH . 'core/')
+);

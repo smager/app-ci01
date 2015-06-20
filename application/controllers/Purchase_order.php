@@ -1,12 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class purchase_order extends CI_Controller {
+class purchase_order extends Base_Controller {
     function __construct() {
         parent::__construct();
-        $this->load->database();
         $this->load->model('purchase_order_model'); 
-        $this->load->helper(array('url','zsi','include'));
     }
     
 	public function index()

@@ -1,14 +1,21 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+
+ 
+ 
+       
 if ( ! function_exists('includeHeader')){    
 function includeHeader($p=null){
+    $ci =& get_instance();
     $l_layout=false;
     $l_win=false;
     $l_grid=false;
+    $g_datePicker=false;
     if( $p!==null){        
         if(isset($p["layout"])) $l_layout = $p["layout"]; 
         if(isset($p["window"])) $l_win = $p["window"]; 
-        if(isset($p["grid"])) $l_grid = $p["grid"];     
+        if(isset($p["grid"])) $l_grid = $p["grid"];   
+        if(isset($p["datePicker"])) $ci->isShowDatePicker = $p["datePicker"];
     }
     
    $l_dhtmlx_path =  base_url('assets/dhtmlx36');
@@ -23,8 +30,11 @@ function includeHeader($p=null){
 <link href="<?php echo base_url('assets/css/bootstrap-theme.min.css');?>" rel="stylesheet">
 <link href="<?php echo base_url('assets/css/zsi_style.css');?>" rel="stylesheet">
 <?php
-
-    
+   if ($ci->isShowDatePicker == true) {
+?>
+    <link href="<?php echo base_url('assets/css/datepicker.css');?>" rel="stylesheet">
+<?php
+}
    if ($l_layout == true) {
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $l_dhtmlx_path; ?>/dhtmlxLayout/codebase/dhtmlxlayout.css">
@@ -120,6 +130,8 @@ if ( ! function_exists('includePageTemplate')){
 
 
 <?php
+
+
 if ( ! function_exists('includePageJS')){        
   function includePageJS($url=''){
     $ci =& get_instance();
@@ -141,7 +153,13 @@ if ( ! function_exists('includePageJS')){
 
 <?php
 if ( ! function_exists('includeFooter')){    
-function includeFooter(){    
+function includeFooter(){ 
+    $ci =& get_instance();
+    if ( $ci->isShowDatePicker == true) {
+?>
+<script type="text/javascript" src="<?php echo base_url("assets/js/bootstrap-datepicker.js"); ?>"></script>   
+<?php                
+    }
 ?>
 <script src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>   <?php   
 }}

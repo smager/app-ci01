@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <meta charset="utf-8">
 <title>Purchase Order</title>
 <?php
-    includeHeader();    
+    includeHeader(array("datePicker"=>true));    
 ?>
 <style>
 .poLeftBox {    
@@ -85,8 +85,7 @@ Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("purc
     
 </div>  
     
-<?php includePageJS(); ?> 
-<script type="text/javascript" src="<?php echo base_url("assets/js/bootstrap-datepicker.js"); ?>"></script>       
+<?php includePageJS(); ?>     
 <?php includeFooter(); ?> 
 </body>
 </html>
