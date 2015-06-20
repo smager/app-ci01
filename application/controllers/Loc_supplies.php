@@ -1,12 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class loc_supplies extends CI_Controller {
+class loc_supplies extends Base_Controller {
     function __construct() {
         parent::__construct();
-        $this->load->database();
         $this->load->model('loc_supplies_model'); 
-        $this->load->helper(array('url','zsi','include'));
     }
     	 
     public function getdata_json($id){    

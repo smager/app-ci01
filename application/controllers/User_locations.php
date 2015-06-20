@@ -1,12 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class user_locations extends CI_Controller {
+class user_locations extends Base_Controller {
     function __construct() {
         parent::__construct();
-        $this->load->database();
         $this->load->model('user_locations_model'); 
-        $this->load->helper(array('url','zsi','include'));
     }
     	 
     public function getdata_json($id){    

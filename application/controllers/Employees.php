@@ -1,12 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class employees extends CI_Controller {
+class employees extends Base_Controller {
     function __construct() {
         parent::__construct();
-        $this->load->database();
         $this->load->model('employees_model'); 
-        $this->load->helper(array('url','zsi','include'));
     }
     
 	public function index()

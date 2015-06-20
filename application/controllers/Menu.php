@@ -1,12 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class menu extends CI_Controller {
+class menu extends Base_Controller {
     function __construct() {
         parent::__construct();
-        $this->load->database();
         $this->load->model('menu_model'); 
-        $this->load->helper(array('url','zsi','include'));
     }
     
     

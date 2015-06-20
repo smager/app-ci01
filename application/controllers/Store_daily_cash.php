@@ -1,13 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class store_daily_cash extends CI_Controller {
+class store_daily_cash extends Base_Controller {
     function __construct() {
         parent::__construct();
-        $this->load->database();
         $this->load->model('store_daily_cash_model'); 
         $this->load->model('denomination_ref_model'); 
-        $this->load->helper(array('url','zsi','include'));
     }
     
 	public function index()

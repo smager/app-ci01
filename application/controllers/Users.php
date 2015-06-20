@@ -1,13 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class users extends CI_Controller {
+class users extends Base_Controller {
     function __construct() {
         parent::__construct();
-        $this->load->database();
         $this->load->model('users_model'); 
         $this->load->library('session');
-        $this->load->helper(array('url','zsi','include'));
     }
     
 	public function index()

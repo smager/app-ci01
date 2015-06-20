@@ -1,11 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Config extends CI_Controller {
+class Config extends Base_Controller {
     function __construct() {
-        parent::__construct();
-        $this->load->helper(array('url'));
-        
+        parent::__construct();        
     }    
 
 	public function index()

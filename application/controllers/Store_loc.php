@@ -1,12 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class store_loc extends CI_Controller {
+class store_loc extends Base_Controller {
     function __construct() {
         parent::__construct();
-        $this->load->database();
         $this->load->model('store_loc_model'); 
-        $this->load->helper(array('url','zsi','include'));
     }
     
 	public function index()

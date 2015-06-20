@@ -1,12 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class brands extends CI_Controller {
+class brands extends Base_Controller {
     function __construct() {
         parent::__construct();
-        $this->load->database();
         $this->load->model('brands_model'); 
-        $this->load->helper(array('url','zsi','include'));
     }
     
 	public function index()

@@ -1,12 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class locations extends CI_Controller {
+class locations extends Base_Controller {
     function __construct() {
         parent::__construct();
-        $this->load->database();
         $this->load->model('locations_model'); 
-        $this->load->helper(array('url','zsi','include'));
     }
     
 	public function index()

@@ -1,14 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Snippets extends CI_Controller {
+class Snippets extends Base_Controller {
     function __construct() {
         parent::__construct();
-        $this->load->database();
-        $this->load->model('snippets_model'); 
-        $this->load->helper(array('url','zsi','include'));
-
-        
+        $this->load->model('snippets_model');         
     }
     
 	public function index()

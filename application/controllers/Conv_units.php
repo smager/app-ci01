@@ -1,12 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class conv_units extends CI_Controller {
+class conv_units extends Base_Controller {
     function __construct() {
         parent::__construct();
-        $this->load->database();
         $this->load->model('conv_units_model'); 
-        $this->load->helper(array('url','zsi','include'));
     }
     
 	public function index()

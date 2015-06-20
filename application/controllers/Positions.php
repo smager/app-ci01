@@ -1,12 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class positions extends CI_Controller {
+class positions extends Base_Controller {
     function __construct() {
         parent::__construct();
-        $this->load->database();
         $this->load->model('positions_model'); 
-        $this->load->helper(array('url','zsi','include'));
     }
     
 	public function index()

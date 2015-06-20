@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <meta charset="utf-8">
 <title>Store Daily Cash </title>
 <?php
-    includeHeader();    
+    includeHeader(array("datePicker"=>true));      
 ?>
     
 <style>
@@ -67,7 +67,6 @@ table tr#total td#totalTitle{
     
 </div>    
 <?php includePageJS(); ?>        
-<script type="text/javascript" src="<?php echo base_url("assets/js/bootstrap-datepicker.js"); ?>"></script>    
 <?php includeFooter(); ?>    
 </body>
 </html>
