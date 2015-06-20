@@ -16,6 +16,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     height: 400px;
     overflow:auto;
 }
+a.poRemove{
+    color: #3071a8;
+    float: right;
+    font-size: 20pt;
+    margin-right: 10px;
+    text-decoration: none;
+    top: -31px;
+}
+    
+a.poRemove:hover{
+    color:red;
+    text-decoration:none;
+}    
     
 </style>    
 </head>

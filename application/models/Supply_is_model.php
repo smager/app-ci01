@@ -11,11 +11,18 @@ class supply_is_model extends CI_Model{
         return $query;    
     }
     
-    function getdata_detail($supply_is_id){
-        $query = $this->db->query("SELECT * FROM supply_is_dtl where supply_is_id=$supply_is_id");
+    function getdata_detail($id){
+        $query = $this->db->query("call getSupply_IS_Unposted($id)");
         return $query;    
     }
     
+    function getIsInfo($id){
+        $result = array();
+        $query = $this->db->query("SELECT * FROM supply_is_unposted_v where store_loc_id=$id");        
+        if($query->num_rows()>0) $result =  $query->result()[0];                
+        return $result;    
+    }
+        
     
     function update($post){
         $supply_is_id =  $post['p_supply_is_id'];   
@@ -48,7 +55,7 @@ class supply_is_model extends CI_Model{
                 $data = array(
                      'supply_is_id' => $supply_is_id
                     ,'supply_brand_id' => $post['p_supply_brand_id'][$x]
-                    ,'supply_is_qty' => $post['p_supply_qty'][$x]
+                    ,'supply_is_qty' => $post['p_supply_is_qty'][$x]
 
                 );
                 

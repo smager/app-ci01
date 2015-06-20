@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <meta charset="utf-8">
 <title>Store Daily Stocks</title>
 <?php
-    includeHeader();    
+    includeHeader(array("datePicker"=>true));    
 ?>
     
 <style>
@@ -31,8 +31,8 @@ table tr#total td#totalTitle{
 <?php menu(); ?> 
     
 <div class="container page">
-<form id="frm" >
-<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+<form id="frm"  action="<?php echo base_url( $this->router->fetch_class() .'/update');?>" method="post">
+<div class="col-xs-10 ">
     <div class="form-horizontal ">
         <?php 
             hiddenBox( array( 'name'=>'supply_is_id'));         
@@ -46,11 +46,14 @@ table tr#total td#totalTitle{
         ?> 
     </div>
 </div>    
-<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">    
-<table class="tblStoreDailyStocks table row" >    
+ 
+<div class="col-xs-10">   
+<table class="table row" >    
     <thead>
         <tr>
-            <th width="40" >Items</th>    
+            <th width="40" ></th>    
+            <th>Items</th>  
+            <th>Unit</th>     
             <th>Qty</th>                  
         </tr>  
     </thead>        
@@ -58,7 +61,7 @@ table tr#total td#totalTitle{
 </table>
 <div class="buttonGroup">
 <?php 
-    Button(array('name'=>'Save','type'=>'button'));    
+    Button(array('name'=>'Save','type'=>'submit'));    
 ?>    
 </div>    
     
@@ -67,7 +70,6 @@ table tr#total td#totalTitle{
     
 </div>    
 <?php includePageJS(); ?>        
-<script type="text/javascript" src="<?php echo base_url("assets/js/bootstrap-datepicker.js"); ?>"></script>    
 <?php includeFooter(); ?>    
 </body>
 </html>

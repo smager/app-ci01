@@ -14,15 +14,7 @@ class supply_is extends Base_Controller {
 		$this->load->view('supply_is_list');
 	}
 
-    public function get_json()
-	{  
-        $store_loc_id = $this->input->get("store_loc_id");
-        $is_no = $this->input->get("is_no");
-        $is_date = $this->input->get("is_date");
-        jsonOut($this->supply_is_model->getdata($store_loc_id,$is_no,$is_date)->result());
-      
-	}   
-    
+ 
     public function get_detail_json($supply_is_id)
 	{
         jsonOut($this->supply_is_model->getdata_detail($supply_is_id)->result());
@@ -30,8 +22,17 @@ class supply_is extends Base_Controller {
 	}       
       
     
+
+    public function get_is_info($id)
+	{
+        jsonOut($this->supply_is_model->getIsInfo($id));
+      
+	}  
+    
+    
     public function update()
 	{
         $this->supply_is_model->update($this->input->post());
+        redirect( base_url($this->router->fetch_class()) );
 	}    
 }
