@@ -517,7 +517,7 @@ CREATE TABLE IF NOT EXISTS `loc_supplies` (
    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
   CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
-   `supply_is_dtls`   int(5) unsigned NOT NULL auto_increment,
+   `supply_is_dtl_id`   int(5) unsigned NOT NULL auto_increment,
    `supply_is_id`     int(5),
    `supply_is_qty`    decimal(5,2),
    `supply_brand_id`  int(5),
@@ -782,23 +782,35 @@ CREATE OR REPLACE VIEW supply_brands2_v AS
 select "" as supply_brand_id, "" as supply_id, brand_id,  brand_name, "" as conv_id, "" as supply_cost, "" as supply_srp, "" as supply, "" as cu_desc
 from  brands;
 
+CREATE OR REPLACE VIEW store_supply_brands_v AS
+select a.store_id, a.store_supply_id, a.supply_id, b.supply, b.supply_cost, b.supply_srp
+from store_supplies a, supply_brands_v b
+WHERE a.supply_id = b.supply_id;
+
 CREATE OR REPLACE VIEW store_loc_supplies_v AS
-select a.store_loc_supply_id, a.store_loc_id, c.store_id, a.supply_brand_id, b.supply, cu_desc, stock_daily_qty, stock_curr_qty, stock_daily_qty - ifnull(stock_curr_qty,0) as rep_qty
+select a.store_loc_supply_id, a.store_loc_id, c.store_id, a.supply_brand_id, b.supply, cu_desc, stock_daily_qty, stock_curr_qty, stock_daily_qty - ifnull(stock_curr_qty,0) as rep_qty, b.supply_cost, b.supply_srp
 from store_loc_supplies a, supply_brands_v b, store_loc c
 WHERE a.supply_brand_id = b.supply_brand_id
 AND a.store_loc_id = c.store_loc_id;
 
 
 CREATE OR REPLACE VIEW store_supplies2_v AS
-select "" as store_loc_supply_id, "" as store_loc_id, a.store_id,  b.supply_brand_id, b.supply, b.cu_desc, "" as stock_daily_qty, "" as stock_curr_qty, "" as rep_qty
+select "" as store_loc_supply_id, "" as store_loc_id, a.store_id,  b.supply_brand_id, b.supply, b.cu_desc, "" as stock_daily_qty, "" as stock_curr_qty, "" as rep_qty, b.supply_cost, b.supply_srp
 from store_supplies a, supply_brands_v b
 WHERE a.supply_id = b.supply_id;
 
+CREATE OR REPLACE VIEW supply_is_v AS
+select a.*
+from supply_is
+where posted=0;
 
-CREATE OR REPLACE VIEW store_supply_brands_v AS
-select a.store_id, a.store_supply_id, a.supply_id, b.supply
-from store_supplies a, supply_brands_v b
-WHERE a.supply_id = b.supply_id;
+CREATE OR REPLACE VIEW supply_is_dtl_unposted_v AS
+select a.*, b.supply, b.cu_desc, b.stock_daily_qty, a.supply_is_qty as rep_qty
+from supply_is_dtl a, store_loc_supplies_v b, supply_is c
+where a.supply_brand_id = b.supply_brand_id
+and a.supply_is_id=c.supply_is_id
+and c.store_loc_id =b.store_loc_id
+and c.posted=0;
     
 ----
 /******FUNCTIONS
@@ -820,9 +832,22 @@ CREATE TRIGGER loc_supplies_ins AFTER INSERT ON locations
   END;
 
 
-UPDATE sales_daily_dtl
-SET 
+CREATE PROCEDURE getSupply_IS_Unposted (IN p_store_loc_id int(5))
+BEGIN
+	DECLARE l_id INT(5);
+	SELECT supply_is_id INTO l_id FROM supply_is WHERE store_loc_id = store_loc_id;
+	IF IFNULL(l_id,0)=0 THEN
+	   SELECT * FROM store_loc_supplies_v WHERE store_loc_id =p_store_loc_id ;
+	ELSE
+	   SELECT * FROM supply_is_dtl_unposted_v WHERE supply_is_id = l_id;
+	END IF;   
+END; 
 
+CREATE PROCEDURE delPO_Unposted (IN p_po_id int(5))
+BEGIN
+	DELETE FROM po_dtl WHERE po_id = po_id;
+	DELETE FROM po WHERE po_id = p_po_id;
+END; 
 
 
 
