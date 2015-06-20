@@ -15,6 +15,7 @@ class store_loc_supplies_model extends CI_Model{
             . " UNION SELECT * FROM store_supplies2_v a "
             . " WHERE NOT EXISTS(SELECT b.supply_brand_id FROM store_loc_supplies_v b WHERE b.store_loc_id=" . $sid
             . " AND b.supply_brand_id = a.supply_brand_id)" 
+            . " AND a.store_id = (SELECT store_id FROM store_loc WHERE store_loc_id=" . $sid . ")"
         );
         return $query;    
     }    
