@@ -10,6 +10,21 @@ class bank_ref_model extends CI_Model{
         return $query;    
     }
     
+    function update2($post){    
+        $params=array(
+             'post'=>$post
+            ,'pk'=> array('ui'=>'bank_ref_id','db'=>'bank_ref_id')
+            ,'ui'=> array('bank_acctno','bank_acctname','bank_name','depo_pct_share','active')
+            ,'db'=> array('bank_acctno','bank_acctname','bank_name','depo_pct_share','active')
+            ,'mustNotEmptyKeys'=> array('bank_acctno','bank_acctname')
+            ,'table'=>'bank_ref'
+            //,'notEmptyOnInsert'=> array('bank_acctno')
+        );
+        
+        $this->load->model('common_model'); 
+        $this->common_model->update($params); 
+    }
+    
     function update($post){
     //print_r($post);
         
