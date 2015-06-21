@@ -54,7 +54,7 @@ for ($x = 0; $x < 5; $x++) {
     <tr>
         
             <td><input type="hidden" name="p_bank_ref_id[]">
-                <?php checkbox( array( 'name'=>'select[]')); ?> </td>
+                <?php checkbox( array( 'name'=>'cb[]')); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"bank_acctno[]")); ?> </td>
             <td><?php inputTextBox( array( 'name'=>'bank_acctname[]')); ?> </td>
             <td><?php inputTextBox( array( 'name'=>'bank_name[]')); ?> </td>
