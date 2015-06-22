@@ -37,13 +37,13 @@ class menu_model extends CI_Model{
     
     
     function getdata(){
-        $query = $this->db->query("SELECT * FROM menu");
+        $query = $this->db->query("SELECT * FROM menu_v");
         return $query;    
     }
     
     function getSubMenuItem($id){
         
-         $query = $this->db->query("SELECT menu_id as id,menu_name as name,menu_url as url FROM menu where menu_type_id=" . $id );
+         $query = $this->db->query("SELECT menu_id as id,menu_name as name,menu_url as url FROM menu_v where menu_type_id=" . $id );
         return $query;    
     }
     
