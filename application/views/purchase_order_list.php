@@ -55,7 +55,7 @@ a.poRemove:hover{
     </div>
 </div>    
     
-<div class="col-xs-2 poLeftBox">
+<div class="col-xs-3 poLeftBox">
 
 <div class="panel panel-default">
   <div class="panel-heading">Unposted P.O #</div>
@@ -70,7 +70,7 @@ a.poRemove:hover{
 </div>
     
 </div>
-<div class="col-xs-10">    
+<div class="col-xs-9">    
 <table id="grid" class="table">
     <thead>
         <tr>

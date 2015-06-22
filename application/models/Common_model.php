@@ -14,17 +14,34 @@ class common_model extends CI_Model{
     }    
     
     function findEmptyKeys($post,$keys,$row_num){
+        $msg = "Wrong spelling wrong dyud na., klaroha imong parameter nga - ";
         $result=false;
         for ($x = 0; $x < sizeof($keys); $x++) {
-            $keyname="p_" . $keys[$x];            
-            if(isset($post[$keyname][$row_num])){
-                if($post[$keyname][$row_num]=='') {
-                    $result=true;
-                    break;
+            $keyname="p_" . $keys[$x];                 
+            if(!isset($post[$keyname])) show_error($msg . $keys[$x]);
+            if(is_array($post[$keyname])){
+                //multiple
+                if(isset($post[$keyname][$row_num])){
+                    if($post[$keyname][$row_num]=='') {
+                        $result=true;
+                        break;
+                    }
+                }
+                else{
+                     show_error( $msg . $keys[$x]);
                 }
             }
             else{
-                 show_error("Wrong spelling wrong dyud na., klaroha imong parameter nga - " . $keys[$x]);
+                //single
+                if(isset($post[$keyname])){
+                    if($post[$keyname]=='') {
+                        $result=true;
+                        break;
+                    }
+                }
+                else{
+                     show_error($msg . $keys[$x]);
+                }                
             }
         }    
         return $result;
@@ -50,32 +67,98 @@ class common_model extends CI_Model{
     }        
     */
     
-    function update($params){
+    function update($post,$params){       
+        
+        if( isset($params["parent"])){
+            //transform parameters
+            //parent and details insert/update            
+            $parent = $params["parent"];
+            
+            //parent:
+            $parentParams =  array(
+                 'pk'=> $parent['pk']
+                ,'dbKeys'=> $parent['dbKeys'] 
+                ,'table'=>$parent['table']                        
+            );
+            if(isset($parent['uiKeys']))  $parentParams['uiKeys'] = $parent['uiKeys']; 
+            if(isset($parent['mustNotEmptyKeys']))  $parentParams['mustNotEmptyKeys'] = $parent['mustNotEmptyKeys']; 
+            if(isset($parent['mustNotEmptyOnInsert']))  $parentParams['mustNotEmptyOnInsert'] = $parent['mustNotEmptyOnInsert']; 
+            
+            $parentId =  $this->processInsertUpdate($post,$parentParams);
 
-        if(isset($params["post"])){   
+            //details:            
+            $detail = $params["details"];
+            
+            //parent:
+            $detailParams =  array(
+                 'pk'=> $detail['pk']
+                ,'dbKeys'=> $detail['dbKeys'] 
+                ,'table'=>$detail['table']                        
+            );
+            if(isset($detail['uiKeys']))  $detailParams['uiKeys'] = $detail['uiKeys']; 
+            if(isset($detail['mustNotEmptyKeys']))  $detailParams['mustNotEmptyKeys'] = $detail['mustNotEmptyKeys']; 
+            if(isset($detail['mustNotEmptyOnInsert']))  $detailParams['mustNotEmptyOnInsert'] = $detail['mustNotEmptyOnInsert']; 
+            
+            $parentKeyValue = array(
+                'key' => $parent['pk']
+                ,'value' => $parentId
+            );
+            
+            
+            $this->processInsertUpdate($post,$detailParams,$parentKeyValue);
+            
+        }else{
+            //single and multiple insert
+            $this->processInsertUpdate($post,$params);
+        }
+
+    }
+    
+    function processInsertUpdate($post,$params,$parentKeyValue=null){    
+        $insertId=0;
+        if(isset($post)){  
+            $p = $post;
             if(!isset($params["uiKeys"])) $params["uiKeys"] = $params["dbKeys"];  
             if(!is_array($params["pk"]))  $params["pk"]= array('uiKey'=>$params["pk"], 'dbKey'=>$params["pk"]);
                     
-            for ($x = 0; $x < sizeof($params["post"]['p_'. $params["uiKeys"][0]]); $x++) {
+            for ($x = 0; $x < sizeof($p['p_'. $params["uiKeys"][0]]); $x++) {                
+                    
+                $keyname =  'p_' . $params["pk"]["uiKey"];
                 
-                $id = $params["post"]['p_' . $params["pk"]["uiKey"]][$x]; 
+                if(is_array($p[$keyname]))                 
+                    $id = $p[$keyname][$x];
+                else
+                    $id = $p[$keyname];                    
                 
-                $isFoundEmptyKeys = $this->findEmptyKeys($params["post"],$params["mustNotEmptyKeys"],$x);
+                $isFoundEmptyKeys = $this->findEmptyKeys($p,$params["mustNotEmptyKeys"],$x);
                 if($isFoundEmptyKeys==false) {   
                      
                     $data = array();
                     for ($i = 0; $i < sizeof($params["uiKeys"]); $i++) {
-                        $data[$params["dbKeys"][$i]] = $params["post"]['p_'. $params["uiKeys"][$i]][$x];
+                        $p_uiName = 'p_' . $params["uiKeys"][$i];
+                        if(!isset($p[$p_uiName])) show_error("wala may parameter nga " . $p_uiName . " brad!");
+                        $p_uiKey = $p[$p_uiName];
+                        if(is_array($p_uiKey))
+                            $data[$params["dbKeys"][$i]] = $p_uiKey[$x];
+                        else 
+                            $data[$params["dbKeys"][$i]] = $p_uiKey;                        
                     }
+                    
                     if($id==''){
                         //insert 
+                        if($parentKeyValue!=null){
+                            $data[$parentKeyValue["key"]]=$parentKeyValue["value"]; 
+                        }
+                        
                         $isFoundEmptyKeys=false;
                         if(isset($params["mustNotEmptyOnInsert"])) 
-                            $isFoundEmptyKeys = $this->findEmptyKeys($params["post"],$params["mustNotEmptyOnInsert"],$x);                        
+                            $isFoundEmptyKeys = $this->findEmptyKeys($p,$params["mustNotEmptyOnInsert"],$x);   
+                        
                         if($isFoundEmptyKeys==false) {                             
                             $data['created_by'] =current_user()->empl_id;
                             $this->db->set('created_date', 'NOW()', FALSE);
                             $this->db->insert($params["table"], $data);
+                            $insertId = $this->db->insert_id();
                         }
 
                     }else{
@@ -89,10 +172,13 @@ class common_model extends CI_Model{
                 }//end of - if(isFoundEmptyKeys)
 
             } //end of loop
-        }//end of - if post is set
+        }//end of - if post is set        
         
-       // exit;
+        return $insertId;
     }
+    
+    
+    
     
 
 
