@@ -23,9 +23,7 @@ class stores_model extends CI_Model{
                      'store_name' => $store_name
 
                 );
-                
-                
-                
+
                 if($id==''){
                     //insert        
                     $data['created_by'] =current_user()->empl_id;
@@ -49,7 +47,6 @@ class stores_model extends CI_Model{
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"stores","store_id");        
     }    
 

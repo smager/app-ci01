@@ -6,6 +6,7 @@ abstract class Base_Controller extends CI_Controller {
         parent::__construct();
         $this->load->database();
         $this->load->helper(array('url','include','zsi'));
+        $this->load->model('common_model'); 
     }    
     
 }

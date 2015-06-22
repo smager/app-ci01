@@ -33,9 +33,6 @@ class menu_types_model extends CI_Model{
                     ,'seq_no' => $post['p_seq_no'][$x]
 
                 );
-                
-                
-                
                 if($id==''){
                     //insert        
                     $data['created_by'] =current_user()->empl_id;
@@ -51,15 +48,11 @@ class menu_types_model extends CI_Model{
                 } 
                 
             }//end of no data 
-            
-            
-            
      } //end of loop
 
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"menu_types","menu_type_id");        
     }    
 

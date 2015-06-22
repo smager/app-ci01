@@ -43,8 +43,7 @@ class select_options_model extends CI_Model{
                     ,'condition_text' => $post['p_condition_text'][$x]
 
                 );
-                
-                
+
                 if($id==''){
                     //insert        
                     $data['created_by'] =current_user()->empl_id;
@@ -60,15 +59,12 @@ class select_options_model extends CI_Model{
                 } 
                 
             }//end of no data 
-            
-            
-            
+
      } //end of loop
 
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"select_options","select_id");        
     }    
 

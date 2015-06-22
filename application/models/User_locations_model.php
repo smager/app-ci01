@@ -30,7 +30,6 @@ class user_locations_model extends CI_Model{
                  'user_id'  => $post['p_user_id']
                 ,'loc_id' => $post['p_loc_id'][$x]
             );
-             echo "\r\n test:$isCheck  -  $id";
                         
             if($isCheck==1 && $id=='')  {                     
                     //insert    
@@ -55,7 +54,6 @@ class user_locations_model extends CI_Model{
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"user_locations","user_loc_id");        
     }    
 

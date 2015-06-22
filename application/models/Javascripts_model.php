@@ -26,9 +26,6 @@ class javascripts_model extends CI_Model{
             ,'page_url' =>  $post['p_page_url']
             ,'content' => $post['p_content']
         );
-
-
-
         if($id==''){
             //insert        
             $data['created_by'] =current_user()->empl_id;
@@ -47,11 +44,9 @@ class javascripts_model extends CI_Model{
             $this->db->update('javascripts', $data);
         } 
 
-
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"javascripts","js_id");        
     }    
 

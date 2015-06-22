@@ -44,8 +44,7 @@ class purchase_order_model extends CI_Model{
             $this->db->where('po_id', $po_id);
             $this->db->update('po', $data);
         }      
-        
-        
+
         //detail        
         for ($x = 0; $x < sizeof($post['p_po_dtls_id']); $x++) {
             $id = $post['p_po_dtls_id'][$x];
@@ -74,14 +73,12 @@ class purchase_order_model extends CI_Model{
                     $this->db->update('po_dtls', $data);
                 } 
             }
-            
-            
+
      } //end of loop
 
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"po","po_id");        
     }    
 

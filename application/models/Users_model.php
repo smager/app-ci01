@@ -40,7 +40,6 @@ class users_model extends CI_Model{
                     ,'active'    =>  $post['p_active'][$x]                
                 );
                 
-                
                 if($id==''){
                     //insert        
                     $data['created_by'] =current_user()->empl_id;
@@ -64,7 +63,6 @@ class users_model extends CI_Model{
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"users","user_id");        
     }    
 

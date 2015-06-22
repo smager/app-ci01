@@ -63,9 +63,7 @@ class menu_model extends CI_Model{
                     ,'menu_type_id' => $post['p_menu_type_id'][$x]
                     ,'system_id' => $post['p_system_id'][$x]
                 );
-                
-                
-                
+
                 if($id==''){
                     //insert        
                     $data['created_by'] =current_user()->empl_id;
@@ -81,15 +79,12 @@ class menu_model extends CI_Model{
                 } 
                 
             }//end of no data 
-            
-            
-            
+
      } //end of loop
 
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"menu","menu_id");        
     }    
 

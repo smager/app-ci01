@@ -18,13 +18,9 @@ class denomination_ref_model extends CI_Model{
             $denomination = $post['p_denomination'][$x];
             
             if($denomination !='') {        
-
                 $data = array(
                      'denomination' => $denomination
-
                 );
-                
-                
                 
                 if($id==''){
                     //insert        
@@ -41,15 +37,12 @@ class denomination_ref_model extends CI_Model{
                 } 
                 
             }//end of no data 
-            
-            
-            
+
      } //end of loop
 
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"denomination_ref","denomination_id");        
     }    
 

@@ -22,9 +22,6 @@ class brands_model extends CI_Model{
                 $data = array(
                      'brand_name' => $brand_name
                 );
-                
-                
-                
                 if($id==''){
                     //insert        
                     $data['created_by'] =current_user()->empl_id;
@@ -40,15 +37,12 @@ class brands_model extends CI_Model{
                 } 
                 
             }//end of no data 
-            
-            
-            
+
      } //end of loop
 
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"brands","brand_id");        
     }    
 

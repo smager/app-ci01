@@ -26,9 +26,6 @@ class page_templates_model extends CI_Model{
             ,'page_url' =>  $post['p_page_url']
             ,'content' => $post['p_content']
         );
-
-
-
         if($id==''){
             //insert        
             $data['created_by'] =current_user()->empl_id;
@@ -42,12 +39,9 @@ class page_templates_model extends CI_Model{
             $this->db->where('page_template_id', $id);
             $this->db->update('page_templates', $data);
         } 
-
-
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"page_templates","page_template_id");        
     }    
 

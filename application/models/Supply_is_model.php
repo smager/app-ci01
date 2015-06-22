@@ -78,7 +78,6 @@ class supply_is_model extends CI_Model{
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"supply_is","supply_is_id");        
     }    
 

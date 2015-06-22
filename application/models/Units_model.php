@@ -24,9 +24,6 @@ class units_model extends CI_Model{
                     ,'unit_desc' => $post['p_unit_desc'][$x]
 
                 );
-                
-                
-                
                 if($id==''){
                     //insert        
                     $data['created_by'] =current_user()->empl_id;
@@ -50,7 +47,6 @@ class units_model extends CI_Model{
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"units","unit_id");        
     }    
 

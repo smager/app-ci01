@@ -24,8 +24,6 @@ class supply_types_model extends CI_Model{
 
                 );
                 
-                
-                
                 if($id==''){
                     //insert        
                     $data['created_by'] =current_user()->empl_id;
@@ -42,14 +40,11 @@ class supply_types_model extends CI_Model{
                 
             }//end of no data 
             
-            
-            
      } //end of loop
 
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"supply_types","supply_type_id");        
     }    
 

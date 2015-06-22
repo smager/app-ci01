@@ -23,9 +23,6 @@ class suppliers_model extends CI_Model{
                      'supplier_name' => $supplier_name
                      ,'active' => $post['p_active'][$x]
                 );
-                
-                
-                
                 if($id==''){
                     //insert        
                     $data['created_by'] =current_user()->empl_id;
@@ -41,15 +38,12 @@ class suppliers_model extends CI_Model{
                 } 
                 
             }//end of no data 
-            
-            
-            
+    
      } //end of loop
 
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"suppliers","supplier_id");        
     }    
 

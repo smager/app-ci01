@@ -11,9 +11,6 @@ class test_model extends CI_Model{
     }
     
     function update($post){            
- 
-        // print_r($post);
-        //exit;
         $params=array(            
             'parent' => array(
                  'pk'=> 'empl_id'
@@ -29,15 +26,12 @@ class test_model extends CI_Model{
                 ,'mustNotEmptyOnInsert'=> array('bank_acctname')
                 ,'table'=>'bank_ref'
             )
-        );
-        $this->load->model('common_model'); 
-        $this->common_model->update($post,$params); 
-        
+        );       
+        $this->common_model->update($post,$params);         
     }
     
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"test","test_id");        
     }    
 

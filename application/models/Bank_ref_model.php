@@ -18,13 +18,10 @@ class bank_ref_model extends CI_Model{
             ,'mustNotEmptyOnInsert'=> array('bank_acctname')
             ,'table'=>'bank_ref'
         );
-        $this->load->model('common_model'); 
         $this->common_model->update($post,$params); 
     }
-    
-    
+
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"bank_ref","bank_ref_id");        
     }    
 

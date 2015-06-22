@@ -31,25 +31,21 @@ class loc_supplies_model extends CI_Model{
                 ,'reorder_level' => $post['p_reorder_level'][$x]
                 ,'max_level' => $post['p_max_level'][$x]
             );
-             echo "\r\n test:$isCheck  -  $id";
                         
             if($isCheck==1 && $id=='')  {                     
                     //insert    
-                    echo "\r\ninsert.".
                     $data['created_by'] =current_user()->empl_id;
                     $this->db->set('created_date', 'NOW()', FALSE);
                     $this->db->insert('loc_supplies', $data);
 
             }else if($isCheck==1 && $id!='')  {                     
                     //update        
-                   echo "\r\nupdate - Id:" . $id . ", reorder_level:" .  $data['reorder_level'] . " max_level: " . $data['max_level'];
                     $data['updated_by'] =current_user()->empl_id;
                     $this->db->set('updated_date', 'NOW()', FALSE);
                     $this->db->where('loc_supply_id', $id);
                     $this->db->update('loc_supplies', $data);
 
             }else if($isCheck==0 && $id!='')  {
-                    echo "\r\ndelete.".
                     $this->db->where('loc_supply_id', $id);
                     $this->db->delete('loc_supplies');
             }
@@ -59,7 +55,6 @@ class loc_supplies_model extends CI_Model{
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"loc_supplies","loc_supply_id");        
     }    
 

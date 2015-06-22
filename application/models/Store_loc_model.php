@@ -25,8 +25,7 @@ class store_loc_model extends CI_Model{
                     ,'store_id' => $post['p_store_id'][$x]
                     ,'active' => $post['p_active'][$x]
                 );
-                                
-                
+                                                
                 if($id==''){
                     //insert        
                     $data['created_by'] =current_user()->empl_id;
@@ -53,7 +52,6 @@ class store_loc_model extends CI_Model{
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"store_loc","store_loc_id");        
     }    
 

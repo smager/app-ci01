@@ -24,9 +24,6 @@ class conv_units_model extends CI_Model{
                     ,'conv_unit_id' => $post['p_conv_unit_id'][$x]
                     ,'conv_unit_qty' => $post['p_conv_unit_qty'][$x]
                 );
-                
-                
-                
                 if($id==''){
                     //insert        
                     $data['created_by'] =current_user()->empl_id;
@@ -42,15 +39,12 @@ class conv_units_model extends CI_Model{
                 } 
                 
             }//end of no data 
-            
-            
-            
+  
      } //end of loop
 
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"conv_units","conv_id");        
     }    
 

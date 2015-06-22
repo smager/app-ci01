@@ -11,8 +11,6 @@ class locations_model extends CI_Model{
     }
     
     function update($post){
-    //print_r($post);
-        
         for ($x = 0; $x < sizeof($post['p_location']); $x++) {
             $id = $post['p_loc_id'][$x];
             $location = $post['p_location'][$x];
@@ -21,11 +19,7 @@ class locations_model extends CI_Model{
 
                 $data = array(
                      'location' => $location
-
-                );
-                
-                
-                
+                );            
                 if($id==''){
                     //insert        
                     $data['created_by'] =current_user()->empl_id;
@@ -41,15 +35,12 @@ class locations_model extends CI_Model{
                 } 
                 
             }//end of no data 
-            
-            
-            
+
      } //end of loop
 
     }        
     
     function delete($post){        
-        $this->load->model('common_model'); 
         $this->common_model->delete($this->input->post(),"locations","loc_id");        
     }    
 
