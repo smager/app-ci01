@@ -68,50 +68,58 @@ class common_model extends CI_Model{
     */
     
     function update($post,$params){       
-        
-        if( isset($params["parent"])){
-            //transform parameters
-            //parent and details insert/update            
-            $parent = $params["parent"];
-            
-            //parent:
-            $parentParams =  array(
-                 'pk'=> $parent['pk']
-                ,'dbKeys'=> $parent['dbKeys'] 
-                ,'table'=>$parent['table']                        
-            );
-            if(isset($parent['uiKeys']))  $parentParams['uiKeys'] = $parent['uiKeys']; 
-            if(isset($parent['mustNotEmptyKeys']))  $parentParams['mustNotEmptyKeys'] = $parent['mustNotEmptyKeys']; 
-            if(isset($parent['mustNotEmptyOnInsert']))  $parentParams['mustNotEmptyOnInsert'] = $parent['mustNotEmptyOnInsert']; 
-            
-            $parentId =  $this->processInsertUpdate($post,$parentParams);
+        $returnid=0;
+        if( isset($params["parent"])){            
+            try {
+                $this->db->trans_begin();
+                //transform parameters
+                //parent and details insert/update            
+                $parent = $params["parent"];
 
-            //details:            
-            $detail = $params["details"];
-            
-            //parent:
-            $detailParams =  array(
-                 'pk'=> $detail['pk']
-                ,'dbKeys'=> $detail['dbKeys'] 
-                ,'table'=>$detail['table']                        
-            );
-            if(isset($detail['uiKeys']))  $detailParams['uiKeys'] = $detail['uiKeys']; 
-            if(isset($detail['mustNotEmptyKeys']))  $detailParams['mustNotEmptyKeys'] = $detail['mustNotEmptyKeys']; 
-            if(isset($detail['mustNotEmptyOnInsert']))  $detailParams['mustNotEmptyOnInsert'] = $detail['mustNotEmptyOnInsert']; 
-            
-            $parentKeyValue = array(
-                'key' => $parent['pk']
-                ,'value' => $parentId
-            );
-            
-            
-            $this->processInsertUpdate($post,$detailParams,$parentKeyValue);
+                //parent:
+                $parentParams =  array(
+                     'pk'=> $parent['pk']
+                    ,'dbKeys'=> $parent['dbKeys'] 
+                    ,'table'=>$parent['table']                        
+                );
+                if(isset($parent['uiKeys']))  $parentParams['uiKeys'] = $parent['uiKeys']; 
+                if(isset($parent['mustNotEmptyKeys']))  $parentParams['mustNotEmptyKeys'] = $parent['mustNotEmptyKeys']; 
+                if(isset($parent['mustNotEmptyOnInsert']))  $parentParams['mustNotEmptyOnInsert'] = $parent['mustNotEmptyOnInsert']; 
+
+                $parentId = $this->processInsertUpdate($post,$parentParams);
+
+                //details:            
+                $detail = $params["details"];
+
+                //parent:
+                $detailParams =  array(
+                     'pk'=> $detail['pk']
+                    ,'dbKeys'=> $detail['dbKeys'] 
+                    ,'table'=>$detail['table']                        
+                );
+                if(isset($detail['uiKeys']))  $detailParams['uiKeys'] = $detail['uiKeys']; 
+                if(isset($detail['mustNotEmptyKeys']))  $detailParams['mustNotEmptyKeys'] = $detail['mustNotEmptyKeys']; 
+                if(isset($detail['mustNotEmptyOnInsert']))  $detailParams['mustNotEmptyOnInsert'] = $detail['mustNotEmptyOnInsert']; 
+
+                $parentKeyValue = array(
+                    'key' => $parent['pk']
+                    ,'value' => $parentId
+                );
+                $returnId=$parentId;
+                $this->processInsertUpdate($post,$detailParams,$parentKeyValue);                
+                
+                $this->db->trans_commit();
+            }            
+            catch (Exception $e) {
+                $this->db->trans_rollback();
+            }            
             
         }else{
             //single and multiple insert
-            $this->processInsertUpdate($post,$params);
+            $returnId = $this->processInsertUpdate($post,$params);
         }
 
+        return $returnId;
     }
     
     function processInsertUpdate($post,$params,$parentKeyValue=null){    
