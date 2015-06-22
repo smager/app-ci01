@@ -12,15 +12,14 @@ class bank_ref_model extends CI_Model{
     
     function update($post){            
         $params=array(
-             'post'=>$post
-            ,'pk'=> 'bank_ref_id'
+             'pk'=> 'bank_ref_id'
             ,'dbKeys'=> array('bank_acctno','bank_acctname','bank_name','depo_pct_share','active')
             ,'mustNotEmptyKeys'=> array('bank_acctno')
             ,'mustNotEmptyOnInsert'=> array('bank_acctname')
             ,'table'=>'bank_ref'
         );
         $this->load->model('common_model'); 
-        $this->common_model->update($params); 
+        $this->common_model->update($post,$params); 
     }
     
     
