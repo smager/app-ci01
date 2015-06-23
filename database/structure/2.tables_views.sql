@@ -60,6 +60,17 @@ CREATE TABLE IF NOT EXISTS `denomination_ref` (
 )
   COMMENT='Money Denomination Reference'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+  
+  CREATE TABLE IF NOT EXISTS `add_on_rate` (
+    `holiday_pct`   decimal(5,2),
+    `sunday_pct`   decimal(5,2),
+    `created_by` int(5),
+    `created_date` datetime,
+    `updated_by` int(5),
+    `updated_date` datetime
+  )
+    COMMENT='Add on pct rate Reference'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
   CREATE TABLE IF NOT EXISTS `store_daily_cash` (
   `store_daily_cash_id`           int(5) unsigned NOT NULL auto_increment,
@@ -246,6 +257,8 @@ CREATE TABLE IF NOT EXISTS `user_locations` (
 CREATE TABLE IF NOT EXISTS `suppliers` (
   `supplier_id`     int(5) unsigned NOT NULL auto_increment,
   `supplier_name`   varchar(64) NOT NULL default '',
+  `contact_name`   varchar(64) NOT NULL default '',
+  `contact_no`   varchar(64) NOT NULL default '',
   `active` int(5) NOT NULL default '1',   
   `created_by` int(5),
   `created_date` datetime,
