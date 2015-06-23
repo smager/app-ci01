@@ -88,7 +88,8 @@ class common_model extends CI_Model{
 
                 $parentId = $this->processInsertUpdate($post,$parentParams);
 
-                //details:            
+                //details:  
+                if(!isset($params["details"]))  show_error("Wala man kay detail array(), pero naa kay parent array(), <br />klaroha kuno para dili ko maglibog.");
                 $detail = $params["details"];
 
                 //parent:
@@ -144,7 +145,7 @@ class common_model extends CI_Model{
                     $data = array();
                     for ($i = 0; $i < sizeof($params["uiKeys"]); $i++) {
                         $p_uiName = 'p_' . $params["uiKeys"][$i];
-                        if(!isset($p[$p_uiName])) show_error("wala may parameter nga " . $p_uiName . " brad!");
+                        if(!isset($p[$p_uiName])) show_error("Wala may parameter nga " . $p_uiName . " brad!");
                         $p_uiKey = $p[$p_uiName];
                         if(is_array($p_uiKey))
                             $data[$params["dbKeys"][$i]] = $p_uiKey[$x];
