@@ -74,14 +74,14 @@ CREATE TABLE IF NOT EXISTS `denomination_ref` (
 
   CREATE TABLE IF NOT EXISTS `store_daily_cash` (
   `store_daily_cash_id`           int(5) unsigned NOT NULL auto_increment,
-  `store_loc_id`                     int(5),
-  `tran_date`                         datetime,
-  `posted_dcash` int(5)                    NOT NULL default '0',  
-  `posted_dsales` int(5)                    NOT NULL default '0',  
-  `created_by`          int(5),
-  `created_date`      datetime,
-  `updated_by`        int(5),
-  `updated_date`     datetime,
+  `store_loc_id`                  int(5),
+  `tran_date`                     datetime,
+  `posted_dcash` int(5)           NOT NULL default '0',  
+  `posted_dsales` int(5)          NOT NULL default '0',  
+  `created_by`                    int(5),
+  `created_date`                  datetime,
+  `updated_by`                    int(5),
+  `updated_date`                  datetime,
   PRIMARY KEY `store_daily_cash_pk`  (`store_daily_cash_id`),
   UNIQUE KEY `store_daily_cash_uk` (`store_loc_id`,`tran_date`)
 )
@@ -90,17 +90,17 @@ CREATE TABLE IF NOT EXISTS `denomination_ref` (
 
 
    CREATE TABLE IF NOT EXISTS `store_daily_cash_dtls` (
-  `store_daily_cash_dtl_id`           int(5) unsigned NOT NULL auto_increment,
-  `store_daily_cash_id`                 int(5),
-  `denomination`                          decimal(7,2),
-  `denomination_qty`                    int(5),
-  `cash_amount`                          decimal(7,2),
- ` sales_denomination_qty`          int(5),
-  `sales_amount`                          decimal(7,2),
-  `created_by`          int(5),
-  `created_date`      datetime,
-  `updated_by`        int(5),
-  `updated_date`     datetime,
+  `store_daily_cash_dtl_id`         int(5) unsigned NOT NULL auto_increment,
+  `store_daily_cash_id`             int(5),
+  `denomination`                    decimal(7,2),
+  `denomination_qty`                int(5),
+  `cash_amount`                     decimal(7,2),
+  `sales_denomination_qty`          int(5),
+  `sales_amount`                    decimal(7,2),
+  `created_by`                      int(5),
+  `created_date`                    datetime,
+  `updated_by`                      int(5),
+  `updated_date`                    datetime,
   PRIMARY KEY `store_daily_cash_dtls_pk`  (`store_daily_cash_dtl_id`),
   UNIQUE KEY `store_daily_cash_dtls_uk` (`store_daily_cash_id`,`denomination`)
 )
