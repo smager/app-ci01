@@ -95,6 +95,7 @@ CREATE TABLE IF NOT EXISTS `denomination_ref` (
   `denomination`                    decimal(7,2),
   `denomination_qty`                int(5),
   `cash_amount`                     decimal(7,2),
+  `return_denomination_qty`         int(5),
   `sales_denomination_qty`          int(5),
   `sales_amount`                    decimal(7,2),
   `created_by`                      int(5),
