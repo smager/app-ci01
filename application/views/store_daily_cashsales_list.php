@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Store Daily Cash </title>
+<title>Store Daily Cash : Returns </title>
 <?php
     includeHeader(array("datePicker"=>true));      
 ?>
@@ -36,6 +36,7 @@ table tr#total td#totalTitle{
     <div class="form-horizontal ">
         <?php 
             hiddenBox( array( 'name'=>'store_daily_cash_id'));         
+            hiddenBox( array( 'name'=>'tran_type','value'=>"cashsales"));         
             openFormGroup();
             selectBox( array( 'labelName'=>'Location' , 'name'=>'store_loc_id', 'labelSize'=>1, 'selectSize'=>3));      
             inputTextBox( array( 'labelName'=>'Date' , 'name'=>'tran_date', 'labelSize'=>1, 'inputSize'=>3,'value'=>date('m/d/Y') )); 

@@ -12,7 +12,7 @@ class store_daily_cash_model extends CI_Model{
     }
     
     function getdata_detail($store_daily_cash_id){
-        $query = $this->db->query("SELECT * FROM store_daily_cash_dtl where store_daily_cash_id=$store_daily_cash_id");
+        $query = $this->db->query("SELECT * FROM store_daily_cash_dtls where store_daily_cash_id=$store_daily_cash_id");
         return $query;    
     }
     
@@ -22,8 +22,12 @@ class store_daily_cash_model extends CI_Model{
         $data = array(
              'store_loc_id' => $post['p_store_loc_id']
             ,'tran_date' =>   date('Y-m-d', strtotime($post['p_tran_date']))  
-            ,'posted' => $post['p_posted']
         );
+        
+        if($post["p_tran_type"]=="cashbox")
+            $data['posted_dcash'] = $post['p_posted'];
+        else
+            $data['posted_dsales'] = $post['p_posted'];            
 
         if($store_daily_cash_id==''){
             //insert        
@@ -43,26 +47,29 @@ class store_daily_cash_model extends CI_Model{
         //detail:
         for ($x = 0; $x < sizeof($post['p_store_daily_cash_dtl_id']); $x++) {
             $id = $post['p_store_daily_cash_dtl_id'][$x];
+                $data = array();
+                if($post["p_tran_type"]=="cashbox"){                    
+                    $data['store_daily_cash_id'] = $store_daily_cash_id;
+                    $data['denomination']= $post['p_denomination'][$x];                                           
+                    $data['cash_amount'] = $post['p_cash_amount'][$x];
+                    $data['denomination_qty'] = $post['p_denomination_qty'][$x];                
+                }
+                else{
+                    $data['return_denomination_qty'] = $post['p_denomination_qty'][$x];
+                }
             
-                $data = array(
-                     'store_daily_cash_id' => $store_daily_cash_id
-                    ,'denomination' => $post['p_denomination'][$x]
-                    ,'denomination_qty' => $post['p_denomination_qty'][$x]
-                    ,'cash_amount' => $post['p_cash_amount'][$x]
-                );
-                
                 if($id==''){
                     //insert        
                     $data['created_by'] =current_user()->empl_id;
                     $this->db->set('created_date', 'NOW()', FALSE);
-                    $this->db->insert('store_daily_cash_dtl', $data);
+                    $this->db->insert('store_daily_cash_dtls', $data);
 
                 }else{
                     //update                        
                     $data['updated_by'] =current_user()->empl_id;
                     $this->db->set('updated_date', 'NOW()', FALSE);
                     $this->db->where('store_daily_cash_dtl_id', $id);
-                    $this->db->update('store_daily_cash_dtl', $data);
+                    $this->db->update('store_daily_cash_dtls', $data);
                 } 
             
         } //end of loop
