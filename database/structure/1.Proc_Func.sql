@@ -1,4 +1,4 @@
---Procedure, Function, Triggers
+/*Procedure, Function*/
 
 create function  getUnitSDesc(p_unit_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
@@ -23,16 +23,6 @@ BEGIN
     SELECT COUNT(po_id) INTO lvl FROM po_dtls WHERE po_id=p_po_id and ifnull(bal_qty,0) > 0 ;
  RETURN (lvl);
 END;
-
-
-CREATE TRIGGER loc_supplies_ins AFTER INSERT ON locations
-  FOR EACH ROW
-  BEGIN
-    INSERT INTO loc_supplies (loc_id, supply_id, created_by, created_date) 
-           SELECT  NEW.loc_id, supply_id, NEW.created_by, NOW() FROM supplies;
-  END;
-
-
 
 CREATE PROCEDURE getSupply_IS_Unposted (IN p_store_loc_id int(5))
 BEGIN
