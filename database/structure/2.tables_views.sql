@@ -209,23 +209,20 @@ CREATE TABLE IF NOT EXISTS `employees` (
   COMMENT='Employees'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
+
 CREATE TABLE IF NOT EXISTS `users` (
-  `user_id` int(5) unsigned NOT NULL auto_increment,
-  `empl_name` varchar(64) NOT NULL default '',
-  `user_password` varchar(64) NOT NULL default'',
-  `user_name` varchar(64) NOT NULL default '',
-  `role_id` int(5),
-  `store_loc_id` int(5),
-  `active` int(5) NOT NULL default '1', 
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
-  PRIMARY KEY `user_pk` (`user_id`),
-  UNIQUE KEY `users_uk` (`user_name`)
-)
-  COMMENT='Users'
-  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+  `user_id` int(5) unsigned NOT NULL,
+  `user_password` varchar(64) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_name` varchar(64) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `empl_id` int(5) DEFAULT NULL,
+  `role_id` int(5) DEFAULT NULL,
+  `active` int(5) NOT NULL DEFAULT '1',
+  `created_by` int(5) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `updated_by` int(5) DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
 
 CREATE TABLE IF NOT EXISTS `user_locations` (
   `user_loc_id` int(5) unsigned NOT NULL auto_increment,
@@ -752,6 +749,22 @@ CREATE TABLE IF NOT EXISTS `page_templates` (
   `updated_date` datetime DEFAULT NULL,
   PRIMARY KEY (`page_template_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+CREATE TABLE `select_options` (
+  `select_id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(100) NOT NULL,
+  `table_name` varchar(100) NOT NULL,
+  `text` varchar(100) NOT NULL,
+  `value` varchar(100) NOT NULL,
+  `condition_text` varchar(100) DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`select_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
 
 
 /* Views */
