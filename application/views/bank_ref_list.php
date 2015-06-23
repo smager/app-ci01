@@ -23,6 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <th>Acct. Name</th>
         <th>Bank Name</th>
         <th>% Deposit Share</th>
+        <th>Amount Deposit Share</th>
+        <th>Priority#</th>
         <th>Active?</th>
         
     </tr>
@@ -42,6 +44,8 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
             <td><?php inputTextBox( array( 'name'=>'bank_acctname[]','value'=>$d[$x]->bank_acctname  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>'bank_name[]','value'=>$d[$x]->bank_name  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>'depo_pct_share[]','value'=>$d[$x]->depo_pct_share  )); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>'depo_amt_share[]','value'=>$d[$x]->depo_amt_share  )); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>'priority_no[]','value'=>$d[$x]->priority_no  )); ?> </td>
             <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N','value'=>$d[$x]->active )); ?> </td>
         
     </tr>        
@@ -59,6 +63,8 @@ for ($x = 0; $x < 5; $x++) {
             <td><?php inputTextBox( array( 'name'=>'bank_acctname[]')); ?> </td>
             <td><?php inputTextBox( array( 'name'=>'bank_name[]')); ?> </td>
             <td><?php inputTextBox( array( 'name'=>'depo_pct_share[]')); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>'depo_amt_share[]')); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>'priority_no[]')); ?> </td>
             <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N')); ?> </td>
     </tr>
     
