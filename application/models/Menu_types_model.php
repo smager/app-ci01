@@ -8,13 +8,13 @@ class menu_types_model extends CI_Model{
     function getdata(){  
         //get session userid
         //$userid =current_user()->empl_id;
-        $query = $this->db->query("SELECT * FROM menu_types");
+        $query = $this->db->query("SELECT * FROM menu_types order by seq_no");
         return $query;    
     }
     
     
     function getdata_idname(){  
-        $query = $this->db->query("SELECT menu_type_id as id,menu_type as name FROM menu_types");
+        $query = $this->db->query("SELECT menu_type_id as id,menu_type as name FROM menu_types order by seq_no");
         return $query;    
     }
     

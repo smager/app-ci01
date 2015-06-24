@@ -8,7 +8,7 @@ class page_templates_model extends CI_Model{
     function getdata($id=null){
         $where ="";        
         if(isset($id) || $id!=null )  $where ="where page_template_id=$id";      
-        $query = $this->db->query("SELECT * FROM page_templates $where");
+        $query = $this->db->query("SELECT * FROM page_templates $where order by page_url");
         return $query;    
     }
     

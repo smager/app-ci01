@@ -8,7 +8,7 @@ class javascripts_model extends CI_Model{
     function getdata($id=null){
         $where ="";        
         if(isset($id) || $id!=null )  $where ="where js_id=$id";      
-        $query = $this->db->query("SELECT * FROM javascripts $where");
+        $query = $this->db->query("SELECT * FROM javascripts $where order by page_url");
         return $query;    
     }
     
