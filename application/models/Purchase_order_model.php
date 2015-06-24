@@ -10,12 +10,22 @@ class purchase_order_model extends CI_Model{
         return $query;    
     }
 
-    function getdata_dtls($id){
-        $query = $this->db->query("SELECT * FROM po_dtls where po_id=" . $id);
+    function getdata_dtls($id,$withbal='n'){
+        $where = "where po_id=$id";
+        if(strtolower($withbal)=='y') $where = $where . " and bal_qty>0";
+        
+        $query = $this->db->query("SELECT * FROM po_dtls $where");
         return $query;    
     }
 
-    
+
+    function getPOWithBal($id=''){
+        $where='';
+        if($id!='') $where = "where po_id=$id"; 
+        
+        $query = $this->db->query("SELECT * FROM powithbal_v $where");
+        return $query;    
+    }
         
         
     
@@ -46,8 +56,8 @@ class purchase_order_model extends CI_Model{
         }      
 
         //detail        
-        for ($x = 0; $x < sizeof($post['p_po_dtls_id']); $x++) {
-            $id = $post['p_po_dtls_id'][$x];
+        for ($x = 0; $x < sizeof($post['p_po_dtl_id']); $x++) {
+            $id = $post['p_po_dtl_id'][$x];
             $po_qty = $post['p_po_qty'][$x];
            
             
@@ -71,7 +81,7 @@ class purchase_order_model extends CI_Model{
                     //update                        
                     $data['updated_by'] =current_user()->empl_id;
                     $this->db->set('updated_date', 'NOW()', FALSE);
-                    $this->db->where('po_dtls_id', $id);
+                    $this->db->where('po_dtl_id', $id);
                     $this->db->update('po_dtls', $data);
                 } 
             }

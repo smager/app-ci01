@@ -81,6 +81,7 @@ a.poRemove:hover{
             <th>Balance</th>
             <th>Qty</th>
             <th>Unit</th>
+            <th>Item</th>
         </tr>
     </thead>        
 </table>    

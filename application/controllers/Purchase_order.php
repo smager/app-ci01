@@ -23,7 +23,14 @@ class purchase_order extends Base_Controller {
     
         jsonOut($this->purchase_order_model->getdata_dtls($id)->result());
         
-    }        
+    }
+    
+    public function powith_bal($id=''){
+    
+        jsonOut($this->purchase_order_model->getPOWithBal($id)->result());
+        
+    }      
+    
         
     public function update()
 	{
