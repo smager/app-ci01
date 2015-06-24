@@ -56,6 +56,7 @@ class store_daily_cash_model extends CI_Model{
                 }
                 else{
                     $data['return_denomination_qty'] = $post['p_denomination_qty'][$x];
+                    $data['return_amount'] = $post['p_return_amount'][$x];
                 }
             
                 if($id==''){

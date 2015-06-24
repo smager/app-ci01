@@ -76,13 +76,16 @@ CREATE TABLE IF NOT EXISTS `denomination_ref` (
   `store_daily_cash_id`           int(5) unsigned NOT NULL auto_increment,
   `store_loc_id`                  int(5),
   `tran_date`                     datetime,
+  `ttl_cash_box_amt`              decimal(7,2),
+  `ttl_return_amt`                decimal(7,2),
+  `ttl_cash_sales_amt`            decimal(7,2),
   `posted_dcash` int(5)           NOT NULL default '0',  
   `posted_dsales` int(5)          NOT NULL default '0',  
   `created_by`                    int(5),
   `created_date`                  datetime,
   `updated_by`                    int(5),
   `updated_date`                  datetime,
-  PRIMARY KEY `store_daily_cash_pk`  (`store_daily_cash_id`),
+  PRIMARY KEY `store_daily_cash_pk`(`store_daily_cash_id`),
   UNIQUE KEY `store_daily_cash_uk` (`store_loc_id`,`tran_date`)
 )
   COMMENT='Store Daily Cash Header'
@@ -96,8 +99,7 @@ CREATE TABLE IF NOT EXISTS `denomination_ref` (
   `denomination_qty`                int(5),
   `cash_amount`                     decimal(7,2),
   `return_denomination_qty`         int(5),
-  `sales_denomination_qty`          int(5),
-  `sales_amount`                    decimal(7,2),
+  `return_amount`                   decimal(7,2),
   `created_by`                      int(5),
   `created_date`                    datetime,
   `updated_by`                      int(5),
