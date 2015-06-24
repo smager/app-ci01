@@ -77,17 +77,21 @@ class common_model extends CI_Model{
                 $parent = $params["parent"];
 
                 //parent:
-                $parentParams =  array(
-                     'pk'=> $parent['pk']
-                    ,'dbKeys'=> $parent['dbKeys'] 
-                    ,'table'=>$parent['table']                        
-                );
-                if(isset($parent['uiKeys']))  $parentParams['uiKeys'] = $parent['uiKeys']; 
-                if(isset($parent['mustNotEmptyKeys']))  $parentParams['mustNotEmptyKeys'] = $parent['mustNotEmptyKeys']; 
-                if(isset($parent['mustNotEmptyOnInsert']))  $parentParams['mustNotEmptyOnInsert'] = $parent['mustNotEmptyOnInsert']; 
+                if(isset($parent["table"])){    
+                    $parentParams =  array(
+                         'pk'=> $parent['pk']
+                        ,'dbKeys'=> $parent['dbKeys'] 
+                        ,'table'=>$parent['table']                        
+                    );
+                    if(isset($parent['uiKeys']))  $parentParams['uiKeys'] = $parent['uiKeys']; 
+                    if(isset($parent['mustNotEmptyKeys']))  $parentParams['mustNotEmptyKeys'] = $parent['mustNotEmptyKeys']; 
+                    if(isset($parent['mustNotEmptyOnInsert']))  $parentParams['mustNotEmptyOnInsert'] = $parent['mustNotEmptyOnInsert']; 
 
-                $parentId = $this->processInsertUpdate($post,$parentParams);
-
+                    $parentId = $this->processInsertUpdate($post,$parentParams);
+                }
+                else{
+                    $parentId = $post["p_" . $parent["pk"]];
+                }
                 //details:  
                 if(!isset($params["details"]))  show_error("Wala man kay detail array(), pero naa kay parent array(), <br />klaroha kuno para dili ko maglibog.");
                 $detail = $params["details"];
@@ -134,12 +138,18 @@ class common_model extends CI_Model{
                     
                 $keyname =  'p_' . $params["pk"]["uiKey"];
                 
+                
+                if(!isset($p[$keyname])) show_error("Naa diay ni siya nga parameter sa imong form? $keyname");
+                
                 if(is_array($p[$keyname]))                 
                     $id = $p[$keyname][$x];
                 else
                     $id = $p[$keyname];                    
                 
-                $isFoundEmptyKeys = $this->findEmptyKeys($p,$params["mustNotEmptyKeys"],$x);
+                $isFoundEmptyKeys=false;
+                if(isset($params["mustNotEmptyKeys"]))    
+                    $isFoundEmptyKeys = $this->findEmptyKeys($p,$params["mustNotEmptyKeys"],$x);
+                
                 if($isFoundEmptyKeys==false) {   
                      
                     $data = array();
@@ -152,7 +162,7 @@ class common_model extends CI_Model{
                         else 
                             $data[$params["dbKeys"][$i]] = $p_uiKey;                        
                     }
-                    
+                                        
                     if($id==''){
                         //insert 
                         if($parentKeyValue!=null){

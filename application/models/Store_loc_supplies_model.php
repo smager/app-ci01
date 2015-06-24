@@ -21,12 +21,18 @@ class store_loc_supplies_model extends CI_Model{
     }    
     
     function update($post){ //zsi.form.displayLOV
-       $params=array(
-             'pk'=> 'store_loc_supply_id'
-            ,'dbKeys'=> array('store_loc_id','supply_brand_id','stock_daily_qty')
-            //,'mustNotEmptyKeys'=> array('stock_daily_qty')
-            ,'table'=>'store_loc_supplies'
-        );
+ 
+        $params=array(            
+            'parent' => array(
+                 'pk'=> 'store_loc_id'
+            )           
+            ,'details' => array(
+                'pk'=> 'store_loc_supply_id'
+                ,'dbKeys'=> array('supply_brand_id','stock_daily_qty')
+                ,'table'=>'store_loc_supplies'
+            )
+        );       
+        
         $this->common_model->update($post,$params); 
     }
 }
