@@ -25,7 +25,7 @@ class store_daily_cash_model extends CI_Model{
         );
         
         if($post["p_tran_type"]=="cashbox")
-            $data['posted_dcash'] = $post['p_posted'];
+            $data['posted_dcash'] = $post['p_posted'];                 
         else
             $data['posted_dsales'] = $post['p_posted'];            
 
@@ -74,6 +74,14 @@ class store_daily_cash_model extends CI_Model{
                 } 
             
         } //end of loop
+        if($post["p_tran_type"]=="cashbox") {
+            if ( $post['p_posted']==1) 
+                $this->db->query("call store_daily_cash_postedCB($store_daily_cash_id)");
+        }
+        else {
+            if ( $post['p_posted']==1) 
+                $this->db->query("call store_daily_cash_postedRet($store_daily_cash_id)");
+        }
 
     }        
     
