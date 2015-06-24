@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Purchase Order</title>
+<title>Receiving</title>
 <?php
     includeHeader(array("datePicker"=>true));    
 ?>
@@ -43,12 +43,15 @@ a.poRemove:hover{
     <div class="form-horizontal ">
         <?php 
 
-            hiddenBox( array( 'name'=>'po_id'));         
+            hiddenBox( array( 'name'=>'receiving_id'));        
             openFormGroup();
-            inputTextBox( array( 'labelName'=>'P.O. #' , 'name'=>'po_no', 'labelSize'=>1, 'inputSize'=>2)); 
-            inputTextBox( array( 'labelName'=>'Date' , 'name'=>'po_date', 'labelSize'=>1, 'inputSize'=>2,'value'=>date('m/d/Y') )); 
-            selectBox( array( 'labelName'=>'Supplier' , 'name'=>'supplier_id', 'labelSize'=>1, 'selectSize'=>2));      
-            selectBox( array( 'labelName'=>'Location' , 'name'=>'loc_id', 'labelSize'=>1, 'selectSize'=>2));      
+                selectBox( array( 'labelName'=>'P.O. #' , 'name'=>'po_id', 'labelSize'=>1, 'selectSize'=>2));  
+                inputTextBox( array( 'labelName'=>'Supplier' , 'name'=>'supplier_name', 'labelSize'=>1, 'inputSize'=>2)); 
+            closeFormGroup();
+            openFormGroup();
+                inputTextBox( array( 'labelName'=>'D.R#' , 'name'=>'dr_no', 'labelSize'=>1, 'inputSize'=>2)); 
+                inputTextBox( array( 'labelName'=>'Date' , 'name'=>'dr_date', 'labelSize'=>1, 'inputSize'=>2,'value'=>date('m/d/Y') )); 
+                selectBox( array( 'labelName'=>'Location' , 'name'=>'loc_id', 'labelSize'=>1, 'selectSize'=>2));      
             closeFormGroup();
 
         ?> 
@@ -58,7 +61,7 @@ a.poRemove:hover{
 <div class="col-xs-3 poLeftBox">
 
 <div class="panel panel-default">
-  <div class="panel-heading">Unposted PO(s)</div>
+  <div class="panel-heading">Unposted DR(s)</div>
   <div class="panel-body">
 
         <div class="list-group">
@@ -75,20 +78,17 @@ a.poRemove:hover{
     <thead>
         <tr>
             <th></th>
-            <th>Item</th>
-            <th>Unit</th>
+            <th>Balance</th>
             <th>Qty</th>
-            <th>Unit Price</th>
-            <th>Total</th>
-
+            <th>Unit</th>
         </tr>
     </thead>        
 </table>    
 <div class="buttonGroup">
-<?php 
+<?php   
 Button(array('name'=>'New','type'=>'button'));    
 Button(array('name'=>'Save','type'=>'submit'));    
-Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("purchase_order/delete")  . "');"));        
+Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url($this->router->fetch_class()) . "delete');"));        
 ?>    
 </div>
 </div>
