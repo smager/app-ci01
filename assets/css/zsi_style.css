@@ -296,7 +296,6 @@ td #delete-row span{
    color: #055A78;
    font-weight: bold;
    height: 25px;
-   left: 400px;
    top: 43px;
    padding-left: 10px;
    padding-top: 3px;   
@@ -310,7 +309,6 @@ td #delete-row span{
    background-color: #fff;
     color: red;
     font-weight: bold;
-    left: 400px;
     padding: 5px 5px 10px 10px;
     position: absolute;
     top: 0;
