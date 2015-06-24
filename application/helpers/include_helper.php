@@ -197,6 +197,14 @@ function menu(){
     $ci->load->library('session');
     
 ?>
+<div class="progressWindow">
+    <div class="loadingImg"></div> 
+    <div class="loadingText">Loading...Please wait</div>
+</div>
+<div class="errorWindow">
+    Some processe(s) encountered a problem. 
+    <br> Please Contact System Administrator.
+</div>
 
 <div class="navbar navbar-default">
       <div class="container">

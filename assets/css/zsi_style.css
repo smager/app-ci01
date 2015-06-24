@@ -292,11 +292,12 @@ td #delete-row span{
 
 .progressWindow{
    background-color: #fff;
+   border: 1pt solid #3399ff;
    color: #055A78;
    font-weight: bold;
    height: 25px;
    left: 400px;
-   top: 0;
+   top: 43px;
    padding-left: 10px;
    padding-top: 3px;   
    position: absolute;
@@ -315,7 +316,7 @@ td #delete-row span{
     top: 0;
     width: 315px;
     z-index: 1000;
-    border: 1pt solid red;
+    border: 1pt solid #3399ff;
     display:none;
 }
 
