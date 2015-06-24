@@ -2,5 +2,5 @@
 1. create database
 2. execute - procedures and functions script - one by one
 3. execute - tables and views script
-4. execute - backup data
-5. execute - triggers scripts one by one.
+4. execute - triggers scripts one by one.
+5. execute - backup data
