@@ -12,7 +12,7 @@ class store_supplies_model extends CI_Model{
     function getdata_ad($sid){
         $query = $this->db->query(
               "SELECT * FROM store_supplies_v where store_id=" . $sid 
-            . " UNION SELECT * FROM supplies_v a "
+            . " UNION SELECT * FROM store_supplies2_v a "
             . " WHERE NOT EXISTS(SELECT b.supply_id FROM store_supplies_v b WHERE b.store_id=" . $sid
             . " AND b.supply_id = a.supply_id)" 
         );

@@ -483,15 +483,15 @@ CREATE TABLE IF NOT EXISTS `loc_supplies` (
  CREATE TABLE IF NOT EXISTS `store_loc_supplies` (
   `store_loc_supply_id` int(5) unsigned NOT NULL auto_increment,
   `store_loc_id` int(5),
-  `supply_brand_id`    int(5),
+  `supply_id`    int(5),
+  `unit_id`      int(5),
   `stock_daily_qty`   decimal(5,2),
-  `stock_curr_qty`    decimal(5,2),
   `created_by` int(5),
   `created_date` datetime,
   `updated_by` int(5),
   `updated_date` datetime,
   PRIMARY KEY `store_loc_supplies_pk`  (`store_loc_supply_id`),
-  UNIQUE KEY `store_loc_supplies_uk` (`store_loc_id`,`supply_brand_id`)
+  UNIQUE KEY `store_loc_supplies_uk` (`store_loc_id`,`supply_id`)
 )
   COMMENT='Store Location Supplies reference'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
@@ -562,18 +562,18 @@ CREATE TABLE IF NOT EXISTS `loc_supplies` (
 
  CREATE TABLE IF NOT EXISTS `store_inv_daily_dtls` (
   `store_inv_daily_dtl_id`  int(5) unsigned NOT NULL auto_increment,
-  `store_inv_daily_id`        int(5),
-  `store_loc_id`                int(5),
-  `supply_brand_id`          int(5),
-  `beg_qty`                      decimal(5,2),
-  `used_qty`                   decimal(5,2),
-  `bal_qty`                     decimal(5,2),
-  `unit_cost`              decimal(8,2),
-  `unit price`             decimal(8,2),
-  `created_by`           int(5),
-  `created_date`        datetime,
-  `updated_by`          int(5),
-  `updated_date`       datetime,
+  `store_inv_daily_id`      int(5),
+  `store_loc_id`            int(5),
+  `supply_brand_id`         int(5),
+  `beg_qty`                 decimal(5,2),
+  `used_qty`                decimal(5,2),
+  `bal_qty`                 decimal(5,2),
+  `unit_cost`               decimal(8,2),
+  `unit price`              decimal(8,2),
+  `created_by`              int(5),
+  `created_date`            datetime,
+  `updated_by`              int(5),
+  `updated_date`            datetime,
   PRIMARY KEY `store_inv_daily_dtls_pk`  (`store_inv_daily_dtl_id`),
   UNIQUE KEY `store_inv_daily_dtls_uk` (`store_inv_daily_id`,`store_loc_id`,`supply_brand_id`)
 )
@@ -783,9 +783,9 @@ WHERE a.from_unit_id = b.unit_id
 AND a.conv_unit_id = c.unit_id;
 
 CREATE OR REPLACE VIEW supplies_v AS
-select "" as store_id, ""  as store_supply_id, a.supply_id, b.supply_code
-from store_supplies a, supplies b
-WHERE a.supply_id = b.supply_id;
+select a.*, getUnitSDesc(unit_id) unit_desc   
+from  supplies;
+
 
 CREATE OR REPLACE VIEW supplies2_v AS
 select "" as loc_id, ""  as loc_supply_id, b.supply_id, b.supply_code, "" as reorder_level, "" as max_level, "" as stock_qty
@@ -797,6 +797,10 @@ CREATE OR REPLACE VIEW store_supplies_v AS
 select store_id, store_supply_id, a.supply_id, b.supply_code
 from store_supplies a, supplies b
 WHERE a.supply_id = b.supply_id;
+
+CREATE OR REPLACE VIEW store_supplies2_v AS
+select "" as store_id, "" as store_supply_id, supply_id, supply_code
+from supplies
 
 CREATE OR REPLACE VIEW loc_supplies_v AS
 select a.loc_id, a.loc_supply_id, a.supply_id, b.supply_code, a.reorder_level, a.max_level, a.stock_qty
@@ -835,11 +839,22 @@ select a.store_id, a.store_supply_id, a.supply_id, b.supply, b.supply_cost, b.su
 from store_supplies a, supply_brands_v b
 WHERE a.supply_id = b.supply_id;
 
+CREATE OR REPLACE VIEW store_loc_supplies_ref_v AS
+select a.store_loc_supply_id, a.store_loc_id, c.store_id, a.supply_id, b.supply_code, b.unit_desc, stock_daily_qty, b.supply_srp
+from store_loc_supplies a, supplies_v b, store_loc c
+WHERE a.store_loc_id = c.store_loc_id
+AND a.supply_id = b.supply_id;
+
+CREATE OR REPLACE VIEW store_loc_supplies_ref2_v AS
+select "" as store_loc_supply_id, "" as store_loc_id, a.store_id, b.supply_id, b.supply_code, b.unit_desc, "" as stock_daily_qty, b.supply_srp
+from  store_supplies a, supplies_v b
+WHERE a.supply_id = b.supply_id;
+
+
 CREATE OR REPLACE VIEW store_loc_supplies_v AS
-select a.store_loc_supply_id, a.store_loc_id, c.store_id, a.supply_brand_id, b.supply, cu_desc, stock_daily_qty, stock_curr_qty, stock_daily_qty - ifnull(stock_curr_qty,0) as rep_qty, b.supply_cost, b.supply_srp
-from store_loc_supplies a, supply_brands_v b, store_loc c
-WHERE a.supply_brand_id = b.supply_brand_id
-AND a.store_loc_id = c.store_loc_id;
+select a.store_loc_supply_id, a.store_loc_id, c.store_id, a.supply_brand_id, b.supply, getUnitSDesc(unit_id) unit_sdesc, stock_daily_qty, stock_curr_qty, stock_daily_qty - ifnull(stock_curr_qty,0) as rep_qty, b.supply_cost, b.supply_srp
+from store_loc_supplies a, supply_v b, store_loc c
+WHERE a.store_loc_id = c.store_loc_id;
 
 
 CREATE OR REPLACE VIEW store_supplies2_v AS
@@ -860,14 +875,15 @@ and a.supply_is_id=c.supply_is_id
 and c.store_loc_id =b.store_loc_id
 and c.posted=0;
 
+CREATE OR REPLACE VIEW powithbal_v AS
+select *, getSupplier(supplier_id) as supplier from po
+where ifnull(getPOBalCount(po_id),0) > 0;
+
 create or replace view po_dtls_v as
 select a.*, b.supply, b.cu_desc 
 from po_dtls a, supply_brands_v b
 where a.supply_brand_id = b.supply_brand_id;
     
-CREATE OR REPLACE VIEW POwithBal AS
-select *, getSupplier(supplier_id) from po
-where ifnull(getPOBalCount(po_id),0) > 0;
 
 
 
