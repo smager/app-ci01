@@ -49,12 +49,14 @@ class purchase_order_model extends CI_Model{
         for ($x = 0; $x < sizeof($post['p_po_dtls_id']); $x++) {
             $id = $post['p_po_dtls_id'][$x];
             $po_qty = $post['p_po_qty'][$x];
+           
             
             if($po_qty!=''){
                 $data = array(
                      'po_id' => $po_id
                     ,'supply_brand_id' => $post['p_supply_brand_id'][$x]
                     ,'po_qty' => $po_qty
+                    ,'bal_qty' => $po_qty
                     ,'unit_price' => $post['p_unit_price'][$x]
                 );
 
