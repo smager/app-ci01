@@ -5,7 +5,7 @@ $(document).ready(function(){
     ctrlSel( base_url + "select_options/code/suppliers","#p_supplier_id","","N");
     ctrlSel( base_url + "select_options/code/locations","#p_loc_id","","N");
 
-    displayBlankRows();
+    displayBlankRows(true);
     getUnpostedPO();
     initInputs();    
     markMandatory();
@@ -16,8 +16,7 @@ $("form[id=frm]").submit(function(){
  }); 
  
  $("#btnNew").click(function(){
-    $("#grid").children('tbody').html('');  
-    displayBlankRows();
+    displayBlankRows(true);
     //clear data
     po_id.val('');
     po_no.val('');
@@ -96,11 +95,16 @@ function getUnpostedPO(){
                 ,loc_id: this.loc_id
                 ,supplier_id:this.supplier_id
             };
-            $(".list-group").append("<a href='javascript:void(0);' onclick='displayDetails("   + JSON.stringify(params) +  ");' class='list-group-item' >" + this.po_no + "</a>");
+            var removeicon = "<a class='glyphicon glyphicon-remove-sign poRemove' onclick='removePO(" + this.po_id  + ");' href='javascript:void(0);'></a>";
+            $(".list-group").append("<a href='javascript:void(0);' onclick='displayDetails("   + JSON.stringify(params) +  ");' class='list-group-item' >" + this.po_no + "</a>" + removeicon);
         });
         
     });
 
+}
+
+function removePO(id){
+    console.log(id);
 }
 
 function initInputs(){
@@ -129,7 +133,7 @@ function displayRecords(id){
         ,url   : base_url + "purchase_order/getdata_dtls_json/" + id
         ,td_body: [ 
             function(d){
-                return     bs({name:"po_dtls_id[]",type:"hidden",value: d.po_dtls_id})
+                return     bs({name:"po_dtl_id[]",type:"hidden",value: d.po_dtl_id})
                         +  bs({name:"cb[]",type:"checkbox"});
 
             }            
@@ -145,7 +149,7 @@ function displayRecords(id){
         ]
         ,onComplete : function(){
             displayUnitDescriptions();
-            displayBlankRows();
+            displayBlankRows(false);
         }
     });    
 }
@@ -168,14 +172,15 @@ function onSupplyBrandChange(){
     
 }
 
-function displayBlankRows(){       
+function displayBlankRows(p_isNew){       
     var bs = zsi.bs.ctrl;    
     //var inputCls = "form-control input-sm";
     zsi.json.loadGrid({
          table  : "#grid"
+        ,isNew  : p_isNew
         ,td_body: [ 
             function(d){
-                return     bs({name:"po_dtls_id[]",type:"hidden"})
+                return     bs({name:"po_dtl_id[]",type:"hidden"})
                         +  bs({name:"select[]",type:"checkbox"});
 
             }            

@@ -26,21 +26,37 @@ $(document).ready(function(){
 
 });
 
+ zsi.ShowHideProgressWindow =  function (isShow){
+    var pw = $(".progressWindow");
+   if(isShow){
+      pw.centerWidth();
+      pw.css("display","block");
+   }
+   else{
+      pw.hide("slow");      
+   }
+ }
+ 
+zsi.ShowHideErrorWindow=function(isShow){
+     var pw = $(".errorWindow");
+    if(isShow){
+       pw.centerWidth();
+       pw.css("display","block");
+    }else{
+       pw.hide("slow");      
+    }
+ 
+ }
+ 
 function monitorAjaxResponse(){
-   $(document).ajaxStart(function(){});      
-
-   $( document ).ajaxSend(function(event,request,settings) {
-      if(typeof zsi_request_count === 'undefined') zsi_request_count=0;
-      zsi_request_count++;
-      
-      if(zsi._strValueExist(settings.url,"zsi_lib.value_exist") ) return;
-      if(zsi._strValueExist(settings.url,"employee_search_json") ) return;      
-      
-      if(typeof parent.ShowHideProgressWindow !== 'undefined') {
-         parent.ShowHideProgressWindow(true);
-      }
-
-   });
+    $(document).ajaxStart(function(){});      
+    $( document ).ajaxSend(function(event,request,settings) {
+        if(typeof zsi_request_count === 'undefined') zsi_request_count=0;
+        zsi_request_count++;
+        if(zsi._strValueExist(settings.url,"checkDataExist") ) return;
+        if(zsi._strValueExist(settings.url,"employee_search_json") ) return;      
+        zsi.ShowHideProgressWindow(true);
+    });
 
    $(document).ajaxComplete(function() {
       if(typeof zsi_request_count !== 'undefined'){
@@ -96,14 +112,10 @@ function monitorAjaxResponse(){
             
             $.post( error_url + "?p_error_type=E&p_error_message=" + escape(request.responseText) + "&p_url="  + escape(settings.url)  , function() {
                console.log( "Error submited." );
-               if(typeof parent.ShowHideErrorWindow !== 'undefined'){
-                  parent.ShowHideErrorWindow(true);                  
+                  zsi.ShowHideErrorWindow(true);                  
                   setTimeout(function(){
-                     parent.ShowHideErrorWindow(false);
+                     zsi.ShowHideErrorWindow(false);
                   },5000);                        
-                  
-               }
-
             });
             
          }
@@ -116,11 +128,11 @@ function monitorAjaxResponse(){
       setTimeout(function(){
          if(typeof zsi_request_count!=='undefined'){
             if(zsi_request_count<=0){
-               if(typeof parent.ShowHideProgressWindow !== 'undefined')  parent.ShowHideProgressWindow(false);
+               zsi.ShowHideProgressWindow(false);
                zsi_request_count=0;
             }
          }
-      },1000);      
+      },100);      
    }
 }
 
@@ -864,11 +876,11 @@ zsi.json.loadGrid = function(o){
         l_grid.append(r);    
     }
     if(typeof o.isNew !== "undefined"){
-        if(o.isNew==true) l_grid.children('tbody').html('');   
+        if(o.isNew==true) l_grid.clearGrid();  
     } 
     
     if(o.url){
-        l_grid.children('tbody').html('');      
+        l_grid.clearGrid();   
         $.getJSON(o.url, function(data){
              $.each(data, function () {
                  trItem(this)
@@ -1053,13 +1065,7 @@ $.fn.fillSelect = function(data,p_selval,p_req,p_onLoadComplete) {
 }
 
 $.fn.clearGrid = function() {
-    var t = $($(this).children("tbody")).children("tr");
-    t.each(function() {
-        var th = $(this).children()[0];
-        if (th.tagName.toLowerCase() != "th") {
-            $(this).remove();
-        }
-    });
+     $(this).children('tbody').html('');
 }
 
 
@@ -1075,13 +1081,15 @@ $.fn.serializeExclude = function(p_arr_exclude) {
    return str;  
 
 }
-
+$.fn.centerWidth = function () {
+    this.css("position","absolute");
+    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
+    return this;
+}
 $.fn.center = function () {
     this.css("position","absolute");
-    this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + 
-                                                $(window).scrollTop()) + "px");
-    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + 
-                                                $(window).scrollLeft()) + "px");
+    this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px");
+    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
     return this;
 }
 
