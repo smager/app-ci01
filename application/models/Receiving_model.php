@@ -41,9 +41,19 @@ class receiving_model extends CI_Model{
 
     }
     
-    function delete($post){        
-        $this->common_model->delete($this->input->post(),"po","po_id");        
-    }    
+    function delete($receiving_id){                
+        //delete header:
+        $this->db->where("receiving_id", $receiving_id);
+        $this->db->delete("receiving_dtls");    
+        //delete details:
+        $this->db->where("receiving_id", $receiving_id);
+        $this->db->delete("receiving");
+        
+    }
+    
+    function delete_dtls($post){        
+        $this->common_model->delete($this->input->post(),"receiving_dtls","receiving_dtl_id");        
+    }        
 
 }
 ?>

@@ -37,10 +37,16 @@ class receiving extends Base_Controller {
       
 	}    
    
-    public function delete()
-	{
+    
         
-        $this->receiving_model->delete($this->input->post());
+    public function delete($receiving_id)
+	{        
+        $this->receiving_model->delete($receiving_id);
+	}  
+    
+    public function delete_dtls()
+	{        
+        $this->receiving_model->delete_dtls($this->input->post());
 	}   
     
 }
