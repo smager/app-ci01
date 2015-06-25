@@ -852,8 +852,8 @@ WHERE a.supply_id = b.supply_id;
 
 
 CREATE OR REPLACE VIEW store_loc_supplies_v AS
-select a.store_loc_supply_id, a.store_loc_id, c.store_id, a.supply_brand_id, b.supply, getUnitSDesc(unit_id) unit_sdesc, stock_daily_qty, stock_curr_qty, stock_daily_qty - ifnull(stock_curr_qty,0) as rep_qty, b.supply_cost, b.supply_srp
-from store_loc_supplies a, supply_v b, store_loc c
+select a.store_loc_supply_id, a.store_loc_id, c.store_id, b.supply_brand_id, b.supply, cu_desc
+from store_loc_supplies a, supply_brands_v b, store_loc c
 WHERE a.store_loc_id = c.store_loc_id;
 
 
@@ -868,7 +868,7 @@ from supply_is
 where posted=0;
 
 CREATE OR REPLACE VIEW supply_is_dtls_unposted_v AS
-select a.*, b.supply, b.cu_desc, b.stock_daily_qty, a.supply_is_qty as rep_qty
+select a.*, b.supply, b.cu_desc
 from supply_is_dtls a, store_loc_supplies_v b, supply_is c
 where a.supply_brand_id = b.supply_brand_id
 and a.supply_is_id=c.supply_is_id

@@ -27,7 +27,7 @@ END;
 CREATE PROCEDURE getSupply_IS_Unposted (IN p_store_loc_id int(5))
 BEGIN
    DECLARE l_id INT(5);
-   SELECT supply_is_id INTO l_id FROM supply_is WHERE store_loc_id = store_loc_id;
+   SELECT supply_is_id INTO l_id FROM supply_is WHERE store_loc_id = store_loc_id limit 1;
    IF IFNULL(l_id,0)=0 THEN
       SELECT * FROM store_loc_supplies_v WHERE store_loc_id =p_store_loc_id ;
    ELSE

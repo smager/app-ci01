@@ -14,7 +14,7 @@ class purchase_order_model extends CI_Model{
         $where = "where po_id=$id";
         if(strtolower($withbal)=='y') $where = $where . " and bal_qty>0";
         
-        $query = $this->db->query("SELECT * FROM po_dtls $where");
+        $query = $this->db->query("SELECT * FROM po_dtls_v $where");
         return $query;    
     }
 
