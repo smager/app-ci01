@@ -10,11 +10,19 @@ class receiving_model extends CI_Model{
         return $query;        
     }
     
-    function getdata($receiving_id){
-        $query = $this->db->query("SELECT * FROM receiving where receiving_id=$receiving_id");
+    function get_unposted_dr($receiving_id=''){       
+        $where=""; 
+        if($receiving_id!='') $where = "where receiving_id=$id";              
+        $query = $this->db->query("SELECT * FROM receiving_unposted_v $where");
         return $query;    
     }
-    
+  
+   function get_unposted_dr_dtls($receiving_id){               
+        $query = $this->db->query("SELECT * FROM receiving_dtls_po_v where receiving_id=$receiving_id");
+        return $query;    
+    }    
+  
+
     function update($post){
         $params=array(            
             'parent' => array(

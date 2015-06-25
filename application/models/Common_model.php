@@ -126,6 +126,12 @@ class common_model extends CI_Model{
 
         return $returnId;
     }
+     
+    function verifyValue($p_name,$value){
+        $result=$value;
+        if( strpos(strtolower($p_name), "date") > 0 ) $result = date('Y-m-d', strtotime($value));
+        return $result;
+    }
     
     function processInsertUpdate($post,$params,$parentKeyValue=null){    
         $insertId=0;
@@ -156,11 +162,13 @@ class common_model extends CI_Model{
                     for ($i = 0; $i < sizeof($params["uiKeys"]); $i++) {
                         $p_uiName = 'p_' . $params["uiKeys"][$i];
                         if(!isset($p[$p_uiName])) show_error("Wala may parameter nga " . $p_uiName . " brad!");
+                        
                         $p_uiKey = $p[$p_uiName];
+                                                      
                         if(is_array($p_uiKey))
-                            $data[$params["dbKeys"][$i]] = $p_uiKey[$x];
+                            $data[$params["dbKeys"][$i]] = $this->verifyValue($p_uiName,$p_uiKey[$x]);
                         else 
-                            $data[$params["dbKeys"][$i]] = $p_uiKey;                        
+                            $data[$params["dbKeys"][$i]] = $this->verifyValue($p_uiName,$p_uiKey);                        
                     }
                                         
                     if($id==''){

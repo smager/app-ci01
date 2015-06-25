@@ -19,9 +19,9 @@ class purchase_order extends Base_Controller {
         
     }
     
-    public function getdata_dtls_json($id){
+    public function getdata_dtls_json($id,$withbal='n'){
     
-        jsonOut($this->purchase_order_model->getdata_dtls($id)->result());
+        jsonOut($this->purchase_order_model->getdata_dtls($id,$withbal)->result());
         
     }
     

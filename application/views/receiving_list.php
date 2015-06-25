@@ -9,14 +9,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     includeHeader(array("datePicker"=>true));    
 ?>
 <style>
-.poLeftBox {    
+.itemLeftBox {    
     margin-top: 10px;
 }
-.poLeftBox .panel-body{
+.itemLeftBox .panel-body{
     height: 400px;
     overflow:auto;
 }
-a.poRemove{
+a.itemRemove{
     color: #3071a8;
     float: right;
     font-size: 20pt;
@@ -25,7 +25,7 @@ a.poRemove{
     top: -31px;
 }
     
-a.poRemove:hover{
+a.itemRemove:hover{
     color:red;
     text-decoration:none;
 }    
@@ -36,7 +36,7 @@ a.poRemove:hover{
 <?php menu(); ?> 
     
 <div class="container page">
-<form id="frm" action="<?php echo base_url('purchase_order/update');?>" method="post" >
+<form id="frm" action="<?php echo base_url($this->router->fetch_class()) . '/update';?>" method="post" >
     
 
 <div >
@@ -44,8 +44,9 @@ a.poRemove:hover{
         <?php 
 
             hiddenBox( array( 'name'=>'receiving_id'));        
+            hiddenBox( array( 'name'=>'po_id'));    
             openFormGroup();
-                selectBox( array( 'labelName'=>'P.O. #' , 'name'=>'po_id', 'labelSize'=>1, 'selectSize'=>2));  
+                selectBox( array( 'labelName'=>'P.O. #' , 'name'=>'po_filter', 'labelSize'=>1, 'selectSize'=>2));  
                 inputTextBox( array( 'labelName'=>'Supplier' , 'name'=>'supplier_name', 'labelSize'=>1, 'inputSize'=>2)); 
             closeFormGroup();
             openFormGroup();
@@ -58,7 +59,7 @@ a.poRemove:hover{
     </div>
 </div>    
     
-<div class="col-xs-3 poLeftBox">
+<div class="col-xs-3 itemLeftBox">
 
 <div class="panel panel-default">
   <div class="panel-heading">Unposted DR(s)</div>

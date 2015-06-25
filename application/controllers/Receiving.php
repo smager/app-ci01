@@ -13,12 +13,22 @@ class receiving extends Base_Controller {
 		$this->load->view('receiving_list');
 	}
 
-    public function getdata_json(){
+    public function get_unposted_dr(){
     
-        jsonOut($this->receiving_model->getdata()->result());
+        jsonOut($this->receiving_model->get_unposted_dr()->result());
+        
+    }
+    public function get_unposted_dr_dtls($receiving_id){
+    
+        jsonOut($this->receiving_model->get_unposted_dr_dtls($receiving_id)->result());
         
     }
     
+    public function getdata_po_with_bal($id){
+    
+        jsonOut($this->receiving_model->getdata_po_with_bal($id)->result());
+        
+    }    
         
     public function update()
 	{
