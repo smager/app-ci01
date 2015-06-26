@@ -134,7 +134,7 @@ class common_model extends CI_Model{
     }
     
     function processInsertUpdate($post,$params,$parentKeyValue=null){    
-        $insertId=0;
+        $returnId=0;
         if(isset($post)){  
             $p = $post;
             if(!isset($params["uiKeys"])) $params["uiKeys"] = $params["dbKeys"];  
@@ -185,11 +185,12 @@ class common_model extends CI_Model{
                             $data['created_by'] =current_user()->empl_id;
                             $this->db->set('created_date', 'NOW()', FALSE);
                             $this->db->insert($params["table"], $data);
-                            $insertId = $this->db->insert_id();
+                            $returnId = $this->db->insert_id();
                         }
 
                     }else{
-                        //update                    
+                        //update    
+                        $returnId = $id;
                         $data['updated_by'] =current_user()->empl_id;
                         $this->db->set('updated_date', 'NOW()', FALSE);
                         $this->db->where( $params["pk"]["dbKey"], $id);
@@ -201,7 +202,7 @@ class common_model extends CI_Model{
             } //end of loop
         }//end of - if post is set        
         
-        return $insertId;
+        return $returnId;
     }
     
     

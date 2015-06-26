@@ -44,12 +44,24 @@ class purchase_order_model extends CI_Model{
                 ,'table'=>'po_dtls'
             )
         );       
-        $this->common_model->update($post,$params);      
+        return $this->common_model->update($post,$params);      
     }        
     
-    function delete($post){        
-        $this->common_model->delete($this->input->post(),"po","po_id");        
-    }    
+    
+    function delete($id){                
+        //delete header:
+        $this->db->where("po_id", $id);
+        $this->db->delete("po_dtls");    
+        //delete details:
+        $this->db->where("po_id", $id);
+        $this->db->delete("po");
+        
+    }
+    
+    function delete_dtls($post){        
+        $this->common_model->delete($this->input->post(),"po_dtls","po_dtl_id");        
+    }        
+    
 
 }
 ?>

@@ -34,14 +34,21 @@ class purchase_order extends Base_Controller {
         
     public function update()
 	{
-        $this->purchase_order_model->update($this->input->post());
-        redirect( base_url("purchase_order") );      
+        jsonOut(
+            array( "po_id" => $this->purchase_order_model->update($this->input->post()) )
+        );        
 	}    
    
-    public function delete()
+    public function delete($po_id)
 	{
         
-        $this->purchase_order_model->delete($this->input->post());
+        $this->purchase_order_model->delete($po_id);
+	}   
+    
+    public function delete_dtls()
+	{
+        
+        $this->purchase_order_model->delete_dtls($this->input->post());
 	}   
     
 }

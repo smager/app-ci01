@@ -87,7 +87,7 @@ a.poRemove:hover{
 <?php 
 Button(array('name'=>'New','type'=>'button'));    
 Button(array('name'=>'Save','type'=>'submit'));    
-Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("purchase_order/delete")  . "');"));        
+Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("purchase_order/delete_dtls")  . "');"));        
 ?>    
 </div>
 </div>
