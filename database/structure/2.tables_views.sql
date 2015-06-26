@@ -319,6 +319,7 @@ CREATE TABLE IF NOT EXISTS `supplies` (
   `supply_type_id` int(5),
   `unit_id`        int(5),  
   `supply_srp`    decimal(5,2),
+  `seq_no`        int(5), 
   `created_by`     int(5),
   `created_date` datetime,
   `updated_by` int(5),
