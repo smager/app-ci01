@@ -53,8 +53,8 @@ table tr#total td#totalTitle{
         <tr>
             <th width="40" ></th>    
             <th>Items</th>  
-            <th>Unit</th>     
-            <th>Qty</th>                  
+            <th>Unit</th> 
+            <th>Ref. Qty</th> 
         </tr>  
     </thead>        
 

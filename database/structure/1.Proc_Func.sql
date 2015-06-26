@@ -16,6 +16,15 @@ BEGIN
  RETURN (lvl);
 END;
 
+create function  getPOLocId(p_po_id int) RETURNS INT(5)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl varchar(100);
+    SELECT loc_id INTO lvl FROM po WHERE po_id=p_po_id;
+ RETURN (lvl);
+END;
+
+
 create function  getPOBalCount(p_po_id int) RETURNS INT(5)
     DETERMINISTIC
 BEGIN
@@ -69,4 +78,21 @@ UPDATE store_daily_cash
    SET ttl_return_amt     = l_return_amt
       ,ttl_cash_sales_amt = l_return_amt - ttl_cash_amt
  WHERE store_daily_cash_id=p_store_daily_cash_id;    
+END;
+
+CREATE PROCEDURE Receiving_posted(p_receiving_id int(5))
+BEGIN
+DECLARE l_return_amt decimal(7,2);
+
+UPDATE po_dtls a, receiving_dtls b 
+SET a.bal_qty = a.bal_qty - b.dr_qty
+WHERE a.po_dtl_id = b.po_dtl_id
+AND b.receiving_id = p_receiving_id;
+
+UPDATE loc_supply_brands a, receiving_dtls_po_v b
+SET a.stock_qty = a.stock_qty + b.dr_qty
+WHERE a.supply_brand_id = b.receiving_dtls_po_v
+AND loc_id =  
+ 
+
 END;

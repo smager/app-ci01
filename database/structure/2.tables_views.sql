@@ -363,6 +363,22 @@ CREATE TABLE IF NOT EXISTS `loc_supplies` (
 )
   COMMENT='Location Supplies'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+  
+
+CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
+  `loc_supply_brand_id` int(5) unsigned NOT NULL auto_increment,
+  `loc_supply_id` int(5),
+  `supply_brand_id` int(5),  
+  `stock_qty` int(5),
+  `created_by` int(5),
+  `created_date` datetime,
+  `updated_by` int(5),
+  `updated_date` datetime,
+  PRIMARY KEY `loc_supply_brands_pk`  (`loc_supply_brand_id`),
+  UNIQUE KEY `loc_supply_brands_uk` (`loc_supply_id`,`supply_brand_id`)
+)
+  COMMENT='Location Supplies per brand'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
  CREATE TABLE IF NOT EXISTS `po` (
   `po_id` int(5) unsigned NOT NULL auto_increment,
@@ -484,7 +500,6 @@ CREATE TABLE IF NOT EXISTS `loc_supplies` (
   `store_loc_supply_id` int(5) unsigned NOT NULL auto_increment,
   `store_loc_id` int(5),
   `supply_id`    int(5),
-  `unit_id`      int(5),
   `stock_daily_qty`   decimal(5,2),
   `created_by` int(5),
   `created_date` datetime,
@@ -544,38 +559,36 @@ CREATE TABLE IF NOT EXISTS `loc_supplies` (
    COMMENT='Stock Issuance details to stores'
    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
- CREATE TABLE IF NOT EXISTS `store_inv_daily` (
-  `store_inv_daily_id` int(5) unsigned NOT NULL auto_increment,
-  `store_inv_date`     datetime,
+ CREATE TABLE IF NOT EXISTS `store_loc_dialy_stocks` (
+  `store_loc_dialy_stock_id` int(5) unsigned NOT NULL auto_increment,
+  `tran_date`     datetime,
   `store_loc_id` int(5),
   `posted` int(5) NOT NULL default '0',  
   `created_by`   int(5),
   `created_date` datetime,
   `updated_by` int(5),
   `updated_date` datetime,
-  PRIMARY KEY `store_inv_daily_pk`  (`store_inv_daily_id`),
-  UNIQUE KEY `store_inv_daily_uk` (`store_inv_date`,`store_loc_id`)
+  PRIMARY KEY `store_loc_dialy_stocks_pk`  (`store_loc_dialy_stock_id`),
+  UNIQUE KEY `store_loc_dialy_stocks_uk` (`tran_date`,`store_loc_id`)
 )
   COMMENT='Daily store supplies usage/sales'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
 
 
- CREATE TABLE IF NOT EXISTS `store_inv_daily_dtls` (
-  `store_inv_daily_dtl_id`  int(5) unsigned NOT NULL auto_increment,
-  `store_inv_daily_id`      int(5),
+ CREATE TABLE IF NOT EXISTS `store_loc_daily_stock_dtls` (
+  `store_loc_daily_stock_dtl_id`  int(5) unsigned NOT NULL auto_increment,
+  `store_loc_daily_stock_id`      int(5),
   `store_loc_id`            int(5),
   `supply_brand_id`         int(5),
   `beg_qty`                 decimal(5,2),
   `used_qty`                decimal(5,2),
   `bal_qty`                 decimal(5,2),
-  `unit_cost`               decimal(8,2),
-  `unit price`              decimal(8,2),
   `created_by`              int(5),
   `created_date`            datetime,
   `updated_by`              int(5),
   `updated_date`            datetime,
-  PRIMARY KEY `store_inv_daily_dtls_pk`  (`store_inv_daily_dtl_id`),
-  UNIQUE KEY `store_inv_daily_dtls_uk` (`store_inv_daily_id`,`store_loc_id`,`supply_brand_id`)
+  PRIMARY KEY `store_loc_daily_stock_dtls_pk`  (`store_loc_daily_stock_dtl_id`),
+  UNIQUE KEY `store_loc_daily_stock_dtls_uk` (`store_loc_daily_stock_id`,`store_loc_id`,`supply_brand_id`)
 )
   COMMENT='Daily store supplies usage/sales detail'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
@@ -852,9 +865,10 @@ WHERE a.supply_id = b.supply_id;
 
 
 CREATE OR REPLACE VIEW store_loc_supplies_v AS
-select a.store_loc_supply_id, a.store_loc_id, c.store_id, b.supply_brand_id, b.supply, cu_desc
-from store_loc_supplies a, supply_brands_v b, store_loc c
-WHERE a.store_loc_id = c.store_loc_id;
+select a.*, c.supply_code, c.unit_id, c.unit_desc
+from store_loc_supplies a, store_loc b, supplies_v c
+WHERE a.store_loc_id = b.store_loc_id
+AND a.supply_id = c.supply_id;
 
 
 CREATE OR REPLACE VIEW store_supplies2_v AS
@@ -879,12 +893,26 @@ CREATE OR REPLACE VIEW powithbal_v AS
 select *, getSupplier(supplier_id) as supplier from po
 where ifnull(getPOBalCount(po_id),0) > 0;
 
+CREATE OR REPLACE VIEW dr_powithbal_v AS
+SELECT a.*
+ FROM powithbal_v a
+ WHERE not exists (select b.po_id FROM receiving b where posted=0 and b.po_id = a.po_id);
+
+
 create or replace view po_dtls_v as
 select a.*, b.supply, b.cu_desc 
 from po_dtls a, supply_brands_v b
 where a.supply_brand_id = b.supply_brand_id;
-    
 
+CREATE OR REPLACE VIEW po_receiving_unposted_v AS
+SELECT a.*
+ FROM powithbal_v a
+ WHERE not exists (select b.po_id FROM receiving b where posted=0 and b.po_id = a.po_id);
+    
+create or replace view receiving_dtls_po_v as
+select a.*, b.supply, b.cu_desc 
+from receiving_dtls a, po_dtls_v b
+where a.po_dtl_id = b.po_dtl_id;
 
 
 
