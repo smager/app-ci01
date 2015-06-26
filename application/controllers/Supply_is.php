@@ -15,9 +15,9 @@ class supply_is extends Base_Controller {
 	}
 
  
-    public function get_detail_json($supply_is_id)
+    public function get_detail_json($id)
 	{
-        jsonOut($this->supply_is_model->getdata_detail($supply_is_id)->result());
+        jsonOut($this->supply_is_model->getdata_detail($id)->result());
       
 	}       
       

@@ -317,10 +317,8 @@ CREATE TABLE IF NOT EXISTS `supplies` (
   `supply_code`   varchar(10) NOT NULL default '',
   `supply_desc`   varchar(64) NOT NULL default '',
   `supply_type_id` int(5),
-  `unit_id` int(5),  
-  `supply_cost`  decimal(5,2),
-  `supply_srp`   decimal(5,2),
-  `created_by` int(5),
+  `unit_id`        int(5),  
+  `created_by`     int(5),
   `created_date` datetime,
   `updated_by` int(5),
   `updated_date` datetime,
@@ -399,18 +397,17 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
 
  CREATE TABLE IF NOT EXISTS `po_dtls` (
   `po_dtl_id` int(5) unsigned NOT NULL auto_increment,
-  `po_id`                   int(5),
-  `supply_brand_id`   int(5),
+  `po_id`              int(5),
+  `supply_id`          int(5),
   `po_qty`             int(5),
   `bal_qty`            int(5),
-  `unit_conv_id`    int(5),
-  `unit_price`   decimal(5,2),
-  `created_by`  int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `unit_id`            int(5),
+  `created_by`         int(5),
+  `created_date`       datetime,
+  `updated_by`         int(5),
+  `updated_date`       datetime,
   PRIMARY KEY `po_dtls_pk`  (`po_dtl_id`),
-  UNIQUE KEY `po_dtls_uk` (`po_id`,`supply_brand_id`)
+  UNIQUE KEY `po_dtls_uk` (`po_id`,`supply_id`)
 )
   COMMENT='orders details'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
@@ -908,9 +905,15 @@ CREATE OR REPLACE VIEW po_receiving_unposted_v AS
 SELECT a.*
  FROM powithbal_v a
  WHERE not exists (select b.po_id FROM receiving b where posted=0 and b.po_id = a.po_id);
-    
+ 
+CREATE OR REPLACE VIEW receiving_unposted_v AS 
+select a.*, b.supplier, b.po_no
+FROM receiving a, powithbal_v b
+where a.posted=0
+AND a.po_id = b.po_id;
+ 
 create or replace view receiving_dtls_po_v as
-select a.*, b.supply, b.cu_desc 
+select a.*, b.bal_qty,b.supply_brand_id, b.supply, b.cu_desc 
 from receiving_dtls a, po_dtls_v b
 where a.po_dtl_id = b.po_dtl_id;
 
