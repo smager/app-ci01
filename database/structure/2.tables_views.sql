@@ -831,24 +831,24 @@ from user_locations a, locations b
 WHERE a.loc_id = b.loc_id;
 
 CREATE OR REPLACE VIEW supply_v AS
-select a.supply_brand_id, a.supply_id, a.brand_id, b.brand_name, a.conv_id, a.supply_cost, a.supply_srp, if(a.brand_id=1,c.supply_code, concat(c.supply_code ,' ', b.brand_name)) as supply 
+select a.supply_brand_id, a.supply_id, a.brand_id, b.brand_name, a.conv_id, a.supply_cost, if(a.brand_id=1,c.supply_code, concat(c.supply_code ,' ', b.brand_name)) as supply 
 from supply_brands a, brands b, supplies c
 WHERE a.brand_id = b.brand_id
 AND a.supply_id = c.supply_id;
 
 CREATE OR REPLACE VIEW supply_brands_v AS
-select a.supply_brand_id, a.supply_id, a.brand_id, b.brand_name, a.conv_id, a.supply_cost, a.supply_srp, if(a.brand_id=1,c.supply_code, concat(c.supply_code ,' ', b.brand_name)) as supply, d.cu_desc 
+select a.supply_brand_id, a.supply_id, a.brand_id, b.brand_name, a.conv_id, a.supply_cost, if(a.brand_id=1,c.supply_code, concat(c.supply_code ,' ', b.brand_name)) as supply, d.cu_desc 
 from supply_brands a, brands b, supplies c, conv_units_v d
 WHERE a.brand_id = b.brand_id
 AND a.supply_id = c.supply_id
 AND a.conv_id = d.conv_id;
 
 CREATE OR REPLACE VIEW supply_brands2_v AS
-select "" as supply_brand_id, "" as supply_id, brand_id,  brand_name, "" as conv_id, "" as supply_cost, "" as supply_srp, "" as supply, "" as cu_desc
+select "" as supply_brand_id, "" as supply_id, brand_id,  brand_name, "" as conv_id, "" as supply_cost, "" as supply, "" as cu_desc
 from  brands;
 
 CREATE OR REPLACE VIEW store_supply_brands_v AS
-select a.store_id, a.store_supply_id, a.supply_id, b.supply, b.supply_cost, b.supply_srp
+select a.store_id, a.store_supply_id, a.supply_id, b.supply, b.supply_cost
 from store_supplies a, supply_brands_v b
 WHERE a.supply_id = b.supply_id;
 
