@@ -112,6 +112,7 @@ CREATE TABLE IF NOT EXISTS `denomination_ref` (
 
 CREATE TABLE IF NOT EXISTS `roles` (
   `role_id` int(5) unsigned NOT NULL auto_increment,
+  `role_code` varchar(5) NOT NULL default '',
   `role_desc` varchar(64) NOT NULL default '',
   `created_by` int(5),
   `created_date` datetime,
@@ -799,7 +800,6 @@ CREATE OR REPLACE VIEW supplies_v AS
 select *, getUnitSDesc(unit_id) unit_desc   
 from  supplies;
 
-
 CREATE OR REPLACE VIEW supplies2_v AS
 select "" as loc_id, ""  as loc_supply_id, b.supply_id, b.supply_code, "" as reorder_level, "" as max_level, "" as stock_qty
 from store_supplies a, supplies b
@@ -869,12 +869,6 @@ select a.*, c.supply_code, c.unit_id, c.unit_desc
 from store_loc_supplies a, store_loc b, supplies_v c
 WHERE a.store_loc_id = b.store_loc_id
 AND a.supply_id = c.supply_id;
-
-
-CREATE OR REPLACE VIEW store_supplies2_v AS
-select "" as store_loc_supply_id, "" as store_loc_id, a.store_id,  b.supply_brand_id, b.supply, b.cu_desc, "" as stock_daily_qty, "" as stock_curr_qty, "" as rep_qty, b.supply_cost, b.supply_srp
-from store_supplies a, supply_brands_v b
-WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW supply_is_v AS
 select *
