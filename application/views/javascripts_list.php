@@ -50,29 +50,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php menu(); ?> 
     
 <div class="container page">
-<form id="frm" action="<?php echo base_url('javascripts/update');?>" method="post" >
-<table id="grid" class="table">  
-    <thead>
-    <tr>
-        <th></th>
-        <th>Page URL</th>
-        <th>Revision</th>
-        <th>Create By</th>
-        <th>Created Date</th>        
-        <th>Updated By</th>
-        <th>Updated Date</th>        
-    </tr>
-    </thead>    
-</table>    
 
-<div class="buttonGroup">
-<?php 
-    Button(array('name'=>'New', 'type'=>'button'));             
-    Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("javascripts/delete")  . "');"));        
-?>    
-</div>
+<?php if($this->input->get("page_url")==''){ ?>        
+    <form id="frm" action="<?php echo base_url('javascripts/update');?>" method="post" >
+    <table id="grid" class="table">  
+        <thead>
+        <tr>
+            <th></th>
+            <th>Page URL</th>
+            <th>Revision</th>
+            <th>Create By</th>
+            <th>Created Date</th>        
+            <th>Updated By</th>
+            <th>Updated Date</th>        
+        </tr>
+        </thead>    
+    </table>    
 
-</form>    
+    <div class="buttonGroup">
+    <?php 
+        Button(array('name'=>'New', 'type'=>'button'));             
+        Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("javascripts/delete")  . "');"));        
+    ?>    
+    </div>
+    </form>
+<?php } ?>   
     
 </div>
     
@@ -82,7 +84,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="<?php echo base_url("assets/ace/src-noconflict/ext-language_tools.js"); ?>"></script>
     
 <script>    
- var onPageLoadUrl = "<?php echo $this->input->get("page_url");?>"; 
  var editor =null;  
  var w1=null;
 
@@ -139,7 +140,8 @@ function createDhtmlxWindow(p){
 }
     
 function displayDataToGrid(){ 
-    
+    var page_url='<?php echo $this->input->get("page_url");?>';
+    if (page_url!='') return;
     zsi.json.loadGrid({
          table  : "#grid"
         ,url    : base_url + "javascripts/getdata_json"

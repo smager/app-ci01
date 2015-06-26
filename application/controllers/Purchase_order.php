@@ -35,8 +35,7 @@ class purchase_order extends Base_Controller {
     public function update()
 	{
         $this->purchase_order_model->update($this->input->post());
-        redirect( base_url("purchase_order") );
-      
+        redirect( base_url("purchase_order") );      
 	}    
    
     public function delete()

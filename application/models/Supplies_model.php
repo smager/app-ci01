@@ -6,7 +6,7 @@ class supplies_model extends CI_Model{
     }
     
     function getdata(){
-        $query = $this->db->query("SELECT * FROM supplies ORDER BY seq_no");
+        $query = $this->db->query("SELECT * FROM supplies_v ORDER BY seq_no");
         return $query;    
     }
     

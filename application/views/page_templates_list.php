@@ -47,33 +47,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php menu(); ?> 
     
 <div class="container page">
-<form id="frm" action="<?php echo base_url('page_templates/update');?>" method="post" >
-<table id="grid" class="table">  
-    <thead>
-    <tr>
-        <th></th>
-        <th>Page URL</th>
-        <th>Create By</th>
-        <th>Created Date</th>        
-        <th>Updated By</th>
-        <th>Updated Date</th>        
-    </tr>
-    </thead>    
-</table>    
+<?php if($this->input->get("page_url")==''){ ?>         
+    <form id="frm" action="<?php echo base_url('page_templates/update');?>" method="post" >
+    <table id="grid" class="table">  
+        <thead>
+        <tr>
+            <th></th>
+            <th>Page URL</th>
+            <th>Create By</th>
+            <th>Created Date</th>        
+            <th>Updated By</th>
+            <th>Updated Date</th>        
+        </tr>
+        </thead>    
+    </table>    
 
-<div class="buttonGroup">
-<?php 
-    Button(array('name'=>'New', 'type'=>'button'));             
-    Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("page_templates/delete")  . "');"));        
-?>    
-</div>
+    <div class="buttonGroup">
+    <?php 
+        Button(array('name'=>'New', 'type'=>'button'));             
+        Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("page_templates/delete")  . "');"));        
+    ?>    
+    </div>
 
-</form>    
-    
-</div>
-    
-    
-    
+    </form>    
+<?php } ?>      
+</div>    
 <script src="<?php echo base_url("assets/ace/src-noconflict/ace.js"); ?>"></script>
 <script src="<?php echo base_url("assets/ace/src-noconflict/ext-language_tools.js"); ?>"></script>
     

@@ -45,10 +45,11 @@ a.poRemove:hover{
 
             hiddenBox( array( 'name'=>'po_id'));         
             openFormGroup();
-            inputTextBox( array( 'labelName'=>'P.O. #' , 'name'=>'po_no', 'labelSize'=>1, 'inputSize'=>2)); 
-            inputTextBox( array( 'labelName'=>'Date' , 'name'=>'po_date', 'labelSize'=>1, 'inputSize'=>2,'value'=>date('m/d/Y') )); 
+            inputTextBox( array( 'labelName'=>'P.O. #' , 'name'=>'po_no', 'labelSize'=>1, 'inputSize'=>1)); 
+            inputTextBox( array( 'labelName'=>'Date' , 'name'=>'po_date', 'labelSize'=>1, 'inputSize'=>1,'value'=>date('m/d/Y') )); 
             selectBox( array( 'labelName'=>'Supplier' , 'name'=>'supplier_id', 'labelSize'=>1, 'selectSize'=>2));      
-            selectBox( array( 'labelName'=>'Location' , 'name'=>'loc_id', 'labelSize'=>1, 'selectSize'=>2));      
+            selectBox( array( 'labelName'=>'Location' , 'name'=>'loc_id', 'labelSize'=>1, 'selectSize'=>2));  
+            yes_no( array( 'labelName'=>'Posted' , 'name'=>'posted', 'labelSize'=>1, 'selectSize'=>1));      
             closeFormGroup();
 
         ?> 
@@ -78,8 +79,6 @@ a.poRemove:hover{
             <th>Item</th>
             <th>Unit</th>
             <th>Qty</th>
-            <th>Unit Price</th>
-            <th>Total</th>
 
         </tr>
     </thead>        

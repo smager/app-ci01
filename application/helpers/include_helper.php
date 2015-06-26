@@ -168,6 +168,7 @@ function includeFooter(){
     echo "<label>Web Editor Manager : <label>";    
     echo "<a href='" .base_url("page_templates"). "?page_url=" .$url. "' target='_blank'>Edit Page Template</a>";
     echo " | <a href='" .base_url("javascripts"). "?page_url=" .$url. "' target='_blank'>Edit Javascript</a>";
+    echo " | <a href='" .base_url("select_options"). "' target='_blank'>Select Options</a>";
     echo "</div>";
 ?>
 
