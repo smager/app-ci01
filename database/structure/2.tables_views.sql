@@ -881,8 +881,12 @@ AND a.po_id = b.po_id;
  
 
 create or replace view receiving_dtls_po_v as
-select a.*, c.supply, c.cu_desc, getPOLocId(b.po_id) loc_id
-from receiving_dtls a, po_dtls_v b, supply_brands_v c
-where a.po_dtl_id = b.po_dtl_id
-AND a.supply_brand_id = c.supply_brand_id;
+select a.*, b.supply_code, b.unit_desc, getPOLocId(b.po_id) loc_id
+from receiving_dtls a, po_dtls_v b
+where a.po_dtl_id = b.po_dtl_id;
 
+
+CREATE OR REPLACE VIEW po_items_v AS
+select a.*, concat(a.supply_code, ' (' , b.brand_name, ')' ) as po_item, b.cu_desc
+from po_dtls_v a, supply_brands_v b
+where a.supply_id = b.supply_id;
