@@ -434,7 +434,8 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `receiving_id` int(5),
   `po_dtl_id`    int(5),
   `supply_brand_id`  int(5),
-  `dr_qty`       decimal(5,2),
+  `dr_qty`       decimal(7,2),
+  `bal_qty`      decimal(7,2),
   `created_by`  int(5),
   `created_date` datetime,
   `updated_by` int(5),
@@ -912,11 +913,10 @@ FROM receiving a, powithbal_v b
 where a.posted=0
 AND a.po_id = b.po_id;
  
+
 create or replace view receiving_dtls_po_v as
-select a.*, b.bal_qty,b.supply_id, b.supply, b.cu_desc 
-from receiving_dtls a, po_dtls_v b
-where a.po_dtl_id = b.po_dtl_id;
-
-
-
+select a.*, b.bal_qty, c.supply, c.cu_desc 
+from receiving_dtls a, po_dtls_v b, supply_brands_v c
+where a.po_dtl_id = b.po_dtl_id
+ AND a.supply_brand_id = c.supply_brand_id;
 
