@@ -44,6 +44,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </style>    
 </head>
 <body>
+
+
+    
 <?php menu(); ?> 
     
 <div class="container page">
@@ -78,9 +81,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="<?php echo base_url("assets/ace/src-noconflict/ace.js"); ?>"></script>
 <script src="<?php echo base_url("assets/ace/src-noconflict/ext-language_tools.js"); ?>"></script>
     
-<script>
+<script>    
+ var onPageLoadUrl = "<?php echo $this->input->get("page_url");?>"; 
  var editor =null;  
  var w1=null;
+
+    
 
     
 $(window).bind('keydown', function(e) {
@@ -231,7 +237,21 @@ return false;
 }   
     
 </script>    
+<?php 
+    
+    $page_url=$this->input->get("page_url");
+    if($page_url!=''){ 
+        $page_url = strtolower($page_url);
+        $where ="where page_url='$page_url'";        
+        $query = $this->db->query("SELECT * FROM javascripts $where");        
+        if($query->num_rows()>0){
+            echo "<script>";
+            echo "getInfo(" . $query->result()[0]->js_id . ");";
+            echo "</script>";
+        }
 
+    }        
+?>    
 <?php includeFooter(); ?> 
 </body>
 </html>

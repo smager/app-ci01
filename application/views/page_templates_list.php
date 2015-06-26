@@ -229,7 +229,21 @@ return false;
 }   
     
 </script>    
+<?php 
+    
+    $page_url=$this->input->get("page_url");
+    if($page_url!=''){ 
+        $page_url = strtolower($page_url);
+        $where ="where page_url='$page_url'";        
+        $query = $this->db->query("SELECT * FROM page_templates $where");        
+        if($query->num_rows()>0){
+            echo "<script>";
+            echo "getInfo(" . $query->result()[0]->page_template_id . ");";
+            echo "</script>";
+        }
 
+    }        
+?>    
 <?php includeFooter(); ?> 
 </body>
 </html>

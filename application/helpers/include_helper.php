@@ -161,7 +161,17 @@ function includeFooter(){
 <?php                
     }
 ?>
-<script src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>   <?php   
+<script src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>   
+<?php 
+    $url = $ci->router->fetch_class() . '/' . $ci->router->fetch_method();
+    echo "<div class='debugPanel'>";
+    echo "<label>Edit Templates/Javascripts : <label>";    
+    echo "<a href='" .base_url("page_templates"). "?page_url=" .$url. "' target='_blank'>Show Page Template</a>";
+    echo " | <a href='" .base_url("javascripts"). "?page_url=" .$url. "' target='_blank'>Show Javascript</a>";
+    echo "</div>";
+?>
+
+<?php   
 }}
 ?>
 
