@@ -79,10 +79,11 @@ a.itemRemove:hover{
     <thead>
         <tr>
             <th></th>
-            <th>Balance</th>
+            <th>Items</th>
+            <th>Unit</th>            
             <th>Qty</th>
-            <th>Unit</th>
-            <th>Item</th>
+            <th>Current Bal.</th>
+            <th>Ending Bal.</th>
         </tr>
     </thead>        
 </table>    
