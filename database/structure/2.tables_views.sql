@@ -534,7 +534,8 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
    `is_no`  int(5),
    `is_date` datetime,
    `store_loc_id`  int(5),
-   `posted` int(5) NOT NULL default '0',     
+   `posted_is` int(5) NOT NULL default '0',    
+   `posted_used` int(5) NOT NULL default '0',     
    `created_by`    int(5),
    `created_date`  datetime,
    `updated_by`    int(5),
@@ -546,11 +547,15 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
   CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
-   `supply_is_dtl_id`   int(5) unsigned NOT NULL auto_increment,
-   `supply_is_id`     int(5),
-   `supply_is_qty`    decimal(5,2),
-   `supply_brand_id`  int(5),
-   `created_by`    int(5),
+   `supply_is_dtl_id`        int(5) unsigned NOT NULL auto_increment,
+   `supply_is_id`            int(5),
+   `supply_is_qty`           decimal(5,2),
+   `supply_brand_id`         int(5),
+   `prev_qty`                decimal(5,2),
+   `used_qty`                decimal(5,2),
+   `returned_qty`            decimal(5,2),
+   `end_qty`                 decimal(5,2),
+   `created_by`              int(5),
    `created_date`  datetime,
    `updated_by`    int(5),
    `updated_date`  datetime,
@@ -559,40 +564,6 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
  )
    COMMENT='Stock Issuance details to stores'
    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
-
- CREATE TABLE IF NOT EXISTS `store_loc_dialy_stocks` (
-  `store_loc_dialy_stock_id` int(5) unsigned NOT NULL auto_increment,
-  `tran_date`     datetime,
-  `store_loc_id` int(5),
-  `posted` int(5) NOT NULL default '0',  
-  `created_by`   int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
-  PRIMARY KEY `store_loc_dialy_stocks_pk`  (`store_loc_dialy_stock_id`),
-  UNIQUE KEY `store_loc_dialy_stocks_uk` (`tran_date`,`store_loc_id`)
-)
-  COMMENT='Daily store supplies usage/sales'
-  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
-
-
- CREATE TABLE IF NOT EXISTS `store_loc_daily_stock_dtls` (
-  `store_loc_daily_stock_dtl_id`  int(5) unsigned NOT NULL auto_increment,
-  `store_loc_daily_stock_id`      int(5),
-  `store_loc_id`            int(5),
-  `supply_brand_id`         int(5),
-  `beg_qty`                 decimal(5,2),
-  `used_qty`                decimal(5,2),
-  `bal_qty`                 decimal(5,2),
-  `created_by`              int(5),
-  `created_date`            datetime,
-  `updated_by`              int(5),
-  `updated_date`            datetime,
-  PRIMARY KEY `store_loc_daily_stock_dtls_pk`  (`store_loc_daily_stock_dtl_id`),
-  UNIQUE KEY `store_loc_daily_stock_dtls_uk` (`store_loc_daily_stock_id`,`store_loc_id`,`supply_brand_id`)
-)
-  COMMENT='Daily store supplies usage/sales detail'
-  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
  CREATE TABLE IF NOT EXISTS `inv_summ` (
   `inv_summ_id`           int(5) unsigned NOT NULL auto_increment,
@@ -797,7 +768,7 @@ WHERE a.from_unit_id = b.unit_id
 AND a.conv_unit_id = c.unit_id;
 
 CREATE OR REPLACE VIEW supplies_v AS
-select *, getUnitSDesc(unit_id) unit_desc   
+select *, getUnitSDesc(unit_id) unit_desc, getSupplyType(supply_type_id) supply_type 
 from  supplies;
 
 CREATE OR REPLACE VIEW supplies2_v AS
@@ -870,10 +841,10 @@ from store_loc_supplies a, store_loc b, supplies_v c
 WHERE a.store_loc_id = b.store_loc_id
 AND a.supply_id = c.supply_id;
 
-CREATE OR REPLACE VIEW supply_is_v AS
+CREATE OR REPLACE VIEW supply_is_unposted_v AS
 select *
 from supply_is
-where posted=0;
+where posted_is=0;
 
 CREATE OR REPLACE VIEW supply_is_dtls_unposted_v AS
 select a.*
@@ -913,5 +884,5 @@ create or replace view receiving_dtls_po_v as
 select a.*, c.supply, c.cu_desc, getPOLocId(b.po_id) loc_id
 from receiving_dtls a, po_dtls_v b, supply_brands_v c
 where a.po_dtl_id = b.po_dtl_id
- AND a.supply_brand_id = c.supply_brand_id;
+AND a.supply_brand_id = c.supply_brand_id;
 

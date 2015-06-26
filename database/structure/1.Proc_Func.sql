@@ -4,7 +4,15 @@ create function  getUnitSDesc(p_unit_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
     DECLARE lvl varchar(100);
-    SELECT unit_sdesc INTO lvl FROM units WHERE unit_id=p_unit_id;
+    SELECT unit_desc INTO lvl FROM units WHERE unit_id=p_unit_id;
+ RETURN (lvl);
+END;
+
+create function  getSupplyType(p_supply_type_id int) RETURNS VARCHAR(100)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl varchar(100);
+    SELECT supply_type INTO lvl FROM supply_types WHERE supply_type_id=p_supply_type_id;
  RETURN (lvl);
 END;
 
