@@ -433,6 +433,7 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `receiving_dtl_id` int(5) unsigned NOT NULL auto_increment,
   `receiving_id` int(5),
   `po_dtl_id`    int(5),
+  `supply_brand_id`  int(5),
   `dr_qty`       decimal(5,2),
   `created_by`  int(5),
   `created_date` datetime,
@@ -793,7 +794,7 @@ WHERE a.from_unit_id = b.unit_id
 AND a.conv_unit_id = c.unit_id;
 
 CREATE OR REPLACE VIEW supplies_v AS
-select a.*, getUnitSDesc(unit_id) unit_desc   
+select *, getUnitSDesc(unit_id) unit_desc   
 from  supplies;
 
 
@@ -810,7 +811,7 @@ WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW store_supplies2_v AS
 select "" as store_id, "" as store_supply_id, supply_id, supply_code
-from supplies
+from supplies;
 
 CREATE OR REPLACE VIEW loc_supplies_v AS
 select a.loc_id, a.loc_supply_id, a.supply_id, b.supply_code, a.reorder_level, a.max_level, a.stock_qty
@@ -850,13 +851,13 @@ from store_supplies a, supply_brands_v b
 WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW store_loc_supplies_ref_v AS
-select a.store_loc_supply_id, a.store_loc_id, c.store_id, a.supply_id, b.supply_code, b.unit_desc, stock_daily_qty, b.supply_srp
+select a.store_loc_supply_id, a.store_loc_id, c.store_id, a.supply_id, b.supply_code, b.unit_desc, stock_daily_qty
 from store_loc_supplies a, supplies_v b, store_loc c
 WHERE a.store_loc_id = c.store_loc_id
 AND a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW store_loc_supplies_ref2_v AS
-select "" as store_loc_supply_id, "" as store_loc_id, a.store_id, b.supply_id, b.supply_code, b.unit_desc, "" as stock_daily_qty, b.supply_srp
+select "" as store_loc_supply_id, "" as store_loc_id, a.store_id, b.supply_id, b.supply_code, b.unit_desc, "" as stock_daily_qty
 from  store_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
@@ -879,10 +880,9 @@ from supply_is
 where posted=0;
 
 CREATE OR REPLACE VIEW supply_is_dtls_unposted_v AS
-select a.*, b.supply, b.cu_desc
+select a.*
 from supply_is_dtls a, store_loc_supplies_v b, supply_is c
-where a.supply_brand_id = b.supply_brand_id
-and a.supply_is_id=c.supply_is_id
+where a.supply_is_id=c.supply_is_id
 and c.store_loc_id =b.store_loc_id
 and c.posted=0;
 
@@ -897,9 +897,9 @@ SELECT a.*
 
 
 create or replace view po_dtls_v as
-select a.*, b.supply, b.cu_desc 
-from po_dtls a, supply_brands_v b
-where a.supply_brand_id = b.supply_brand_id;
+select a.*, b.supply_code, b.unit_desc 
+from po_dtls a, supplies_v b
+where a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW po_receiving_unposted_v AS
 SELECT a.*
@@ -913,7 +913,7 @@ where a.posted=0
 AND a.po_id = b.po_id;
  
 create or replace view receiving_dtls_po_v as
-select a.*, b.bal_qty,b.supply_brand_id, b.supply, b.cu_desc 
+select a.*, b.bal_qty,b.supply_id, b.supply, b.cu_desc 
 from receiving_dtls a, po_dtls_v b
 where a.po_dtl_id = b.po_dtl_id;
 
