@@ -165,9 +165,9 @@ function includeFooter(){
 <?php 
     $url = $ci->router->fetch_class() . '/' . $ci->router->fetch_method();
     echo "<div class='debugPanel'>";
-    echo "<label>Edit Templates/Javascripts : <label>";    
-    echo "<a href='" .base_url("page_templates"). "?page_url=" .$url. "' target='_blank'>Show Page Template</a>";
-    echo " | <a href='" .base_url("javascripts"). "?page_url=" .$url. "' target='_blank'>Show Javascript</a>";
+    echo "<label>Web Editor Manager : <label>";    
+    echo "<a href='" .base_url("page_templates"). "?page_url=" .$url. "' target='_blank'>Edit Page Template</a>";
+    echo " | <a href='" .base_url("javascripts"). "?page_url=" .$url. "' target='_blank'>Edit Javascript</a>";
     echo "</div>";
 ?>
 
