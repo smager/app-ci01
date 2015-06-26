@@ -1,5 +1,5 @@
 var ctrlSel = zsi.control.SelectList;  
-var supply_brands;
+var supply;
 $(document).ready(function(){
     
     ctrlSel( base_url + "select_options/code/suppliers","#p_supplier_id","","N");
@@ -9,54 +9,55 @@ $(document).ready(function(){
     getUnpostedPO();
     initInputs();    
     markMandatory();
-    setSupplyBrands();
+    setSupply();
 });
 $("form[id=frm]").submit(function(){
      if( zsi.form.checkMandatory()!==true) return false;
+     
+     $.post(base_url + "purchase_order/update",$(this).serializeArray()
+        ,function(d){
+            displayRecords(d.po_id);
+            po_id.val(d.po_id);
+            getUnpostedPO();
+            markMandatory();
+        } 
+     );
+     
+     
+     return false;
  }); 
  
  $("#btnNew").click(function(){
-    displayBlankRows(true);
-    //clear data
-    po_id.val('');
-    po_no.val('');
+    newBlankEntry();
  });
  
+ function newBlankEntry(){
+    displayBlankRows(true);
+    ClearHeader();
+ }
  
-function setTotalEvent(){
-    
-       $("input[name='p_po_qty[]']").keyup(function(){
-            var p_unit_price = $(this.parentNode).next().children("input[name='p_unit_price[]']");
-            var p_total = $(this.parentNode).next().next().children("input[name='p_total[]']");
-            if(p_unit_price.val()!==""){
-                p_total.val(parseFloat(this.value  *  p_unit_price.val()).toFixed(2) );
-            }
-       });
-       
+ function ClearHeader(){
+    po_id.val('').change();
+    po_no.val('').change();
+    po_date.val('').change();
+    loc_id.val('').change();
+    supplier_id.val('').change();    
+ }
+ 
 
-       $("input[name='p_unit_price[]']").keyup(function(){
-            var p_po_qty = $(this.parentNode).prev().children("input[name='p_po_qty[]']");
-            var p_total = $(this.parentNode).next().children("input[name='p_total[]']");
-            if(p_po_qty.val()!==""){
-                p_total.val(parseFloat(this.value  *  p_po_qty.val()).toFixed(2) );
-            }
-       });
-    
-} 
-
-function setSupplyBrands(){
-  $.getJSON(base_url + "supply_brands/getdata_supply_brands_json", function(d){
-        supply_brands = d;
+function setSupply(){
+  $.getJSON(base_url + "supplies/getdata_json", function(d){
+        supply = d;
     });
 }
 
 function displayUnitDescriptions(){
-    $("select[name='p_supply_brand_id[]']").each(function(){
+    $("select[name='p_supply_id[]']").each(function(){
         var td = $(this.parentNode).next();
         var input =  td.children("input[name='p_unit_conv_id[]']");
         var val = $(this).attr("selectedvalue");
-        $.each(supply_brands,function(){
-            if (this.supply_brand_id == val){
+        $.each(supply,function(){
+            if (this.supply_id == val){
                 input.val(this.cu_desc);
                 return;
             }
@@ -72,20 +73,20 @@ function markMandatory(){
                 ,"type":"S"
             }             
             ,{
-                 "names" : ["p_po_qty[]","p_supply_brand_id[]","p_unit_price[]"]
+                 "names" : ["p_po_qty[]","p_supply_id[]"]
                 ,"type":"M"
                 ,"required_one":"Y"            
             }
       ]      
       ,"groupTitles":[ 
              {"titles" :["P.O No.","Date","Supplier","Location"]}
-            ,{"titles" :["Quantity","Supply","Unit Price"]}
+            ,{"titles" :["Quantity","Supply"]}
       ]
    });
    
 }
 function getUnpostedPO(){
-    
+     $(".list-group").html('');
     $.getJSON(base_url + "purchase_order/getdata_json/",function(data){
         $.each(data,function(){
             var params = {
@@ -104,7 +105,15 @@ function getUnpostedPO(){
 }
 
 function removePO(id){
-    console.log(id);
+      if(confirm("Are you sure you want to delete selected items?")) {
+        ClearHeader();  
+        $.post( base_url + "purchase_order/delete/" + id , function(d){
+                getUnpostedPO();
+                displayBlankRows(true);
+            }).fail(function(d) {
+                alert("Sorry, the curent transaction is not successfull.");
+            });
+        }
 }
 
 function initInputs(){
@@ -137,15 +146,9 @@ function displayRecords(id){
                         +  bs({name:"cb[]",type:"checkbox"});
 
             }            
-            ,function(d){ return bs({name:"supply_brand_id[]",type:"select",value:d.supply_brand_id}); }
+            ,function(d){ return bs({name:"supply_id[]",type:"select",value:d.supply_id}); }
             ,function(d){ return bs({name:"unit_conv_id[]"}); }
             ,function(d){ return bs({name:"po_qty[]",value:d.po_qty,class:"form-control numeric"}); }
-            ,function(d){ return bs({name:"unit_price[]",value:d.unit_price,class:"form-control numeric"});  }
-            ,function(d){
-                var total = (d.unit_price!==null?d.unit_price:0 )  * (d.po_qty!==null?d.po_qty:0)
-                return bs({name:"total[]",value:total.toFixed(2)});  
-                
-            }
         ]
         ,onComplete : function(){
             displayUnitDescriptions();
@@ -154,16 +157,16 @@ function displayRecords(id){
     });    
 }
 
-function onSupplyBrandChange(){
+function onSupplyChange(){
     
-    $("select[name='p_supply_brand_id[]']").change(function(){
+    $("select[name='p_supply_id[]']").change(function(){
         var td = $(this.parentNode).next();
         var input =  td.children("input[name='p_unit_conv_id[]']");
         var selVal = this.value;
         
-        $.each(supply_brands,function(){
-            if (this.supply_brand_id == selVal){
-                input.val(this.cu_desc);
+        $.each(supply,function(){
+            if (this.supply_id == selVal){
+                input.val(this.unit_desc);
                 return;
             }
         });
@@ -178,27 +181,46 @@ function displayBlankRows(p_isNew){
     zsi.json.loadGrid({
          table  : "#grid"
         ,isNew  : p_isNew
+        ,limit: 10
         ,td_body: [ 
             function(d){
                 return     bs({name:"po_dtl_id[]",type:"hidden"})
                         +  bs({name:"select[]",type:"checkbox"});
 
             }            
-            ,function(d){ return bs({name:"supply_brand_id[]",type:"select"}); }
+            ,function(d){ return bs({name:"supply_id[]",type:"select"}); }
             ,function(d){ return bs({name:"unit_conv_id[]"}); }
             ,function(d){ return bs({name:"po_qty[]",class:"form-control numeric"}); }
-            ,function(d){ return bs({name:"unit_price[]",class:"form-control numeric"});  }
-            ,function(d){ return bs({name:"total[]"});  }
         ]
         ,onComplete : function(){
-            ctrlSel( base_url + "select_options/code/supply_brands","select[name='p_supply_brand_id[]']","","N");
-            onSupplyBrandChange();
+            ctrlSel( base_url + "select_options/code/supplies","select[name='p_supply_id[]']","","N");
+            onSupplyChange();
             markMandatory();
             $("input[name='p_po_qty[]'],input[name='p_unit_price[]']").change();
-            setTotalEvent();
             zsi.initInputTypesAndFormats();
         }
     });    
 }
+
+
+function checkDelete(l_cmd) {
+   var l_stmt=[], l_count;
+    
+   var data = zsi.table.getCheckBoxesValues("input[name='p_cb[]']:checked");
+    for(var x=0;x<data.length; x++){
+        l_stmt.push( { name:"p_del_id[]",value : data[x] }  ); 
+    }
+   if (l_stmt!=="") {
+      if(confirm("Are you sure you want to delete selected items?")) {
+      $.post( l_cmd , l_stmt, function(d){
+            displayRecords(po_id.val());
+         }).fail(function(d) {
+            alert("Sorry, the curent transaction is not successfull.");
+        });
+      }
+   }
+return false;
+}   
+
 
 
