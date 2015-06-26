@@ -20,8 +20,8 @@ class roles_model extends CI_Model{
             if($role_desc !='') {        
 
                 $data = array(
-                     'role_desc' => $role_desc
-
+                      'role_desc' => $role_desc
+                     ,'role_code' =>  $post['p_role_code'][$x]
                 );
                 
                 if($id==''){

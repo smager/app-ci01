@@ -17,7 +17,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <form id="frm" action="<?php echo base_url('roles/update');?>" method="post" >
 <table class="table">    
     <tr>
-        <th></th>
+        <th style="width:30px;"></th>
+        <th style="width:80px;">Code</th>        
         <th>Role</th>
     </tr>
 <?php
@@ -30,8 +31,9 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
 ?>
     <tr>
         
-            <td><input type="hidden" name="p_role_id[]" value="<?php echo $d[$x]->role_id; ?>">
+            <td style="text-align:center" ><input type="hidden" name="p_role_id[]" value="<?php echo $d[$x]->role_id; ?>">
                 <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->role_id  )); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"role_code[]",'value'=>$d[$x]->role_code  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"role_desc[]",'value'=>$d[$x]->role_desc  )); ?> </td>
     </tr>        
 
@@ -42,8 +44,9 @@ for ($x = 0; $x < 5; $x++) {
 ?>
     <tr>
         
-            <td><input type="hidden" name="p_role_id[]">
+            <td ><input type="hidden" name="p_role_id[]">
                 <?php checkbox( array( 'name'=>'select[]')); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"role_code[]")); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"role_desc[]")); ?> </td>
     </tr>
     
