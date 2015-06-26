@@ -91,8 +91,7 @@ AND b.receiving_id = p_receiving_id;
 
 UPDATE loc_supply_brands a, receiving_dtls_po_v b
 SET a.stock_qty = a.stock_qty + b.dr_qty
-WHERE a.supply_brand_id = b.receiving_dtls_po_v
-AND a.loc_id =  
- 
-
+WHERE a.supply_brand_id = b.supply_brand_id
+AND a.loc_id =  b.loc_id
+AND a.receiving_id = p_receiving_id;
 END;
