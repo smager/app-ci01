@@ -38,7 +38,6 @@ class supply_brands_model extends CI_Model{
                  'supply_id'  => $post['p_supply_id']
                 ,'brand_id' => $post['p_brand_id'][$x]
                  ,'conv_id' => $post['p_conv_id'][$x]
-                 ,'supply_srp' => $post['p_supply_srp'][$x]
                  ,'supply_cost' => $post['p_supply_cost'][$x]
             );
                         
