@@ -79,8 +79,8 @@ a.itemRemove:hover{
     <thead>
         <tr>
             <th></th>
-            <th>Items</th>
-            <th>Unit</th>            
+            <th>Supply</th>
+            <th>Brand/Unit</th>
             <th>Qty</th>
             <th>Current Bal.</th>
             <th>Ending Bal.</th>

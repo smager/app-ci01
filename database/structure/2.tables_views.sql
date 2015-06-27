@@ -886,7 +886,7 @@ from receiving_dtls a, po_dtls_v b
 where a.po_dtl_id = b.po_dtl_id;
 
 
-CREATE OR REPLACE VIEW po_items_v AS
-select a.*, concat(a.supply_code, ' (' , b.brand_name, ')' ) as po_item, b.cu_desc
+CREATE OR REPLACE VIEW supply_brands_po_dtls_v AS
+select a.*, b.brand_name, b.cu_desc
 from po_dtls_v a, supply_brands_v b
 where a.supply_id = b.supply_id;

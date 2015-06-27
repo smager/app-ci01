@@ -15,6 +15,11 @@ class supply_brands_model extends CI_Model{
         return $query;    
     }
     
+    function getDataSupplyBrandsPODtl(){
+        $query = $this->db->query("SELECT * FROM supply_brands_po_dtls_v");
+        return $query;    
+    }    
+    
     function getdata_ad($sid){
         $query = $this->db->query(
             

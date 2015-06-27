@@ -14,6 +14,13 @@ class supply_brands extends Base_Controller {
     public function getdata_supply_brands_json(){    
         jsonOut($this->supply_brands_model->getDataSupplyBrands()->result());        
     }
+
+    
+    public function getsupply_brands_podtls_json(){    
+        jsonOut($this->supply_brands_model->getDataSupplyBrandsPODtl()->result());        
+    }
+    
+    
     public function update(){
         $this->supply_brands_model->update($this->input->post());    
     }
