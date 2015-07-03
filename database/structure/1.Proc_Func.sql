@@ -32,6 +32,13 @@ BEGIN
  RETURN (lvl);
 END;
 
+create function  getStockCount(p_loc_supply_id int) RETURNS decimal(7,2)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl decimal(7,2);
+    SELECT sum(stock_qty) INTO lvl FROM loc_supply_brands WHERE loc_supply_id=p_loc_supply_id;
+ RETURN (lvl);
+END;
 
 create function  getPOBalCount(p_po_id int) RETURNS INT(5)
     DETERMINISTIC
