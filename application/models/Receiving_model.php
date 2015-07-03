@@ -33,6 +33,7 @@ class receiving_model extends CI_Model{
             ,'details' => array(
                 'pk'=> 'receiving_dtl_id'
                 ,'dbKeys'=> array('dr_qty','po_dtl_id')
+                ,'mustNotEmptyKeys'=> array('po_dtl_id')
                 ,'table'=>'receiving_dtls'
             )
         );       
