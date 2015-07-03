@@ -40,6 +40,23 @@ BEGIN
  RETURN (lvl);
 END;
 
+create function  getLocSupplyId(p_loc_id int, p_supply_id int) RETURNS int(5)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl int;
+    SELECT loc_supply_id INTO lvl FROM loc_supplies WHERE loc_id = p_loc_id and supply_id = p_supply_id); 
+ RETURN (ifnull(lvl,0));
+END;
+
+create function  getLocSupplyBrandId(p_loc_id int, p_supply_id int, p_supply_brand_id int) RETURNS int(5)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl int;
+    SELECT loc_supply_brand_id INTO lvl FROM loc_supply_brands WHERE supply_brand_id=p_supply_brand_id 
+       AND loc_supply_id=(select loc_supply_id FROM loc_supplies WHERE loc_id = p_loc_id and supply_id = p_supply_id); 
+ RETURN (ifnull(lvl,0));
+END;
+
 create function  getPOBalCount(p_po_id int) RETURNS INT(5)
     DETERMINISTIC
 BEGIN
@@ -106,7 +123,9 @@ AND b.receiving_id = p_receiving_id;
 
 UPDATE loc_supply_brands a, receiving_dtls_po_v b
 SET a.stock_qty = a.stock_qty + b.dr_qty
-WHERE a.supply_brand_id = b.supply_brand_id
-AND a.loc_id =  b.loc_id
-AND a.receiving_id = p_receiving_id;
-END;
+WHERE a.loc_supply_brand_id=getLocSupplyBrandId(b.loc_id, b.supply_id,b.supply_brand_id);
+
+INSERT INTO loc_supply_brands (loc_supply_id, supply_brand_id, stock_qty)
+SELECT loc_id,supply_brand_id, stock_qty FROM receiving_dtls_po_v
+WHERE receiving_id = p_receiving_id;
+END; 
