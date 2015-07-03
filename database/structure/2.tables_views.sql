@@ -351,7 +351,6 @@ CREATE TABLE IF NOT EXISTS `loc_supplies` (
   `loc_supply_id` int(5) unsigned NOT NULL auto_increment,
   `loc_id` int(5),
   `supply_id` int(5),
-  `stock_qty` int(5),
   `reorder_level` int(5),
   `max_level` int(5),
   `created_by` int(5),
@@ -369,7 +368,7 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `loc_supply_brand_id` int(5) unsigned NOT NULL auto_increment,
   `loc_supply_id` int(5),
   `supply_brand_id` int(5),  
-  `stock_qty` int(5),
+  `stock_qty` decimal(7,2),
   `created_by` int(5),
   `created_date` datetime,
   `updated_by` int(5),
@@ -771,11 +770,6 @@ CREATE OR REPLACE VIEW supplies_v AS
 select *, getUnitSDesc(unit_id) unit_desc, getSupplyType(supply_type_id) supply_type 
 from  supplies;
 
-CREATE OR REPLACE VIEW supplies2_v AS
-select "" as loc_id, ""  as loc_supply_id, b.supply_id, b.supply_code, "" as reorder_level, "" as max_level, "" as stock_qty
-from store_supplies a, supplies b
-WHERE a.supply_id = b.supply_id;
-
 
 CREATE OR REPLACE VIEW store_supplies_v AS
 select store_id, store_supply_id, a.supply_id, b.supply_code
@@ -786,9 +780,14 @@ CREATE OR REPLACE VIEW store_supplies2_v AS
 select "" as store_id, "" as store_supply_id, supply_id, supply_code
 from supplies;
 
+CREATE OR REPLACE VIEW supplies2_v AS
+select "" as loc_id, ""  as loc_supply_id, b.supply_id, b.supply_code, "" as reorder_level, "" as max_level, "" as stock_qty, b.unit_desc
+from store_supplies a, supplies_v b
+WHERE a.supply_id = b.supply_id;
+
 CREATE OR REPLACE VIEW loc_supplies_v AS
-select a.loc_id, a.loc_supply_id, a.supply_id, b.supply_code, a.reorder_level, a.max_level, a.stock_qty
-from loc_supplies a, supplies b
+select a.loc_id, a.loc_supply_id, a.supply_id, b.supply_code, a.reorder_level, a.max_level, getStockCount(a.loc_supply_id) as stock_qty, b.unit_desc
+from loc_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW user_locations_v AS
