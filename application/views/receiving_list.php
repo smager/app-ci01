@@ -82,8 +82,8 @@ a.itemRemove:hover{
             <th>Supply</th>
             <th>Brand/Unit</th>
             <th>Qty</th>
-            <th>Current Bal.</th>
-            <th>Ending Bal.</th>
+            <th style="text-align:center;">Current Bal.</th>
+            <th style="text-align:center;">Ending Bal.</th>
         </tr>
     </thead>        
 </table>    
