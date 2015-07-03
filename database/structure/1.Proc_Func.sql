@@ -126,6 +126,8 @@ SET a.stock_qty = a.stock_qty + b.dr_qty
 WHERE a.loc_supply_brand_id=getLocSupplyBrandId(b.loc_id, b.supply_id,b.supply_brand_id);
 
 INSERT INTO loc_supply_brands (loc_supply_id, supply_brand_id, stock_qty)
-SELECT loc_id,supply_brand_id, stock_qty FROM receiving_dtls_po_v
-WHERE receiving_id = p_receiving_id;
-END; 
+SELECT a.loc_id, supply_brand_id, stock_qty FROM receiving_dtls_po_v a
+WHERE a.receiving_id = p_receiving_id
+AND NOT EXISTS (SELECT loc_supply_brand_id FROM loc_supply_brands WHERE a.loc_supply_brand_id=getLocSupplyBrandId(a.loc_id, a.supply_id,a.supply_brand_id);
+
+END;

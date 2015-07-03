@@ -790,6 +790,12 @@ select a.loc_id, a.loc_supply_id, a.supply_id, b.supply_code, a.reorder_level, a
 from loc_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
+CREATE OR REPLACE VIEW loc_supply_brands_v AS
+select a.*, 
+from loc_supply_brands a, loc_supplies_v b
+WHERE a.supply_id = b.supply_id;
+
+
 CREATE OR REPLACE VIEW user_locations_v AS
 select a.user_loc_id, a.loc_id, a.user_id, b.location
 from user_locations a, locations b
