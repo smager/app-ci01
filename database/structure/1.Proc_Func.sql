@@ -134,8 +134,26 @@ SET a.stock_qty = a.stock_qty + b.dr_qty
 WHERE a.loc_supply_brand_id=getLocSupplyBrandId(b.loc_id, b.supply_id,b.supply_brand_id);
 
 INSERT INTO loc_supply_brands (loc_supply_id, supply_brand_id, stock_qty)
+SELECT loc_id,supply_brand_id, stock_qty FROM receiving_dtls_po_v
+WHERE receiving_id = p_receiving_id;
+END;
+
+CREATE PROCEDURE supply_is_post(p_is_id int(5))
+BEGIN
+DECLARE l_return_amt decimal(7,2);
+
+UPDATE loc_supply_brands a, supply_is_dtls b 
+SET a.stock_qty = a.stock_qty - b.supply_is_qty
+WHERE a.supply_brand_id = b.supply_brand_id
+AND b.receiving_id = p_receiving_id;
+UPDATE loc_supply_brands a, receiving_dtls_po_v b
+SET a.stock_qty = a.stock_qty + b.dr_qty
+WHERE a.loc_supply_brand_id=getLocSupplyBrandId(b.loc_id, b.supply_id,b.supply_brand_id);
+
+INSERT INTO loc_supply_brands (loc_supply_id, supply_brand_id, stock_qty)
 SELECT a.loc_id, supply_brand_id, stock_qty FROM receiving_dtls_po_v a
 WHERE a.receiving_id = p_receiving_id
 AND NOT EXISTS (SELECT loc_supply_brand_id FROM loc_supply_brands WHERE a.loc_supply_brand_id=getLocSupplyBrandId(a.loc_id, a.supply_id,a.supply_brand_id);
+
 
 END;
