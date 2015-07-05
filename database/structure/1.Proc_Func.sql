@@ -24,6 +24,14 @@ BEGIN
  RETURN (lvl);
 END;
 
+create function  getLocation(p_loc_id int) RETURNS VARCHAR(100)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl varchar(100);
+    SELECT location INTO lvl FROM locations WHERE loc_id=p_loc_id;
+ RETURN (lvl);
+END;
+
 create function  getPOLocId(p_po_id int) RETURNS INT(5)
     DETERMINISTIC
 BEGIN

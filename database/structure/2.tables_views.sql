@@ -418,7 +418,6 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `dr_no`  int(5),
   `dr_date` datetime,
   `po_id`  int(5),
-  `loc_id` int(5),
   `posted` int(5) NOT NULL default '0',     
   `created_by` int(5),
   `created_date` datetime,
@@ -859,7 +858,7 @@ and c.store_loc_id =b.store_loc_id
 and c.posted=0;
 
 CREATE OR REPLACE VIEW powithbal_v AS
-select *, getSupplier(supplier_id) as supplier from po
+select *, getSupplier(supplier_id) as supplier, getLocation(loc_id) as location from po
 where ifnull(getPOBalCount(po_id),0) > 0;
 
 CREATE OR REPLACE VIEW dr_powithbal_v AS
@@ -879,7 +878,7 @@ SELECT a.*
  WHERE not exists (select b.po_id FROM receiving b where posted=0 and b.po_id = a.po_id);
  
 CREATE OR REPLACE VIEW receiving_unposted_v AS 
-select a.*, b.supplier, b.po_no
+select a.*, b.supplier, b.location,  b.po_no
 FROM receiving a, powithbal_v b
 where a.posted=0
 AND a.po_id = b.po_id;
