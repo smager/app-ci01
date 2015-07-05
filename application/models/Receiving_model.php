@@ -37,10 +37,10 @@ class receiving_model extends CI_Model{
                 ,'table'=>'receiving_dtls'
             )
         );               
-        $this->common_model->update($post,$params);          
+        $receiving_id = $this->common_model->update($post,$params);          
         // posted=true;
         if($post["p_posted"]==true){        
-            $this->db->query("call receiving_post(" . $post["p_receiving_id"] . ")");
+            $this->db->query("call receiving_post($receiving_id)");
         }
     }
     
