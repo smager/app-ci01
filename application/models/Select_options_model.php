@@ -24,17 +24,11 @@ class select_options_model extends CI_Model{
             if(isset($get["where"])) $l_condition .= " and " . $get["where"];
             
             
-            $sql = "SELECT  " . $i->text . " as text, " . $i->value  . " as value  FROM " . $i->table_name  . " " . $l_condition;               
+            $sql = "SELECT  " . $i->text . " as text, " . $i->value  . " as value  FROM " . $i->table_name  . " " . $l_condition . " order by " . $i->text ;               
             $result = $this->db->query($sql);
         }
         return $result;    
     }  
-    
-    function getdata_by_where($get){
-        if(isset($get["where"]))  $l_condition="where " . $get["where"];        
-        $sql = "select  " . $get["text"] . " as text, " . $get["value"]  . " as value  FROM " .  $get["table"]  . " " . $l_condition;   
-        return $this->db->query($sql);
-    }    
         
     function update($post){
     //print_r($post);
