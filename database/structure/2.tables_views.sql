@@ -368,7 +368,7 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `loc_supply_brand_id` int(5) unsigned NOT NULL auto_increment,
   `loc_supply_id` int(5),
   `supply_brand_id` int(5),  
-  `stock_qty` decimal(7,2),
+  `stock_qty` decimal(10,2),
   `created_by` int(5),
   `created_date` datetime,
   `updated_by` int(5),
@@ -400,8 +400,8 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `po_dtl_id` int(5) unsigned NOT NULL auto_increment,
   `po_id`              int(5),
   `supply_id`          int(5),
-  `po_qty`             int(5),
-  `bal_qty`            int(5),
+  `po_qty`             decimal(10,2),
+  `bal_qty`            decimal(10,2),
   `unit_id`            int(5),
   `created_by`         int(5),
   `created_date`       datetime,
@@ -434,8 +434,8 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `receiving_id` int(5),
   `po_dtl_id`    int(5),
   `supply_brand_id`  int(5),
-  `dr_qty`       decimal(7,2),
-  `bal_qty`      decimal(7,2),
+  `dr_qty`       decimal(10,2),
+  `bal_qty`      decimal(10,2),
   `created_by`  int(5),
   `created_date` datetime,
   `updated_by` int(5),
@@ -547,12 +547,12 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
    `supply_is_dtl_id`        int(5) unsigned NOT NULL auto_increment,
    `supply_is_id`            int(5),
-   `supply_is_qty`           decimal(5,2),
+   `supply_is_qty`           decimal(7,2),
    `loc_supply_brand_id`     int(5),
-   `prev_qty`                decimal(5,2),
-   `used_qty`                decimal(5,2),
-   `returned_qty`            decimal(5,2),
-   `end_qty`                 decimal(5,2),
+   `prev_qty`                decimal(7,2),
+   `used_qty`                decimal(7,2),
+   `returned_qty`            decimal(7,2),
+   `end_qty`                 decimal(7,2),
    `created_by`              int(5),
    `created_date`  datetime,
    `updated_by`    int(5),
@@ -569,12 +569,12 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `inv_summ_month`    int(5),
   `loc_id`                     int(5),
   `supply_id`               int(5),
-  `beg_qty`                decimal(5,2),
-  `dr_qty`                  decimal(5,2),
-  `used_qty`              decimal(5,2),
-  `adj_plus_qty`        decimal(5,2),
-  `adj_minus_qty`     decimal(5,2),
-  `end_qty`               decimal(5,2),
+  `beg_qty`                decimal(10,2),
+  `dr_qty`                  decimal(10,2),
+  `used_qty`              decimal(10,2),
+  `adj_plus_qty`          decimal(10,2),
+  `adj_minus_qty`         decimal(10,2),
+  `end_qty`               decimal(10,2),
   `created_by`          int(5),
   `created_date`      datetime,
   `updated_by`        int(5),
@@ -851,6 +851,11 @@ select *
 from supply_is
 where posted_is=0;
 
+CREATE OR REPLACE VIEW po_unposted_v AS
+select *
+from po
+where posted=0;
+
 CREATE OR REPLACE VIEW supply_is_dtls_unposted_v AS
 select a.*
 from supply_is_dtls a, store_loc_supplies_v b, supply_is c
@@ -860,7 +865,8 @@ and c.posted=0;
 
 CREATE OR REPLACE VIEW powithbal_v AS
 select *, getSupplier(supplier_id) as supplier, getLocation(loc_id) as location from po
-where ifnull(getPOBalCount(po_id),0) > 0;
+where ifnull(getPOBalCount(po_id),0) > 0
+AND posted=1;
 
 CREATE OR REPLACE VIEW dr_powithbal_v AS
 SELECT a.*

@@ -6,7 +6,7 @@ class purchase_order_model extends CI_Model{
     }
     
     function getdata(){
-        $query = $this->db->query("SELECT * FROM po");
+        $query = $this->db->query("SELECT * FROM po_unposted_v");
         return $query;    
     }
 
