@@ -48,11 +48,11 @@ a.itemRemove:hover{
             openFormGroup();
                 selectBox( array( 'labelName'=>'P.O. #' , 'name'=>'po_filter', 'labelSize'=>1, 'selectSize'=>2));  
                 inputTextBox( array( 'labelName'=>'Supplier' , 'name'=>'supplier_name', 'labelSize'=>1, 'inputSize'=>2)); 
+                inputTextBox( array( 'labelName'=>'Location' , 'name'=>'loc_id', 'labelSize'=>1, 'inputSize'=>2));      
             closeFormGroup();
             openFormGroup();
                 inputTextBox( array( 'labelName'=>'D.R#' , 'name'=>'dr_no', 'labelSize'=>1, 'inputSize'=>2)); 
                 inputTextBox( array( 'labelName'=>'Date' , 'name'=>'dr_date', 'labelSize'=>1, 'inputSize'=>2,'value'=>date('m/d/Y') )); 
-                selectBox( array( 'labelName'=>'Location' , 'name'=>'loc_id', 'labelSize'=>1, 'selectSize'=>2));      
             closeFormGroup();
 
         ?> 
