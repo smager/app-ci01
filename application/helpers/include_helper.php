@@ -164,12 +164,16 @@ function includeFooter(){
 <script src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>   
 <?php 
     $url = $ci->router->fetch_class() . '/' . $ci->router->fetch_method();
-    echo "<div class='debugPanel'>";
-    echo "<label>Web Editor Manager : </label>";    
-    echo "<a href='" .base_url("page_templates"). "?page_url=" .$url. "' target='_blank'>Edit Page Template</a>";
-    echo " | <a href='" .base_url("javascripts"). "?page_url=" .$url. "' target='_blank'>Edit Javascript</a>";
-    echo " | <a href='" .base_url("select_options"). "' target='_blank'>Select Options</a>";
-    echo "</div>";
+ if( isset( $ci->session->userdata['current_user'] ) ==true ){        
+    if (current_user()->roleCode=="dev") {    
+        echo "<div class='debugPanel'>";
+        echo "<label>Web Editor Manager : </label>";    
+        echo "<a href='" .base_url("page_templates"). "?page_url=" .$url. "' target='_blank'>Edit Page Template</a>";
+        echo " | <a href='" .base_url("javascripts"). "?page_url=" .$url. "' target='_blank'>Edit Javascript</a>";
+        echo " | <a href='" .base_url("select_options"). "' target='_blank'>Select Options</a>";
+        echo "</div>";
+    }
+ }
 ?>
 
 <?php   

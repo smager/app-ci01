@@ -16,7 +16,14 @@ class users_model extends CI_Model{
         $result =false;
         if ($query->num_rows() > 0 ){  
             $result = true;
-            $this->session->set_userdata('current_user', $query->result()[0]);
+            $user = $query->result()[0];
+            //get role code
+            $sql = "select role_code from roles where role_id=$user->role_id";
+            $role = $this->db->query($sql)->result()[0];        
+            //add new property role code.
+            $user->roleCode  = strtolower($role->role_code);
+            $this->session->set_userdata('current_user', $user);
+                
         }
         return $result;
     }
