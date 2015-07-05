@@ -53,6 +53,7 @@ a.itemRemove:hover{
             openFormGroup();
                 inputTextBox( array( 'labelName'=>'D.R#' , 'name'=>'dr_no', 'labelSize'=>1, 'inputSize'=>2)); 
                 inputTextBox( array( 'labelName'=>'Date' , 'name'=>'dr_date', 'labelSize'=>1, 'inputSize'=>2,'value'=>date('m/d/Y') )); 
+                 yes_no( array( 'labelName'=>'Posted' , 'name'=>'posted', 'labelSize'=>1, 'selectSize'=>1));      
             closeFormGroup();
 
         ?> 

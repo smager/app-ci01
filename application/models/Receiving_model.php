@@ -27,19 +27,21 @@ class receiving_model extends CI_Model{
         $params=array(            
             'parent' => array(
                  'pk'=> 'receiving_id'
-                ,'dbKeys'=> array('po_id','dr_no','dr_date','loc_id')
+                ,'dbKeys'=> array('po_id','dr_no','dr_date','posted')
                 ,'table'=>'receiving'
             )           
             ,'details' => array(
                 'pk'=> 'receiving_dtl_id'
-                ,'dbKeys'=> array('dr_qty','po_dtl_id')
+                ,'dbKeys'=> array('dr_qty','po_dtl_id','supply_brand_id','bal_qty')
                 ,'mustNotEmptyKeys'=> array('po_dtl_id')
                 ,'table'=>'receiving_dtls'
             )
-        );       
-        
-        $this->common_model->update($post,$params);         
-
+        );               
+        $this->common_model->update($post,$params);          
+        // posted=true;
+        if($post["p_posted"]==true){        
+            $this->db->query("call receiving_post(" . $post["p_receiving_id"] . ")");
+        }
     }
     
     function delete($receiving_id){                

@@ -1,12 +1,13 @@
 var ctrlSel = zsi.control.SelectList;  
 var po_info;
+var supply_brands_info;
 $(document).ready(function(){
-    ctrlSel( base_url + "select_options/code/locations","#p_loc_id","","N");
     ctrlSel( base_url + "select_options/code/po_with_bal","#p_po_filter","","N");
     initInputs();    
     getUnpostedDR();
     markMandatory();
     setPOInfo();
+    setSupplyBrandsInfo();
 });
 $("form[id=frm]").submit(function(){
      if( zsi.form.checkMandatory()!==true) return false;
@@ -18,8 +19,6 @@ $("form[id=frm]").submit(function(){
     po_filter.val('').change();
     markMandatory();
  });
- 
-
 
 function setPOInfo(){
   $.getJSON(base_url + "purchase_order/powith_bal", function(d){
@@ -27,12 +26,19 @@ function setPOInfo(){
     });
 }
 
+function setSupplyBrandsInfo(){
+  $.getJSON(base_url + "supply_brands/getdata_supply_brands_json", function(d){
+         supply_brands_info=d;
+    });
+}
+
+
 
 function markMandatory(){
     zsi.form.markMandatory({       
       "groupNames":[
             {
-                 "names" : ["p_po_filter","p_dr_no","p_dr_date","p_loc_id"]
+                 "names" : ["p_po_filter","p_dr_no","p_dr_date"]
                 ,"type":"S"
             }             
              
@@ -44,7 +50,7 @@ function markMandatory(){
              
       ]      
       ,"groupTitles":[ 
-             {"titles" :["P.O No.","DR No","date","Location"]}
+             {"titles" :["P.O No.","DR No","date"]}
             ,{"titles" :["Quantity"]}
       ]
    });
@@ -55,7 +61,7 @@ function markMandatoryDR(){
     zsi.form.markMandatory({       
       "groupNames":[
             {
-                 "names" : ["p_dr_no","p_dr_date","p_loc_id"]
+                 "names" : ["p_dr_no","p_dr_date"]
                 ,"type":"S"
             }             
             ,{
@@ -65,7 +71,7 @@ function markMandatoryDR(){
             }
       ]      
       ,"groupTitles":[ 
-             {"titles" :["DR No","date","Location"]}
+             {"titles" :["DR No","date"]}
             ,{"titles" :["Quantity"]}
       ]
    });
@@ -110,20 +116,23 @@ function initInputs(){
     dr_date = $("#p_dr_date");
     loc_id = $("#p_loc_id");
     supplier_name= $("#p_supplier_name");
+    loc_id.attr("readonly","");
+    supplier_name.attr("readonly","");
+    
 
     po_filter.change(function(){
         var selVal = this.value;
-        
+        ctrlSel( base_url + "select_options/code/po_dtlswithbal?where=po_id=" + selVal,"select[name='p_po_dtl_id[]']","","N"); 
         po_id.val(selVal);
         receiving_id.val('');
         dr_no.val('');
         supplier_name.val('');
-        
-        displayPO_dtls(selVal);
-        
+        loc_id.val('');
+        displayBlankRows();
         $.each(po_info,function(){
           if(selVal == this.po_id){              
             supplier_name.val(this.supplier);
+            loc_id.val(this.location);
             return;
           }
         });
@@ -136,7 +145,6 @@ function displayDetails(p){
     po_id.val(p.po_id);
     dr_no.val(p.dr_no).change();
     dr_date.val(p.dr_date).change();
-    loc_id.val(p.loc_id).change();
     displayRecords(p.receiving_id);
 }
 
@@ -152,10 +160,11 @@ function displayRecords(id){
                         +  bs({name:"cb[]",type:"checkbox"});
 
             }            
-            ,function(d){ return d.bal_qty;}
+            ,function(d){ return bs({name:"po_dtl_id[]",type:"select",value:d.po_dtl_id}) }
+            ,function(d){ return bs({name:"supply_brand_id[]",type:"select",value:d.supply_brand_id}) }
             ,function(d){ return bs({name:"dr_qty[]",value:d.dr_qty}); }
-            ,function(d){ return d.cu_desc; }
-            ,function(d){ return d.supply;  }
+            ,function(d){ return '';}
+            ,function(d){ return '';}
         ]
         ,onComplete : function(){
              setDRQtyEvent();
@@ -163,29 +172,90 @@ function displayRecords(id){
     });    
 }
 
-function displayPO_dtls(id){
-    if(id==='') return;
+function displayBlankRows(){
     var bs = zsi.bs.ctrl;    
     zsi.json.loadGrid({
          table  : "#grid"
-        ,url   : base_url + "purchase_order/getdata_dtls_json/" + id + "/y"
+        ,isNew  : true 
+        ,limit: 15
         ,td_body: [ 
             function(d){
-                return     bs({name:"receiving_dtl_id[]",type:"hidden",value: d.receiving_dtl_id})
-                        +  bs({name:"po_dtl_id[]",type:"hidden",value: d.po_dtl_id})
+                return     bs({name:"receiving_dtl_id[]",type:"hidden"})
+                        +  bs({name:"bal_qty[]",type:"hidden"})
                         +  bs({name:"cb[]",type:"checkbox"});
 
             }            
-            ,function(d){ return d.bal_qty;}
-            ,function(d){ return bs({name:"dr_qty[]",value:d.dr_qty}); }
-            ,function(d){ return d.cu_desc; }
-            ,function(d){ return d.supply;  }
+            ,function(d){ return bs({name:"po_dtl_id[]",type:"select"}) }
+            ,function(d){ return bs({name:"supply_brand_id[]",type:"select"}) }
+            ,function(d){ return bs({name:"dr_qty[]",class:"form-control numeric"}); }
+            ,function(d){ return '';}
+            ,function(d){ return '';}
+        ]
+        ,td_properties: [
+            "","","","","style='text-align:center;'","style='text-align:center;'"
         ]
         ,onComplete : function(){
+            
           setDRQtyEvent();
+          setSupplyChangeEvent();
+          setQtyChange();
         }
     });    
 }
+
+function setQtyChange(){
+    
+     $("input[name='p_dr_qty[]']").keyup(function(){
+            var currBal = parseInt("0"  + $(this.parentNode).next().html());
+            var endBal = $(this.parentNode).next().next();
+            var total=currBal;
+            if(this.value==="") {
+                endBal.html(total);
+                return;
+            }
+            
+            if(this.value <= currBal) 
+                total =  currBal - this.value;
+            else
+                this.value = currBal;
+            endBal.html(total);
+     });
+     zsi.initInputTypesAndFormats();
+}
+
+function setSupplyChangeEvent(){
+     $("select[name='p_po_dtl_id[]']").change(function(){
+        var selVal = this.value;
+        var jObj = $(this.parentNode).next().children("select[name='p_supply_brand_id[]']");
+        var bal_qty = $(this.parentNode).prev().children("input[name='p_bal_qty[]']");
+        var dr_qty = $(this.parentNode).next().next().children("input[name='p_dr_qty[]']");
+        var tdCurrBal = $(this.parentNode).next().next().next();
+        var tdEndBal = $(this.parentNode).next().next().next().next();
+        jObj.html('');
+        dr_qty.val('');
+        tdEndBal.html('');
+
+        var supply_brand = jObj[0]
+        var ctr=0;
+        console.log(supply_brands_info);
+         $.each(supply_brands_info,function(){
+            if(selVal==this.po_dtl_id){
+                var l_option = new Option(unescape(this.brand_name+ " / " +this.cu_desc ), this.supply_brand_id);
+                 supply_brand.add(l_option, null);
+                 if(ctr===0) {
+                    tdCurrBal.html(this.bal_qty);
+                    bal_qty.val(this.bal_qty);
+                    ctr++;
+                 }
+            }
+            
+         });
+         
+     });
+   // 
+}
+
+
  
 function setDRQtyEvent(){
     $("input[name='p_dr_qty[]']").change();

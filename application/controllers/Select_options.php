@@ -9,14 +9,14 @@ class select_options extends Base_Controller {
     
 	public function index()
 	{
-        check_login();        
-        $this->load->view('select_options_list');        
+        check_login();       
+            $this->load->view('select_options_list');        
 	}
     
 	public function code($code)
 	{
         check_login();
-        $query = $this->select_options_model->getdata_by_code($code);
+        $query = $this->select_options_model->getdata_by_code($code, $this->input->get() );
         if($query==null)
             jsonOut( array());
         else 
