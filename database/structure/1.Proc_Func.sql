@@ -144,3 +144,8 @@ SET a.stock_qty = a.stock_qty - b.supply_is_qty
 WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
 AND b.supply_is_id = p_supply_is_id;
 END;
+
+
+
+
+

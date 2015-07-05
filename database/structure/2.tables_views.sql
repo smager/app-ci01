@@ -790,9 +790,10 @@ from loc_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW loc_supply_brands_v AS
-select a.*, 
-from loc_supply_brands a, loc_supplies_v b
-WHERE a.supply_id = b.supply_id;
+select a.*, b.supply_code, c.cu_desc
+from loc_supply_brands a, loc_supplies_v b, supply_brands_v c
+WHERE a.loc_supply_id = b.loc_supply_id
+AND a.supply_brand_id = c.supply_brand_id;
 
 
 CREATE OR REPLACE VIEW user_locations_v AS
@@ -872,6 +873,12 @@ select a.*, b.supply_code, b.unit_desc
 from po_dtls a, supplies_v b
 where a.supply_id = b.supply_id;
 
+create or replace view po_dtlswithbal_v as
+select a.*, b.supply_code, b.unit_desc 
+from po_dtls a, supplies_v b
+where bal_qty > 0 and a.supply_id = b.supply_id;
+
+
 CREATE OR REPLACE VIEW po_receiving_unposted_v AS
 SELECT a.*
  FROM powithbal_v a
@@ -884,13 +891,13 @@ where a.posted=0
 AND a.po_id = b.po_id;
  
 
-create or replace view receiving_dtls_po_v as
-select a.*, b.supply_code, b.unit_desc, getPOLocId(b.po_id) loc_id
-from receiving_dtls a, po_dtls_v b
-where a.po_dtl_id = b.po_dtl_id;
-
-
 CREATE OR REPLACE VIEW supply_brands_po_dtls_v AS
-select a.*, b.brand_name, b.cu_desc
+select a.*,b.supply_brand_id, b.brand_name, b.cu_desc
 from po_dtls_v a, supply_brands_v b
 where a.supply_id = b.supply_id;
+
+create or replace view receiving_dtls_po_v as
+select a.*, b.supply_code, b.unit_desc, getPOLocId(b.po_id) loc_id, b.brand_name, b.cu_desc, (a.bal_qty - a.dr_qty) as end_qty
+from receiving_dtls a, supply_brands_po_dtls_v b
+where a.po_dtl_id = b.po_dtl_id
+and a.supply_brand_id = b.supply_brand_id;
