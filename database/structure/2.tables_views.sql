@@ -184,6 +184,7 @@ CREATE TABLE IF NOT EXISTS `store_loc` (
   `store_loc` varchar(100) NOT NULL default '',
   `loc_id` int(5),
   `store_id` int(5),
+  `is_cart` int(5) NOT NULL default '0', 
   `active` int(5) NOT NULL default '1', 
   `created_by` int(5),
   `created_date` datetime,
@@ -319,7 +320,8 @@ CREATE TABLE IF NOT EXISTS `supplies` (
   `supply_desc`   varchar(64) NOT NULL default '',
   `supply_type_id` int(5),
   `unit_id`        int(5),  
-  `supply_srp`    decimal(5,2),
+  `supply_srp`     decimal(7,2),
+  `weight_serve`   decimal(7,2), 
   `seq_no`        int(5), 
   `created_by`     int(5),
   `created_date` datetime,
@@ -525,6 +527,38 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
    COMMENT='Store Location Expenses'
    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
+
+  CREATE TABLE IF NOT EXISTS `supply_pc` (
+   `supply_pc_id`   int(5) unsigned NOT NULL auto_increment,
+   `pc_no`  int(5),
+   `pc_date` datetime,
+   `loc_id`  int(5),
+   `posted` int(5) NOT NULL default '0',    
+   `created_by`    int(5),
+   `created_date`  datetime,
+   `updated_by`    int(5),
+   `updated_date`  datetime,
+   PRIMARY KEY `supply_pc_pk`  (`supply_pc_id`),
+   UNIQUE KEY `supply_pc_uk` (`pc_no`,`loc_id`)
+ )
+   COMMENT='Stock Physical Count header per location'
+   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+  CREATE TABLE IF NOT EXISTS `supply_pc_dtls` (
+   `supply_pc_dtl_id`        int(5) unsigned NOT NULL auto_increment,
+   `supply_pc_id`            int(5),
+   `supply_pc_qty`           decimal(7,2),
+   `loc_supply_brand_id`     int(5),
+   `pc_qty`                  decimal(7,2),
+   `created_by`              int(5),
+   `created_date`  datetime,
+   `updated_by`    int(5),
+   `updated_date`  datetime,
+   PRIMARY KEY `supply_pc_dtls_pk`  (`supply_pc_dtl_id`),
+   UNIQUE KEY `supply_pc_dtls_uk` (`supply_pc_id`,`loc_supply_brand_id`)
+ )
+   COMMENT='Stock Physical Count details per location'
+   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin; 
 
  
   CREATE TABLE IF NOT EXISTS `supply_is` (
@@ -841,7 +875,7 @@ WHERE a.supply_id = b.supply_id;
 
 
 CREATE OR REPLACE VIEW store_loc_supplies_v AS
-select a.*, c.supply_code, c.unit_id, c.unit_desc
+select a.*, b.loc_id, c.supply_code, c.unit_id, c.unit_desc
 from store_loc_supplies a, store_loc b, supplies_v c
 WHERE a.store_loc_id = b.store_loc_id
 AND a.supply_id = c.supply_id;

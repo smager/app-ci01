@@ -147,7 +147,11 @@ WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
 AND b.supply_is_id = p_supply_is_id;
 END;
 
-
-
-
+CREATE PROCEDURE store_loc_supplies_ins (IN p_store_loc_id INT(10), IN p_store_id INT(10))
+BEGIN  
+    insert into store_loc_supplies (store_loc_id, supply_id) 
+    select p_store_loc_id, supply_id 
+      from store_supplies_v 
+     where store_id = p_store_id; 
+END;
 

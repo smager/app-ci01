@@ -19,6 +19,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <tr>
         <th></th>
         <th>Supplier Name</th>
+        <th>Contact Name</th>
+        <th>Contact No.</th>
         <th>Active</th>
     </tr>
 <?php
@@ -34,6 +36,8 @@ for ($x = 0; $x < $q->num_rows(); $x++) {
             <td align="right"><input type="hidden" name="p_supplier_id[]" value="<?php echo $d[$x]->supplier_id; ?>">
                 <?php checkbox( array( 'name'=>'cb[]','value'=>$d[$x]->supplier_id  )); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"supplier_name[]",'value'=>$d[$x]->supplier_name  )); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"contact_name[]",'value'=>$d[$x]->contact_name  )); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"contact_no[]",'value'=>$d[$x]->contact_no  )); ?> </td>
             <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N','value'=>$d[$x]->active )); ?> </td>
     </tr>        
 
@@ -47,6 +51,8 @@ for ($x = 0; $x < 5; $x++) {
             <td align="right"><input type="hidden" name="p_supplier_id[]">
                 <?php checkbox( array( 'name'=>'select[]')); ?> </td>
             <td><?php inputTextBox( array( 'name'=>"supplier_name[]")); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"contact_name[]")); ?> </td>
+            <td><?php inputTextBox( array( 'name'=>"contact_no[]")); ?> </td>
             <td><?php yes_no(array('name'=>'active[]','mandatory'=>'N')); ?> </td>
     </tr>
     

@@ -21,7 +21,9 @@ class suppliers_model extends CI_Model{
 
                 $data = array(
                      'supplier_name' => $supplier_name
-                     ,'active' => $post['p_active'][$x]
+                    ,'contact_name' => $post['p_contact_name'][$x]
+                    ,'contact_no' => $post['p_contact_no'][$x]
+                    ,'active' => $post['p_active'][$x]
                 );
                 if($id==''){
                     //insert        
