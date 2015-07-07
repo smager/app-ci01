@@ -4,10 +4,10 @@ $(document).ready(function(){
     
     ctrlSel( base_url + "select_options/code/suppliers","#p_supplier_id","","N");
     ctrlSel( base_url + "select_options/code/locations","#p_loc_id","","N");
-
+    initInputs();
+    onLocationChange();
     displayBlankRows(true);
     getUnpostedPO();
-    initInputs();    
     markMandatory();
     setSupply();
 });
@@ -28,6 +28,7 @@ $("form[id=frm]").submit(function(){
  }); 
  
  $("#btnNew").click(function(){
+    if(loc_id.val()==='') { alert("Enter Location"); return false; }
     newBlankEntry();
  });
  
@@ -48,20 +49,6 @@ $("form[id=frm]").submit(function(){
 function setSupply(){
   $.getJSON(base_url + "supplies/getdata_json", function(d){
         supply = d;
-    });
-}
-
-function displayUnitDescriptions(){
-    $("select[name='p_supply_id[]']").each(function(){
-        var td = $(this.parentNode).next();
-        var input =  td.children("input[name='p_unit_conv_id[]']");
-        var val = $(this).attr("selectedvalue");
-        $.each(supply,function(){
-            if (this.supply_id == val){
-                input.val(this.cu_desc);
-                return;
-            }
-        });
     });
 }
 
@@ -128,7 +115,7 @@ function displayDetails(p){
     po_id.val(p.po_id).change();
     po_no.val(p.po_no).change();
     po_date.val(p.po_date).change();
-    loc_id.val(p.loc_id).change();
+    loc_id.val(p.loc_id);//.change();
     supplier_id.val(p.supplier_id).change();
 
     displayRecords(p.po_id);
@@ -136,7 +123,6 @@ function displayDetails(p){
 
 function displayRecords(id){       
     var bs = zsi.bs.ctrl;    
-    //var inputCls = "form-control input-sm";
     zsi.json.loadGrid({
          table  : "#grid"
         ,url   : base_url + "purchase_order/getdata_dtls_json/" + id
@@ -147,12 +133,19 @@ function displayRecords(id){
 
             }            
             ,function(d){ return bs({name:"supply_id[]",type:"select",value:d.supply_id}); }
-            ,function(d){ return bs({name:"unit_conv_id[]"}); }
+            ,function(d){ return d.unit_desc; }
             ,function(d){ return bs({name:"po_qty[]",value:d.po_qty,class:"form-control numeric"}); }
         ]
         ,onComplete : function(){
-            displayUnitDescriptions();
-            displayBlankRows(false);
+            onSupplyChange();
+            
+            $("select[name='p_supply_id[]']").dataBind(base_url + "select_options/code/po_details?where=po_id=" +  id, function(){
+                displayBlankRows(false);
+                loc_id.change();
+            });
+           
+
+            
         }
     });    
 }
@@ -160,13 +153,11 @@ function displayRecords(id){
 function onSupplyChange(){
     
     $("select[name='p_supply_id[]']").change(function(){
-        var td = $(this.parentNode).next();
-        var input =  td.children("input[name='p_unit_conv_id[]']");
+        var tdUnit = $(this.parentNode).next();
         var selVal = this.value;
-        
         $.each(supply,function(){
             if (this.supply_id == selVal){
-                input.val(this.unit_desc);
+                tdUnit.html(this.unit_desc);
                 return;
             }
         });
@@ -174,26 +165,31 @@ function onSupplyChange(){
     });
     
 }
+function onLocationChange(){
+    loc_id.change(function(){
+        if(this.value==='') return false;
+        //ctrlSel( base_url + "select_options/code/loc_supplies?where=loc_id=" + this.value,"select[name='p_supply_id[]']","","N");
+        $("select[name='p_supply_id[]'].new").dataBind(base_url + "select_options/code/loc_supplies?where=loc_id=" + this.value);
+    });
+}
 
 function displayBlankRows(p_isNew){       
     var bs = zsi.bs.ctrl;    
-    //var inputCls = "form-control input-sm";
     zsi.json.loadGrid({
          table  : "#grid"
         ,isNew  : p_isNew
-        ,limit: 10
+        ,limit: 15
         ,td_body: [ 
             function(d){
                 return     bs({name:"po_dtl_id[]",type:"hidden"})
                         +  bs({name:"select[]",type:"checkbox"});
 
             }            
-            ,function(d){ return bs({name:"supply_id[]",type:"select"}); }
-            ,function(d){ return bs({name:"unit_conv_id[]"}); }
+            ,function(d){ return bs({name:"supply_id[]",type:"select", class:"form-control new"}); }
+            ,function(d){ return ""; }
             ,function(d){ return bs({name:"po_qty[]",class:"form-control numeric"}); }
         ]
         ,onComplete : function(){
-            ctrlSel( base_url + "select_options/code/supplies","select[name='p_supply_id[]']","","N");
             onSupplyChange();
             markMandatory();
             $("input[name='p_po_qty[]'],input[name='p_unit_price[]']").change();
