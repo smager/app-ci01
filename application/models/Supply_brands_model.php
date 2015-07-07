@@ -35,6 +35,7 @@ class supply_brands_model extends CI_Model{
     
     
     function update($post){ //zsi.form.displayLOV        
+        $m =  new supply_brands_model();
         $params=array(            
             'parent' => array(
                  'pk'=> 'supply_id'
@@ -44,11 +45,20 @@ class supply_brands_model extends CI_Model{
                 ,'dbKeys'=> array('brand_id','conv_id','supply_cost')
                 ,'mustNotEmptyKeys'=> array('brand_id')
                 ,'table'=>'supply_brands'
+                //,'onInsertUpdate'=> $this
             )
         );       
         $supply_id  = $this->common_model->update($post,$params);           
         //$this->db->query("call LocSupplyBrandsIns2($supply_id)");
     } 
+    
+    function onInsert($supply_brand_id){
+          //$this->db->query("call procedure_name($supply_brand_id)");   
+    }
+
+    function onUpdate($supply_brand_id){
+        // $this->db->query("call procedure_name($supply_brand_id)");   
+    }
     
 
     

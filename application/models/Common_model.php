@@ -86,6 +86,7 @@ class common_model extends CI_Model{
                     if(isset($parent['uiKeys']))  $parentParams['uiKeys'] = $parent['uiKeys']; 
                     if(isset($parent['mustNotEmptyKeys']))  $parentParams['mustNotEmptyKeys'] = $parent['mustNotEmptyKeys']; 
                     if(isset($parent['mustNotEmptyOnInsert']))  $parentParams['mustNotEmptyOnInsert'] = $parent['mustNotEmptyOnInsert']; 
+                    if(isset($parent['onInsertUpdate']))  $parentParams['onInsertUpdate'] = $parent['onInsertUpdate']; 
 
                     $parentId = $this->processInsertUpdate($post,$parentParams);
                 }
@@ -105,14 +106,14 @@ class common_model extends CI_Model{
                 if(isset($detail['uiKeys']))  $detailParams['uiKeys'] = $detail['uiKeys']; 
                 if(isset($detail['mustNotEmptyKeys']))  $detailParams['mustNotEmptyKeys'] = $detail['mustNotEmptyKeys']; 
                 if(isset($detail['mustNotEmptyOnInsert']))  $detailParams['mustNotEmptyOnInsert'] = $detail['mustNotEmptyOnInsert']; 
+                if(isset($detail['onInsertUpdate']))  $detailParams['onInsertUpdate'] = $detail['onInsertUpdate']; 
 
                 $parentKeyValue = array(
                     'key' => $parent['pk']
                     ,'value' => $parentId
                 );
-                $returnId=$parentId;
-                $this->processInsertUpdate($post,$detailParams,$parentKeyValue);                
-                
+                $returnId=$parentId;                
+                $this->processInsertUpdate($post,$detailParams,$parentKeyValue);                                
                 $this->db->trans_commit();
             }            
             catch (Exception $e) {
@@ -186,6 +187,12 @@ class common_model extends CI_Model{
                             $this->db->set('created_date', 'NOW()', FALSE);
                             $this->db->insert($params["table"], $data);
                             $returnId = $this->db->insert_id();
+                            //trigger invoked insert event
+                            if(isset($params['onInsertUpdate'])){
+                                $onIU = $params['onInsertUpdate'];
+                                if(method_exists($onIU,"onInsert")) $onIU->onInsert($returnId);
+                            }
+                                            
                         }
 
                     }else{
@@ -195,6 +202,12 @@ class common_model extends CI_Model{
                         $this->db->set('updated_date', 'NOW()', FALSE);
                         $this->db->where( $params["pk"]["dbKey"], $id);
                         $this->db->update($params["table"], $data);
+                        //trigger invoked insert event
+                        if(isset($params['onInsertUpdate'])){
+                            $onIU = $params['onInsertUpdate'];
+                            if(method_exists($onIU,"onUpdate")) $onIU->onUpdate($returnId);
+                        }
+                        
                     } 
 
                 }//end of - if(isFoundEmptyKeys)
