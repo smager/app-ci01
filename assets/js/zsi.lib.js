@@ -58,10 +58,10 @@ function monitorAjaxResponse(){
         zsi.ShowHideProgressWindow(true);
     });
 
-   $(document).ajaxComplete(function() {
+   $(document).ajaxComplete(function(event,request,settings) {
       if(typeof zsi_request_count !== 'undefined'){
          zsi_request_count--;
-         if(zsi_request_count==0){
+         if(zsi_request_count<=0){
             //console.log("no remaining request");
             CloseProgressWindow();
          }
@@ -550,8 +550,11 @@ zsi.form.checkMandatory=function(){
 }
 
 zsi.form.markMandatory=function(om){
+//clear colored box;
+$("input,select,textarea").not("[type=hidden]").each(function(){
+    $(this).css("border","solid 1px #ccc");
+});
 zsi.form.__objMandatory=om;
-
 for(var x=0;x<om.groupNames.length;x++){
    if(om.groupNames[x].names.length!=om.groupTitles[x].titles.length){
       alert("Error!, parameters are not equal.");
@@ -889,8 +892,8 @@ zsi.json.loadGrid = function(o){
         });    
     }
     else{
-        if(typeof o.rows === "undefined") o.rows =5;
-        for(var y=0;y<o.rows;y++){
+        if(typeof o.limit === "undefined") o.limit=5;
+        for(var y=0;y<o.limit;y++){
             trItem();
         }
         if(o.onComplete) o.onComplete();
@@ -1008,6 +1011,26 @@ $.fn.clearSelect = function() {
 
 }
 
+
+$.fn.dataBind = function(){
+    var a = arguments;
+    var p=a[0];
+    if(typeof a[0] ==="string"){
+         p={}; p.url = a[0]; 
+        if(typeof a[1] !=="undefined") p.onAllComplete = a[1];
+    }
+    var obj=this;
+    var selVal = (typeof p.selectedValue==="undefined"? "" : p.selectedValue);
+    var required  =(typeof p.required==="undefined"? "N" : p.required);
+   $.getJSON(p.url, function( data ) {
+         obj.fillSelect(data,selVal,required,p.onEachComplete);
+         if(p.onAllComplete){
+           obj.onAllComplete = p.onAllComplete;
+           obj.onAllComplete(data);
+         } 
+   });
+}
+
 $.fn.fillSelect = function(data,p_selval,p_req,p_onLoadComplete) {
     this.clearSelect();
 
@@ -1039,19 +1062,21 @@ $.fn.fillSelect = function(data,p_selval,p_req,p_onLoadComplete) {
 
                var selval = $(ddl).attr("selectedvalue");
                if(selval){
-                     $(ddl).children("option").each(function(i){
+                    /* $(ddl).children("option").each(function(i){
                         if (selval==this.value){
                            ddl.selectedIndex = i;
                            $(ddl).change();
                            return false;
                         }
                      });
+                     */
+                    $(ddl).val(selval);  
                }
                $(ddl).removeAttr("selectedvalue");
 
                if(p_onLoadComplete) {
-                  ddl.LoadComplete = p_onLoadComplete;
-                  ddl.LoadComplete();
+                  ddl.onEachComplete = p_onLoadComplete;
+                  ddl.onEachComplete();
                }
 
            }
