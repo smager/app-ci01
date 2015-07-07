@@ -32,15 +32,22 @@ class supply_brands_model extends CI_Model{
     }    
     
     
-    function update($post){ //zsi.form.displayLOV
-         $params=array(
-             'pk'=> 'supply_brand_id'
-            ,'dbKeys'=> array('supply_id','brand_id','conv_id','supply_cost')
-            ,'table'=>'supply_brands'
-        );
-        $supply_brand_id=$this->common_model->update($post,$params); 
-        $supply_id=$post()['supply_id'];
-        $this->db->query("call LocSupplyBrandsIns2($supply_brand_id,$supply_id");
+    
+    
+    function update($post){ //zsi.form.displayLOV        
+        $params=array(            
+            'parent' => array(
+                 'pk'=> 'supply_id'
+            )           
+            ,'details' => array(
+                 'pk'=> 'supply_brand_id'
+                ,'dbKeys'=> array('brand_id','conv_id','supply_cost')
+                ,'mustNotEmptyKeys'=> array('brand_id')
+                ,'table'=>'supply_brands'
+            )
+        );       
+        $supply_id  = $this->common_model->update($post,$params);           
+        //$this->db->query("call LocSupplyBrandsIns2($supply_id)");
     } 
     
 
