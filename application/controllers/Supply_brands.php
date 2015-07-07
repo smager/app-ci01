@@ -8,7 +8,7 @@ class supply_brands extends Base_Controller {
     }
     	 
     public function getdata_json($id){    
-        jsonOut($this->supply_brands_model->getdata_ad($id)->result());        
+        jsonOut($this->supply_brands_model->getdata($id)->result());        
     }
     
     public function getdata_supply_brands_json(){    

@@ -9,6 +9,12 @@ class loc_supplies_model extends CI_Model{
         $query = $this->db->query("SELECT * FROM loc_supplies_v where loc_id=".$sid);
         return $query;    
     }
+    
+     function getdata_sb($sid){
+        $query = $this->db->query("SELECT * FROM loc_supply_brands_v where loc_id=".$sid);
+        return $query;    
+    }   
+    
     function getdata_ad($sid){
         $query = $this->db->query(
              "SELECT * FROM loc_supplies_v where loc_id=" . $sid
