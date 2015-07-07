@@ -25,4 +25,10 @@ class supply_brands extends Base_Controller {
         $this->supply_brands_model->update($this->input->post());    
     }
 
+        public function delete()
+	{
+        
+        $this->supply_brands_model->delete($this->input->post());
+	}   
+    
 }
