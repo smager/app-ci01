@@ -24,9 +24,10 @@ class loc_supplies_model extends CI_Model{
         for ($x = 0; $x < sizeof($post['p_loc_supply_id']); $x++) {
             $id = $post['p_loc_supply_id'][$x];            
             $isCheck =  $post['p_isCheck'][$x];
+            $loc_id =  $post['p_loc_id'];
             
             $data = array(
-                 'loc_id'  => $post['p_loc_id']
+                 'loc_id'  => $loc_id
                 ,'supply_id' => $post['p_supply_id'][$x]
                 ,'reorder_level' => $post['p_reorder_level'][$x]
                 ,'max_level' => $post['p_max_level'][$x]
@@ -51,6 +52,8 @@ class loc_supplies_model extends CI_Model{
             }
             
         } //end of loop
+
+        $this->db->query("call LocSupplyBrandsIns($loc_id)");
 
     }        
     

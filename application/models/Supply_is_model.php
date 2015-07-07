@@ -5,11 +5,6 @@ class supply_is_model extends CI_Model{
 
     }
     
-    function getdata($store_loc_id,$date){
-        $str = "SELECT * FROM supply_is where store_loc_id='$store_loc_id' and DATE_FORMAT(is_date,'%m/%d/%Y')='$date'";
-        $query = $this->db->query($str);
-        return $query;    
-    }
     
     function getdata_detail($id){
         $query = $this->db->query("call getSupply_IS_Unposted($id)");

@@ -155,3 +155,18 @@ BEGIN
      where store_id = p_store_id; 
 END;
 
+
+CREATE PROCEDURE getLocPC(p_loc_pc_id int(5))
+BEGIN
+select * from loc_pc where 
+
+
+END;
+
+CREATE PROCEDURE LocSupplyBrandsIns(p_loc_id int(5))
+BEGIN
+INSERT INTO loc_supply_brands (supply_brand_id, loc_supply_id)
+SELECT a.supply_brand_id, getLocSupplyId(p_loc_id, a.supply_id) 
+FROM supply_brands a
+WHERE NOT EXISTS (SELECT supply_brand_id FROM loc_supply_brands b WHERE b.loc_supply_id =  getLocSupplyId(p_loc_id, a.supply_id));
+END;

@@ -528,29 +528,28 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
 
-  CREATE TABLE IF NOT EXISTS `supply_pc` (
-   `supply_pc_id`   int(5) unsigned NOT NULL auto_increment,
-   `pc_no`  int(5),
-   `pc_date` datetime,
-   `loc_id`  int(5),
+  CREATE TABLE IF NOT EXISTS `loc_pc` (
+   `loc_pc_id`   int(5) unsigned NOT NULL auto_increment,
+   `pc_no`          int(5),
+   `pc_date`        datetime,
+   `loc_id`         int(5),
    `posted` int(5) NOT NULL default '0',    
    `created_by`    int(5),
    `created_date`  datetime,
    `updated_by`    int(5),
    `updated_date`  datetime,
-   PRIMARY KEY `supply_pc_pk`  (`supply_pc_id`),
+   PRIMARY KEY `supply_pc_pk`  (`loc_pc_id`),
    UNIQUE KEY `supply_pc_uk` (`pc_no`,`loc_id`)
  )
    COMMENT='Stock Physical Count header per location'
    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
-  CREATE TABLE IF NOT EXISTS `supply_pc_dtls` (
-   `supply_pc_dtl_id`        int(5) unsigned NOT NULL auto_increment,
-   `supply_pc_id`            int(5),
-   `supply_pc_qty`           decimal(7,2),
-   `loc_supply_brand_id`     int(5),
-   `pc_qty`                  decimal(7,2),
-   `created_by`              int(5),
+  CREATE TABLE IF NOT EXISTS `loc_pc_dtls` (
+   `loc_pc_dtl_id`        int(5) unsigned NOT NULL auto_increment,
+   `loc_pc_id`            int(5),
+   `supply_brand_id`      int(5),
+   `pc_qty`               decimal(7,2),
+   `created_by`           int(5),
    `created_date`  datetime,
    `updated_by`    int(5),
    `updated_date`  datetime,
@@ -814,20 +813,21 @@ select "" as store_id, "" as store_supply_id, supply_id, supply_code
 from supplies;
 
 CREATE OR REPLACE VIEW supplies2_v AS
-select "" as loc_id, ""  as loc_supply_id, b.supply_id, b.supply_code, "" as reorder_level, "" as max_level, "" as stock_qty, b.unit_desc
+select "" as loc_id, ""  as loc_supply_id, b.supply_id, b.seq_no, b.supply_code, "" as reorder_level, "" as max_level, "" as stock_qty, b.unit_desc
 from store_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW loc_supplies_v AS
-select a.loc_id, a.loc_supply_id, a.supply_id, b.supply_code, a.reorder_level, a.max_level, getStockCount(a.loc_supply_id) as stock_qty, b.unit_desc
+select a.loc_id, a.loc_supply_id, a.supply_id, b.seq_no,  b.supply_code, a.reorder_level, a.max_level, getStockCount(a.loc_supply_id) as stock_qty, b.unit_desc
 from loc_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW loc_supply_brands_v AS
-select a.*, b.supply_code, c.cu_desc
+select a.*, b.seq_no, b.supply_code, c.brand_name, c.cu_desc
 from loc_supply_brands a, loc_supplies_v b, supply_brands_v c
 WHERE a.loc_supply_id = b.loc_supply_id
-AND a.supply_brand_id = c.supply_brand_id;
+AND a.supply_brand_id = c.supply_brand_id
+ORDER BY seq_no;
 
 
 CREATE OR REPLACE VIEW user_locations_v AS
@@ -941,3 +941,8 @@ select a.*, b.supply_code, b.unit_desc, getPOLocId(b.po_id) loc_id, b.brand_name
 from receiving_dtls a, supply_brands_po_dtls_v b
 where a.po_dtl_id = b.po_dtl_id
 and a.supply_brand_id = b.supply_brand_id;
+
+CREATE OR REPLACE VIEW loc_pc_dtls_v AS
+SELECT a.*
+FROM loc_pc a, supply_brand
+WHERE a.supply_brand_id = b.supply_brand_id
