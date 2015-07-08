@@ -84,6 +84,9 @@ BEGIN
    END IF;   
 END; 
 
+
+
+
 CREATE PROCEDURE delPO_Unposted (IN p_po_id int(5))
 BEGIN
    DELETE FROM po_dtls WHERE po_id = po_id;
@@ -155,12 +158,10 @@ BEGIN
      where store_id = p_store_id; 
 END;
 
-
-CREATE PROCEDURE getLocPC(p_loc_pc_id int(5))
+CREATE PROCEDURE getLocPC_Unposted(p_loc_id int(5))
 BEGIN
-select * from loc_pc where 
-
-
+select * from loc_pc where posted=0
+and loc_id=p_loc_id;
 END;
 
 CREATE PROCEDURE LocSupplyBrandsIns(p_loc_id int(5))
@@ -170,3 +171,43 @@ SELECT a.supply_brand_id, getLocSupplyId(p_loc_id, a.supply_id)
 FROM supply_brands a
 WHERE NOT EXISTS (SELECT supply_brand_id FROM loc_supply_brands b WHERE b.loc_supply_id =  getLocSupplyId(p_loc_id, a.supply_id));
 END;
+
+CREATE PROCEDURE LocSupplyBrandsIns2(p_supply_id int(5))
+BEGIN
+DECLARE l_loc_id   int;
+DECLARE l_loc_supply_id INT;
+DECLARE exit_loop BOOLEAN;       
+DECLARE loc_cursor CURSOR FOR
+  SELECT loc_id FROM locations;
+ 
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = TRUE; 
+OPEN loc_cursor;  
+locations_loop: LOOP 
+FETCH  loc_cursor INTO l_loc_id;
+     SELECT loc_supply_id INTO l_loc_supply_id FROM loc_supplies WHERE loc_id = l_loc_id AND supply_id = p_supply_id;
+
+     INSERT INTO loc_supply_brands (supply_brand_id, loc_supply_id)
+     SELECT supply_brand_id, l_loc_supply_id
+     FROM supply_brands
+     WHERE supply_id = p_supply_id
+     AND NOT EXISTS (SELECT supply_brand_id FROM loc_supply_brands b WHERE a.supply_brand_id = a.supply_brand_id and loc_id=l_loc_id);
+     IF exit_loop THEN
+         CLOSE loc_cursor;
+         LEAVE locations_loop;
+     END IF;
+   END LOOP locations_loop;
+
+END;
+
+     
+   -- Declare the cursor
+   
+     
+   -- set exit_loop flag to true if there are no more rows
+   
+   -- open the cursor
+  
+   -- start looping
+   
+     -- read the name from next row into the variables 
+     

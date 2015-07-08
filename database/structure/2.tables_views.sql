@@ -823,7 +823,7 @@ from loc_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW loc_supply_brands_v AS
-select a.*, b.seq_no, b.supply_code, c.brand_name, c.cu_desc
+select a.*, b.supply_id, b.seq_no, b.supply_code, b.loc_id, c.brand_name, c.cu_desc
 from loc_supply_brands a, loc_supplies_v b, supply_brands_v c
 WHERE a.loc_supply_id = b.loc_supply_id
 AND a.supply_brand_id = c.supply_brand_id
