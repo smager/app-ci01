@@ -190,7 +190,7 @@ class common_model extends CI_Model{
                             //trigger invoked insert event
                             if(isset($params['onInsertUpdate'])){
                                 $onIU = $params['onInsertUpdate'];
-                                if(method_exists($onIU,"onInsert")) $onIU->onInsert($returnId);
+                                if(method_exists($onIU,"onInsert")) $onIU->onInsert($returnId,$post,$data,$x);
                             }
                                             
                         }
@@ -205,7 +205,7 @@ class common_model extends CI_Model{
                         //trigger invoked insert event
                         if(isset($params['onInsertUpdate'])){
                             $onIU = $params['onInsertUpdate'];
-                            if(method_exists($onIU,"onUpdate")) $onIU->onUpdate($returnId);
+                            if(method_exists($onIU,"onUpdate")) $onIU->onUpdate($returnId,$post,$data,$x);
                         }
                         
                     } 

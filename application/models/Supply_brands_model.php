@@ -52,11 +52,11 @@ class supply_brands_model extends CI_Model{
         //$this->db->query("call LocSupplyBrandsIns2($supply_id)");
     } 
     
-    function onInsert($supply_brand_id){
+    function onInsert($supply_brand_id,$post,$data,$x){
           //$this->db->query("call procedure_name($supply_brand_id)");   
     }
 
-    function onUpdate($supply_brand_id){
+    function onUpdate($supply_brand_id,$post,$data,$x){
         // $this->db->query("call procedure_name($supply_brand_id)");   
     }
     
