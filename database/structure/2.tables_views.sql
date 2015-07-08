@@ -943,6 +943,6 @@ where a.po_dtl_id = b.po_dtl_id
 and a.supply_brand_id = b.supply_brand_id;
 
 CREATE OR REPLACE VIEW loc_pc_dtls_v AS
-SELECT a.*
-FROM loc_pc a, supply_brand
-WHERE a.supply_brand_id = b.supply_brand_id
+SELECT a.*, b.seq_no, b.supply_code, b.brand_name, b.cu_desc
+FROM loc_pc_dtls a, loc_supply_brands_v b
+WHERE a.loc_supply_brand_id = b.loc_supply_brand_id;

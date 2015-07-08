@@ -85,13 +85,25 @@ BEGIN
 END; 
 
 
+CREATE PROCEDURE getLocPC_Unposted(p_loc_id int(5))
+BEGIN
+select * from loc_pc where posted=0
+and loc_id=p_loc_id;
+END;
 
+CREATE PROCEDURE delPC_Unposted (IN p_loc_pc_id int(5))
+BEGIN
+   DELETE FROM loc_pc_dtls WHERE loc_pc_id = p_loc_pc_id;
+   DELETE FROM loc_pc WHERE loc_pc_id = p_loc_pc_id;
+END; 
 
 CREATE PROCEDURE delPO_Unposted (IN p_po_id int(5))
 BEGIN
    DELETE FROM po_dtls WHERE po_id = po_id;
    DELETE FROM po WHERE po_id = p_po_id;
 END; 
+
+
 
 CREATE PROCEDURE store_daily_cash_postedCB(IN p_store_daily_cash_id int(5))
 BEGIN
@@ -158,12 +170,6 @@ BEGIN
      where store_id = p_store_id; 
 END;
 
-CREATE PROCEDURE getLocPC_Unposted(p_loc_id int(5))
-BEGIN
-select * from loc_pc where posted=0
-and loc_id=p_loc_id;
-END;
-
 CREATE PROCEDURE LocSupplyBrandsIns(p_loc_id int(5))
 BEGIN
 INSERT INTO loc_supply_brands (supply_brand_id, loc_supply_id)
@@ -199,15 +205,10 @@ FETCH  loc_cursor INTO l_loc_id;
 
 END;
 
-     
-   -- Declare the cursor
-   
-     
-   -- set exit_loop flag to true if there are no more rows
-   
-   -- open the cursor
-  
-   -- start looping
-   
-     -- read the name from next row into the variables 
-     
+CREATE PROCEDURE loc_pc_post(p_loc_pc_id int(5))
+BEGIN
+UPDATE loc_supply_brands a, loc_pc_dtls b 
+SET a.stock_qty = b.pc_qty
+WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
+AND b.loc_pc_id = p_loc_pc_id;
+END;     
