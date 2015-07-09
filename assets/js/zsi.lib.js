@@ -1058,17 +1058,7 @@ $.fn.fillSelect = function(data,p_selval,p_req,p_onLoadComplete) {
                });
 
                var selval = $(ddl).attr("selectedvalue");
-               if(selval){
-                    /* $(ddl).children("option").each(function(i){
-                        if (selval==this.value){
-                           ddl.selectedIndex = i;
-                           $(ddl).change();
-                           return false;
-                        }
-                     });
-                     */
-                    $(ddl).val(selval);  
-               }
+               if(selval) $(ddl).val(selval);                 
                $(ddl).removeAttr("selectedvalue");
 
                if(p_onLoadComplete) {
@@ -1144,15 +1134,15 @@ $.fn.setUniqueOptions=function(){
                 });
             }else{
                 //set new data
-                var selectedVal = {value:this.value, text: this.options[this.selectedIndex].text};
+                var selOpt = {value:this.value, text: this.options[this.selectedIndex].text};
                  $(this).clearSelect(); 
                  ddl.add(new Option("",""), null);
-                 ddl.add(new Option(selectedVal.text,selectedVal.value), null);
+                 ddl.add(new Option(selOpt.text,selOpt.value), null);
                  $.each(newData, function() {
                     var l_option = new Option(unescape(this.text), this.value);
                     ddl.add(l_option, null);
                 });
-                $(this).val(selectedVal.value);
+                $(this).val(selOpt.value);
               
             }
         });
