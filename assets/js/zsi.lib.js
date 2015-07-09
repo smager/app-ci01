@@ -716,29 +716,26 @@ zsi.form.showAlert= function(p_class){
 zsi.form.displayLOV = function(p){
     var td_data = [];
     var td_prop;
-    if(typeof p.td_properties!=="undefined") td_prop = p.td_properties;
+    
     if(typeof p.show_checkbox==="undefined") p.show_checkbox=true;
     td_data.push(function(d){
-                var inputs= '<input name="p_' + p.params[0] + '[]"  type="hidden"  value="' + d[p.params[0]] + '">' 
-                     + '<input name="p_' + p.params[1] + '[]" type="hidden" value="' + d[p.params[1]] + '" >'    
-                     + '<input name="p_isCheck[]" type="hidden" value="' +  ((d[p.params[0]])? 1:0)  + '" >';
+                var isNew = (typeof d ==="undefined"?true:false);
+                var inputs= '<input name="p_' + p.params[0] + '[]"  type="hidden"  value="' + (isNew!==true?d[p.params[0]]:"") + '">' 
+                     + '<input name="p_' + p.params[1] + '[]" type="hidden" value="' + (isNew!==true?d[p.params[1]]:"") + '" >'    
+                     + '<input name="p_isCheck[]" type="hidden" value="' +  (isNew!==true?((d[p.params[0]])? 1:0):"")  + '" >';
                 if(p.show_checkbox==true)  
-                    inputs +='<input name="p_cb[]" onclick="clickCB(this);" class="" type="checkbox" ' + ((d[p.params[0]])? 'checked':'') + '>'
+                    inputs +='<input name="p_cb[]" onclick="clickCB(this);" class="" type="checkbox" ' + (isNew!==true?((d[p.params[0]])? 'checked':''):"") + '>'
                 return inputs;     
-                     
     });
     
     td_data = td_data.concat(p.column_data);        
-    zsi.json.loadGrid({
-         table          : p.table
-        ,url            : p.url
-        ,td_body        : td_data
-        ,td_properties  : td_prop
-        ,onComplete     : function(){
-            if(p.onComplete) p.onComplete();
-        }
-    });
-    
+    var params  ={ table : p.table, td_body:td_data}; 
+    if(typeof p.url!=="undefined") params.url=p.url;
+    if(typeof p.limit!=="undefined") params.limit=p.limit;
+    if(typeof p.onComplete!=="undefined") params.onComplete=p.onComplete;
+    if(typeof p.isNew!=="undefined") params.isNew=p.isNew;
+    if(typeof p.td_properties!=="undefined") params.td_properties = p.td_properties;    
+    zsi.json.loadGrid(params);
     clickCB = function(o){
             var td = o.parentNode;
             if(o.checked==false) {
@@ -1011,7 +1008,6 @@ $.fn.clearSelect = function() {
 
 }
 
-
 $.fn.dataBind = function(){
     var a = arguments;
     var p=a[0];
@@ -1023,11 +1019,12 @@ $.fn.dataBind = function(){
     var selVal = (typeof p.selectedValue==="undefined"? "" : p.selectedValue);
     var required  =(typeof p.required==="undefined"? "N" : p.required);
    $.getJSON(p.url, function( data ) {
-         obj.fillSelect(data,selVal,required,p.onEachComplete);
-         if(p.onAllComplete){
-           obj.onAllComplete = p.onAllComplete;
-           obj.onAllComplete(data);
-         } 
+        obj.fillSelect(data,selVal,required,p.onEachComplete);
+        if(p.onAllComplete){
+            obj.onAllComplete = p.onAllComplete;
+            obj.onAllComplete(data);
+        } 
+        if(p.isUniqueOptions===true) obj.setUniqueOptions();
    });
 }
 
@@ -1083,11 +1080,86 @@ $.fn.fillSelect = function(data,p_selval,p_req,p_onLoadComplete) {
        }
 
    }
-
-
-
-
 }
+
+
+$.fn.setUniqueOptions=function(){
+    var optionData=[];
+    var obj = this;
+    
+    var options = $(obj).children("option");
+    options.each(function(){
+        if(this.value!=="") optionData.push({value :this.value, text: this.innerHTML});
+    });
+       
+   this.change(function(){
+        var data = getSelectedData();
+        fillUnselectedData(data);
+   });
+
+    function addSelectedData(o,data){
+        var isFound=false;
+        for(var x=0;x<data.length;x++){
+            if(data[x].value==o.value) {
+                isFound=true; 
+                break;
+            }
+        }
+        if(isFound===false){
+            data.push({value:o.value, text:o.text});
+        }
+    }
+    function getSelectedData(){
+        selectedData=[];
+
+       obj.each(function(){
+            if(this.value!=="")  {
+                addSelectedData({value:this.value, text:this.options[this.selectedIndex].text },selectedData);                
+            }
+        });
+        return selectedData;
+    }
+    
+    function fillUnselectedData(selectedData){
+        var newData=[];
+        for(var x=0;x<optionData.length;x++){
+            var isFound=false;
+            for(var i=0;i<selectedData.length;i++){
+                if(optionData[x].value===selectedData[i].value) {
+                    isFound=true;
+                    break;
+                }  
+            }
+           if(isFound===false) addSelectedData(optionData[x],newData);
+        }
+        
+        obj.each(function(){
+            var ddl = this;
+            if(this.value===""){
+                $(this).clearSelect(); 
+                 this.add(new Option("", ""), null);
+                 $.each(newData, function() {
+                    var l_option = new Option(unescape(this.text), this.value);
+                    ddl.add(l_option, null);
+                });
+            }else{
+                //set new data
+                var selectedVal = {value:this.value, text: this.options[this.selectedIndex].text};
+                 $(this).clearSelect(); 
+                 ddl.add(new Option("",""), null);
+                 ddl.add(new Option(selectedVal.text,selectedVal.value), null);
+                 $.each(newData, function() {
+                    var l_option = new Option(unescape(this.text), this.value);
+                    ddl.add(l_option, null);
+                });
+                $(this).val(selectedVal.value);
+              
+            }
+        });
+         
+    }
+}
+/*end of set unique option*/
 
 $.fn.clearGrid = function() {
      $(this).children('tbody').html('');
