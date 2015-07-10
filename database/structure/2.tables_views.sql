@@ -501,6 +501,7 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `store_loc_supply_id` int(5) unsigned NOT NULL auto_increment,
   `store_loc_id` int(5),
   `supply_id`    int(5),
+  ,loc_supply_id int(5),
   `stock_daily_qty`   decimal(5,2),
   `created_by` int(5),
   `created_date` datetime,
