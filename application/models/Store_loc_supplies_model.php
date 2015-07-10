@@ -28,7 +28,7 @@ class store_loc_supplies_model extends CI_Model{
             )           
             ,'details' => array(
                 'pk'=> 'store_loc_supply_id'
-                ,'dbKeys'=> array('supply_id','stock_daily_qty')
+                ,'dbKeys'=> array('loc_supply_id','stock_daily_qty')
                 ,'table'=>'store_loc_supplies'
             )
         );       

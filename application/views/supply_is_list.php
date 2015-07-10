@@ -9,23 +9,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     includeHeader(array("datePicker"=>true));    
 ?>
     
-<style>
-table tr#total td{
-    font-size:13px;
-}
-table tr#total td#totalTitle{
-    font-weight: bold;
-    text-align:right;
-    padding-right:10px;
-}
-
-.tblStoreDailyStocks tr#total {
-    background-color: #dfecfa;
-}    
-  
-    
-    
-</style>    
 </head>
 <body>
 <?php menu(); ?> 
@@ -55,6 +38,8 @@ table tr#total td#totalTitle{
             <th>Items</th>  
             <th>Unit</th> 
             <th>Ref. Qty</th> 
+            <th>Current Stocks</th> 
+            <th>I.S. Qty</th> 
         </tr>  
     </thead>        
 
@@ -69,6 +54,7 @@ table tr#total td#totalTitle{
 </form>    
     
 </div>    
+<?php includeHandleBars(); ?>    
 <?php includePageJS(); ?>        
 <?php includeFooter(); ?>    
 </body>
