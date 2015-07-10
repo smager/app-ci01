@@ -15,6 +15,15 @@ class loc_supplies_model extends CI_Model{
         return $query;    
     }   
     
+    function get_loc_supply_brands($sid){
+        $query = $this->db->query("SELECT * FROM loc_supply_brands_v where loc_supply_id=".$sid . " and stock_qty>0");
+        return $query;    
+    }   
+    
+    
+    
+    
+        
     function getdata_ad($sid){
         $query = $this->db->query(
              "SELECT * FROM loc_supplies_v where loc_id=" . $sid
