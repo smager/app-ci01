@@ -13,7 +13,7 @@ class store_loc_supplies_model extends CI_Model{
         $query = $this->db->query(
               "SELECT * FROM store_loc_supplies_v where store_loc_id=" . $sid 
             . " UNION SELECT * FROM store_loc_supplies2_v a "
-            . " WHERE NOT EXISTS(SELECT b.supply_id FROM store_loc_supplies_ref_v b WHERE b.store_loc_id=" . $sid
+            . " WHERE NOT EXISTS(SELECT b.supply_id FROM store_loc_supplies_v b WHERE b.store_loc_id=" . $sid
             . " AND b.supply_id = a.supply_id)" 
             . " AND a.store_id = (SELECT store_id FROM store_loc WHERE store_loc_id=" . $sid . ")"
         );

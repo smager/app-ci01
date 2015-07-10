@@ -500,7 +500,6 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
  CREATE TABLE IF NOT EXISTS `store_loc_supplies` (
   `store_loc_supply_id` int(5) unsigned NOT NULL auto_increment,
   `store_loc_id` int(5),
-  `supply_id`    int(5),
   ,loc_supply_id int(5),
   `stock_daily_qty`   decimal(5,2),
   `created_by` int(5),
@@ -508,7 +507,7 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `updated_by` int(5),
   `updated_date` datetime,
   PRIMARY KEY `store_loc_supplies_pk`  (`store_loc_supply_id`),
-  UNIQUE KEY `store_loc_supplies_uk` (`store_loc_id`,`supply_id`)
+  UNIQUE KEY `store_loc_supplies_uk` (`store_loc_id`,`loc_supply_id`)
 )
   COMMENT='Store Location Supplies reference'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
@@ -879,23 +878,24 @@ select a.store_id, a.store_supply_id, a.supply_id, b.supply, b.supply_cost
 from store_supplies a, supply_brands_v b
 WHERE a.supply_id = b.supply_id;
 
-CREATE OR REPLACE VIEW store_loc_supplies_ref_v AS
-select a.store_loc_supply_id, a.store_loc_id, c.store_id, a.supply_id, b.supply_code, b.unit_desc, stock_daily_qty, getStoreLocTotalStocks(store_loc_supply_id) as ttl_stocks
-from store_loc_supplies a, supplies_v b, store_loc c
-WHERE a.store_loc_id = c.store_loc_id
-AND a.supply_id = b.supply_id;
 
-CREATE OR REPLACE VIEW store_loc_supplies_ref2_v AS
-select "" as store_loc_supply_id, "" as store_loc_id, a.store_id, b.supply_id, b.supply_code, b.unit_desc, "" as stock_daily_qty, "" as ttl_stocks
-from  store_supplies a, supplies_v b
+CREATE OR REPLACE VIEW loc_supplies_v AS
+select a.*, b.supply_code, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks
+from loc_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
-
 CREATE OR REPLACE VIEW store_loc_supplies_v AS
-select a.store_loc_supply_id, a.store_loc_id, c.store_id, a.supply_id, b.supply_code, b.unit_desc, stock_daily_qty, getStoreLocTotalStocks(store_loc_supply_id) as ttl_stocks
-from store_loc_supplies a, supplies_v b, store_loc c
+select a.store_loc_supply_id, a.store_loc_id, c.store_id, a.loc_supply_id, b.supply_code, b.unit_desc, stock_daily_qty, 
+getStoreLocTotalStocks(store_loc_supply_id) as store_stocks, b.ttl_stocks
+from store_loc_supplies a, loc_supplies_v b, store_loc c
 WHERE a.store_loc_id = c.store_loc_id
-AND a.supply_id = b.supply_id;
+AND a.loc_supply_id = b.loc_supply_id;
+
+
+CREATE OR REPLACE VIEW store_loc_supplies2_v AS
+select "" as store_loc_supply_id, "" as store_loc_id, a.store_id, "" as loc_supply_id, b.supply_code, b.unit_desc, "" as stock_daily_qty, "" as store_stocks, "" as ttl_stocks
+from  store_supplies a, supplies_v b
+WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW supply_is_unposted_v AS
 select *
