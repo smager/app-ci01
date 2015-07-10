@@ -48,6 +48,14 @@ BEGIN
  RETURN (lvl);
 END;
 
+create function  getStoreLocTotalStocks(p_store_loc_supply_id int) RETURNS decimal(7,2)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl decimal(7,2);
+    SELECT ttl_stocks INTO lvl FROM StoreLocSupplyBrandsSum_v WHERE store_loc_supply_id=p_store_loc_supply_id;
+ RETURN (lvl);
+END;
+
 create function  getLocSupplyId(p_loc_id int, p_supply_id int) RETURNS int(5)
     DETERMINISTIC
 BEGIN

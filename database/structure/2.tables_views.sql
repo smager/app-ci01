@@ -879,22 +879,22 @@ from store_supplies a, supply_brands_v b
 WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW store_loc_supplies_ref_v AS
-select a.store_loc_supply_id, a.store_loc_id, c.store_id, a.supply_id, b.supply_code, b.unit_desc, stock_daily_qty
+select a.store_loc_supply_id, a.store_loc_id, c.store_id, a.supply_id, b.supply_code, b.unit_desc, stock_daily_qty, getStoreLocTotalStocks(store_loc_supply_id) as ttl_stocks
 from store_loc_supplies a, supplies_v b, store_loc c
 WHERE a.store_loc_id = c.store_loc_id
 AND a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW store_loc_supplies_ref2_v AS
-select "" as store_loc_supply_id, "" as store_loc_id, a.store_id, b.supply_id, b.supply_code, b.unit_desc, "" as stock_daily_qty
+select "" as store_loc_supply_id, "" as store_loc_id, a.store_id, b.supply_id, b.supply_code, b.unit_desc, "" as stock_daily_qty, "" as ttl_stocks
 from  store_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
 
 CREATE OR REPLACE VIEW store_loc_supplies_v AS
-select a.*, b.loc_id, c.supply_code, c.unit_id, c.unit_desc
-from store_loc_supplies a, store_loc b, supplies_v c
-WHERE a.store_loc_id = b.store_loc_id
-AND a.supply_id = c.supply_id;
+select a.store_loc_supply_id, a.store_loc_id, c.store_id, a.supply_id, b.supply_code, b.unit_desc, stock_daily_qty, getStoreLocTotalStocks(store_loc_supply_id) as ttl_stocks
+from store_loc_supplies a, supplies_v b, store_loc c
+WHERE a.store_loc_id = c.store_loc_id
+AND a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW supply_is_unposted_v AS
 select *
@@ -962,3 +962,8 @@ CREATE OR REPLACE VIEW loc_pc_dtls_v AS
 SELECT a.*, b.seq_no, b.supply_code, b.brand_name, b.cu_desc
 FROM loc_pc_dtls a, loc_supply_brands_v b
 WHERE a.loc_supply_brand_id = b.loc_supply_brand_id;
+
+CREATE OR REPLACE VIEW StoreLocSupplyBrandsSum_v AS
+SELECT store_loc_supply_id, SUM(stock_qty) as ttl_stocks
+FROM store_loc_supply_brands
+GROUP BY store_loc_supply_id;
