@@ -32,6 +32,14 @@ BEGIN
  RETURN (lvl);
 END;
 
+create function  getLocIdFromStoreLoc(p_store_loc_id int) RETURNS VARCHAR(100)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl int(5);
+    SELECT loc_id INTO lvl FROM store_loc WHERE store_loc_id=p_store_loc_id;
+ RETURN (lvl);
+END;
+
 create function  getPOLocId(p_po_id int) RETURNS INT(5)
     DETERMINISTIC
 BEGIN
