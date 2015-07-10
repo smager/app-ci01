@@ -35,8 +35,12 @@ class users extends Base_Controller {
         
 	}  
 	public function logout()
-	{
+	{        
         $this->session->unset_userdata('current_user');
+        if (isset($_COOKIE['menu'])) {
+            unset($_COOKIE['menu']);
+            setcookie('menu', null, -1, '/');
+        }
         redirect( base_url() );            
     }
 
