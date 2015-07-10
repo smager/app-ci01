@@ -49,7 +49,7 @@ class supply_brands_model extends CI_Model{
             )
         );       
         $supply_id  = $this->common_model->update($post,$params);           
-        //$this->db->query("call LocSupplyBrandsIns2($supply_id)");
+       // $this->db->query("call LocSupplyBrandsIns2($supply_id)");
     } 
     
     function onInsert($supply_brand_id,$post,$data,$x){
