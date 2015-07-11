@@ -4,61 +4,51 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>404 Page Not Found</title>
-<style type="text/css">
-
-::selection { background-color: #E13300; color: white; }
-::-moz-selection { background-color: #E13300; color: white; }
-
-body {
-	background-color: #fff;
-	margin: 40px;
-	font: 13px/20px normal Helvetica, Arial, sans-serif;
-	color: #4F5155;
-}
-
-a {
-	color: #003399;
-	background-color: transparent;
-	font-weight: normal;
-}
-
-h1 {
-	color: #444;
-	background-color: transparent;
-	border-bottom: 1px solid #D0D0D0;
-	font-size: 19px;
-	font-weight: normal;
-	margin: 0 0 14px 0;
-	padding: 14px 15px 10px 15px;
-}
-
-code {
-	font-family: Consolas, Monaco, Courier New, Courier, monospace;
-	font-size: 12px;
-	background-color: #f9f9f9;
-	border: 1px solid #D0D0D0;
-	color: #002166;
-	display: block;
-	margin: 14px 0 14px 0;
-	padding: 12px 10px 12px 10px;
-}
-
-#container {
-	margin: 10px;
-	border: 1px solid #D0D0D0;
-	box-shadow: 0 0 8px #D0D0D0;
-}
-
-p {
-	margin: 12px 15px 12px 15px;
-}
-</style>
+<title>Lyncor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  var base_url ="<?php echo "http://" . $_SERVER['SERVER_NAME'] . "/"; ?>";
+</script>   
+<script src="assets/js/jquery-1.11.3.min.js"></script>   
+<script src="javascripts/source?p_url=zsi_lib&p_revision=133"></script>
+<link href="assets/css/bootstrap.css" rel="stylesheet">
+<link href="assets/css/bootstrap-theme.min.css" rel="stylesheet">
+<link href="assets/css/zsi_style.css" rel="stylesheet">
 </head>
 <body>
-	<div id="container">
-		<h1><?php echo $heading; ?></h1>
-		<?php echo $message; ?>
-	</div>
+<div class="progressWindow">
+    <div class="loadingImg"></div> 
+    <div class="loadingText">Loading...Please wait</div>
+</div>
+<div class="errorWindow">
+    Some processe(s) encountered a problem. 
+    <br> Please Contact System Administrator.
+</div>
+
+<div class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="../" class="navbar-brand">LynCor</a>
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+        </div>
+      </div>
+</div>
+
+<script src="javascripts/source?p_url=loadmenu&p_revision=5"></script>
+
+<div class="container page">
+    <div class="login-panel col-md-12">
+        <h1><?php echo $heading; ?></h1>
+        <h2><?php echo $message; ?></h2>
+        
+    </div>
+</div>
+<script src="assets/js/bootstrap.min.js"></script>    
 </body>
 </html>
