@@ -968,3 +968,8 @@ CREATE OR REPLACE VIEW StoreLocSupplyBrandsSum_v AS
 SELECT store_loc_supply_id, SUM(stock_qty) as ttl_stocks
 FROM store_loc_supply_brands
 GROUP BY store_loc_supply_id;
+
+create or replace view is_dtls_v as
+select a.*, b.supply_code, b.brand_name, b.cu_desc 
+from supply_is_dtls a, loc_supply_brands_v b
+where a.loc_supply_brand_id = b.loc_supply_brand_id;
