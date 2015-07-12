@@ -6,10 +6,18 @@ class supply_is_model extends CI_Model{
     }
     
     
-    function getdata_detail($id){
-        $query = $this->db->query("call getSupply_IS_Unposted($id)");
+    function getdata_detail($store_loc_id){
+        //getSupply_IS_Unposted <-removed
+        $query = $this->db->query("call getStoreLocSupplies($store_loc_id)");
         return $query;    
     }
+    
+    
+    function get_is_detail($store_loc_id,$loc_supply_id){
+        $query = $this->db->query("call getSupplyIsUnposted($store_loc_id,$loc_supply_id)");
+        return $query;    
+    }  
+    
     
     function getIsInfo($id){
         $result = array();
@@ -20,57 +28,28 @@ class supply_is_model extends CI_Model{
         
     
     function update($post){
-        $supply_is_id =  $post['p_supply_is_id'];   
-        $data = array(
-             'store_loc_id' => $post['p_store_loc_id']
-            ,'is_no' => $post['p_is_no']
-            ,'is_date' =>   date('Y-m-d', strtotime($post['p_is_date']))  
-            ,'posted' => $post['p_posted']
-        );
-
-        if($supply_is_id==''){
-            //insert        
-            $data['created_by'] =current_user()->empl_id;
-            $this->db->set('created_date', 'NOW()', FALSE);
-            $this->db->insert('supply_is', $data);
-             $supply_is_id = $this->db->insert_id();
-
-        }else{
-            //update                        
-            $data['updated_by'] =current_user()->empl_id;
-            $this->db->set('updated_date', 'NOW()', FALSE);
-            $this->db->where('supply_is_id', $supply_is_id);
-            $this->db->update('supply_is', $data);
-        }         
-
-        //detail:
-        for ($x = 0; $x < sizeof($post['p_supply_is_dtl_id']); $x++) {
-            $id = $post['p_supply_is_dtl_id'][$x];
+    
+        if( isset($post["p_posted_is"]) )
+            $posted_name ="posted_is";
+        else
+            $posted_name ="posted_used";
             
-                $data = array(
-                     'supply_is_id' => $supply_is_id
-                    ,'supply_brand_id' => $post['p_supply_brand_id'][$x]
-                    ,'supply_is_qty' => $post['p_supply_is_qty'][$x]
-
-                );
-                
-                if($id==''){
-                    //insert        
-                    $data['created_by'] =current_user()->empl_id;
-                    $this->db->set('created_date', 'NOW()', FALSE);
-                    $this->db->insert('supply_is_dtl', $data);
-
-                }else{
-                    //update                        
-                    $data['updated_by'] =current_user()->empl_id;
-                    $this->db->set('updated_date', 'NOW()', FALSE);
-                    $this->db->where('supply_is_dtl_id', $id);
-                    $this->db->update('supply_is_dtl', $data);
-                } 
-            
-        } //end of loop
-
+        $params=array(            
+            'parent' => array(
+                 'pk'=> 'supply_is_id'
+                ,'dbKeys'=> array('store_loc_id','is_no','is_date',$posted_name)
+                ,'table'=>'supply_is'
+            )           
+            ,'details' => array(
+                'pk'=> 'supply_is_dtl_id'
+                ,'dbKeys'=> array('loc_supply_brand_id','supply_is_qty')
+                ,'mustNotEmptyKeys'=> array('loc_supply_brand_id')
+                ,'table'=>'supply_is_dtls'
+            )
+        );       
+        return $this->common_model->update($post,$params);      
     }        
+        
     
     function delete($post){        
         $this->common_model->delete($this->input->post(),"supply_is","supply_is_id");        

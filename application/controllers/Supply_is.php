@@ -19,7 +19,13 @@ class supply_is extends Base_Controller {
 	{
         jsonOut($this->supply_is_model->getdata_detail($id)->result());
       
-	}       
+	} 
+    
+    public function get_is_detail($store_loc_id,$loc_supply_id)
+	{
+        jsonOut($this->supply_is_model->get_is_detail($store_loc_id,$loc_supply_id)->result());
+      
+	}           
       
     
 
