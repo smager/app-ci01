@@ -89,10 +89,15 @@ BEGIN
  RETURN (lvl);
 END;
 
+PROCEDURE getStoreLocSupplies (IN p_store_loc_id INT(10))
+BEGIN
+     SELECT * FROM store_loc_supplies_v WHERE store_loc_id =p_store_loc_id;
+END
+
 CREATE PROCEDURE getSupplyIsUnposted (IN p_store_loc_id int, p_loc_supply_id int)
 BEGIN
    DECLARE l_id INT(5);
-   SELECT supply_is_id INTO l_id FROM supply_is WHERE posted_is=0 and store_loc_id = store_loc_id limit 1;
+   SELECT supply_is_id INTO l_id FROM supply_is WHERE posted_is=0 and store_loc_id = p_store_loc_id limit 1;
    IF IFNULL(l_id,0)=0 THEN
       SELECT *, "" as supply_is_id, "" as supply_is_dtl_id, "" as supply_is_qty FROM loc_supply_brands_v WHERE loc_supply_id =p_loc_supply_id and stock_qty > 0 ;
    ELSE
