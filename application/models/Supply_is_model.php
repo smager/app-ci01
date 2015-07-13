@@ -47,7 +47,21 @@ class supply_is_model extends CI_Model{
                 ,'table'=>'supply_is_dtls'
             )
         );       
-        return $this->common_model->update($post,$params);      
+        $is_id = $this->common_model->update($post,$params);          
+        // posted=true;
+        $store_loc_id=$post['p_store_loc_id'];
+        if( isset($post["p_posted_is"]) ){
+            if($post["p_posted_is"]==true) {
+                 $this->db->query("call setLocStockIsPost($is_id)");
+                 $this->db->query("call setStoreStockIsPost($is_id,$store_loc_id)");
+            }
+        }
+        
+        if( isset($post["p_posted_used"]) ){
+             if($post["p_posted_used"]==true) $this->db->query("call setLocStockIsPostt($is_id)");
+        }
+             
+        
     }        
         
     

@@ -112,7 +112,7 @@ BEGIN
    END IF;   
 END; 
 
-CREATE PROCEDURE setLocStockIsUpdate (IN p_supply_is_id INT)   
+CREATE PROCEDURE setLocStockIsPost (IN p_supply_is_id INT)   
 BEGIN
   UPDATE loc_supply_brands a, supply_is_dtls b
   SET a.stock_qty = a.stock_qty - b.supply_is_qty
@@ -120,7 +120,7 @@ BEGIN
   AND b.supply_is_id = p_supply_is_id;
 END;
 
-CREATE PROCEDURE setStoreStockIsUpdate (IN p_supply_is_id INT, p_store_loc_id INT)   
+CREATE PROCEDURE setStoreStockIsPost (IN p_supply_is_id INT, p_store_loc_id INT)   
 BEGIN
   UPDATE store_loc_supply_brands a, supply_is_dtls b
   SET a.stock_qty = a.stock_qty + b.supply_is_qty
@@ -131,6 +131,7 @@ BEGIN
                WHERE c.store_loc_supply_id=a.store_loc_supply_id 
                  AND c.store_loc_id = p_store_loc_id);
 END;
+
 
 CREATE PROCEDURE getLocPC_Unposted(p_loc_id int(5))
 BEGIN
@@ -201,20 +202,19 @@ WHERE receiving_id = p_receiving_id
 AND ifnull(getLocSupplyBrandId(loc_id, supply_id, supply_brand_id),0) = 0; 
 END;
 
-CREATE PROCEDURE supply_is_post(p_supply_is_id int(5))
-BEGIN
-UPDATE loc_supply_brands a, supply_is_dtls b 
-SET a.stock_qty = a.stock_qty - b.supply_is_qty
-WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
-AND b.supply_is_id = p_supply_is_id;
-END;
+
 
 CREATE PROCEDURE store_loc_supplies_ins (IN p_store_loc_id INT(10), IN p_store_id INT(10))
 BEGIN  
-    insert into store_loc_supplies (store_loc_id, supply_id) 
-    select p_store_loc_id, supply_id 
-      from store_supplies_v 
-     where store_id = p_store_id; 
+    insert into store_loc_supplies (store_loc_id, loc_supply_id) 
+    select p_store_loc_id, a.loc_supply_id,  
+      from loc_supplies_v a
+     where EXISTS (SELECT supply_id FROM store_supplies_v b WHERE b.supply_id = a.supply_id AND b.store_id = p_store_id); 
+
+   INSERT INTO store_loc_supply_brands(store_loc_supply_id, loc_supply_brand_id)
+   SELECT b.store_loc_supply_id , a.loc_supply_brand_id FROM loc_supply_brands_v a, store_loc_supplies_v b
+   where b.loc_supply_id = a.loc_supply_id
+   and b.store_loc_id=p_store_loc_id;
 END;
 
 CREATE PROCEDURE LocSupplyBrandsIns(p_loc_id int(5))

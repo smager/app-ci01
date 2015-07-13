@@ -829,11 +829,17 @@ select "" as store_id, "" as store_supply_id, supply_id, supply_code
 from supplies;
 
 CREATE OR REPLACE VIEW supplies2_v AS
-select "" as loc_id, ""  as loc_supply_id, b.supply_id, b.seq_no, b.supply_code, "" as reorder_level, "" as max_level, "" as stock_qty, b.unit_desc
+select "" as loc_id, ""  as loc_supply_id, b.supply_id, b.seq_no, b.supply_code, "" as reorder_level, "" as max_level, b.unit_desc, "" as ttl_stocks
 from store_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW loc_supplies_v AS
+select a.loc_id, a.loc_supply_id, a.supply_id, b.seq_no, b.supply_code, a.reorder_level, a.max_level, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks
+from loc_supplies a, supplies_v b
+WHERE a.supply_id = b.supply_id;
+
+
+CREATE OR REPLACE VIEW loc_supplies2_v AS
 select a.*, b.seq_no, b.supply_code, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks
 from loc_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
