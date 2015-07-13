@@ -112,6 +112,26 @@ BEGIN
    END IF;   
 END; 
 
+CREATE PROCEDURE setLocStockIsUpdate (IN p_supply_is_id INT)   
+BEGIN
+  UPDATE loc_supply_brands a, supply_is_dtls b
+  SET a.stock_qty = a.stock_qty - b.supply_is_qty
+  WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
+  AND b.supply_is_id = p_supply_is_id;
+END;
+
+CREATE PROCEDURE setStoreStockIsUpdate (IN p_supply_is_id INT, p_store_loc_id INT)   
+BEGIN
+  UPDATE store_loc_supply_brands a, supply_is_dtls b
+  SET a.stock_qty = a.stock_qty + b.supply_is_qty
+  WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
+  AND b.supply_is_id = p_supply_is_id
+  AND EXISTS (SELECT c.store_loc_supply_id 
+                FROM store_loc_supplies c 
+               WHERE c.store_loc_supply_id=a.store_loc_supply_id 
+                 AND c.store_loc_id = p_store_loc_id);
+END;
+
 CREATE PROCEDURE getLocPC_Unposted(p_loc_id int(5))
 BEGIN
 select * from loc_pc where posted=0
