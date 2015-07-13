@@ -89,14 +89,20 @@ BEGIN
  RETURN (lvl);
 END;
 
-CREATE PROCEDURE getSupply_IS_Unposted (IN p_store_loc_id int(5))
+CREATE PROCEDURE getSupplyIsUnposted (IN p_store_loc_id int, p_loc_supply_id int)
 BEGIN
    DECLARE l_id INT(5);
    SELECT supply_is_id INTO l_id FROM supply_is WHERE posted_is=0 and store_loc_id = store_loc_id limit 1;
    IF IFNULL(l_id,0)=0 THEN
-      SELECT * FROM store_loc_supplies_v WHERE store_loc_id =p_store_loc_id ;
+      SELECT *, "" as supply_is_id, "" as supply_is_dtl_id, "" as supply_is_qty FROM loc_supply_brands_v WHERE loc_supply_id =p_loc_supply_id and stock_qty > 0 ;
    ELSE
-      SELECT * FROM supply_is_dtls_unposted_v WHERE supply_is_id = l_id;
+    SELECT a.supply_is_id, a.supply_is_dtl_id, b.loc_supply_id,  a.loc_supply_brand_id, b.brand_name, b.cu_desc, a.supply_is_qty 
+       FROM supply_is_dtls a, loc_supply_brands_v b
+       WHERE a.loc_supply_brand_id = b.loc_supply_brand_id and a.supply_is_id = l_id
+      UNION
+      SELECT "" as supply_is_id, "" as supply_is_dtl_id, a.loc_supply_id, a.loc_supply_brand_id, a.brand_name, a.cu_desc, "" as supply_is_qty FROM loc_supply_brands_v a 
+       WHERE a.stock_qty > 0 AND NOT EXISTS (SELECT b.loc_supply_brand_id FROM supply_is_dtls b 
+       WHERE b.loc_supply_brand_id = b.loc_supply_brand_id and supply_is_id = l_id);   
    END IF;   
 END; 
 
