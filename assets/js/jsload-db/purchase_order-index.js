@@ -1,9 +1,7 @@
-var ctrlSel = zsi.control.SelectList;  
 var supply;
 $(document).ready(function(){
-    
-    ctrlSel( base_url + "select_options/code/suppliers","#p_supplier_id","","N");
-    ctrlSel( base_url + "select_options/code/locations","#p_loc_id","","N");
+    $("#p_supplier_id").dataBind( base_url + "select_options/code/suppliers");
+    $("#p_loc_id").dataBind( base_url + "select_options/code/locations");
     initInputs();
     onLocationChange();
     displayBlankRows(true);
@@ -16,7 +14,12 @@ $("form[id=frm]").submit(function(){
      
      $.post(base_url + "purchase_order/update",$(this).serializeArray()
         ,function(d){
-            displayRecords(d.po_id);
+            
+           if(posted.val()===0) 
+                displayRecords(d.po_id);
+            else
+                newBlankEntry();
+           
             po_id.val(d.po_id);
             getUnpostedPO();
             markMandatory();
@@ -43,6 +46,7 @@ $("form[id=frm]").submit(function(){
     po_date.val('').change();
     loc_id.val('').change();
     supplier_id.val('').change();    
+    posted.val(0);
  }
  
 
@@ -66,7 +70,7 @@ function markMandatory(){
             }
       ]      
       ,"groupTitles":[ 
-             {"titles" :["P.O No.","Date","Supplier","Location"]}
+             {"titles" :["P.O No","Date","Supplier","Location"]}
             ,{"titles" :["Quantity","Supply"]}
       ]
    });
@@ -109,6 +113,7 @@ function initInputs(){
     po_date = $("#p_po_date");
     loc_id = $("#p_loc_id");
     supplier_id = $("#p_supplier_id");    
+    posted = $("#p_posted");    
 }
 
 function displayDetails(p){
@@ -168,8 +173,10 @@ function onSupplyChange(){
 function onLocationChange(){
     loc_id.change(function(){
         if(this.value==='') return false;
-        //ctrlSel( base_url + "select_options/code/loc_supplies?where=loc_id=" + this.value,"select[name='p_supply_id[]']","","N");
-        $("select[name='p_supply_id[]'].new").dataBind(base_url + "select_options/code/loc_supplies?where=loc_id=" + this.value);
+        $("select[name='p_supply_id[]'].new").dataBind({ 
+             url: base_url + "select_options/code/loc_supplies?where=loc_id=" + this.value
+            ,isUniqueOptions:true
+        });
     });
 }
 
