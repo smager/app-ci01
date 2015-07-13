@@ -861,9 +861,11 @@ zsi.json.checkValueExist = function(p_url, p_target,p_table, p_field){
      
 zsi.json.loadGrid = function(o){           
     var l_grid = $(o.table);
+    var num_rows=0;
+    var ctr = 0;    
     var trItem= function(data){
-        var r = ""
-        r +="<tr>";
+        var r = "";
+        r +="<tr rowObj >";
             for(var x=0;x<o.td_body.length;x++){
                 var l_prop='';
                 if (typeof o.td_properties !== "undefined"){
@@ -873,7 +875,17 @@ zsi.json.loadGrid = function(o){
             }
         r +="</tr>";                         
 
-        l_grid.append(r);    
+        l_grid.append(r);
+        var tr=$("tr[rowObj]");tr.removeAttr("rowObj"); 
+        if (typeof o.onEachComplete !== "undefined"){
+            var callBackDone = function(){
+                ctr++;
+                if(num_rows == ctr) {
+                    if(o.onComplete) o.onComplete();
+                }
+            }
+            o.onEachComplete(tr,data,callBackDone);
+        }
     }
     if(typeof o.isNew !== "undefined"){
         if(o.isNew==true) l_grid.clearGrid();  
@@ -882,10 +894,11 @@ zsi.json.loadGrid = function(o){
     if(o.url){
         l_grid.clearGrid();   
         $.getJSON(o.url, function(data){
+             num_rows = data.length;
              $.each(data, function () {
                  trItem(this)
              });
-            if(o.onComplete) o.onComplete();
+             if (typeof o.onEachComplete === "undefined") if(o.onComplete) o.onComplete();
         });    
     }
     else{
@@ -893,7 +906,7 @@ zsi.json.loadGrid = function(o){
         for(var y=0;y<o.limit;y++){
             trItem();
         }
-        if(o.onComplete) o.onComplete();
+        if (typeof o.onEachComplete === "undefined") if(o.onComplete) o.onComplete();
     }
     
 }
