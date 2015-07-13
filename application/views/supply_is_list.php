@@ -47,7 +47,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <th>Items</th>  
             <th>Unit</th> 
             <th>Ref. Qty</th> 
-            <th>Current Stocks</th> 
+            <th>Store Stocks</th> 
+            <th>Warehouse Stocks</th>
             <th>I.S. Qty</th> 
         </tr>  
     </thead>        
