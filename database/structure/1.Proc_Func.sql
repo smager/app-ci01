@@ -107,14 +107,14 @@ BEGIN
    DECLARE l_id INT(5);
    SELECT supply_is_id INTO l_id FROM supply_is WHERE posted_is=0 and store_loc_id = p_store_loc_id limit 1;
    IF IFNULL(l_id,0)=0 THEN
-      SELECT *, "" as supply_is_id, "" as supply_is_dtl_id, "" as supply_is_qty, getStoreLocSupplyBrandStockQty(p_store_loc_id, loc_supply_brand_id) as beg_qty FROM loc_supply_brands_v WHERE loc_supply_id =p_loc_supply_id and stock_qty > 0 ;
+      SELECT *, "" as supply_is_id, "" as supply_is_dtl_id, "" as supply_is_qty, getStoreLocSupplyBrandStockQty(p_store_loc_id, loc_supply_brand_id) as prev_qty, "" as beg_qty FROM loc_supply_brands_v WHERE loc_supply_id =p_loc_supply_id and stock_qty > 0 ;
    ELSE
-    SELECT a.supply_is_id, a.supply_is_dtl_id, b.loc_supply_id,  a.loc_supply_brand_id, b.stock_qty, b.brand_name, b.cu_desc, a.supply_is_qty, a.beg_qty
+    SELECT a.supply_is_id, a.supply_is_dtl_id, b.loc_supply_id,  a.loc_supply_brand_id, b.stock_qty, b.brand_name, b.cu_desc, a.supply_is_qty, a.beg_qty, a.prev_qty
        FROM supply_is_dtls a, loc_supply_brands_v b
        WHERE a.loc_supply_brand_id = b.loc_supply_brand_id and a.supply_is_id = l_id
        AND b.loc_supply_id =p_loc_supply_id
       UNION
-      SELECT "" as supply_is_id, "" as supply_is_dtl_id, a.loc_supply_id, a.loc_supply_brand_id, a.stock_qty, a.brand_name, a.cu_desc, "" as supply_is_qty, getStoreLocSupplyBrandStockQty(p_store_loc_id, loc_supply_brand_id) as beg_qty 
+      SELECT "" as supply_is_id, "" as supply_is_dtl_id, a.loc_supply_id, a.loc_supply_brand_id, a.stock_qty, a.brand_name, a.cu_desc, "" as supply_is_qty, getStoreLocSupplyBrandStockQty(p_store_loc_id, loc_supply_brand_id) as prev_qty, "" as beg_qty
         FROM loc_supply_brands_v a 
        WHERE a.stock_qty > 0 AND a.loc_supply_id = p_loc_supply_id AND NOT EXISTS (SELECT b.loc_supply_brand_id FROM supply_is_dtls b 
        WHERE b.loc_supply_brand_id = b.loc_supply_brand_id and supply_is_id = l_id);   
@@ -140,6 +140,16 @@ BEGIN
                WHERE c.store_loc_supply_id=a.store_loc_supply_id 
                  AND c.store_loc_id = p_store_loc_id);
 END;
+
+CREATE PROCEDURE setLocStockIsUsagePost (IN p_supply_is_id INT)   
+BEGIN
+  UPDATE loc_supply_brands a, supply_is_dtls b
+  SET a.stock_qty = a.stock_qty + b.returned_qty
+  WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
+  AND b.supply_is_id = p_supply_is_id;
+END;
+
+
 
 
 CREATE PROCEDURE getLocPC_Unposted(p_loc_id int(5))
