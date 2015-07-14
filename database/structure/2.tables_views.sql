@@ -599,6 +599,7 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
    `supply_is_qty`           decimal(7,2),
    `loc_supply_brand_id`     int(5),
    `prev_qty`                decimal(7,2),
+   `beg_qty`                 decimal(7,2),
    `used_qty`                decimal(7,2),
    `returned_qty`            decimal(7,2),
    `end_qty`                 decimal(7,2),
@@ -979,3 +980,15 @@ create or replace view is_dtls_v as
 select a.*, b.supply_code, b.brand_name, b.cu_desc 
 from supply_is_dtls a, loc_supply_brands_v b
 where a.loc_supply_brand_id = b.loc_supply_brand_id;
+
+
+create or replace view supply_is_v as
+select a.*, b.store_loc 
+FROM supply_is a, store_loc b
+WHERE a.store_loc_id = b.store_loc_id
+AND posted_used=0;
+
+create or replace view store_loc_supply_brands_v as
+select a.*, b.store_loc_id
+FROM store_loc_supply_brands a, store_loc_supplies_v b
+where a.store_loc_supply_id = b.store_loc_supply_id;
