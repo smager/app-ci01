@@ -6,7 +6,7 @@ class select_options_model extends CI_Model{
     }
     
     function getdata(){
-        $query = $this->db->query("SELECT * FROM select_options");
+        $query = $this->db->query("SELECT * FROM select_options order by code");
         return $query;    
     }
 

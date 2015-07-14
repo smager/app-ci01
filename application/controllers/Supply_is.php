@@ -13,6 +13,12 @@ class supply_is extends Base_Controller {
         check_login();
 		$this->load->view('supply_is_list');
 	}
+    
+	public function usage()
+	{
+        check_login();
+		$this->load->view('supply_usage_list');
+	}    
 
  
     public function get_detail_json($id)
