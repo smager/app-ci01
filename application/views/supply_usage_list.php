@@ -18,11 +18,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div class="col-xs-10 ">
     <div class="form-horizontal ">
         <?php 
-            hiddenBox( array( 'name'=>'supply_is_id'));         
             openFormGroup();
-            selectBox( array( 'labelName'=>'Send To' , 'name'=>'store_loc_id', 'labelSize'=>1, 'selectSize'=>3));      
+            selectBox( array( 'labelName'=>'Store' , 'name'=>'supply_is_id', 'labelSize'=>1, 'selectSize'=>3));      
             inputTextBox( array( 'labelName'=>'IS#' , 'name'=>'is_no', 'labelSize'=>1, 'inputSize'=>2 )); 
-            inputTextBox( array( 'labelName'=>'Date' , 'name'=>'is_date', 'labelSize'=>1, 'inputSize'=>2,'value'=>date('m/d/Y') )); 
+            inputTextBox( array( 'labelName'=>'Date' , 'name'=>'is_date', 'labelSize'=>1, 'inputSize'=>2 )); 
             yes_no( array( 'labelName'=>'Posted' , 'name'=>'posted_used', 'labelSize'=>1, 'selectSize'=>1));                  
 
             closeFormGroup();
@@ -37,10 +36,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <tr>
             <th width="40" ></th>    
             <th>Items</th>  
-            <th>Unit</th> 
-            <th>Ref. Qty</th> 
-            <th>Warehouse Stocks</th>
-            <th>I.S. Qty</th> 
+            <th>Brand/Unit</th> 
+            <th>Beg. Qty</th> 
+            <th>Used Qty</th>
+            <th>Returned Qty</th> 
         </tr>  
     </thead>        
 
@@ -55,7 +54,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </form>    
     
 </div>    
-<?php includeHandleBars(); ?>    
 <?php includePageJS(); ?>        
 <?php includeFooter(); ?>    
 </body>

@@ -33,7 +33,10 @@ function setInputs(){
 }
 
 store_loc_id.change(function(){
-    if (this.value==="") return;
+    if (this.value==="") {
+        $(".table").clearGrid();
+        return;
+    }
     $.getJSON(base_url + "supply_is/get_is_info/" + store_loc_id.val(), function(info){
         supply_is_id.val(info.supply_is_id);
         is_no.val( info.is_no );
@@ -63,12 +66,14 @@ store_loc_id.change(function(){
                     if(supply_is_id.val()===''){
                             supply_is_id.val(this.supply_is_id);
                     }
+
                     t +="<tr>";
                         t +="<td>" 
                             +  bs({name:"loc_supply_brand_id[]",type:"hidden",value: this.loc_supply_brand_id})
                             +  bs({name:"supply_is_dtl_id[]",type:"hidden",value: this.supply_is_dtl_id})
                             +  bs({name:"stock_qty[]",type:"hidden",value: this.stock_qty})
-                            +  bs({name:"beg_qty[]",type:"hidden",value: this.beg_qty})
+                            +  bs({name:"prev_qty[]",type:"hidden",value: this.prev_qty})
+                            +  bs({name:"beg_qty[]",type:"hidden",value: parseFloat(this.prev_qty) + parseFloat((this.supply_is_qty===""?0:this.supply_is_qty)) })
                             +  bs({name:"supply_is_qty[]",value: this.supply_is_qty,class:"form-control numeric"})
                         t +="</td>";
                         t +="<td>&nbsp;&nbsp;" + this.stock_qty  + " " + this.brand_name + " " + this.cu_desc  + "</td>";                    
@@ -84,6 +89,12 @@ store_loc_id.change(function(){
             var supply_is_qty = $("input[name='p_supply_is_qty[]']");
             supply_is_qty.keyup(function(){
                 var stock_qty = $(this.parentNode).children("input[name='p_stock_qty[]']");    
+                var beg_qty = $(this.parentNode).children("input[name='p_beg_qty[]']");    
+                var prev_qty = $(this.parentNode).children("input[name='p_prev_qty[]']");    
+                beg_qty.val( 
+                    parseFloat(prev_qty.val()) + parseFloat((this.value===""?0:this.value)) 
+                );
+                
                 if(parseInt(this.value) > parseInt(stock_qty.val())) {
                     this.value =  parseInt(stock_qty.val());
                 }
@@ -94,27 +105,6 @@ store_loc_id.change(function(){
     });       
 
 });
-
-function manageItem(supply_is_id,loc_supply_id){
-    $("input[name='p_supply_is_id']").val(supply_is_id);
-    zsi.form.displayLOV({
-         table  : "#" + tblPopup
-        ,url   : base_url + "loc_supplies/get_loc_supply_brands/" + loc_supply_id
-        ,show_checkbox: false
-        ,params : ["store_loc_supply_id","supply_id"] 
-        ,column_data: [
-             function(d){return d.supply_code;}
-            ,function(d){ return (d.unit_desc!==null?d.unit_desc:"");}
-            ,function(d){ return bs({name:"stock_daily_qty[]",value:d.stock_daily_qty!==null?d.stock_daily_qty:""}); }
-        ]
-        ,td_properties: ["","nowrap"]
-        ,onComplete:function(){
-            $('#modalWindow').modal("show");
-        }
-    });
-    
-    
-}
 
  
  
