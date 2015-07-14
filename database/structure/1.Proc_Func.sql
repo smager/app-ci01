@@ -143,10 +143,23 @@ END;
 
 CREATE PROCEDURE setLocStockIsUsagePost (IN p_supply_is_id INT)   
 BEGIN
+  DECLARE l_store_loc_id INT(5);
+  SELECT store_loc_id INTO l_store_loc_id FROM supply_is where supply_is_id = p_supply_is_id;
+  
   UPDATE loc_supply_brands a, supply_is_dtls b
   SET a.stock_qty = a.stock_qty + b.returned_qty
   WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
   AND b.supply_is_id = p_supply_is_id;
+
+  UPDATE store_loc_supply_brands a, supply_is_dtls b
+  SET a.stock_qty = b.beg_qty - b.used_qty
+  WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
+  AND b.supply_is_id = p_supply_is_id
+  AND EXISTS (SELECT c.store_loc_supply_id 
+                FROM store_loc_supplies c 
+               WHERE c.store_loc_supply_id=a.store_loc_supply_id 
+                 AND c.store_loc_id = l_store_loc_id);
+
 END;
 
 
