@@ -42,7 +42,7 @@ class supply_is_model extends CI_Model{
             )           
             ,'details' => array(
                 'pk'=> 'supply_is_dtl_id'
-                ,'dbKeys'=> array('loc_supply_brand_id','supply_is_qty')
+                ,'dbKeys'=> array('beg_qty','loc_supply_brand_id','supply_is_qty')
                 ,'mustNotEmptyKeys'=> array('loc_supply_brand_id')
                 ,'table'=>'supply_is_dtls'
             )

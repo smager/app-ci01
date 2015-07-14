@@ -14,6 +14,10 @@ body{
     padding-right:10px;
 }
 
+.subTable tbody tr td {
+    padding-top: 2px;
+}
+    
 .page {
     background: #fff none repeat scroll 0 0;
     border: 1pt solid #e5e5e5;
