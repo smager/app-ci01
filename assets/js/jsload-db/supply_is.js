@@ -3,28 +3,6 @@ var tblPopup = "tblStoreLocSupp";
 setInputs();
 $(document).ready(function(){
     $("#p_store_loc_id").dataBind(base_url + "select_options/code/store_locs");
-    
-    $.get(base_url + "assets/templates/bsDialogBox.txt",function(d){
-        var template = Handlebars.compile(d);     
-        
-        var context = { id:"modalWindow"
-                        , title: "Supply Stock Reference"
-                        , footer:   '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
-                                  + '<button type="button" onclick="submitSelectedItems();" class="btn btn-primary">Save</button>'
-                        , body: '<table id="'+ tblPopup  +'" class="table row">'
-                                + '<thead>'
-                                    + '<tr><th width="1"></th><th>Brand/Unit</th>'
-                                    + '<th>Avail. Stocks</th>'
-                                    + '<th>I.S. Qty.</th>'
-                                + '</thead>'
-                                + '</table>'
-                      };
-        var html    = template(context);     
-        $("body").append(html);
-        $(".modal-body").append('<input type="hidden" name="p_supply_is_id">');
-        
-    });        
-    
     markMandatory();
 });   
 
@@ -80,7 +58,7 @@ store_loc_id.change(function(){
             qty.innerHTML="loading...";
             var onEC = this;
             $.getJSON(base_url + "supply_is/get_is_detail/" + data.store_loc_id + "/" + data.loc_supply_id, function(data){
-                var t="<table>";
+                var t="<table class='subTable'>";
                 $.each(data,function(){
                     if(supply_is_id.val()===''){
                             supply_is_id.val(this.supply_is_id);
@@ -90,6 +68,7 @@ store_loc_id.change(function(){
                             +  bs({name:"loc_supply_brand_id[]",type:"hidden",value: this.loc_supply_brand_id})
                             +  bs({name:"supply_is_dtl_id[]",type:"hidden",value: this.supply_is_dtl_id})
                             +  bs({name:"stock_qty[]",type:"hidden",value: this.stock_qty})
+                            +  bs({name:"beg_qty[]",type:"hidden",value: this.beg_qty})
                             +  bs({name:"supply_is_qty[]",value: this.supply_is_qty,class:"form-control numeric"})
                         t +="</td>";
                         t +="<td>&nbsp;&nbsp;" + this.stock_qty  + " " + this.brand_name + " " + this.cu_desc  + "</td>";                    
@@ -105,10 +84,9 @@ store_loc_id.change(function(){
             var supply_is_qty = $("input[name='p_supply_is_qty[]']");
             supply_is_qty.keyup(function(){
                 var stock_qty = $(this.parentNode).children("input[name='p_stock_qty[]']");    
-                if(parseInt(this.value) <= parseInt(stock_qty.val())) 
-                    this.value =  parseInt(stock_qty.val()) - parseInt(this.value);
-                else
-                    this.value = parseInt(stock_qty.val());
+                if(parseInt(this.value) > parseInt(stock_qty.val())) {
+                    this.value =  parseInt(stock_qty.val());
+                }
             });
             zsi.initInputTypesAndFormats();
             

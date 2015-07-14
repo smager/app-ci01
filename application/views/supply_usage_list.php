@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php menu(); ?> 
     
 <div class="container page">
-<form id="frm"  action="<?php echo base_url( $this->router->fetch_class() .'/update');?>" method="post">
+<form id="frm"  action="<?php echo base_url( $this->router->fetch_class() .'/usage_update');?>" method="post">
 <div class="col-xs-10 ">
     <div class="form-horizontal ">
         <?php 
