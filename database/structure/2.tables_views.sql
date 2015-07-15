@@ -545,17 +545,18 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
 
 
   CREATE TABLE IF NOT EXISTS `loc_pc` (
-   `loc_pc_id`   int(5) unsigned NOT NULL auto_increment,
+   `loc_pc_id`      int(5) unsigned NOT NULL auto_increment,
    `pc_no`          int(5),
    `pc_date`        datetime,
    `loc_id`         int(5),
-   `posted` int(5) NOT NULL default '0',    
-   `created_by`    int(5),
-   `created_date`  datetime,
-   `updated_by`    int(5),
-   `updated_date`  datetime,
+   `store_loc_id`   int(5),
+   `posted` int(5)  NOT NULL default '0',    
+   `created_by`     int(5),
+   `created_date`   datetime,
+   `updated_by`     int(5),
+   `updated_date`   datetime,
    PRIMARY KEY `loc_pc_pk`  (`loc_pc_id`),
-   UNIQUE KEY `loc_pc_uk` (`pc_no`,`loc_id`)
+   UNIQUE KEY `loc_pc_uk` (`pc_no`,`loc_id`,`store_loc_id`)
  )
    COMMENT='Stock Physical Count header per location'
    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
