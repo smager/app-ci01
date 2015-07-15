@@ -39,13 +39,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <table class="table row" >    
     <thead>
         <tr>
-            <th width="40" ></th>    
+            <th>I.S. Qty</th>    
             <th>Items</th>  
             <th>Unit</th> 
             <th>Ref. Qty</th> 
             <th>Store Stocks</th> 
             <th>Warehouse Stocks</th>
-            <th>I.S. Qty</th> 
         </tr>  
     </thead>        
 
