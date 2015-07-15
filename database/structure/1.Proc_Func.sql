@@ -234,8 +234,6 @@ WHERE receiving_id = p_receiving_id
 AND ifnull(getLocSupplyBrandId(loc_id, supply_id, supply_brand_id),0) = 0; 
 END;
 
-
-
 CREATE PROCEDURE store_loc_supplies_ins (IN p_store_loc_id INT(10), IN p_store_id INT(10))
 BEGIN  
     IF ifnull(p_store_id,0) <> 0 THEN
