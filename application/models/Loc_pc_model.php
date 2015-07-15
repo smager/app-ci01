@@ -26,7 +26,7 @@ class loc_pc_model extends CI_Model{
         $params=array(            
             'parent' => array(
                  'pk'=> 'loc_pc_id'
-                ,'dbKeys'=> array('pc_no','pc_date','loc_id','posted')
+                ,'dbKeys'=> array('pc_no','pc_date','loc_id','store_loc_id','posted')
                 ,'table'=>'loc_pc'
             )           
             ,'details' => array(

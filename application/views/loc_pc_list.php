@@ -47,7 +47,8 @@ a.removeItem:hover{
             openFormGroup();
             inputTextBox( array( 'labelName'=>'P.C. #' , 'name'=>'pc_no', 'labelSize'=>1, 'inputSize'=>1)); 
             inputTextBox( array( 'labelName'=>'Date' , 'name'=>'pc_date', 'labelSize'=>1, 'inputSize'=>1,'value'=>date('m/d/Y') )); 
-            selectBox( array( 'labelName'=>'Location' , 'name'=>'loc_id', 'labelSize'=>1, 'selectSize'=>2));  
+            selectBox( array( 'labelName'=>'Warehouse' , 'name'=>'loc_id', 'labelSize'=>1, 'selectSize'=>2));  
+            selectBox( array( 'labelName'=>'Store' , 'name'=>'store_loc_id', 'labelSize'=>1, 'selectSize'=>2));  
             yes_no( array( 'labelName'=>'Posted' , 'name'=>'posted', 'labelSize'=>1, 'selectSize'=>1));      
             closeFormGroup();
 
