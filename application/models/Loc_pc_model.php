@@ -37,10 +37,10 @@ class loc_pc_model extends CI_Model{
             )
         );       
         $loc_pc_id = $this->common_model->update($post,$params);      
-        
+        $store_loc_id = $post["p_store_loc_id"];
         // posted=true;
         if($post["p_posted"]==true){        
-            $this->db->query("call loc_pc_post($loc_pc_id )");
+            $this->db->query("call loc_pc_post($loc_pc_id,$store_loc_id)");
         }
         
     }        
