@@ -23,11 +23,12 @@ class loc_pc_model extends CI_Model{
    
 
     function update($post){
-        $params=array(            
+        $params=array(           
             'parent' => array(
                  'pk'=> 'loc_pc_id'
                 ,'dbKeys'=> array('pc_no','pc_date','loc_id','store_loc_id','posted')
                 ,'table'=>'loc_pc'
+                ,'allowNull'=>true
             )           
             ,'details' => array(
                 'pk'=> 'loc_pc_dtl_id'
@@ -36,13 +37,17 @@ class loc_pc_model extends CI_Model{
                 ,'table'=>'loc_pc_dtls'
             )
         );       
-        $loc_pc_id = $this->common_model->update($post,$params);      
+        
+        $loc_pc_id = $this->common_model->update($post,$params);
+
         // posted=true;
         if($post["p_posted"]==true){        
-            $store_loc_id = $post["p_store_loc_id"];
+            $store_loc_id =0;
+            if(isset($post->p_store_loc_id)) $store_loc_id = $post->p_store_loc_id;               
             $this->db->query("call loc_pc_post($loc_pc_id,$store_loc_id)");
         }
         
+        return  $loc_pc_id;
     }        
     
     

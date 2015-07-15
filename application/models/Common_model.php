@@ -87,6 +87,7 @@ class common_model extends CI_Model{
                     if(isset($parent['mustNotEmptyKeys']))  $parentParams['mustNotEmptyKeys'] = $parent['mustNotEmptyKeys']; 
                     if(isset($parent['mustNotEmptyOnInsert']))  $parentParams['mustNotEmptyOnInsert'] = $parent['mustNotEmptyOnInsert']; 
                     if(isset($parent['onInsertUpdate']))  $parentParams['onInsertUpdate'] = $parent['onInsertUpdate']; 
+                    if(isset($parent['allowNull']))  $parentParams['allowNull'] = $parent['allowNull']; 
 
                     $parentId = $this->processInsertUpdate($post,$parentParams);
                 }
@@ -107,7 +108,6 @@ class common_model extends CI_Model{
                 if(isset($detail['mustNotEmptyKeys']))  $detailParams['mustNotEmptyKeys'] = $detail['mustNotEmptyKeys']; 
                 if(isset($detail['mustNotEmptyOnInsert']))  $detailParams['mustNotEmptyOnInsert'] = $detail['mustNotEmptyOnInsert']; 
                 if(isset($detail['onInsertUpdate']))  $detailParams['onInsertUpdate'] = $detail['onInsertUpdate']; 
-
                 $parentKeyValue = array(
                     'key' => $parent['pk']
                     ,'value' => $parentId
@@ -162,14 +162,20 @@ class common_model extends CI_Model{
                     $data = array();
                     for ($i = 0; $i < sizeof($params["uiKeys"]); $i++) {
                         $p_uiName = 'p_' . $params["uiKeys"][$i];
-                        if(!isset($p[$p_uiName])) show_error("Wala may parameter nga " . $p_uiName . " brad!");
                         
-                        $p_uiKey = $p[$p_uiName];
-                                                      
-                        if(is_array($p_uiKey))
-                            $data[$params["dbKeys"][$i]] = $this->verifyValue($p_uiName,$p_uiKey[$x]);
-                        else 
-                            $data[$params["dbKeys"][$i]] = $this->verifyValue($p_uiName,$p_uiKey);                        
+                        if(!isset($p[$p_uiName]) ){
+                            if( !isset($params['allowNull'])  || $params['allowNull']==false ) {   
+                                show_error("Wala may parameter nga " . $p_uiName . " brad!");
+                            }                            
+                        }
+                        else{// if set
+                            $p_uiKey = $p[$p_uiName];
+                            if(is_array($p_uiKey))
+                                $data[$params["dbKeys"][$i]] = $this->verifyValue($p_uiName,$p_uiKey[$x]);
+                            else 
+                                $data[$params["dbKeys"][$i]] = $this->verifyValue($p_uiName,$p_uiKey); 
+                        }
+                        
                     }
                                         
                     if($id==''){
