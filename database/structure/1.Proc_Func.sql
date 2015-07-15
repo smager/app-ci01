@@ -284,10 +284,18 @@ FETCH  loc_cursor INTO l_loc_id;
 
 END;
 
-CREATE PROCEDURE loc_pc_post(p_loc_pc_id int(5))
+CREATE PROCEDURE loc_pc_post(p_loc_pc_id int(5), p_store_loc_id int(5))
 BEGIN
-UPDATE loc_supply_brands a, loc_pc_dtls b 
-SET a.stock_qty = b.pc_qty
-WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
-AND b.loc_pc_id = p_loc_pc_id;
+IF ifnull(p_store_loc_id,0) = 0 THEN
+   UPDATE loc_supply_brands a, loc_pc_dtls b 
+   SET a.stock_qty = b.pc_qty
+   WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
+   AND b.loc_pc_id = p_loc_pc_id;
+ELSE
+   UPDATE store_loc_supply_brands a, loc_pc_dtls b
+   SET a.stock_qty = b.pc_qty
+   WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
+   AND b.loc_pc_id = p_loc_pc_id
+   AND EXISTS (SELECT store_loc_id FROM store_loc_supplies c WHERE a.store_loc_supply_id = c.store_loc_supply_id and c.store_loc_id = p_store_loc_id);
+END IF;
 END;     
