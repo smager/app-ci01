@@ -238,15 +238,18 @@ END;
 
 CREATE PROCEDURE store_loc_supplies_ins (IN p_store_loc_id INT(10), IN p_store_id INT(10))
 BEGIN  
-    insert into store_loc_supplies (store_loc_id, loc_supply_id) 
-    select p_store_loc_id, a.loc_supply_id,  
-      from loc_supplies_v a
-     where EXISTS (SELECT supply_id FROM store_supplies_v b WHERE b.supply_id = a.supply_id AND b.store_id = p_store_id); 
-
-   INSERT INTO store_loc_supply_brands(store_loc_supply_id, loc_supply_brand_id)
-   SELECT b.store_loc_supply_id , a.loc_supply_brand_id FROM loc_supply_brands_v a, store_loc_supplies_v b
-   where b.loc_supply_id = a.loc_supply_id
-   and b.store_loc_id=p_store_loc_id;
+    IF ifnull(p_store_id,0) <> 0 THEN
+       insert into store_loc_supplies (store_loc_id, loc_supply_id) 
+       select p_store_loc_id, a.loc_supply_id
+         from loc_supplies_v a
+        where EXISTS (SELECT supply_id FROM store_supplies_v b WHERE b.supply_id = a.supply_id AND b.store_id = p_store_id); 
+    END IF;
+     INSERT INTO store_loc_supply_brands(store_loc_supply_id, loc_supply_brand_id)
+     SELECT b.store_loc_supply_id , a.loc_supply_brand_id FROM loc_supply_brands_v a, store_loc_supplies_v b
+     WHERE b.loc_supply_id = a.loc_supply_id
+     AND b.store_loc_id=p_store_loc_id
+     AND NOT EXISTS (SELECT c.store_loc_supply_brand_id FROM store_loc_supply_brands_v c 
+     WHERE a.loc_supply_brand_id = c.loc_supply_brand_id AND c.store_loc_id=p_store_loc_id);
 END;
 
 CREATE PROCEDURE LocSupplyBrandsIns(p_loc_id int(5))
@@ -255,33 +258,6 @@ INSERT INTO loc_supply_brands (supply_brand_id, loc_supply_id)
 SELECT a.supply_brand_id, getLocSupplyId(p_loc_id, a.supply_id) 
 FROM supply_brands a
 WHERE NOT EXISTS (SELECT supply_brand_id FROM loc_supply_brands b WHERE b.loc_supply_id =  getLocSupplyId(p_loc_id, a.supply_id));
-END;
-
-CREATE PROCEDURE LocSupplyBrandsIns2(p_supply_id int(5))
-BEGIN
-DECLARE l_loc_id   int;
-DECLARE l_loc_supply_id INT;
-DECLARE exit_loop BOOLEAN;       
-DECLARE loc_cursor CURSOR FOR
-  SELECT loc_id FROM locations;
- 
-DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = TRUE; 
-OPEN loc_cursor;  
-locations_loop: LOOP 
-FETCH  loc_cursor INTO l_loc_id;
-     SELECT loc_supply_id INTO l_loc_supply_id FROM loc_supplies WHERE loc_id = l_loc_id AND supply_id = p_supply_id;
-
-     INSERT INTO loc_supply_brands (supply_brand_id, loc_supply_id)
-     SELECT supply_brand_id, l_loc_supply_id
-     FROM supply_brands
-     WHERE supply_id = p_supply_id
-     AND NOT EXISTS (SELECT supply_brand_id FROM loc_supply_brands b WHERE a.supply_brand_id = a.supply_brand_id and loc_id=l_loc_id);
-     IF exit_loop THEN
-         CLOSE loc_cursor;
-         LEAVE locations_loop;
-     END IF;
-   END LOOP locations_loop;
-
 END;
 
 CREATE PROCEDURE loc_pc_post(p_loc_pc_id int(5), p_store_loc_id int(5))
@@ -299,3 +275,4 @@ ELSE
    AND EXISTS (SELECT store_loc_id FROM store_loc_supplies c WHERE a.store_loc_supply_id = c.store_loc_supply_id and c.store_loc_id = p_store_loc_id);
 END IF;
 END;     
+

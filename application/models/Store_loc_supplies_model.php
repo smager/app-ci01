@@ -31,9 +31,10 @@ class store_loc_supplies_model extends CI_Model{
                 ,'dbKeys'=> array('loc_supply_id','stock_daily_qty')
                 ,'table'=>'store_loc_supplies'
             )
-        );       
-        
-        $this->common_model->update($post,$params); 
+        );    
+       
+        $l_store_loc_id = $this->common_model->update($post,$params); 
+        $this->db->query("call store_loc_supplies_ins($l_store_loc_id,0)");
     }
 }
 ?>
