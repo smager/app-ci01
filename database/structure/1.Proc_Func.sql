@@ -68,7 +68,7 @@ create function  getLocSupplyId(p_loc_id int, p_supply_id int) RETURNS int(5)
     DETERMINISTIC
 BEGIN
     DECLARE lvl int;
-    SELECT loc_supply_id INTO lvl FROM loc_supplies WHERE loc_id = p_loc_id and supply_id = p_supply_id); 
+    SELECT loc_supply_id INTO lvl FROM loc_supplies WHERE loc_id = p_loc_id and supply_id = p_supply_id) 
  RETURN (ifnull(lvl,0));
 END;
 
