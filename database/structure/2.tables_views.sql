@@ -612,6 +612,40 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
  )
    COMMENT='Stock Issuance details to stores'
    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+   
+   CREATE TABLE IF NOT EXISTS `stock_transfer` (
+   `st_id`   int(5) unsigned NOT NULL auto_increment,
+   `st_no`  int(5),
+   `st_date` datetime,
+   `loc_id`  int(5),
+   `loc_id_to`  int(5),
+   `posted` int(5) NOT NULL default '0',    
+   `created_by`    int(5),
+   `created_date`  datetime,
+   `updated_by`    int(5),
+   `updated_date`  datetime,
+   PRIMARY KEY `stock_transfer_pk`  (`st_id`),
+   UNIQUE KEY `stock_transfer_uk` (`st_no`,`loc_id`)
+ )
+   COMMENT='Stock Transfer header to other warehouse'
+   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+  
+
+  CREATE TABLE IF NOT EXISTS `stock_transfer_dtls` (
+   `st_dtl_id`               int(5) unsigned NOT NULL auto_increment,
+   `st_id`                   int(5),
+   `st_qty`                  decimal(7,2),
+   `loc_supply_brand_id`     int(5),
+   `created_by`              int(5),
+   `created_date`  datetime,
+   `updated_by`    int(5),
+   `updated_date`  datetime,
+   PRIMARY KEY `stock_transfer_dtls_pk`  (`st_dtl_id`),
+   UNIQUE KEY `stock_transfer_dtls_uk` (`st_id`,`loc_supply_brand_id`)
+ )
+   COMMENT='Stock Transfer details to other warehouse'
+   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
 
  CREATE TABLE IF NOT EXISTS `inv_summ` (
   `inv_summ_id`           int(5) unsigned NOT NULL auto_increment,
