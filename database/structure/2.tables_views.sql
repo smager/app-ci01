@@ -146,16 +146,16 @@ CREATE TABLE IF NOT EXISTS `supply_types` (
  
 CREATE TABLE IF NOT EXISTS `supplies` (
   `supply_id`     int(5) unsigned NOT NULL auto_increment,
-  `supply_code`   varchar(10) NOT NULL default '',
+  `supply_code`   varchar(25) NOT NULL default '',
   `supply_desc`   varchar(64) NOT NULL default '',
   `supply_type_id` int(5),
   `unit_id`        int(5),  
   `supply_srp`     decimal(7,2),
   `weight_serve`   decimal(7,2), 
-  `seq_no`        int(5), 
+  `seq_no`         int(5), 
   `created_by`     int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
+  `created_date`   datetime,
+  `updated_by`    int(5),
   `updated_date` datetime,
   PRIMARY KEY `supplies_pk`  (`supply_id`),
   UNIQUE KEY `supplies_uk` (`supply_code`)
@@ -1020,3 +1020,8 @@ create or replace view store_loc_supply_brands_v as
 select a.*, b.store_loc_id
 FROM store_loc_supply_brands a, store_loc_supplies_v b
 where a.store_loc_supply_id = b.store_loc_supply_id;
+
+CREATE OR REPLACE VIEW stock_transfer_unposted_v AS 
+select *
+FROM stock_transfer
+where posted=0
