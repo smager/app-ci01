@@ -404,7 +404,7 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `updated_by` int(5),
   `updated_date` datetime,
   PRIMARY KEY `receiving_pk`  (`receiving_id`),
-  UNIQUE KEY `receiving_uk` (`dr_no`, `loc_id`,`po_id`)
+  UNIQUE KEY `receiving_uk` (`dr_no`, `po_id`)
 )
   COMMENT='Receiving of orders header'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
@@ -500,7 +500,7 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
  CREATE TABLE IF NOT EXISTS `store_loc_supplies` (
   `store_loc_supply_id` int(5) unsigned NOT NULL auto_increment,
   `store_loc_id` int(5),
-  ,loc_supply_id int(5),
+  `loc_supply_id` int(5),
   `stock_daily_qty`   decimal(5,2),
   `created_by` int(5),
   `created_date` datetime,
@@ -845,13 +845,19 @@ select a.*, b.seq_no, b.supply_code, b.unit_desc, getStockCount(loc_supply_id) a
 from loc_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
+CREATE OR REPLACE VIEW supply_brands_v AS
+select a.supply_brand_id, a.supply_id, a.brand_id, b.brand_name, a.conv_id, a.supply_cost, if(a.brand_id=1,c.supply_code, concat(c.supply_code ,' ', b.brand_name)) as supply, d.cu_desc 
+from supply_brands a, brands b, supplies c, conv_units_v d
+WHERE a.brand_id = b.brand_id
+AND a.supply_id = c.supply_id
+AND a.conv_id = d.conv_id;
+
 CREATE OR REPLACE VIEW loc_supply_brands_v AS
 select a.*, b.supply_id, b.seq_no, b.supply_code, b.loc_id, c.brand_name, c.cu_desc
 from loc_supply_brands a, loc_supplies_v b, supply_brands_v c
 WHERE a.loc_supply_id = b.loc_supply_id
 AND a.supply_brand_id = c.supply_brand_id
 ORDER BY seq_no;
-
 
 CREATE OR REPLACE VIEW user_locations_v AS
 select a.user_loc_id, a.loc_id, a.user_id, b.location
@@ -869,13 +875,6 @@ from supply_brands a, brands b, supplies c
 WHERE a.brand_id = b.brand_id
 AND a.supply_id = c.supply_id;
 
-CREATE OR REPLACE VIEW supply_brands_v AS
-select a.supply_brand_id, a.supply_id, a.brand_id, b.brand_name, a.conv_id, a.supply_cost, if(a.brand_id=1,c.supply_code, concat(c.supply_code ,' ', b.brand_name)) as supply, d.cu_desc 
-from supply_brands a, brands b, supplies c, conv_units_v d
-WHERE a.brand_id = b.brand_id
-AND a.supply_id = c.supply_id
-AND a.conv_id = d.conv_id;
-
 CREATE OR REPLACE VIEW supply_brands2_v AS
 select "" as supply_brand_id, "" as supply_id, brand_id,  brand_name, "" as conv_id, "" as supply_cost, "" as supply, "" as cu_desc
 from  brands;
@@ -885,11 +884,6 @@ select a.store_id, a.store_supply_id, a.supply_id, b.supply, b.supply_cost
 from store_supplies a, supply_brands_v b
 WHERE a.supply_id = b.supply_id;
 
-
-CREATE OR REPLACE VIEW loc_supplies_v AS
-select a.*,b.supply_id, b.supply_code, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks
-from loc_supplies a, supplies_v b
-WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW store_loc_supplies_v AS
 select a.store_loc_supply_id, a.store_loc_id, c.store_id, b.supply_id, a.loc_supply_id, b.supply_code, b.unit_desc, stock_daily_qty, 
@@ -919,7 +913,7 @@ select a.*
 from supply_is_dtls a, store_loc_supplies_v b, supply_is c
 where a.supply_is_id=c.supply_is_id
 and c.store_loc_id =b.store_loc_id
-and c.posted=0;
+and c.posted_is=0;
 
 CREATE OR REPLACE VIEW powithbal_v AS
 select *, getSupplier(supplier_id) as supplier, getLocation(loc_id) as location from po
