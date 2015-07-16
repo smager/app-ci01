@@ -8,29 +8,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php
     includeHeader(array("datePicker"=>true));    
 ?>
-<style>
-.itemLeftBox {    
-    margin-top: 10px;
-}
-.itemLeftBox .panel-body{
-    height: 400px;
-    overflow:auto;
-}
-a.itemRemove{
-    color: #3071a8;
-    float: right;
-    font-size: 20pt;
-    margin-right: 10px;
-    text-decoration: none;
-    top: -31px;
-}
-    
-a.itemRemove:hover{
-    color:red;
-    text-decoration:none;
-}    
-    
-</style>    
 </head>
 <body>
 <?php menu(); ?> 

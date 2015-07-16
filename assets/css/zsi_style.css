@@ -85,10 +85,37 @@ ul
    aborder: #B5CDE4 1px solid;
 }
 
-.head6 { font-family: trebuchet ms, verdana, arial, helvetica; font-size: 100%; padding-bottom: 2px; font-weight: bold; color: #000; margin: 0; }
+.head6 { 
+    font-family: trebuchet ms, verdana, arial, helvetica; 
+    font-size: 100%; 
+    padding-bottom: 2px; 
+    font-weight: bold; 
+    color: #000;
+    margin: 0; 
+}
+/********[left box ]*******************/
+.itemLeftBox {    
+    margin-top: 10px;
+}
+.itemLeftBox .panel-body{
+    height: 400px;
+    overflow:auto;
+}
+a.itemRemove{
+    color: #3071a8;
+    float: right;
+    font-size: 20pt;
+    margin-right: 10px;
+    text-decoration: none;
+    top: -31px;
+}
+    
+a.itemRemove:hover{
+    color:red;
+    text-decoration:none;
+}    
+/***************************/
 
-
- 
 .theme-dropdown .dropdown-menu {
   position: static;
   display: block;

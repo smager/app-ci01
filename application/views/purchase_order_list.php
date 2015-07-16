@@ -7,30 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <title>Purchase Order</title>
 <?php
     includeHeader(array("datePicker"=>true));    
-?>
-<style>
-.poLeftBox {    
-    margin-top: 10px;
-}
-.poLeftBox .panel-body{
-    height: 400px;
-    overflow:auto;
-}
-a.poRemove{
-    color: #3071a8;
-    float: right;
-    font-size: 20pt;
-    margin-right: 10px;
-    text-decoration: none;
-    top: -31px;
-}
-    
-a.poRemove:hover{
-    color:red;
-    text-decoration:none;
-}    
-    
-</style>    
+?>  
 </head>
 <body>
 <?php menu(); ?> 
@@ -56,7 +33,7 @@ a.poRemove:hover{
     </div>
 </div>    
     
-<div class="col-xs-3 poLeftBox">
+<div class="col-xs-3 itemLeftBox">
 
 <div class="panel panel-default">
   <div class="panel-heading">Unposted PO(s)</div>
