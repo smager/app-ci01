@@ -1021,7 +1021,14 @@ select a.*, b.store_loc_id
 FROM store_loc_supply_brands a, store_loc_supplies_v b
 where a.store_loc_supply_id = b.store_loc_supply_id;
 
+
+
 CREATE OR REPLACE VIEW stock_transfer_unposted_v AS 
 select *
 FROM stock_transfer
 where posted=0
+
+create or replace view stock_transfer_dtls_v as
+select a.*, b.stock_qty
+from stock_transfer_dtls a, loc_supply_brands_v b
+where a.loc_supply_brand_id = b.loc_supply_brand_id;
