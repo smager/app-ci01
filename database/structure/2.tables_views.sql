@@ -844,7 +844,7 @@ from menu
 order by menu_type_id, seq_no;
 
 CREATE OR REPLACE VIEW conv_units_v AS
-select a.conv_id, if(a.from_unit_id=a.conv_unit_id, b.unit_sdesc, concat(conv_unit_qty, ' ', c.unit_sdesc, ' per ',  b.unit_sdesc)) as cu_desc
+select a.*, if(a.from_unit_id=a.conv_unit_id, b.unit_sdesc, concat(conv_unit_qty, ' ', c.unit_sdesc, ' per ',  b.unit_sdesc)) as cu_desc
 FROM conv_units a, units b, units c
 WHERE a.from_unit_id = b.unit_id
 AND a.conv_unit_id = c.unit_id;
@@ -880,14 +880,14 @@ from loc_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW supply_brands_v AS
-select a.supply_brand_id, a.supply_id, a.brand_id, b.brand_name, a.conv_id, a.supply_cost, if(a.brand_id=1,c.supply_code, concat(c.supply_code ,' ', b.brand_name)) as supply, d.cu_desc 
+select a.supply_brand_id, a.supply_id, a.brand_id, b.brand_name, a.conv_id, a.supply_cost, if(a.brand_id=1,c.supply_code, concat(c.supply_code ,' ', b.brand_name)) as supply, d.cu_desc, conv_unit_qty 
 from supply_brands a, brands b, supplies c, conv_units_v d
 WHERE a.brand_id = b.brand_id
 AND a.supply_id = c.supply_id
 AND a.conv_id = d.conv_id;
 
 CREATE OR REPLACE VIEW loc_supply_brands_v AS
-select a.*, b.supply_id, b.seq_no, b.supply_code, b.loc_id, c.brand_name, c.cu_desc
+select a.*, b.supply_id, b.seq_no, b.supply_code, b.loc_id, c.brand_name, c.cu_desc, concat(b.supply_code, ' ', c.brand_name, ' ', c.cu_desc, ' (',a.stock_qty ,')') as brand_supply, c.conv_unit_qty
 from loc_supply_brands a, loc_supplies_v b, supply_brands_v c
 WHERE a.loc_supply_id = b.loc_supply_id
 AND a.supply_brand_id = c.supply_brand_id

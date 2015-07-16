@@ -283,6 +283,11 @@ END;
 
 CREATE PROCEDURE stock_transfer_post(p_st_id int(5), p_loc_id_to int)
 BEGIN
+   UPDATE loc_supply_brands a, stock_transfer_dtls b
+   SET a.stock_qty = a.stock_qty - b.st_qty
+   WHERE st_id = p_st_id
+   AND a.loc_supply_brand_id=b.loc_supply_brand_id;
+
    UPDATE loc_supply_brands_v a, stock_transfer_dtls b
    SET a.stock_qty = a.stock_qty + b.st_qty
    WHERE st_id = p_st_id
