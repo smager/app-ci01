@@ -81,6 +81,14 @@ BEGIN
  RETURN (ifnull(lvl,0));
 END;
 
+create function  getSupplyBrandIdFromLoc(p_loc_supply_brand_id int) RETURNS int(5)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl int;
+    SELECT supply_brand_id INTO lvl FROM loc_supply_brands_v WHERE loc_supply_brand_id=p_loc_supply_brand_id;
+ RETURN (ifnull(lvl,0));
+END;
+
 create function  getPOBalCount(p_po_id int) RETURNS INT(5)
     DETERMINISTIC
 BEGIN
@@ -161,8 +169,6 @@ BEGIN
                  AND c.store_loc_id = l_store_loc_id);
 
 END;
-
-
 
 
 CREATE PROCEDURE getLocPC_Unposted(p_loc_id int(5))
@@ -274,3 +280,12 @@ ELSE
 END IF;
 END;     
 
+
+CREATE PROCEDURE stock_transfer_post(p_st_id int(5), p_loc_id_to int)
+BEGIN
+   UPDATE loc_supply_brands_v a, stock_transfer_dtls b
+   SET a.stock_qty = a.stock_qty + b.st_qty
+   WHERE st_id = p_st_id
+   AND a.supply_brand_id=getSupplyBrandIdFromLoc(b.loc_supply_brand_id)
+   AND a.loc_id = p_loc_id_to;
+END; 
