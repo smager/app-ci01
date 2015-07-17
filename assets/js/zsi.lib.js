@@ -383,15 +383,17 @@ zsi.page.DisplayRecordPage   = function(p_page_no,p_rows,p_numrec){
 }
 /*------------------------------------------------------------------------------------------*/
 /*Example:
-  SelectList("common/get_select_data","#p_vaccine_code","=l_vaccine_code","N");
+  SelectList("common/get_select_data","#p_vaccine_code",2,"N",callbackfunc);
 */
 
 zsi.control.SelectList = function(p_url,p_selector,p_selval,p_req,p_onLoadComplete){
-   $.getJSON(p_url, function( data ) {
+    var _isRequired = (p_req.toLowerCase()=="y"?true:false);
+   $.getJSON(p_url, function( _data ) {
+       var params = {data: _data,selectedValue: p_selval,isRequired: _isRequired,onLoadComplete: p_onLoadComplete};
       if(p_selector instanceof jQuery)
-         p_selector.fillSelect(data,p_selval,p_req,p_onLoadComplete);
+          p_selector.fillSelect(params);
       else
-         $(p_selector).fillSelect(data,p_selval,p_req,p_onLoadComplete);
+         $(p_selector).fillSelect(params);
    });
 }
 
@@ -859,7 +861,23 @@ zsi.json.checkValueExist = function(p_url, p_target,p_table, p_field){
    }
 }
      
-zsi.json.loadGrid = function(o){           
+zsi.json.loadGrid = function(o){  
+    var isOnEC= (typeof o.onEachComplete !== "undefined");
+    if (isOnEC){    
+        var strFunc = o.onEachComplete.toString();
+      args = strFunc
+      .replace(/((\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s))/mg,'')
+      .match(/^function\s*[^\(]*\(\s*([^\)]*)\)/m)[1]
+      .split(/,/);
+      var cbName="callback Function";
+     if(args.length!=3) 
+        console.warn("you must implement these parameters: tr,data,callbackFunc");
+     else
+        cbName = args[2];
+    if(strFunc.indexOf(cbName+"()") < 0 )    
+        console.warn("you must call " + cbName + "() before the end of onEachComplete function.");
+    }
+
     var l_grid = $(o.table);
     var num_rows=0;
     var ctr = 0;    
@@ -877,7 +895,8 @@ zsi.json.loadGrid = function(o){
 
         l_grid.append(r);
         var tr=$("tr[rowObj]");tr.removeAttr("rowObj"); 
-        if (typeof o.onEachComplete !== "undefined"){
+        if (isOnEC){
+            //this calback function is for asynchronous response.
             var callBackDone = function(){
                 ctr++;
                 if(num_rows == ctr) {
@@ -1029,19 +1048,25 @@ $.fn.dataBind = function(){
         if(typeof a[1] !=="undefined") p.onAllComplete = a[1];
     }
     var obj=this;
-    var selVal = (typeof p.selectedValue==="undefined"? "" : p.selectedValue);
-    var required  =(typeof p.required==="undefined"? "N" : p.required);
-   $.getJSON(p.url, function( data ) {
-        obj.fillSelect(data,selVal,required,p.onEachComplete);
+   $.getJSON(p.url, function( _data ) {
+        obj.fillSelect({
+               data             : _data
+              ,selectedValue    : p.selectedValue
+              ,isRequired       : p.required
+              ,onLoadComplete   : p.onEachComplete
+        });
         if(p.onAllComplete){
             obj.onAllComplete = p.onAllComplete;
-            obj.onAllComplete(data);
+            obj.onAllComplete(_data);
         } 
-        if(p.isUniqueOptions===true) obj.setUniqueOptions();
+        if(p.isUniqueOptions===true)  obj.setUniqueOptions();
    });
 }
 
-$.fn.fillSelect = function(data,p_selval,p_req,p_onLoadComplete) {
+$.fn.fillSelect = function(o) {
+    //params: data,selectedValue,onLoadComplete;
+    if(typeof o.isRequired ==="undefined")  o.isRequired=false;
+    if(typeof o.selectedValue ==="undefined")  o.selectedValue='';
     this.clearSelect();
 
     if(this.length>1){
@@ -1057,15 +1082,15 @@ $.fn.fillSelect = function(data,p_selval,p_req,p_onLoadComplete) {
           var reqIndex=0;
        if (ddl) {
            if (ddl.tagName.toLowerCase() == 'select') {
-               if(p_req=="N"){
+               if(o.isRequired==false){
                   var l_option_blank = new Option("", "");
                   ddl.add(l_option_blank, null);
                   reqIndex=1;
                }
-               $.each(data, function(index, optionData) {
+               $.each(o.data, function(index, optionData) {
                   var l_option = new Option(unescape(optionData.text), optionData.value);
                   ddl.add(l_option, null);
-                  if(optionData.value==p_selval){
+                  if(optionData.value==o.selectedValue){
                      ddl.selectedIndex=parseInt(index + reqIndex );
                   }
                });
@@ -1074,8 +1099,8 @@ $.fn.fillSelect = function(data,p_selval,p_req,p_onLoadComplete) {
                if(selval) $(ddl).val(selval); 
               // $(ddl).removeAttr("selectedvalue");
 
-               if(p_onLoadComplete) {
-                  ddl.onEachComplete = p_onLoadComplete;
+               if(o.onLoadComplete) {
+                  ddl.onEachComplete = o.onLoadComplete;
                   ddl.onEachComplete();
                }
 
@@ -1084,23 +1109,14 @@ $.fn.fillSelect = function(data,p_selval,p_req,p_onLoadComplete) {
 
    }
 }
-
+ 
 
 $.fn.setUniqueOptions=function(){
     var optionData=[];
     var obj = this;
-    
     var options = $(obj).children("option");
-    options.each(function(){
-        if(this.value!=="") optionData.push({value :this.value, text: this.innerHTML});
-    });
-       
-   this.change(function(){
-        var data = getSelectedData();
-        fillUnselectedData(data);
-   });
-
-    function addSelectedData(o,data){
+    //functions
+    var addSelectedData=function(o,data){
         var isFound=false;
         for(var x=0;x<data.length;x++){
             if(data[x].value==o.value) {
@@ -1112,7 +1128,7 @@ $.fn.setUniqueOptions=function(){
             data.push({value:o.value, text:o.text});
         }
     }
-    function getSelectedData(){
+    var getSelectedData=function(){
         selectedData=[];
 
        obj.each(function(){
@@ -1122,8 +1138,7 @@ $.fn.setUniqueOptions=function(){
         });
         return selectedData;
     }
-    
-    function fillUnselectedData(selectedData){
+    var fillUnselectedData=function(selectedData){
         var newData=[];
         for(var x=0;x<optionData.length;x++){
             var isFound=false;
@@ -1161,6 +1176,21 @@ $.fn.setUniqueOptions=function(){
         });
          
     }
+    
+    options.each(function(){
+        if(this.value!=="") optionData.push({value :this.value, text: this.innerHTML});
+    });
+    
+    this.change(function(){
+        fire();
+    });
+    function fire(){
+        var data = getSelectedData();
+        fillUnselectedData(data);
+    }
+    fire();
+    return this;
+    
 }
 /*end of set unique option*/
 
