@@ -54,7 +54,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <tr>
             <th></th>
             <th>Item</th>
-            <th>Unit</th>
+            <th  style="text-align: center;">Unit</th>
             <th>Qty</th>
 
         </tr>
