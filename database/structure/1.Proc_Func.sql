@@ -248,19 +248,20 @@ WHERE receiving_id = p_receiving_id
 AND ifnull(getLocSupplyBrandId(loc_id, supply_id, supply_brand_id),0) = 0; 
 END;
 
+
 CREATE PROCEDURE store_loc_supplies_ins (IN p_store_loc_id INT(10), IN p_store_id INT(10))
 BEGIN  
 DECLARE l_loc_id INT
-    SELECT loc_id FROM store_loc WHERE store_loc_id=p_store_loc_id;
+    SELECT loc_id INTO l_loc_id FROM store_loc WHERE store_loc_id=p_store_loc_id;
     IF ifnull(p_store_id,0) <> 0 THEN
        insert into store_loc_supplies (store_loc_id, loc_supply_id) 
        select p_store_loc_id, a.loc_supply_id
          from loc_supplies_v a
-        where loc_id = 
+        where loc_id = l_loc_id 
         AND EXISTS (SELECT supply_id FROM store_supplies_v b WHERE b.supply_id = a.supply_id AND b.store_id = p_store_id); 
     END IF;
-     INSERT INTO store_loc_supply_brands(store_loc_supply_id, loc_supply_brand_id)
-     SELECT b.store_loc_supply_id , a.loc_supply_brand_id FROM loc_supply_brands_v a, store_loc_supplies_v b
+     INSERT INTO store_loc_supply_brands(store_loc_supply_id, loc_supply_brand_id, stock_qty)
+     SELECT b.store_loc_supply_id , a.loc_supply_brand_id, 0 FROM loc_supply_brands_v a, store_loc_supplies_v b
      WHERE b.loc_supply_id = a.loc_supply_id
      AND b.store_loc_id=p_store_loc_id
      AND NOT EXISTS (SELECT c.store_loc_supply_brand_id FROM store_loc_supply_brands_v c 

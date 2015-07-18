@@ -531,16 +531,31 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
    `store_loc_exp_id`   int(5) unsigned NOT NULL auto_increment,
    `store_loc_id`  int(5),
    `exp_date` datetime,
-   `exp_amt` datetime,
    `posted` int(5) NOT NULL default '0',     
    `created_by`    int(5),
    `created_date`  datetime,
    `updated_by`    int(5),
    `updated_date`  datetime,
-   PRIMARY KEY `store_loc_pk`  (`store_loc_exp_id`),
-   UNIQUE KEY `store_loc_uk` (`exp_date`,`store_loc_id`)
+   PRIMARY KEY `store_loc_exp_pk`  (`store_loc_exp_id`),
+   UNIQUE KEY `store_loc_exp_uk` (`exp_date`,`store_loc_id`)
  )
    COMMENT='Store Location Expenses'
+   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+   
+   
+  CREATE TABLE IF NOT EXISTS `store_loc_exp_dtls` (
+   `store_loc_exp_dtl_id`   int(5) unsigned NOT NULL auto_increment,
+   `store_loc_exp_id`  int(5),
+   `exp_desc` VARCHAR(100),
+   `exp_amt` decimal(7,2),
+   `created_by`    int(5),
+   `created_date`  datetime,
+   `updated_by`    int(5),
+   `updated_date`  datetime,
+   PRIMARY KEY `store_loc_exp_dtls_pk`  (`store_loc_exp_dtl_id`),
+   UNIQUE KEY `store_loc_exp_dtls_uk` (`store_loc_exp_id`,`exp_desc`)
+ )
+   COMMENT='Store Location Expense Details'
    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
 
