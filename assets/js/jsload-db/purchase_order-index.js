@@ -87,7 +87,7 @@ function getUnpostedPO(){
                 ,loc_id: this.loc_id
                 ,supplier_id:this.supplier_id
             };
-            var removeicon = "<a class='glyphicon glyphicon-remove-sign poRemove' onclick='removePO(" + this.po_id  + ");' href='javascript:void(0);'></a>";
+            var removeicon = "<a class='glyphicon glyphicon-remove-sign itemRemove' onclick='removePO(" + this.po_id  + ");' href='javascript:void(0);'></a>";
             $(".list-group").append("<a href='javascript:void(0);' onclick='displayDetails("   + JSON.stringify(params) +  ");' class='list-group-item' >" + this.po_no + "</a>" + removeicon);
         });
         
@@ -141,14 +141,11 @@ function displayRecords(id){
             ,function(d){ return d.unit_desc; }
             ,function(d){ return bs({name:"po_qty[]",value:d.po_qty,class:"form-control numeric"}); }
         ]
+        ,td_properties: ["","","align='center'"] 
         ,onComplete : function(){
             onSupplyChange();
-            
-            $("select[name='p_supply_id[]']").dataBind(base_url + "select_options/code/po_details?where=po_id=" +  id, function(){
-                displayBlankRows(false);
-                loc_id.change();
-            });
-           
+            displayBlankRows(false);
+            loc_id.change();
 
             
         }
@@ -173,11 +170,18 @@ function onSupplyChange(){
 function onLocationChange(){
     loc_id.change(function(){
         if(this.value==='') return false;
-        $("select[name='p_supply_id[]'].new").dataBind({ 
+        $("select[name='p_supply_id[]']").dataBind({ 
              url: base_url + "select_options/code/loc_supplies?where=loc_id=" + this.value
             ,isUniqueOptions:true
+            ,onAllComplete: function(){
+                markMandatory();
+                $("select[name='p_supply_id[]']").change();
+                $("input[name='p_po_qty[]']").change();
+            }            
         });
     });
+    
+   
 }
 
 function displayBlankRows(p_isNew){       
@@ -196,6 +200,7 @@ function displayBlankRows(p_isNew){
             ,function(d){ return ""; }
             ,function(d){ return bs({name:"po_qty[]",class:"form-control numeric"}); }
         ]
+        ,td_properties: ["","","align='center'"] 
         ,onComplete : function(){
             onSupplyChange();
             markMandatory();
