@@ -14,6 +14,23 @@
 Date.prototype.isValid = function () {
     return this.getTime() === this.getTime();
 };  
+Date.prototype.toShortDate = function () {
+    var m =  (this.getMonth()+1) + "";
+    m = (m.length==1? "0"+m:m);
+    return m + '/' + this.getDate() + '/' +  this.getFullYear();
+};  
+
+String.prototype.toDateFormat = function () {
+    var val="";
+    if(this.indexOf("-") >-1 ){
+        aDate = this.substr(0,10).split("-");
+        val = aDate[1] + "/" + aDate[2] + "/" + aDate[0];
+    }else{
+        var _date = Date.parse(this);
+        if(isNaN(_date)===false )  val = (new Date(_date).toShortDate()) + "";
+    }
+     return val;
+}; 
 
 /* Page Initialization */
 $(document).ready(function(){
