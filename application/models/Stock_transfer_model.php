@@ -5,8 +5,8 @@ class stock_transfer_model extends CI_Model{
 
     }
     
-    function getdata(){
-        $query = $this->db->query("SELECT * FROM stock_transfer");
+    function getUnpostedST(){
+        $query = $this->db->query("SELECT * FROM stock_transfer_unposted_v");
         return $query;    
     }
 

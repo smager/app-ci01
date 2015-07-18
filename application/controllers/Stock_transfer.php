@@ -13,9 +13,9 @@ class stock_transfer extends Base_Controller {
 		$this->load->view('stock_transfer_list');
 	}
 
-    public function getdata_json(){
+    public function getUnpostedST(){
     
-        jsonOut($this->stock_transfer_model->getdata()->result());
+        jsonOut($this->stock_transfer_model->getUnpostedST()->result());
         
     }
     
