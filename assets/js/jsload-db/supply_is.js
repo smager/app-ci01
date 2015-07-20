@@ -48,17 +48,18 @@ store_loc_id.change(function(){
          table  : ".table"
         ,url   : base_url + "supply_is/get_detail_json/" + store_loc_id.val() 
         ,td_body: [ 
-             function(d){return    "";}            
+             function(d){return    "";}     
             ,function(d){ return d.supply_code; }
             ,function(d){ return d.unit_desc; }
             ,function(d){ return d.stock_daily_qty;} 
             ,function(d){ return d.store_stocks;}
             ,function(d){ return d.ttl_stocks;}
-            ,function(d){ return "";}
+           //,function(d){ return "";}
         ]
         ,onEachComplete : function(tr,data,callBackDone){
-            var qty= tr.children("td")[6];
-            qty.innerHTML="loading...";
+            var rowData =data;
+            var qty= tr.children("td")[0];
+            qty.innerHTML= "<img src='"+ base_url + "assets/images/loading.gif" +"' width='20px'> loading...";
             var onEC = this;
             $.getJSON(base_url + "supply_is/get_is_detail/" + data.store_loc_id + "/" + data.loc_supply_id, function(data){
                 var t="<table class='subTable'>";
@@ -72,8 +73,7 @@ store_loc_id.change(function(){
                             +  bs({name:"loc_supply_brand_id[]",type:"hidden",value: this.loc_supply_brand_id})
                             +  bs({name:"supply_is_dtl_id[]",type:"hidden",value: this.supply_is_dtl_id})
                             +  bs({name:"stock_qty[]",type:"hidden",value: this.stock_qty})
-                            +  bs({name:"prev_qty[]",type:"hidden",value: this.prev_qty})
-                            +  bs({name:"beg_qty[]",type:"hidden",value: parseFloat(this.prev_qty) + parseFloat((this.supply_is_qty===""?0:this.supply_is_qty)) })
+                            +  bs({name:"prev_qty[]",type:"hidden",value: rowData.store_stocks})
                             +  bs({name:"supply_is_qty[]",value: this.supply_is_qty,class:"form-control numeric"})
                         t +="</td>";
                         t +="<td>&nbsp;&nbsp;" + this.stock_qty  + " " + this.brand_name + " " + this.cu_desc  + "</td>";                    
