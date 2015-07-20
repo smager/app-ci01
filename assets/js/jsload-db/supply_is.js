@@ -89,12 +89,7 @@ store_loc_id.change(function(){
             var supply_is_qty = $("input[name='p_supply_is_qty[]']");
             supply_is_qty.keyup(function(){
                 var stock_qty = $(this.parentNode).children("input[name='p_stock_qty[]']");    
-                var beg_qty = $(this.parentNode).children("input[name='p_beg_qty[]']");    
                 var prev_qty = $(this.parentNode).children("input[name='p_prev_qty[]']");    
-                beg_qty.val( 
-                    parseFloat(prev_qty.val()) + parseFloat((this.value===""?0:this.value)) 
-                );
-                
                 if(parseInt(this.value) > parseInt(stock_qty.val())) {
                     this.value =  parseInt(stock_qty.val());
                 }
