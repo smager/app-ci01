@@ -45,7 +45,7 @@ class loc_pc_model extends CI_Model{
             $store_loc_id =0;
             if(isset($post["p_store_loc_id"] )) $store_loc_id = $post["p_store_loc_id"];      
             $sql = "call loc_pc_post($loc_pc_id,$store_loc_id)";
-            $this->db->query("call loc_pc_post($loc_pc_id,$store_loc_id)");
+            $this->db->query($sql);
         }
         
         return  $loc_pc_id;
