@@ -39,7 +39,7 @@ class supply_is_model extends CI_Model{
     }        
         
     //update for issuance
-    function update($post){
+    function update($post){        
         $params=array(            
             'parent' => array(
                  'pk'=> 'supply_is_id'
@@ -48,19 +48,34 @@ class supply_is_model extends CI_Model{
             )           
             ,'details' => array(
                 'pk'=> 'supply_is_dtl_id'
-                ,'dbKeys'=> array('prev_qty','beg_qty','loc_supply_brand_id','supply_is_qty')
+                ,'dbKeys'=> array('prev_qty','loc_supply_brand_id','supply_is_qty')
                 ,'mustNotEmptyKeys'=> array('loc_supply_brand_id')
                 ,'table'=>'supply_is_dtls'
+                ,'onBeforeInsertUpdate'=>$this
             )
         );       
-        $is_id = $this->common_model->update($post,$params);          
+        $is_id = $this->common_model->update($post,$params);                        
         // posted=true;
         $store_loc_id=$post['p_store_loc_id'];
         if($post["p_posted_is"]==true) {
              $this->db->query("call setLocStockIsPost($is_id)");
              $this->db->query("call setStoreStockIsPost($is_id,$store_loc_id)");
         }
-    }        
+    } 
+    
+    function onBeforeInsert($post, &$params,$i){
+        $this->onUpdateInsert($post,$params,$i);  
+    }
+
+    function onBeforeUpdate($post, &$params,$i){
+        $this->onUpdateInsert($post,$params,$i);  
+    }
+    
+    function onUpdateInsert($post, &$params,$i){
+        $params["beg_qty"] = (float)$post["p_prev_qty"][$i] + (float)$post["p_supply_is_qty"][$i];        
+    }
+    
+    
         
   //update for usage
   function usage_update($post){

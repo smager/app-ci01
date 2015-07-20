@@ -86,7 +86,9 @@ class common_model extends CI_Model{
                     if(isset($parent['uiKeys']))  $parentParams['uiKeys'] = $parent['uiKeys']; 
                     if(isset($parent['mustNotEmptyKeys']))  $parentParams['mustNotEmptyKeys'] = $parent['mustNotEmptyKeys']; 
                     if(isset($parent['mustNotEmptyOnInsert']))  $parentParams['mustNotEmptyOnInsert'] = $parent['mustNotEmptyOnInsert']; 
+                    if(isset($parent['onBeforeInsertUpdate']))  $parentParams['onBeforeInsertUpdate'] = $parent['onBeforeInsertUpdate']; 
                     if(isset($parent['onInsertUpdate']))  $parentParams['onInsertUpdate'] = $parent['onInsertUpdate']; 
+                    
                     if(isset($parent['allowNull']))  $parentParams['allowNull'] = $parent['allowNull']; 
 
                     $parentId = $this->processInsertUpdate($post,$parentParams);
@@ -107,7 +109,9 @@ class common_model extends CI_Model{
                 if(isset($detail['uiKeys']))  $detailParams['uiKeys'] = $detail['uiKeys']; 
                 if(isset($detail['mustNotEmptyKeys']))  $detailParams['mustNotEmptyKeys'] = $detail['mustNotEmptyKeys']; 
                 if(isset($detail['mustNotEmptyOnInsert']))  $detailParams['mustNotEmptyOnInsert'] = $detail['mustNotEmptyOnInsert']; 
+                if(isset($detail['onBeforeInsertUpdate']))  $detailParams['onBeforeInsertUpdate'] = $detail['onBeforeInsertUpdate']; 
                 if(isset($detail['onInsertUpdate']))  $detailParams['onInsertUpdate'] = $detail['onInsertUpdate']; 
+                    
                 $parentKeyValue = array(
                     'key' => $parent['pk']
                     ,'value' => $parentId
@@ -188,30 +192,37 @@ class common_model extends CI_Model{
                         if(isset($params["mustNotEmptyOnInsert"])) 
                             $isFoundEmptyKeys = $this->findEmptyKeys($p,$params["mustNotEmptyOnInsert"],$x);   
                         
-                        if($isFoundEmptyKeys==false) {                             
+                        if($isFoundEmptyKeys==false) {                                
+                            if(isset($params['onBeforeInsertUpdate'])){
+                                $obj = $params['onBeforeInsertUpdate'];
+                                if(method_exists($obj,"onBeforeInsert")) $obj->onBeforeInsert($post,$data,$x);
+                            }                                                        
                             $data['created_by'] =current_user()->empl_id;
                             $this->db->set('created_date', 'NOW()', FALSE);
                             $this->db->insert($params["table"], $data);
                             $returnId = $this->db->insert_id();
                             //trigger invoked insert event
                             if(isset($params['onInsertUpdate'])){
-                                $onIU = $params['onInsertUpdate'];
-                                if(method_exists($onIU,"onInsert")) $onIU->onInsert($returnId,$post,$data,$x);
+                                $obj = $params['onInsertUpdate'];
+                                if(method_exists($obj,"onInsert")) $obj->onInsert($returnId,$post,$data,$x);
                             }
                                             
                         }
 
                     }else{
                         //update    
-                        $returnId = $id;
+                        if(isset($params['onBeforeInsertUpdate'])){
+                            $obj = $params['onBeforeInsertUpdate'];
+                            if(method_exists($obj,"onBeforeUpdate")) $obj->onBeforeUpdate($post,$data,$x);
+                        }                         
                         $data['updated_by'] =current_user()->empl_id;
                         $this->db->set('updated_date', 'NOW()', FALSE);
                         $this->db->where( $params["pk"]["dbKey"], $id);
                         $this->db->update($params["table"], $data);
                         //trigger invoked insert event
                         if(isset($params['onInsertUpdate'])){
-                            $onIU = $params['onInsertUpdate'];
-                            if(method_exists($onIU,"onUpdate")) $onIU->onUpdate($returnId,$post,$data,$x);
+                            $obj = $params['onInsertUpdate'];
+                            if(method_exists($obj,"onUpdate")) $obj->onUpdate($returnId,$post,$data,$x);
                         }
                         
                     } 
