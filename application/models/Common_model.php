@@ -96,6 +96,7 @@ class common_model extends CI_Model{
                 else{
                     $parentId = $post["p_" . $parent["pk"]];
                 }
+                
                 //details:  
                 if(!isset($params["details"]))  show_error("Wala man kay detail array(), pero naa kay parent array(), <br />klaroha kuno para dili ko maglibog.");
                 $detail = $params["details"];
@@ -116,7 +117,7 @@ class common_model extends CI_Model{
                     'key' => $parent['pk']
                     ,'value' => $parentId
                 );
-                $returnId=$parentId;                
+                $returnId=$parentId;
                 $this->processInsertUpdate($post,$detailParams,$parentKeyValue);                                
                 $this->db->trans_commit();
             }            
@@ -211,6 +212,7 @@ class common_model extends CI_Model{
 
                     }else{
                         //update    
+                        $returnId = $id;
                         if(isset($params['onBeforeInsertUpdate'])){
                             $obj = $params['onBeforeInsertUpdate'];
                             if(method_exists($obj,"onBeforeUpdate")) $obj->onBeforeUpdate($post,$data,$x);
