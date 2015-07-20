@@ -48,7 +48,7 @@ class supply_is_model extends CI_Model{
             )           
             ,'details' => array(
                 'pk'=> 'supply_is_dtl_id'
-                ,'dbKeys'=> array('prev_qty','loc_supply_brand_id','supply_is_qty')
+                ,'dbKeys'=> array('prev_qty','unit_price','loc_supply_brand_id','supply_is_qty')
                 ,'mustNotEmptyKeys'=> array('loc_supply_brand_id')
                 ,'table'=>'supply_is_dtls'
                 ,'onBeforeInsertUpdate'=>$this
@@ -72,7 +72,8 @@ class supply_is_model extends CI_Model{
     }
     
     function onUpdateInsert($post, &$params,$i){
-        $params["beg_qty"] = (float)$post["p_prev_qty"][$i] + (float)$post["p_supply_is_qty"][$i];        
+        $params["beg_qty"] = (float)$post["p_prev_qty"][$i] + (float)$post["p_supply_is_qty"][$i];      
+        $params["unit_price"] = (float)$post["p_prev_qty"][$i] + (float)$post["p_supply_is_qty"][$i];      
     }
     
     
