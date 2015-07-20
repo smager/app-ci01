@@ -618,6 +618,7 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
    `beg_qty`                 decimal(7,2) DEFAULT 0,
    `used_qty`                decimal(7,2) DEFAULT 0,
    `returned_qty`            decimal(7,2) DEFAULT 0,
+   `unit_price`              decimal(7,2) DEFAULT 0,
    `created_by`              int(5),
    `created_date`  datetime,
    `updated_by`    int(5),
@@ -936,14 +937,16 @@ WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW store_loc_supplies_v AS
 select a.store_loc_supply_id, a.store_loc_id, c.store_id, b.supply_id, a.loc_supply_id, b.supply_code, b.unit_desc, stock_daily_qty, 
-getStoreLocTotalStocks(store_loc_supply_id) as store_stocks, b.ttl_stocks
+getStoreLocTotalStocks(store_loc_supply_id) as store_stocks, b.ttl_stocks, getSupplyUprice(b.supply_id) as unit_price
 from store_loc_supplies a, loc_supplies_v b, store_loc c
 WHERE a.store_loc_id = c.store_loc_id
-AND a.loc_supply_id = b.loc_supply_id;
+AND a.loc_supply_id = b.loc_supply_id
+order by b.seq_no;
 
 
 CREATE OR REPLACE VIEW store_loc_supplies2_v AS
-select "" as store_loc_supply_id, "" as store_loc_id, a.store_id, a.supply_id, "" as loc_supply_id, b.supply_code, b.unit_desc, "" as stock_daily_qty, "" as store_stocks, "" as ttl_stocks
+select "" as store_loc_supply_id, "" as store_loc_id, a.store_id, a.supply_id, "" as loc_supply_id, b.supply_code, b.unit_desc, "" as stock_daily_qty, 
+"" as store_stocks, "" as ttl_stocks, getSupplyUprice(b.supply_id) as unit_price
 from  store_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
@@ -952,17 +955,23 @@ select *
 from supply_is
 where posted_is=0;
 
-CREATE OR REPLACE VIEW po_unposted_v AS
-select *
-from po
-where posted=0;
-
 CREATE OR REPLACE VIEW supply_is_dtls_unposted_v AS
 select a.*
 from supply_is_dtls a, store_loc_supplies_v b, supply_is c
 where a.supply_is_id=c.supply_is_id
 and c.store_loc_id =b.store_loc_id
 and c.posted_is=0;
+
+CREATE OR REPLACE VIEW supply_is_dtls_v AS
+select a.*, a.beg_qty - a.used_qty as end_qty, b.store_loc_id, b.is_date, c.supply_code, c.brand_name, c.cu_desc, getSupplyUprice(c.supply_id) as unit_price
+from supply_is_dtls a, supply_is b, loc_supply_brands_v c
+where a.supply_is_id=b.supply_is_id
+AND a.loc_supply_brand_id = c.loc_supply_brand_id;
+
+CREATE OR REPLACE VIEW po_unposted_v AS
+select *
+from po
+where posted=0;
 
 CREATE OR REPLACE VIEW powithbal_v AS
 select *, getSupplier(supplier_id) as supplier, getLocation(loc_id) as location from po
@@ -1034,7 +1043,8 @@ AND posted_used=0;
 create or replace view store_loc_supply_brands_v as
 select a.*, b.store_loc_id
 FROM store_loc_supply_brands a, store_loc_supplies_v b
-where a.store_loc_supply_id = b.store_loc_supply_id;
+where a.store_loc_supply_id = b.store_loc_supply_id
+order by b.seq_no;
 
 
 

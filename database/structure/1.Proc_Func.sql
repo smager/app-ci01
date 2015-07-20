@@ -16,6 +16,15 @@ BEGIN
  RETURN (lvl);
 END;
 
+
+create function  getSupplyUprice(p_supply_id int) RETURNS VARCHAR(100)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl decimal(7,2);
+    SELECT supply_srp INTO lvl FROM supplies WHERE supply_id=p_supply_id;
+ RETURN (lvl);
+END;
+
 create function  getSupplier(p_supplier_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
