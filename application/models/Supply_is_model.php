@@ -37,6 +37,13 @@ class supply_is_model extends CI_Model{
         if($query->num_rows()>0) $result =  $query->result()[0];                
         return $result;    
     }        
+    
+    //inq:
+    function getSupplyISdetails($store_loc_id,$isDate){
+        $query = $this->db->query("SELECT * FROM supply_is_dtls_v where store_loc_id=$store_loc_id and date_format(is_date,'%m/%d/%Y')='$isDate'");
+        return $query;    
+    }    
+    
         
     //update for issuance
     function update($post){        

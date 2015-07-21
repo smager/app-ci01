@@ -384,3 +384,12 @@ if ( ! function_exists('current_user'))
         return $cu;
     }
 }
+
+if ( ! function_exists('getPageTitle'))
+{    
+    function getPageTitle(){
+        $ci =& get_instance();
+        $ci->load->model('menu_model');        
+        echo $ci->menu_model->getMenuByUrl();
+    }
+}

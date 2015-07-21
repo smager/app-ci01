@@ -5,7 +5,6 @@ class menu_model extends CI_Model{
 
     }
     
-    
     function getMenus(){
         $html='';
         $q=$this->menu_types_model->getdata();
@@ -40,6 +39,17 @@ class menu_model extends CI_Model{
         $query = $this->db->query("SELECT * FROM menu_v");
         return $query;    
     }
+
+    function getMenuByUrl(){
+        $result="";
+        $action = $this->router->fetch_method(); 
+        $urlAction = $this->router->fetch_class() . '/' . $action;
+        $url = $this->router->fetch_class();
+        $sql = "SELECT menu_name FROM menu_v where lower(menu_url)='$url' or lower(menu_url)='$urlAction'";
+        $query = $this->db->query($sql);
+        if($query->num_rows() > 0) $result = $query->result()[0]->menu_name;        
+        return $result;    
+    }    
     
     function getSubMenuItem($id){
         
