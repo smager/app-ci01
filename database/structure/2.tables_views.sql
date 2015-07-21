@@ -619,6 +619,7 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
    `used_qty`                decimal(7,2) DEFAULT 0,
    `returned_qty`            decimal(7,2) DEFAULT 0,
    `unit_price`              decimal(7,2) DEFAULT 0,
+   `unit_cost`               decimal(7,2) DEFAULT 0,
    `created_by`              int(5),
    `created_date`  datetime,
    `updated_by`    int(5),
@@ -963,7 +964,7 @@ and c.store_loc_id =b.store_loc_id
 and c.posted_is=0;
 
 CREATE OR REPLACE VIEW supply_is_dtls_v AS
-select a.*, a.beg_qty - a.used_qty as end_qty, b.store_loc_id, b.is_date, c.supply_code, c.brand_name, c.cu_desc, getSupplyUprice(c.supply_id) as unit_price
+select a.*, a.beg_qty - a.used_qty as end_qty, b.store_loc_id, b.is_date, c.supply_code, c.brand_name, c.cu_desc, unit_price * used_qty as sales_amount, unit_cost * used_qty as cost_amount
 from supply_is_dtls a, supply_is b, loc_supply_brands_v c
 where a.supply_is_id=b.supply_is_id
 AND a.loc_supply_brand_id = c.loc_supply_brand_id;
