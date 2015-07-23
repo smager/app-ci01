@@ -246,6 +246,21 @@ UPDATE store_daily_cash
  WHERE store_daily_cash_id=p_store_daily_cash_id;    
 END;
 
+CREATE FUNCTION get_store_daily_cash_denom_qty(p_store_loc_id int,  p_denomination int, p_tran_date DATE) RETURNS INT(5) 
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl INT(5);
+    SELECT denomination_qty INTO lvl FROM store_daily_cash_dtls_v WHERE store_loc_id = p_store_loc_id and denomination=p_denomination AND  DATE_FORMAT(tran_date,'%m/%d/%Y') = p_tran_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
+CREATE PROCEDURE store_daily_cash_report(p_store_loc_id int, p_tran_date varchar(20))
+BEGIN
+   SELECT *, get_store_daily_cash_denom_qty(store_loc_id, denomination, date_add(tran_date,interval -1 day)) as prev_qty
+   FROM store_daily_cash_dtls_v
+   WHERE store_loc_id = p_store_loc_id AND DATE_FORMAT(tran_date,'%m/%d/%Y') = p_tran_date;
+END;
+
 CREATE PROCEDURE Receiving_post(p_receiving_id int(5))
 BEGIN
 
