@@ -17,6 +17,13 @@ class store_daily_cash_model extends CI_Model{
     }
     
     
+    //inq:
+    function getDailyCashInq($store_loc_id,$tran_date){
+        $query = $this->db->query("call store_daily_cash_report($store_loc_id,'$tran_date')");
+        return $query;    
+    }    
+    
+    
     function update($post){
         $store_daily_cash_id =  $post['p_store_daily_cash_id'];   
         $data = array(

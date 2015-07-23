@@ -20,6 +20,13 @@ class store_daily_expenses_model extends CI_Model{
     }
     
     
+    //inq:
+    function storeLocExpInq($store_loc_id,$tran_date){
+        $query = $this->db->query("call store_loc_exp_report($store_loc_id,'$tran_date')");
+        return $query;    
+    }    
+    
+    
     function update($post){
             
         $params=array(            
