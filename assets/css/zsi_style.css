@@ -34,11 +34,11 @@ body{
         margin-top: 10px;
         border: 1pt solid #e5e5e5;
     }
-    table.zTable tr th.Title1{
+    table.zTable tr th.title1{
         background-color:#562F32;   
         color:#fff;
     }
-    table.zTable tr th.Title2{
+    table.zTable tr th.title2{
         background-color:#8E5458;
         color:#fff;
     }
