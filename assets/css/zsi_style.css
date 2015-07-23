@@ -6,6 +6,54 @@ body{
     margin-bottom:0px;
     background:#f5f6f6;
 }
+/*zsiTable*/
+
+    table.zTable .align-l{ text-align:left;}
+    table.zTable .align-r{ text-align:right;}
+    table.zTable .align-c{ text-align:center;}
+    table.zTable tr.total td {
+        background-color:#8E5458;    
+        padding-bottom: 4px;
+        padding-top: 4px;
+        color:#fff;
+        font-weight:bold;
+    }    
+   table.zTable tr th{
+         vertical-align: inherit;
+         background-color:#F4EEED;
+         padding-bottom: 4px;
+         padding-top: 4px;
+     }    
+    table.zTable tr th, table.zTable tr td { 
+        padding-left: 5px;
+        padding-right: 5px;
+        border-left: 1pt solid #d6d8d8;
+    }
+    
+    table.zTable{
+        margin-top: 10px;
+        border: 1pt solid #e5e5e5;
+    }
+    table.zTable tr th.Title1{
+        background-color:#562F32;   
+        color:#fff;
+    }
+    table.zTable tr th.Title2{
+        background-color:#8E5458;
+        color:#fff;
+    }
+    
+    table.zTable tr.even td {
+        background-color:#F9F3DE;
+    }
+    
+    table.zTable tr:hover td {
+        background-color:#B21E28;
+        color:#fff;
+    }
+  
+/*end of zsiTable*/
+
 .table {
     margin-top: 10px;
 }
