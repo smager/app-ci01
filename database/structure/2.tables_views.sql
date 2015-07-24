@@ -1061,3 +1061,8 @@ CREATE OR REPLACE VIEW store_daily_cash_dtls_v as
 SELECT a.*, b.store_loc_id,  b.tran_date
 FROM store_daily_cash_dtls a, store_daily_cash b
 WHERE a.store_daily_cash_id=b.store_daily_cash_id;
+
+CREATE OR REPLACE VIEW store_loc_exp_dtls_v as
+SELECT a.*, b.store_loc_id,  b.exp_date
+FROM store_loc_exp_dtls a, store_loc_exp b
+WHERE a.store_loc_exp_id=b.store_loc_exp_id;

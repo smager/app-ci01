@@ -261,6 +261,13 @@ BEGIN
    WHERE store_loc_id = p_store_loc_id AND DATE_FORMAT(tran_date,'%m/%d/%Y') = p_tran_date;
 END;
 
+CREATE PROCEDURE store_loc_exp_report(p_store_loc_id int, p_tran_date varchar(20))
+BEGIN
+   SELECT *
+   FROM store_loc_exp_dtls_v 
+   WHERE store_loc_id = p_store_loc_id AND DATE_FORMAT(exp_date,'%m/%d/%Y') = p_tran_date;
+END;
+
 CREATE PROCEDURE Receiving_post(p_receiving_id int(5))
 BEGIN
 
