@@ -610,7 +610,8 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
    COMMENT='Stock Issuance details to stores'
    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;    
 
-   CREATE TABLE IF NOT EXISTS `store_loc_supply_daily` (
+ 
+ CREATE TABLE IF NOT EXISTS `store_loc_supply_daily` (
   `store_loc_supply_daily_id` int(5) unsigned NOT NULL auto_increment,
   `store_loc_id`            int(5),
   `loc_supply_id`           int(5),
@@ -1062,3 +1063,9 @@ CREATE OR REPLACE VIEW loc_pc_dtls_v as
 SELECT a.*, b.loc_id, b.store_loc_id,  b.tran_date
 FROM loc_pc_dtls a, loc_pc b
 WHERE a.loc_pc_id=b.loc_pc_id;
+
+CREATE OR REPLACE VIEW store_loc_supply_daily_v AS
+select a.*, b.supply_code, b.unit_desc
+from store_loc_supply_daily a, store_loc_supplies_v b
+where a.store_loc_id=b.store_loc_id
+AND a.loc_supply_id = b.loc_supply_id;

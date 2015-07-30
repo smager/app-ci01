@@ -169,10 +169,9 @@ BEGIN
     SELECT store_loc_id, is_date, loc_supply_id, unit_price, unit_cost, sum(supply_is_qty) as SumISQty
      FROM supply_is_dtls_v
     WHERE supply_is_id = p_supply_is_id
-    GROUP BY is_date, loc_supply_id, unit_price, unit_cost
-    HAVING SumISQty > 0;
+    GROUP BY is_date, loc_supply_id, unit_price, unit_cost;
   END IF;
- DELETE FROM supply_is_dtls WHERE supply_id=p_supply_id and ifnull(supply_is_qty,0)=0;
+ DELETE FROM supply_is_dtls WHERE supply_is_id=p_supply_is_id and ifnull(supply_is_qty,0)=0;
 END;
 
 
@@ -204,6 +203,14 @@ BEGIN
 select * from loc_pc where posted=0
 and loc_id=p_loc_id;
 END;
+
+
+CREATE PROCEDURE getStoreLocSupplyDaily(p_store_loc_id int(5), p_date VARCHAR(20))
+BEGIN
+select * from store_loc_supply_daily_v where store_loc_id = p_store_loc_id
+and DATE_FORMAT(stock_date,'%m/%d/%Y') = p_date; 
+END;
+
 
 CREATE PROCEDURE delPC_Unposted (IN p_loc_pc_id int(5))
 BEGIN
