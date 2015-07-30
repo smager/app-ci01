@@ -620,6 +620,7 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
   `remaining_qty`           decimal(7,2) DEFAULT 0,
   `is_qty`                  decimal(7,2) DEFAULT 0,
   `out_qty`                 decimal(7,2) DEFAULT 0,
+  `end_qty`                 decimal(7,2) DEFAULT 0,
   `unit_price`              decimal(7,2) DEFAULT 0,
   `unit_cost`              decimal(7,2) DEFAULT 0,
   `created_by`             int(5),
