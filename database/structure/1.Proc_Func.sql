@@ -295,24 +295,17 @@ WHERE receiving_id = p_receiving_id
 AND ifnull(getLocSupplyBrandId(loc_id, supply_id, supply_brand_id),0) = 0; 
 END;
 
-
-CREATE PROCEDURE store_loc_supplies_ins (IN p_store_loc_id INT(10), IN p_store_id INT(10))
+CREATE PROCEDURE store_loc_supplies_ins (p_store_loc_id INT(10),p_store_id INT(10))
 BEGIN  
-DECLARE l_loc_id INT
+DECLARE l_loc_id INT;
     SELECT loc_id INTO l_loc_id FROM store_loc WHERE store_loc_id=p_store_loc_id;
     IF ifnull(p_store_id,0) <> 0 THEN
        insert into store_loc_supplies (store_loc_id, loc_supply_id) 
        select p_store_loc_id, a.loc_supply_id
          from loc_supplies_v a
-        where loc_id = l_loc_id 
+        where a.loc_id = l_loc_id 
         AND EXISTS (SELECT supply_id FROM store_supplies_v b WHERE b.supply_id = a.supply_id AND b.store_id = p_store_id); 
     END IF;
-     INSERT INTO store_loc_supply_brands(store_loc_supply_id, loc_supply_brand_id, stock_qty)
-     SELECT b.store_loc_supply_id , a.loc_supply_brand_id, 0 FROM loc_supply_brands_v a, store_loc_supplies_v b
-     WHERE b.loc_supply_id = a.loc_supply_id
-     AND b.store_loc_id=p_store_loc_id
-     AND NOT EXISTS (SELECT c.store_loc_supply_brand_id FROM store_loc_supply_brands_v c 
-     WHERE a.loc_supply_brand_id = c.loc_supply_brand_id AND c.store_loc_id=p_store_loc_id);
 END;
 
 CREATE PROCEDURE LocSupplyBrandsIns(p_loc_id int(5))
@@ -331,11 +324,14 @@ IF ifnull(p_store_loc_id,0) = 0 THEN
    WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
    AND b.loc_pc_id = p_loc_pc_id;
 ELSE
-   UPDATE store_loc_supply_brands a, loc_pc_dtls b
-   SET a.stock_qty = b.pc_qty
-   WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
-   AND b.loc_pc_id = p_loc_pc_id
-   AND EXISTS (SELECT store_loc_id FROM store_loc_supplies c WHERE a.store_loc_supply_id = c.store_loc_supply_id and c.store_loc_id = p_store_loc_id);
+   UPDATE supply_is_dtls_v a, loc_pc_dtls_v b
+   SET a.returned_qty = b.pc_qty 
+   WHERE b.loc_supply_brand_id = a.loc_supply_brand_id
+   AND b.store_loc_id = a.store_loc_id
+   AND b.pc_date = a.is_date;
+   
+   
+
 END IF;
 END;     
 
