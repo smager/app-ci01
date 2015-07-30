@@ -127,7 +127,7 @@ BEGIN
    IF IFNULL(l_id,0)=0 THEN
       SELECT *, "" as supply_is_id, "" as supply_is_dtl_id, "" as supply_is_qty FROM loc_supply_brands_v WHERE loc_supply_id =p_loc_supply_id and stock_qty > 0 ;
    ELSE
-    SELECT a.supply_is_id, a.supply_is_dtl_id, b.loc_supply_id,  a.loc_supply_brand_id, b.stock_qty, b.brand_name, b.cu_desc, a.supply_is_qty, a.beg_qty, a.prev_qty
+    SELECT a.supply_is_id, a.supply_is_dtl_id, b.loc_supply_id,  a.loc_supply_brand_id, b.stock_qty, b.brand_name, b.cu_desc, a.supply_is_qty
        FROM supply_is_dtls a, loc_supply_brands_v b
        WHERE a.loc_supply_brand_id = b.loc_supply_brand_id and a.supply_is_id = l_id
        AND b.loc_supply_id =p_loc_supply_id
