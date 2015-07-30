@@ -215,6 +215,14 @@ BEGIN
 END; 
 
 
+CREATE FUNCTION get_store_pc_qty(p_store_loc_id int,  p_loc_supply_brand_id int, p_tran_date DATE) RETURNS decimal(7,2) 
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl decimal(7,2);
+    SELECT pc_qty INTO lvl FROM loc_pc_dtls_v WHERE store_loc_id = p_store_loc_id and loc_supply_brand_id=p_loc_supply_brand_id AND  DATE_FORMAT(pc_date,'%m/%d/%Y') = p_tran_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
 
 CREATE PROCEDURE store_daily_cash_postedCB(IN p_store_daily_cash_id int(5))
 BEGIN

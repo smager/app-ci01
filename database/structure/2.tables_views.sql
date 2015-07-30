@@ -1020,9 +1020,10 @@ where a.po_dtl_id = b.po_dtl_id
 and a.supply_brand_id = b.supply_brand_id;
 
 CREATE OR REPLACE VIEW loc_pc_dtls_v AS
-SELECT a.*, b.seq_no, b.supply_code, b.brand_name, b.cu_desc
-FROM loc_pc_dtls a, loc_supply_brands_v b
-WHERE a.loc_supply_brand_id = b.loc_supply_brand_id;
+SELECT a.*,c.loc_id, c.store_loc_id, c.pc_date, b.seq_no, b.supply_code, b.brand_name, b.cu_desc
+FROM loc_pc_dtls a, loc_supply_brands_v b, loc_pc c
+WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
+AND a.loc_pc_id=c.loc_pc_id;
 
 CREATE OR REPLACE VIEW StoreLocSupplyBrandsSum_v AS
 SELECT store_loc_supply_id, SUM(stock_qty) as ttl_stocks
@@ -1066,3 +1067,8 @@ CREATE OR REPLACE VIEW store_loc_exp_dtls_v as
 SELECT a.*, b.store_loc_id,  b.exp_date
 FROM store_loc_exp_dtls a, store_loc_exp b
 WHERE a.store_loc_exp_id=b.store_loc_exp_id;
+
+CREATE OR REPLACE VIEW loc_pc_dtls_v as
+SELECT a.*, b.loc_id, b.store_loc_id,  b.tran_date
+FROM loc_pc_dtls a, loc_pc b
+WHERE a.loc_pc_id=b.loc_pc_id;
