@@ -965,7 +965,8 @@ and c.store_loc_id =b.store_loc_id
 and c.posted=0;
 
 CREATE OR REPLACE VIEW supply_is_dtls_v AS
-select a.*, b.store_loc_id, b.is_date, c.supply_code, c.brand_name, c.cu_desc, c.loc_supply_id, c.supply_id, getSupplyUprice(supply_id) as unit_price, getSupplyUcost(supply_id) as unit_cost
+select a.*, b.store_loc_id, b.is_date, c.supply_code, c.brand_name, c.cu_desc, c.loc_supply_id, c.supply_id, 
+getSupplyUprice(supply_id) as unit_price, getSupplyUcost(supply_id) as unit_cost
 from supply_is_dtls a, supply_is b, loc_supply_brands_v c
 where a.supply_is_id=b.supply_is_id
 AND a.loc_supply_brand_id = c.loc_supply_brand_id;

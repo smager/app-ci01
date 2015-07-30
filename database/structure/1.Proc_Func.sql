@@ -25,7 +25,7 @@ BEGIN
  RETURN (lvl);
 END;
 
-create function  getSupplyUcost(p_supply_brand_id int) RETURNS decimal(7,2)
+create function  getSupplyUcost(p_supply_id int) RETURNS decimal(7,2)
     DETERMINISTIC
 BEGIN
     DECLARE lvl decimal(7,2);
@@ -128,10 +128,9 @@ BEGIN
      SELECT * FROM store_loc_supplies_v WHERE store_loc_id =p_store_loc_id;
 END
 
-CREATE PROCEDURE getSupplyIsUnposted (IN p_store_loc_id int, p_loc_supply_id int, p_is_date VARCHAR(20))
+CREATE PROCEDURE getSupplyIsUnposted (IN p_store_loc_id int, IN p_loc_supply_id int)
 BEGIN
    DECLARE l_id INT(5);
-   DECLARE l_date DATE;
    SELECT supply_is_id INTO l_id FROM supply_is WHERE posted=0 and store_loc_id = p_store_loc_id limit 1;
    IF IFNULL(l_id,0)=0 THEN
       SELECT *, "" as supply_is_id, "" as supply_is_dtl_id, "" as supply_is_qty FROM loc_supply_brands_v WHERE loc_supply_id =p_loc_supply_id and stock_qty > 0 ;
@@ -159,19 +158,21 @@ END;
 CREATE PROCEDURE setStoreStockIsPost (IN p_supply_is_id INT, p_store_loc_id INT, p_date VARCHAR(20))   
 BEGIN
   DECLARE l_found VARCHAR(5);
-  SELECT '1' INTO l_found FROM store_loc_supply_daily WHERE store_loc_id = p_store_loc_id AND DATE_FORMAT(stock_date,'%m/%d/%Y')=p_date;
+  SELECT '1' INTO l_found FROM store_loc_supply_daily WHERE store_loc_id = p_store_loc_id AND DATE_FORMAT(stock_date,'%m/%d/%Y')=p_date limit 1;
   IF l_found='1' THEN
     UPDATE store_loc_supply_daily a, supply_is_dtls_v b
-       SET a.is_qty = a.is_qty + b.is_qty
-     WHERE v.supply_is_id = p_supply_is_id
-       AND a.loc_supply_id = v.loc_supply_id;
+       SET a.is_qty = a.is_qty + b.supply_is_qty
+     WHERE b.supply_is_id = p_supply_is_id
+       AND a.loc_supply_id = b.loc_supply_id;
   ELSE
-    INSERT INTO store_loc_supply_daily (stock_date, loc_supply_id, unit_price, unit_cost, is_qty)
-    SELECT is_date, loc_supply_id, unit_price, unit_cost, sum(is_qty) as SumISQty,
+    INSERT INTO store_loc_supply_daily (store_loc_id, stock_date, loc_supply_id, unit_price, unit_cost, is_qty)
+    SELECT store_loc_id, is_date, loc_supply_id, unit_price, unit_cost, sum(supply_is_qty) as SumISQty
      FROM supply_is_dtls_v
     WHERE supply_is_id = p_supply_is_id
-    GROUP BY is_date, loc_supply_id, unit_price, unit_cost;
+    GROUP BY is_date, loc_supply_id, unit_price, unit_cost
+    HAVING SumISQty > 0;
   END IF;
+ DELETE FROM supply_is_dtls WHERE supply_id=p_supply_id and ifnull(supply_is_qty,0)=0;
 END;
 
 
