@@ -63,9 +63,10 @@ class supply_is_model extends CI_Model{
         $is_id = $this->common_model->update($post,$params);                        
         // posted=true;
         $store_loc_id=$post['p_store_loc_id'];
-        if($post["p_posted_is"]==true) {
+        $is_date=$post['p_is_date'];
+        if($post["p_posted"]==true) {
              $this->db->query("call setLocStockIsPost($is_id)");
-             $this->db->query("call setStoreStockIsPost($is_id,$store_loc_id)");
+             $this->db->query("call setStoreStockIsPost($is_id,$store_loc_id,'$is_date')");
         }
     } 
     
