@@ -73,13 +73,6 @@ BEGIN
  RETURN (lvl);
 END;
 
-create function  getStoreLocTotalStocks(p_store_loc_supply_id int) RETURNS decimal(7,2)
-    DETERMINISTIC
-BEGIN
-    DECLARE lvl decimal(7,2);
-    SELECT ttl_stocks INTO lvl FROM StoreLocSupplyBrandsSum_v WHERE store_loc_supply_id=p_store_loc_supply_id;
- RETURN (lvl);
-END;
 
 create function  getLocSupplyId(p_loc_id int, p_supply_id int) RETURNS int(5)
     DETERMINISTIC
@@ -127,27 +120,19 @@ BEGIN
      SELECT * FROM store_loc_supplies_v WHERE store_loc_id =p_store_loc_id;
 END
 
-CREATE FUNCTION getStoreLocSupplyBrandStockQty (p_store_loc_id INT, p_loc_supply_brand_id INT) RETURNS DECIMAL(7,2)
-    DETERMINISTIC
-BEGIN
-    DECLARE lvl DECIMAL(7,2);
-    SELECT stock_qty INTO lvl FROM store_loc_supply_brands_v WHERE store_loc_id = p_store_loc_id and loc_supply_brand_id = p_loc_supply_brand_id; 
- RETURN (ifnull(lvl,0));
-END;
-
 CREATE PROCEDURE getSupplyIsUnposted (IN p_store_loc_id int, p_loc_supply_id int)
 BEGIN
    DECLARE l_id INT(5);
    SELECT supply_is_id INTO l_id FROM supply_is WHERE posted_is=0 and store_loc_id = p_store_loc_id limit 1;
    IF IFNULL(l_id,0)=0 THEN
-      SELECT *, "" as supply_is_id, "" as supply_is_dtl_id, "" as supply_is_qty, getStoreLocSupplyBrandStockQty(p_store_loc_id, loc_supply_brand_id) as prev_qty, "" as beg_qty FROM loc_supply_brands_v WHERE loc_supply_id =p_loc_supply_id and stock_qty > 0 ;
+      SELECT *, "" as supply_is_id, "" as supply_is_dtl_id, "" as supply_is_qty FROM loc_supply_brands_v WHERE loc_supply_id =p_loc_supply_id and stock_qty > 0 ;
    ELSE
     SELECT a.supply_is_id, a.supply_is_dtl_id, b.loc_supply_id,  a.loc_supply_brand_id, b.stock_qty, b.brand_name, b.cu_desc, a.supply_is_qty, a.beg_qty, a.prev_qty
        FROM supply_is_dtls a, loc_supply_brands_v b
        WHERE a.loc_supply_brand_id = b.loc_supply_brand_id and a.supply_is_id = l_id
        AND b.loc_supply_id =p_loc_supply_id
       UNION
-      SELECT "" as supply_is_id, "" as supply_is_dtl_id, a.loc_supply_id, a.loc_supply_brand_id, a.stock_qty, a.brand_name, a.cu_desc, "" as supply_is_qty, getStoreLocSupplyBrandStockQty(p_store_loc_id, loc_supply_brand_id) as prev_qty, "" as beg_qty
+      SELECT "" as supply_is_id, "" as supply_is_dtl_id, a.loc_supply_id, a.loc_supply_brand_id, a.stock_qty, a.brand_name, a.cu_desc, "" as supply_is_qty 
         FROM loc_supply_brands_v a 
        WHERE a.stock_qty > 0 AND a.loc_supply_id = p_loc_supply_id AND NOT EXISTS (SELECT b.loc_supply_brand_id FROM supply_is_dtls b 
        WHERE b.loc_supply_brand_id = b.loc_supply_brand_id and supply_is_id = l_id);   

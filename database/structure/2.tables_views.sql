@@ -512,20 +512,6 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   COMMENT='Store Location Supplies reference'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
   
-  CREATE TABLE IF NOT EXISTS `store_loc_supply_brands` (
-  `store_loc_supply_brand_id` int(5) unsigned NOT NULL auto_increment,
-  `store_loc_supply_id`    int(5),
-  `loc_supply_brand_id`    int(5),
-  `stock_qty`              decimal(7,2),
-  `created_by`             int(5),
-  `created_date`           datetime,
-  `updated_by`             int(5),
-  `updated_date`           datetime,
-  PRIMARY KEY `store_loc_supply_brands_pk`  (`store_loc_supply_brand_id`),
-  UNIQUE KEY `store_loc_supply_brands_uk` (`store_loc_supply_id`,`loc_supply_brand_id`)
-)
-  COMMENT='Store Location Supplies per brand stocks'
-  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
   
   CREATE TABLE IF NOT EXISTS `store_loc_exp` (
    `store_loc_exp_id`   int(5) unsigned NOT NULL auto_increment,
@@ -614,10 +600,6 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
    `supply_is_id`            int(5),
    `supply_is_qty`           decimal(7,2),
    `loc_supply_brand_id`     int(5),
-   `prev_qty`                decimal(7,2) DEFAULT 0,
-   `beg_qty`                 decimal(7,2) DEFAULT 0,
-   `used_qty`                decimal(7,2) DEFAULT 0,
-   `returned_qty`            decimal(7,2) DEFAULT 0,
    `unit_price`              decimal(7,2) DEFAULT 0,
    `unit_cost`               decimal(7,2) DEFAULT 0,
    `created_by`              int(5),
@@ -629,6 +611,26 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
  )
    COMMENT='Stock Issuance details to stores'
    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+  CREATE TABLE IF NOT EXISTS `store_loc_supply_daily` (
+  `store_loc_supply_daily_id` int(5) unsigned NOT NULL auto_increment,
+  `store_loc_supply_id`     int(5),
+  `supply_is_id`            int(5),
+  `prev_qty`                decimal(7,2) DEFAULT 0,
+  `beg_qty`                 decimal(7,2) DEFAULT 0,
+  `used_qty`                decimal(7,2) DEFAULT 0,
+  `returned_qty`            decimal(7,2) DEFAULT 0,
+  `created_by`             int(5),
+  `created_date`           datetime,
+  `updated_by`             int(5),
+  `updated_date`           datetime,
+  PRIMARY KEY `store_loc_supply_daily_pk`  (`store_loc_supply_daily_id`),
+  UNIQUE KEY `store_loc_supply_daily_uk` (`store_loc_supply_id`,`supply_is_id`)
+)
+  COMMENT='Store Location Supplies daily stocks'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+ 
+
    
    CREATE TABLE IF NOT EXISTS `stock_transfer` (
    `st_id`   int(5) unsigned NOT NULL auto_increment,
@@ -938,7 +940,7 @@ WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW store_loc_supplies_v AS
 select a.store_loc_supply_id, a.store_loc_id, c.store_id, b.supply_id, a.loc_supply_id, b.supply_code, b.unit_desc, stock_daily_qty, 
-getStoreLocTotalStocks(store_loc_supply_id) as store_stocks, b.ttl_stocks, getSupplyUprice(b.supply_id) as unit_price
+getSupplyUprice(b.supply_id) as unit_price
 from store_loc_supplies a, loc_supplies_v b, store_loc c
 WHERE a.store_loc_id = c.store_loc_id
 AND a.loc_supply_id = b.loc_supply_id
@@ -947,7 +949,7 @@ order by b.seq_no;
 
 CREATE OR REPLACE VIEW store_loc_supplies2_v AS
 select "" as store_loc_supply_id, "" as store_loc_id, a.store_id, a.supply_id, "" as loc_supply_id, b.supply_code, b.unit_desc, "" as stock_daily_qty, 
-"" as store_stocks, "" as ttl_stocks, getSupplyUprice(b.supply_id) as unit_price
+getSupplyUprice(b.supply_id) as unit_price
 from  store_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
@@ -1025,28 +1027,16 @@ FROM loc_pc_dtls a, loc_supply_brands_v b, loc_pc c
 WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
 AND a.loc_pc_id=c.loc_pc_id;
 
-CREATE OR REPLACE VIEW StoreLocSupplyBrandsSum_v AS
-SELECT store_loc_supply_id, SUM(stock_qty) as ttl_stocks
-FROM store_loc_supply_brands
-GROUP BY store_loc_supply_id;
-
 create or replace view is_dtls_v as
 select a.*, b.supply_code, b.brand_name, b.cu_desc 
 from supply_is_dtls a, loc_supply_brands_v b
 where a.loc_supply_brand_id = b.loc_supply_brand_id;
-
 
 create or replace view supply_is_v as
 select a.*, b.store_loc 
 FROM supply_is a, store_loc b
 WHERE a.store_loc_id = b.store_loc_id
 AND posted_used=0;
-
-create or replace view store_loc_supply_brands_v as
-select a.*, b.store_loc_id
-FROM store_loc_supply_brands a, store_loc_supplies_v b
-where a.store_loc_supply_id = b.store_loc_supply_id
-order by b.seq_no;
 
 CREATE OR REPLACE VIEW stock_transfer_unposted_v AS 
 select *
