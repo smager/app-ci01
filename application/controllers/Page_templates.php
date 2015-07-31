@@ -39,6 +39,11 @@ class page_templates extends Base_Controller {
         jsonOut($this->page_templates_model->getdata($js_id)->result());
       
 	}   
+        
+    public function search()
+	{  
+        jsonOut($this->page_templates_model->search($this->input->get())->result());      
+	}   
   
     
     public function update()

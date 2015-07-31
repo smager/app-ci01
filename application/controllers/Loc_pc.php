@@ -13,16 +13,8 @@ class loc_pc extends Base_Controller {
         $this->load->view('default_view');
 	}
 
-    public function get_loc_pc_new($loc_id,$store_loc_id=0){
-    
-        jsonOut($this->loc_pc_model->getLocPCNew($loc_id,$store_loc_id)->result());
-        
-    }
-    
-    public function getdata_dtls($loc_pc_id){
-    
-        jsonOut($this->loc_pc_model->getdata_dtls($loc_pc_id)->result());
-        
+    public function get_loc_pc($loc_id=0,$store_loc_id=0,$loc_pc_id=0){    
+        jsonOut($this->loc_pc_model->getLocPCNew($loc_id,$store_loc_id,$loc_pc_id)->result());        
     }
     
     
@@ -35,10 +27,8 @@ class loc_pc extends Base_Controller {
         
     public function update()
 	{
-        jsonOut(
-            array( "loc_pc_id" => $this->loc_pc_model->update($this->input->post()) )
-        );        
-	}    
+        jsonOut(  $this->loc_pc_model->update($this->input->post()) );        
+    }    
    
     public function delete($po_id)
 	{

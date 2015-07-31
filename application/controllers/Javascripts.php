@@ -51,6 +51,12 @@ class javascripts extends Base_Controller {
         jsonOut($this->javascripts_model->getdata($js_id)->result());
       
 	}   
+
+    public function search()
+	{  
+        jsonOut($this->javascripts_model->search($this->input->get())->result());      
+	}   
+  
   
     
     public function update()

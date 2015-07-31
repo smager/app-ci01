@@ -11,6 +11,17 @@ class javascripts_model extends CI_Model{
         $query = $this->db->query("SELECT * FROM javascripts $where order by page_url");
         return $query;    
     }
+
+    function search($get){
+        $where =" where 1=1 ";        
+        
+        if(isset($get["p_url"]) )  $where .="and page_url like '%" . $get["p_url"] . "%'";   
+        if(isset($get["p_content"]) )  $where .="and content like '%" . $get["p_content"] . "%'";   
+        
+        $query = $this->db->query("SELECT * FROM javascripts $where order by page_url");
+        return $query;    
+    }    
+        
     
     function getdata_by_url($url=''){
         $where ="";        

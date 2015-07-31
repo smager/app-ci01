@@ -53,6 +53,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <?php if($this->input->get("page_url")==''){ ?>        
     <form id="frm" action="<?php echo base_url('javascripts/update');?>" method="post" >
+        <div class="form-horizontal ">
+            <div class="form-group  ">  
+                <div class="col-xs-12">
+                    <label class=" col-xs-1 control-label">Page Url:</label>
+                    <div class=" col-xs-2">
+                        <input type="text" name="p_url" id="p_url" class="form-control input-sm ">
+                    </div>  
+
+                    <label class=" col-xs-1 control-label">Content:</label>
+                    <div class=" col-xs-2">
+                        <input type="text" name="p_content" id="p_content" class="form-control input-sm ">
+                    </div>                  
+
+                    <button type="button"  class="btn btn-primary btn-sm" id="btnSearch">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </div>    
+            </div> 
+        </div>                
     <table id="grid" class="table">  
         <thead>
         <tr>
@@ -84,6 +103,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="<?php echo base_url("assets/ace/src-noconflict/ext-language_tools.js"); ?>"></script>
     
 <script>    
+ var defaultUrl= base_url + "javascripts/getdata_json/";    
  var editor =null;  
  var w1=null;
 
@@ -101,7 +121,7 @@ $(window).bind('keydown', function(e) {
 });    
  
 $(document).ready(function(){
-    displayDataToGrid();
+    displayDataToGrid(defaultUrl);
 });
     
     
@@ -139,12 +159,12 @@ function createDhtmlxWindow(p){
     return w;
 }
     
-function displayDataToGrid(){ 
+function displayDataToGrid(url){ 
     var page_url='<?php echo $this->input->get("page_url");?>';
     if (page_url!='') return;
     zsi.json.loadGrid({
          table  : "#grid"
-        ,url    : base_url + "javascripts/getdata_json"
+        ,url    : url
         ,td_body: [ 
             function(d){
                 return '<input id="p_cb[]" name="p_cb[]" class="" type="checkbox">'
@@ -162,7 +182,7 @@ function displayDataToGrid(){
 }
 
 function getInfo(p_id){
-    $.getJSON(base_url + "javascripts/getdata_json/" + p_id
+    $.getJSON(defaultUrl +  p_id
        ,function(data){
             var d = data[0];
             
@@ -207,6 +227,11 @@ function showWindow(onComplete){
 }    
 
 
+$("#btnSearch").click(function(){     
+   var params  = "?p_url=" + $("#p_url").val() + "&p_content=" +  $("#p_content").val();    
+   displayDataToGrid( base_url + "javascripts/search" + params );
+});    
+
     
 function submit(p_IsHide){
     $("#p_content").val(editor.getSession().getValue());            
@@ -214,7 +239,7 @@ function submit(p_IsHide){
     if(p_IsHide==true) w1.close();        
     $.post(base_url + "javascripts/update",data,function(d){   
         zsi.form.showAlert("alert");
-        displayDataToGrid();
+        displayDataToGrid(defaultUrl);
     });    
 }    
     
@@ -229,7 +254,7 @@ function checkDelete(l_cmd) {
    if (l_stmt!="") {
       if(confirm("Are you sure you want to delete selected items?")) {
       $.post( l_cmd , l_stmt, function(d){
-            displayDataToGrid();
+            displayDataToGrid(defaultUrl);
          }).fail(function(d) {
             alert("Sorry, the curent transaction is not successfull.");
         });

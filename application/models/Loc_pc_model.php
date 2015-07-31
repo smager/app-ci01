@@ -5,16 +5,17 @@ class loc_pc_model extends CI_Model{
 
     }
     
-    function getLocPCNew($loc_id,$store_loc_id){
-        $query = $this->db->query("call getLocPCNew($loc_id,$store_loc_id);");
+    function getLocPCNew($loc_id,$store_loc_id,$loc_pc_id){
+        $query = $this->db->query("call getLocPC($loc_id,$store_loc_id,$loc_pc_id);");
         return $query;    
     }
 
-    
+    /*
     function getdata_dtls($loc_pc_id){
         $query = $this->db->query("SELECT * FROM loc_pc_dtls_v where loc_pc_id=$loc_pc_id");
         return $query;    
     }
+    */
 
      function get_unposted_pc(){
         $query = $this->db->query("select * from loc_pc where posted=0");
@@ -32,7 +33,7 @@ class loc_pc_model extends CI_Model{
             )           
             ,'details' => array(
                 'pk'=> 'loc_pc_dtl_id'
-                ,'dbKeys'=> array('loc_supply_brand_id','pc_qty')
+                ,'dbKeys'=> array('loc_supply_brand_id','store_loc_supply_id','pc_qty')
                // ,'mustNotEmptyKeys'=> array('po_qty')
                 ,'table'=>'loc_pc_dtls'
             )
@@ -48,7 +49,8 @@ class loc_pc_model extends CI_Model{
             $this->db->query($sql);
         }
         
-        return  $loc_pc_id;
+        $query = $this->db->query("select * from loc_pc where loc_pc_id=$loc_pc_id");        
+        return  $query->result()[0];
     }        
     
     
