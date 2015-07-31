@@ -11,7 +11,7 @@ class supply_is extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('supply_is_list');
+        $this->load->view('default_view');
 	}
     
 	public function usage()
