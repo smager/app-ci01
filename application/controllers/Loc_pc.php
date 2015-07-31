@@ -10,7 +10,7 @@ class loc_pc extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('loc_pc_list');
+        $this->load->view('default_view');
 	}
 
     public function getdata($loc_id){
