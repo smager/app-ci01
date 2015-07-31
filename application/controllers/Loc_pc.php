@@ -13,9 +13,9 @@ class loc_pc extends Base_Controller {
         $this->load->view('default_view');
 	}
 
-    public function getdata($loc_id){
+    public function get_loc_pc_new($loc_id,$store_loc_id=0){
     
-        jsonOut($this->loc_pc_model->getdata($loc_id)->result());
+        jsonOut($this->loc_pc_model->getLocPCNew($loc_id,$store_loc_id)->result());
         
     }
     

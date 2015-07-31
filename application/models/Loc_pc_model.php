@@ -5,8 +5,8 @@ class loc_pc_model extends CI_Model{
 
     }
     
-    function getdata($loc_id){
-        $query = $this->db->query("SELECT * FROM loc_supply_brands_v where loc_id=$loc_id");
+    function getLocPCNew($loc_id,$store_loc_id){
+        $query = $this->db->query("call getLocPCNew($loc_id,$store_loc_id);");
         return $query;    
     }
 
