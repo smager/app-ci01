@@ -126,7 +126,15 @@ END;
 CREATE PROCEDURE getStoreLocSupplies (IN p_store_loc_id INT(10))
 BEGIN
      SELECT * FROM store_loc_supplies_v WHERE store_loc_id =p_store_loc_id;
-END
+END;
+
+create function  getStoreLocSupplyId(p_store_loc_id, p_loc_supply_id int) RETURNS INT(5)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl int(5);
+    SELECT store_loc_supply_id INTO lvl FROM store_loc_supplies WHERE store_loc_id=p_store_loc_id and loc_supply_id=p_loc_supply_id;
+ RETURN (lvl);
+END;
 
 CREATE PROCEDURE getSupplyIsUnposted (IN p_store_loc_id int, IN p_loc_supply_id int)
 BEGIN
@@ -158,23 +166,37 @@ END;
 CREATE PROCEDURE setStoreStockIsPost (IN p_supply_is_id INT, p_store_loc_id INT, p_date VARCHAR(20))   
 BEGIN
   DECLARE l_found VARCHAR(5);
-  SELECT '1' INTO l_found FROM store_loc_supply_daily WHERE store_loc_id = p_store_loc_id AND DATE_FORMAT(stock_date,'%m/%d/%Y')=p_date limit 1;
+  SELECT '1' INTO l_found FROM store_loc_supply_daily_v WHERE store_loc_id = p_store_loc_id AND DATE_FORMAT(stock_date,'%m/%d/%Y')=p_date limit 1;
   IF l_found='1' THEN
     UPDATE store_loc_supply_daily a, supply_is_dtls_v b
-       SET a.is_qty = a.is_qty + b.supply_is_qty
+       SET a.is_qty = a.is_qty + b.supply_is_qty,
+           a.beg_qty = beg_qty + b.supply_is_qty
      WHERE b.supply_is_id = p_supply_is_id
-       AND a.loc_supply_id = b.loc_supply_id;
+       AND a.store_loc_supply_id = getStoreLocSupplyId(b.store_loc_id,b.loc_supply_id);
   ELSE
-    INSERT INTO store_loc_supply_daily (store_loc_id, stock_date, loc_supply_id, unit_price, unit_cost, is_qty)
-    SELECT store_loc_id, is_date, loc_supply_id, unit_price, unit_cost, sum(supply_is_qty) as SumISQty
-     FROM supply_is_dtls_v
-    WHERE supply_is_id = p_supply_is_id
-    GROUP BY is_date, loc_supply_id, unit_price, unit_cost;
+    INSERT INTO store_loc_supply_daily (store_loc_supply_id,  stock_date,  unit_price, unit_cost, is_qty, beg_qty)
+    SELECT store_loc_supply_id, str_to_date(p_date,'%m/%d/%Y'), unit_price, unit_cost,0,0 FROM store_loc_supplies_v
+    WHERE store_loc_id = p_store_loc_id;
+    
+    UPDATE store_loc_supply_daily a, supply_is_dtls_grp_v b
+       SET a.is_qty = b.SumISQty
+          ,a.beg_qty = b.SumISQty
+     WHERE a.store_loc_supply_id = getStoreLocSupplyId(b.store_loc_id,b.loc_supply_id)
+       AND b.supply_is_id = p_supply_is_id;
   END IF;
  DELETE FROM supply_is_dtls WHERE supply_is_id=p_supply_is_id and ifnull(supply_is_qty,0)=0;
 END;
 
 
+CREATE PROCEDURE setStoreLocSuppDailyRemQty(p_store_loc_id INT,  p_date VARCHAR(20))
+BEGIN
+  UPDATE store_loc_supply_daily a, store_loc_supply_daily_v b
+     SET a.remaining_qty = b.end_qty
+   WHERE b.store_loc_id = p_store_loc_id
+     AND a.store_loc_supply_id = b.store_loc_supply_id
+     AND DATE_FORMAT(date_add(a.stock_date,interval +1 day),'%m/%d/%Y') = DATE_FORMAT(date_add(str_to_date(p_date,'%m/%d/%Y'), interval + 1 day),'%m/%d/%Y')
+     AND DATE_FORMAT(b.stock_date,'%m/%d/%Y') = p_date;
+END;
    
 CREATE PROCEDURE setLocStockIsUsagePost (IN p_supply_is_id INT)   
 BEGIN
@@ -197,13 +219,29 @@ BEGIN
 
 END;
 
-
 CREATE PROCEDURE getLocPC_Unposted(p_loc_id int(5))
 BEGIN
 select * from loc_pc where posted=0
 and loc_id=p_loc_id;
 END;
 
+
+CREATE PROCEDURE getLocPC(p_loc_id INT, p_store_loc_id INT, p_loc_pc_id INT ) 
+BEGIN
+   IF ifNull(p_loc_pc_id,0) = 0 THEN
+     IF ifNull(p_store_loc_id,0) = 0 THEN
+        SELECT * FROM loc_supply_brands_v WHERE loc_id = p_loc_id;
+     ELSE
+        SELECT * FROM store_loc_supplies_v WHERE store_loc_id = p_store_loc_id;
+     END IF;
+   ELSE
+     IF ifNull(p_store_loc_id,0) = 0 THEN
+        SELECT * FROM loc_pc_dtls_v WHERE loc_pc_id = p_loc_pc_id;
+     ELSE
+        SELECT * FROM loc_pc_dtls_by_store_loc_v WHERE loc_pc_id = p_loc_pc_id;
+     END IF;  
+   END IF;
+END;
 
 CREATE PROCEDURE getStoreLocSupplyDaily(p_store_loc_id int(5), p_date VARCHAR(20))
 BEGIN
@@ -326,25 +364,29 @@ FROM supply_brands a
 WHERE NOT EXISTS (SELECT supply_brand_id FROM loc_supply_brands b WHERE b.loc_supply_id =  getLocSupplyId(p_loc_id, a.supply_id));
 END;
 
-CREATE PROCEDURE loc_pc_post(p_loc_pc_id int(5), p_store_loc_id int(5))
+CREATE PROCEDURE loc_pc_post(p_loc_pc_id int(5), p_store_loc_id int(5), p_date varchar(20))
 BEGIN
+DECLARE l_found VARCHAR(5);
 IF ifnull(p_store_loc_id,0) = 0 THEN
    UPDATE loc_supply_brands a, loc_pc_dtls b 
    SET a.stock_qty = b.pc_qty
    WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
    AND b.loc_pc_id = p_loc_pc_id;
 ELSE
-   UPDATE supply_is_dtls_v a, loc_pc_dtls_v b
-   SET a.returned_qty = b.pc_qty 
-   WHERE b.loc_supply_brand_id = a.loc_supply_brand_id
-   AND b.store_loc_id = a.store_loc_id
-   AND b.pc_date = a.is_date;
-   
-   
-
+  SELECT 'found' INTO l_found FROM store_loc_supply_daily_v WHERE store_loc_id = p_store_loc_id AND DATE_FORMAT(stock_date,'%m/%d/%Y')=p_date limit 1;
+  IF ifNull(l_found,'') = '' THEN
+      INSERT INTO store_loc_supply_daily (store_loc_supply_id,  stock_date,  unit_price, unit_cost, is_qty, beg_qty)
+      SELECT store_loc_supply_id, str_to_date(p_date,'%m/%d/%Y'), unit_price, unit_cost,0,0 FROM store_loc_supplies_v
+      WHERE store_loc_id = p_store_loc_id;
+  END IF;
+      UPDATE store_loc_supply_daily a, loc_pc_dtls_by_store_loc_v b
+      SET a.remaining_qty = b.pc_qty,
+          a.beg_qty = beg_qty + b.pc_qty
+      WHERE a.store_loc_supply_id = b.store_loc_supply_id
+      AND a.stock_date = b.pc_date
+      AND b.loc_pc_id = p_loc_pc_id;
 END IF;
-END;     
-
+END; 
 
 CREATE PROCEDURE stock_transfer_post(p_st_id int(5), p_loc_id_to int)
 BEGIN

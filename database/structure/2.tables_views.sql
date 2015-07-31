@@ -567,13 +567,14 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
    `loc_pc_dtl_id`        int(5) unsigned NOT NULL auto_increment,
    `loc_pc_id`            int(5),
    `loc_supply_brand_id`  int(5),
+   `store_loc_supply_id`  int(5),
    `pc_qty`               decimal(7,2),
    `created_by`           int(5),
    `created_date`  datetime,
    `updated_by`    int(5),
    `updated_date`  datetime,
    PRIMARY KEY `loc_pc_dtls_pk`  (`loc_pc_dtl_id`),
-   UNIQUE KEY `loc_pc_dtls_uk` (`loc_pc_id`,`loc_supply_brand_id`)
+   UNIQUE KEY `loc_pc_dtls_uk` (`loc_pc_id`,`loc_supply_brand_id`,`store_loc_supply_id` )
  )
    COMMENT='Stock Physical Count details per location'
    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin; 
@@ -613,8 +614,7 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
  
  CREATE TABLE IF NOT EXISTS `store_loc_supply_daily` (
   `store_loc_supply_daily_id` int(5) unsigned NOT NULL auto_increment,
-  `store_loc_id`            int(5),
-  `loc_supply_id`           int(5),
+  `store_loc_supply_id`     int(5),
   `stock_date`              date,
   `beg_qty`                 decimal(7,2) DEFAULT 0,
   `remaining_qty`           decimal(7,2) DEFAULT 0,
@@ -628,7 +628,7 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
   `updated_by`             int(5),
   `updated_date`           datetime,
   PRIMARY KEY `store_loc_supply_daily_pk`  (`store_loc_supply_daily_id`),
-  UNIQUE KEY `store_loc_supply_daily_uk` (`store_loc_id`,`loc_supply_id`,`stock_date`)
+  UNIQUE KEY `store_loc_supply_daily_uk` (`store_loc_supply_id`,`stock_date`)
 )
   COMMENT='Store Location Supplies daily stocks'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
@@ -907,7 +907,7 @@ AND a.supply_id = c.supply_id
 AND a.conv_id = d.conv_id;
 
 CREATE OR REPLACE VIEW loc_supply_brands_v AS
-select a.*, b.supply_id, b.seq_no, b.supply_code, b.loc_id, c.brand_name, c.cu_desc, concat(b.supply_code, ' ', c.brand_name, ' ', c.cu_desc, ' (',a.stock_qty ,')') as brand_supply, c.conv_unit_qty
+select a.*, b.supply_id, b.seq_no, b.supply_code, b.loc_id, c.brand_name, c.cu_desc, concat(b.supply_code, ' ', c.brand_name, ' ', c.cu_desc, ' (',a.stock_qty ,')') as brand_supply, c.conv_unit_qty, "" as store_loc_supply_id
 from loc_supply_brands a, loc_supplies_v b, supply_brands_v c
 WHERE a.loc_supply_id = b.loc_supply_id
 AND a.supply_brand_id = c.supply_brand_id
@@ -941,7 +941,7 @@ WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW store_loc_supplies_v AS
 select a.store_loc_supply_id, a.store_loc_id, c.store_id, b.supply_id, a.loc_supply_id, b.supply_code, b.unit_desc, stock_daily_qty, 
-getSupplyUprice(b.supply_id) as unit_price
+getSupplyUprice(b.supply_id) as unit_price, getSupplyUcost(b.supply_id) as unit_cost,"" as loc_supply_brand_id
 from store_loc_supplies a, loc_supplies_v b, store_loc c
 WHERE a.store_loc_id = c.store_loc_id
 AND a.loc_supply_id = b.loc_supply_id
@@ -950,7 +950,7 @@ order by b.seq_no;
 
 CREATE OR REPLACE VIEW store_loc_supplies2_v AS
 select "" as store_loc_supply_id, "" as store_loc_id, a.store_id, a.supply_id, "" as loc_supply_id, b.supply_code, b.unit_desc, "" as stock_daily_qty, 
-getSupplyUprice(b.supply_id) as unit_price
+getSupplyUprice(b.supply_id) as unit_price, getSupplyUcost(b.supply_id) as unit_cost, "" as loc_supply_brand_id
 from  store_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
@@ -972,6 +972,12 @@ getSupplyUprice(supply_id) as unit_price, getSupplyUcost(supply_id) as unit_cost
 from supply_is_dtls a, supply_is b, loc_supply_brands_v c
 where a.supply_is_id=b.supply_is_id
 AND a.loc_supply_brand_id = c.loc_supply_brand_id;
+
+CREATE OR REPLACE VIEW supply_is_dtls_grp_v AS
+ SELECT store_loc_id, supply_is_id, is_date, loc_supply_id, unit_price, unit_cost, sum(supply_is_qty) as SumISQty
+   FROM supply_is_dtls_v
+  GROUP BY store_loc_id, supply_is_id, is_date, loc_supply_id, unit_price, unit_cost;
+
 
 CREATE OR REPLACE VIEW po_unposted_v AS
 select *
@@ -1029,6 +1035,14 @@ FROM loc_pc_dtls a, loc_supply_brands_v b, loc_pc c
 WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
 AND a.loc_pc_id=c.loc_pc_id;
 
+CREATE OR REPLACE VIEW loc_pc_dtls_by_store_loc_v AS
+SELECT a.*,c.loc_id, c.store_loc_id, c.pc_date, b.seq_no, b.supply_code, "" as brand_name, b.unit_desc as cu_desc
+FROM loc_pc_dtls a, store_loc_supplies_v b, loc_pc c
+WHERE a.store_loc_supply_id = b.store_loc_supply_id
+AND a.loc_pc_id=c.loc_pc_id;
+
+
+
 create or replace view is_dtls_v as
 select a.*, b.supply_code, b.brand_name, b.cu_desc 
 from supply_is_dtls a, loc_supply_brands_v b
@@ -1066,7 +1080,6 @@ FROM loc_pc_dtls a, loc_pc b
 WHERE a.loc_pc_id=b.loc_pc_id;
 
 CREATE OR REPLACE VIEW store_loc_supply_daily_v AS
-select a.*, b.supply_code, b.unit_desc
+select a.*, b.store_loc_id, b.supply_code, b.unit_desc
 from store_loc_supply_daily a, store_loc_supplies_v b
-where a.store_loc_id=b.store_loc_id
-AND a.loc_supply_id = b.loc_supply_id;
+where a.store_loc_supply_id=b.store_loc_supply_id;
