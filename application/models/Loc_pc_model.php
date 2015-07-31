@@ -44,8 +44,9 @@ class loc_pc_model extends CI_Model{
         // posted=true;
         if($post["p_posted"]==true){        
             $store_loc_id =0;
-            if(isset($post["p_store_loc_id"] )) $store_loc_id = $post["p_store_loc_id"];      
-            $sql = "call loc_pc_post($loc_pc_id,$store_loc_id)";
+            if(isset($post["p_store_loc_id"] )) $store_loc_id = $post["p_store_loc_id"];    
+            $pc_date=$post["p_pc_date"];
+            $sql = "call loc_pc_post($loc_pc_id,$store_loc_id,'$pc_date')";
             $this->db->query($sql);
         }
         

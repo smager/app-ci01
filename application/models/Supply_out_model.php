@@ -24,8 +24,11 @@ class supply_out_model extends CI_Model{
             ,'mustNotEmptyKeys'=> array('out_qty')
             ,'table'=>'store_loc_supply_daily'
         );       
-        $is_id = $this->common_model->update($post,$params);                        
+        $is_id = $this->common_model->update($post,$params);      
         
+        $store_loc_id=$post["p_store_loc_id"];
+        $date=$post["p_date"];                    
+        $this->db->query("call setStoreLocSuppDailyRemQty($store_loc_id,'$date')");        
     } 
 
 }
