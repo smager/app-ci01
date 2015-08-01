@@ -187,15 +187,16 @@ BEGIN
  DELETE FROM supply_is_dtls WHERE supply_is_id=p_supply_is_id and ifnull(supply_is_qty,0)=0;
 END;
 
-
-CREATE PROCEDURE setStoreLocSuppDailyRemQty(p_store_loc_id INT,  p_date VARCHAR(20))
+CREATE PROCEDURE setStoreLocSuppDailyRemQty(p_store_loc_id INT, p_date VARCHAR(20))
 BEGIN
   UPDATE store_loc_supply_daily a, store_loc_supply_daily_v b
-     SET a.remaining_qty = b.end_qty
+     SET a.remaining_qty = b.end_qty,
+         a.beg_qty = b.is_qty + b.end_qty,
+         a.end_qty = b.end_qty 
    WHERE b.store_loc_id = p_store_loc_id
      AND a.store_loc_supply_id = b.store_loc_supply_id
-     AND DATE_FORMAT(date_add(a.stock_date,interval +1 day),'%m/%d/%Y') = DATE_FORMAT(date_add(str_to_date(p_date,'%m/%d/%Y'), interval + 1 day),'%m/%d/%Y')
-     AND DATE_FORMAT(b.stock_date,'%m/%d/%Y') = p_date;
+     AND DATE_FORMAT(b.stock_date,'%m/%d/%Y') = p_date
+     AND DATE_FORMAT(date_add(b.stock_date,interval +1 day),'%m/%d/%Y') = DATE_FORMAT(date_add(str_to_date(p_date,'%m/%d/%Y'), interval + 1 day),'%m/%d/%Y');
 END;
    
 CREATE PROCEDURE setLocStockIsUsagePost (IN p_supply_is_id INT)   

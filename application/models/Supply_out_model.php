@@ -5,6 +5,7 @@ class supply_out_model extends CI_Model{
 
     }
     
+    //reports/getStoreLocSupplyDaily
     function getdata_detail($get){
         $store_loc_id=$get["p_store_loc_id"];
         $date=$get["p_date"];        
