@@ -307,13 +307,13 @@ CREATE FUNCTION get_store_daily_cash_denom_qty(p_store_loc_id int,  p_denominati
     DETERMINISTIC
 BEGIN
     DECLARE lvl INT(5);
-    SELECT denomination_qty INTO lvl FROM store_daily_cash_dtls_v WHERE store_loc_id = p_store_loc_id and denomination=p_denomination AND  DATE_FORMAT(tran_date,'%m/%d/%Y') = p_tran_date; 
+    SELECT denomination_qty INTO lvl FROM store_daily_cash_dtls_v WHERE store_loc_id = p_store_loc_id and denomination=p_denomination AND  tran_date = p_tran_date; 
  RETURN (ifnull(lvl,0));
 END;
 
 CREATE PROCEDURE store_daily_cash_report(p_store_loc_id int, p_tran_date varchar(20))
 BEGIN
-   SELECT *, get_store_daily_cash_denom_qty(store_loc_id, denomination, date_add(tran_date,interval -1 day)) as prev_qty
+   SELECT *, get_store_daily_cash_denom_qty(store_loc_id, denomination, date_add(str_to_date(p_tran_date,'%m/%d/%Y'),interval -2 day)) as prev_qty
    FROM store_daily_cash_dtls_v
    WHERE store_loc_id = p_store_loc_id AND DATE_FORMAT(tran_date,'%m/%d/%Y') = p_tran_date;
 END;

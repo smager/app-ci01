@@ -533,8 +533,10 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   CREATE TABLE IF NOT EXISTS `store_loc_exp_dtls` (
    `store_loc_exp_dtl_id`   int(5) unsigned NOT NULL auto_increment,
    `store_loc_exp_id`  int(5),
-   `exp_desc` VARCHAR(100),
-   `exp_amt` decimal(7,2),
+   `exp_desc`          VARCHAR(100),
+   `exp_amt`           decimal(7,2),
+   `or_no`             VARCHAR(20),
+   `fr_cb_amt`         int(1) NOT NULL default '0',
    `created_by`    int(5),
    `created_date`  datetime,
    `updated_by`    int(5),
