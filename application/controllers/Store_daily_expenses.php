@@ -11,7 +11,7 @@ class store_daily_expenses extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('store_daily_expenses_list');
+		$this->load->view('default_view');
 	}
     
     public function getinfo()
