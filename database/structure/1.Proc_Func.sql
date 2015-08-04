@@ -250,6 +250,15 @@ select * from store_loc_supply_daily_v where store_loc_id = p_store_loc_id
 and DATE_FORMAT(stock_date,'%m/%d/%Y') = p_date; 
 END;
 
+CREATE FUNCTION getStoreLocSupplyDailySum(p_store_loc_id int(5), p_date VARCHAR(20)) RETURNS decimal(7,2) 
+    DETERMINISTIC
+BEGIN
+ DECLARE lvl decimal(7,2);
+    select SUM(out_qty * unit_price) INTO lvl from store_loc_supply_daily_v where store_loc_id = p_store_loc_id
+    and DATE_FORMAT(stock_date,'%m/%d/%Y') = p_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
 
 CREATE PROCEDURE delPC_Unposted (IN p_loc_pc_id int(5))
 BEGIN
@@ -322,6 +331,13 @@ CREATE PROCEDURE store_loc_exp_report(p_store_loc_id int, p_tran_date varchar(20
 BEGIN
    SELECT *
    FROM store_loc_exp_dtls_v 
+   WHERE store_loc_id = p_store_loc_id AND DATE_FORMAT(exp_date,'%m/%d/%Y') = p_tran_date;
+END;
+
+CREATE PROCEDURE store_loc_sales_exp_report(p_store_loc_id int, p_tran_date varchar(20))
+BEGIN
+   SELECT *
+   FROM store_loc_sales_exp_dtls_v 
    WHERE store_loc_id = p_store_loc_id AND DATE_FORMAT(exp_date,'%m/%d/%Y') = p_tran_date;
 END;
 
