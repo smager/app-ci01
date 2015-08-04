@@ -6,7 +6,7 @@ class store_daily_cash_model extends CI_Model{
     }
     
     function getdata($store_loc_id,$date){
-        $str = "SELECT * FROM store_daily_cash where store_loc_id='$store_loc_id' and DATE_FORMAT(tran_date,'%m/%d/%Y')='$date'";
+        $str = "SELECT * FROM store_daily_cash where store_loc_id='$store_loc_id' and DATE_FORMAT(tran_date,'%m/%d/%Y')='$date' and posted_dcash!=1";
         $query = $this->db->query($str);
         return $query;    
     }

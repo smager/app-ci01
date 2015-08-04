@@ -8,15 +8,13 @@ var l_timer;
 
 
 $("#btnSave").click(function(){
-  $.post (base_url + "store_daily_cash/update", $("#frm").serializeArray(), function(d){
-      if(p_posted.val()===0){
-        getStoreDailyCashData();
-      }else{
-        p_posted.val(0);
-        $(".tblStoreDailyCash").clearGrid();  
-      }
-  });
-    
+  $.post (
+          base_url + "store_daily_cash/update"
+        , $("#frm").serializeArray()
+        , function(d){
+            getStoreDailyCashData();
+        }
+    );
 });    
     
 
