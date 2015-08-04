@@ -16,8 +16,10 @@ Date.prototype.isValid = function () {
 };  
 Date.prototype.toShortDate = function () {
     var m =  (this.getMonth()+1) + "";
+    var d = this.getDate() + "";
     m = (m.length==1? "0"+m:m);
-    return m + '/' + this.getDate() + '/' +  this.getFullYear();
+    d = (d.length==1? "0" +d:d);
+    return m + '/' + d + '/' +  this.getFullYear();
 };  
 
 String.prototype.toDateFormat = function () {
@@ -1120,8 +1122,11 @@ $.fn.fillSelect = function(o) {
                $.each(o.data, function(index, optionData) {
                   var l_option = new Option(unescape(optionData.text), optionData.value);
                   ddl.add(l_option, null);
-                  if(optionData.value==o.selectedValue){
-                     ddl.selectedIndex=parseInt(index + reqIndex );
+                  if(o.selectedValue){
+                      if(optionData.value==o.selectedValue){
+                         ddl.selectedIndex=parseInt(index + reqIndex );
+                        
+                      }
                   }
                });
 
