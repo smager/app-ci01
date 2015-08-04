@@ -36,8 +36,7 @@ class store_daily_expenses extends Base_Controller {
     
     public function update()
 	{
-        $this->store_daily_expenses_model->update($this->input->post());
-        redirect( base_url($this->router->fetch_class()) );
+        $this->store_daily_expenses_model->update($this->input->post());        
 	}
     
     

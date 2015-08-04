@@ -10,7 +10,7 @@ class store_daily_expenses_model extends CI_Model{
     }
 
     function getinfo($store_loc_id,$exp_date){
-        $sql = "select * from store_loc_exp where store_loc_id=$store_loc_id and  DATE_FORMAT(exp_date,'%m/%d/%Y')='$exp_date'";
+        $sql = "select * from store_loc_exp where store_loc_id=$store_loc_id and  DATE_FORMAT(exp_date,'%m/%d/%Y')='$exp_date'";        
         $q = $this->db->query($sql);
         if($q->num_rows()>0)
             $result= $q->result(); 
@@ -33,7 +33,6 @@ class store_daily_expenses_model extends CI_Model{
     
     
     function update($post){
-            
         $params=array(            
             'parent' => array(
                  'pk'=> 'store_loc_exp_id'
@@ -42,12 +41,12 @@ class store_daily_expenses_model extends CI_Model{
             )           
             ,'details' => array(
                 'pk'=> 'store_loc_exp_dtl_id'
-                ,'dbKeys'=> array('exp_desc','exp_amt')
-                ,'mustNotEmptyKeys'=> array('exp_desc','exp_amt')
+                ,'dbKeys'=> array('fr_sales','or_no','exp_desc','exp_amt')
+                ,'mustNotEmptyKeys'=> array('fr_sales','or_no','exp_desc','exp_amt')
                 ,'table'=>'store_loc_exp_dtls'
             )
         );       
-        $is_id = $this->common_model->update($post,$params);          
+       return $this->common_model->update($post,$params);          
     
     }        
         
