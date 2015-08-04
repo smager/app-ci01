@@ -54,12 +54,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="col-xs-12">
                     <label class=" col-xs-1 control-label">Page Url:</label>
                     <div class=" col-xs-2">
-                        <input type="text" name="p_url" id="p_url" class="form-control input-sm ">
+                        <input type="text" name="p_filter_url" id="p_filter_url" class="form-control input-sm ">
                     </div>  
 
                     <label class=" col-xs-1 control-label">Content:</label>
                     <div class=" col-xs-2">
-                        <input type="text" name="p_content" id="p_content" class="form-control input-sm ">
+                        <input type="text" name="p_filter_content" id="p_filter_content" class="form-control input-sm ">
                     </div>                  
 
                     <button type="button"  class="btn btn-primary btn-sm" id="btnSearch">
@@ -213,7 +213,7 @@ function showWindow(onComplete){
     
     
 $("#btnSearch").click(function(){     
-   var params  = "?p_url=" + $("#p_url").val() + "&p_content=" +  $("#p_content").val();    
+   var params  = "?p_url=" + $("#p_filter_url").val() + "&p_content=" +  $("#p_filter_content").val();    
    displayDataToGrid( base_url + "page_templates/search" + params );
 });    
 
