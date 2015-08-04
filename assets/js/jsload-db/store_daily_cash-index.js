@@ -12,6 +12,7 @@ $("#btnSave").click(function(){
           base_url + "store_daily_cash/update"
         , $("#frm").serializeArray()
         , function(d){
+            p_posted.val(0);
             getStoreDailyCashData();
         }
     );
@@ -20,7 +21,7 @@ $("#btnSave").click(function(){
 
 function setChangeEvent(){   
     //add tr for summary total
-    var l_summaryTR = "<tr id='total'><td id='totalTitle' colspan='2'>Total = </td><td style='text-align: right;padding-right: 10px'><label id='lblSum'>0.00</label></td></tr>";
+    var l_summaryTR = "<tr class='total'><td id='totalTitle' colspan='2'>Total</td><td style='text-align: right;padding-right: 10px'><label id='lblSum'>0.00</label></td></tr>";
      $(".tblStoreDailyCash").append(l_summaryTR);
     computeTotal();
 
@@ -39,7 +40,7 @@ function setChangeEvent(){
         l_lblamount.text('');
         if( l_result > 0){
             l_amount.val(l_result);
-            l_lblamount.text(l_result.toFixed(2));
+            l_lblamount.text(l_result.toMoney());
         }
         computeTotal();
     });
@@ -51,7 +52,7 @@ function computeTotal(){
         if(this.value) l_total  = (l_total + parseFloat(this.value)); 
     });
     
-    $("#lblSum").text(l_total.toFixed(2));
+    $("#lblSum").text(l_total.toMoney());
 }    
 
     
@@ -60,9 +61,16 @@ function getStoreDailyCashData(){
     $.getJSON(base_url + "store_daily_cash/get_json",l_data
        ,function(d){
               if(d.length > 0 ) {
-                  p_store_daily_cash_id.val(d[0].store_daily_cash_id);
-                  p_posted.val(d[0].posted_dcash);
-                  getStoreDailyCashDetailData();
+                  info=d[0];
+                  if(info.posted_dcash!=1){
+                      p_store_daily_cash_id.val(info.store_daily_cash_id);
+                      p_posted.val(info.posted_dcash);
+                      getStoreDailyCashDetailData();
+                  }else{
+                      p_posted.val(0);
+                      $(".tblStoreDailyCash").clearGrid();
+                      alert("Record for this date is already posted.");
+                  }
               }else{
                   getDenominationData();
               }
