@@ -32,6 +32,12 @@ class reports extends Base_Controller {
         jsonOut($this->store_daily_cash_model->getDailyCashInq($store_loc_id,$isDate)->result());        
     }
 
+    public function get_store_loc_sales_exp_inq(){
+        $this->load->model('store_daily_expenses_model');         
+        $store_loc_id = $this->input->get("p_store_loc_id");
+        $isDate=  $this->input->get("p_is_date");
+        jsonOut($this->store_daily_expenses_model->storeLocSalesExpInq($store_loc_id,$isDate)->result());        
+    }
     public function get_store_loc_exp_inq(){
         $this->load->model('store_daily_expenses_model');         
         $store_loc_id = $this->input->get("p_store_loc_id");
@@ -39,12 +45,7 @@ class reports extends Base_Controller {
         jsonOut($this->store_daily_expenses_model->storeLocExpInq($store_loc_id,$isDate)->result());        
     }
     
-    public function get_store_loc_sales_exp_inq(){
-        $this->load->model('store_daily_sales_expenses_model');         
-        $store_loc_id = $this->input->get("p_store_loc_id");
-        $isDate=  $this->input->get("p_is_date");
-        jsonOut($this->store_daily_sales_expenses_model->storeLocSalesExpInq($store_loc_id,$isDate)->result());        
-    }
+
     
     
 }
