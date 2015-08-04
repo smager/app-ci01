@@ -32,6 +32,16 @@ String.prototype.toDateFormat = function () {
      return val;
 }; 
 
+String.prototype.toMoney = function(){
+    var res = "";
+    if(isNaN(this)===false) res = parseFloat(this).toMoney();
+    return res;
+};
+
+Number.prototype.toMoney = function(){
+    return this.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+};
+
 /* Page Initialization */
 $(document).ready(function(){
    monitorAjaxResponse();      
@@ -897,10 +907,12 @@ zsi.json.loadGrid = function(o){
 
     var l_grid = $(o.table);
     var num_rows=0;
-    var ctr = 0;    
+    var ctr = 0;   
+    var oe="odd";
     var trItem= function(data){
         var r = "";
-        r +="<tr rowObj >";
+        
+        r +="<tr rowObj class='"  + oe + "'>";
             for(var x=0;x<o.td_body.length;x++){
                 var l_prop='';
                 if (typeof o.td_properties !== "undefined"){
@@ -908,6 +920,7 @@ zsi.json.loadGrid = function(o){
                 } 
                 r +="<td " + l_prop + " >" + o.td_body[x](data) + "</td>";                                                         
             }
+            oe = (oe=="odd"?"even":"odd");
         r +="</tr>";                         
 
         l_grid.append(r);
