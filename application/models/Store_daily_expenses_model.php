@@ -42,7 +42,7 @@ class store_daily_expenses_model extends CI_Model{
             ,'details' => array(
                 'pk'=> 'store_loc_exp_dtl_id'
                 ,'dbKeys'=> array('fr_sales','or_no','exp_desc','exp_amt')
-                ,'mustNotEmptyKeys'=> array('fr_sales','or_no','exp_desc','exp_amt')
+                ,'mustNotEmptyKeys'=> array('fr_sales','exp_desc','exp_amt')
                 ,'table'=>'store_loc_exp_dtls'
             )
         );       
