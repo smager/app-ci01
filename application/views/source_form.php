@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     hiddenBox( array( 'name'=>'codepath', 'value'=>$_GET["p_codepath"]));  
     hiddenBox( array( 'name'=>'content'));  
     openFormGroup();
-        inputTextBox( array( 'name'=>"filename",'labelName'=>"File Name :",'labelSize'=>1,'inputSize'=>3,'value'=>$_GET["p_filename"])); 
+        inputTextBox( array( 'name'=>"filename",'labelName'=>"File Name",'labelSize'=>1,'inputSize'=>3,'value'=>$_GET["p_filename"])); 
     closeFormGroup();
     openFormGroup();    
 ?>       
