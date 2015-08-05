@@ -13,7 +13,7 @@ class supplies_model extends CI_Model{
     function update($post){
         $params=array(
              'pk'=> 'supply_id'
-            ,'dbKeys'=> array('seq_no','supply_code','supply_desc','supply_type_id','supply_srp','unit_id','weight_serve')
+            ,'dbKeys'=> array('seq_no','supply_code','supply_desc','supply_type_id','supply_srp','supply_cost','unit_id','weight_serve')
             ,'mustNotEmptyKeys'=> array('supply_code')
             ,'mustNotEmptyOnInsert'=> array('supply_code')
             ,'table'=>'supplies'
