@@ -17,6 +17,32 @@ class source extends Base_Controller {
         $this->load->view('source_view',$data);                
 	}
     
+	public function form()
+	{
+        check_login();
+		$this->load->view('source_form');
+	}    
+    
+	public function get_content($codePath,$fileName)
+	{
+        check_login();
+
+        $this->load->helper('url'); 
+        $this->load->helper('file'); 
+        
+        $path="";
+
+        switch($codePath){
+            case "m" : $path = "./application/models/"; break;
+            case "v" : $path = "./application/views/"; break;
+            case "c" : $path = "./application/controllers/"; break;
+            case "css" : $path = "./assets/css/"; break;
+            
+            default:break;
+        }
+        $string = read_file($path.$fileName);
+		echo $string;
+	}    
     
     
     function dir_map_sort($array)
