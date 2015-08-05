@@ -60,7 +60,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div class="container page">
 <?php 
     echo "\r\n<div class='filesPane'>";
-        echo "\r\n<div class='filegroup controller col-xs-6 col-sm-4 col-md-3 col-lg-3'>";
+        echo "\r\n<div class='filegroup controller col-xs-12 col-sm-6 col-md-4 col-lg-3'>";
         echo "\r\n<div class='title'>Controllers</div>";
         echo "\r\n<ul class='files'>";
         foreach ($controllers as &$c) {
@@ -70,7 +70,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         echo "\r\n<button type='button' class='btn btn-primary btn-sm' id='btnNewC'><span class='glyphicon glyphicon-plus-sign'></span> New</button>";
         echo "\r\n</div>";
 
-        echo "\r\n<div class='filegroup model col-xs-6 col-sm-4 col-md-3 col-lg-3'>";
+        echo "\r\n<div class='filegroup model col-xs-12 col-sm-6 col-md-4 col-lg-3'>";
         echo "\r\n<div class='title'>Models</div>";
         echo "\r\n<ul class='files'>";
         foreach ($models as &$m) {
@@ -81,7 +81,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         echo "\r\n</div>";
  
 
-        echo "\r\n<div class='filegroup view col-xs-6 col-sm-4 col-md-3 col-lg-3'>";
+        echo "\r\n<div class='filegroup view col-xs-12 col-sm-6  col-md-4 col-lg-3'>";
         echo "\r\n<div class='title'>Views</div>";
         echo "\r\n<ul class='files'>";
         foreach ($views as &$v) {
@@ -93,7 +93,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         echo "\r\n<button type='button' class='btn btn-primary btn-sm' id='btnNewV'><span class='glyphicon glyphicon-plus-sign'></span> New</button>";
         echo "\r\n</div>";
 
-        echo "\r\n<div class='filegroup view col-xs-6 col-sm-4 col-md-3 col-lg-3'>";
+        echo "\r\n<div class='filegroup view col-xs-12 col-sm-6 col-md-4 col-lg-3'>";
         echo "\r\n<div class='title'>Helpers</div>";
         echo "\r\n<ul class='files'>";
         foreach ($helpers as &$h) {
@@ -104,7 +104,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         echo "\r\n</div>";
 
 
-        echo "\r\n<div class='filegroup view col-xs-6 col-sm-4 col-md-3 col-lg-3'>";
+        echo "\r\n<div class='filegroup view col-xs-12 col-sm-6 col-md-4 col-lg-3'>";
         echo "\r\n<div class='title'>CSS</div>";
         echo "\r\n<ul class='files'>";
         foreach ($css as &$c) {
