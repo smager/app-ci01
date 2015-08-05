@@ -7,9 +7,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div class="form-horizontal">
     
 <?php 
-    hiddenBox( array( 'name'=>'code_path'));  
-    hiddenBox( array( 'name'=>'file_name'));  
-?>
+    hiddenBox( array( 'name'=>'codepath', 'value'=>$_GET["p_codepath"]));  
+    hiddenBox( array( 'name'=>'filename', 'value'=>$_GET["p_filename"]));  
+    hiddenBox( array( 'name'=>'content'));  
+
+    echo "<label>File Name: " . $_GET["p_filename"] . "</label><br />";
+?>       
    <pre id="editor"></pre>
 <?php
     closeFormGroup();

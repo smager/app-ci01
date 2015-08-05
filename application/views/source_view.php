@@ -157,12 +157,12 @@ function createDhtmlxWindow(p){
     return w;
 }
     
-function getInfo(p_path,p_file_name){
-    $.get(defaultUrl +  "get_content/" + p_path + "/" + p_file_name
+function getInfo(p_path,p_filename){
+    $.get(defaultUrl +  "get_content/" + p_path + "/" + p_filename
        ,function(data){
             data= data.replace(/^\s+/,""); //ltrim
-            showWindow(p_path,function(){
-                $("#p_file_name").val(p_file_name);
+            showWindow(p_path,p_filename,function(){
+                $("#p_filename").val(p_filename);
                 editor.getSession().setValue(unescape(data)); 
             });
         }
@@ -170,8 +170,8 @@ function getInfo(p_path,p_file_name){
    
 }   
     
-function showWindow(codePath,onComplete){
-    $.get(base_url + "source/form",function(html_data){           
+function showWindow(codePath,p_filename,onComplete){
+    $.get(base_url + "source/form?p_codepath="+ codePath + "&p_filename=" + p_filename,function(html_data){           
             w1=createDhtmlxWindow({
                  name : "w1"
                 ,title: "Source"
