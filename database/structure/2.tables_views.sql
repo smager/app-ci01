@@ -5,13 +5,13 @@ user/pwd: zsi / lyncor@tan
 */
 
 CREATE TABLE IF NOT EXISTS `systems` (
-  `system_id` int(5) unsigned NOT NULL auto_increment,
-  `system_name` varchar(64) NOT NULL default '',
-  `system_desc` varchar(100) NOT NULL default '',
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `system_id`      int(5) unsigned NOT NULL auto_increment,
+  `system_name`    varchar(64) NOT NULL default '',
+  `system_desc`    varchar(100) NOT NULL default '',
+  `created_by`     int(5),
+  `created_date`   datetime,
+  `updated_by`     int(5),
+  `updated_date`   datetime,
   PRIMARY KEY  `systems_pk`  (`system_id`),
   UNIQUE KEY  `systems_uk` (`system_name`)
 )
@@ -20,11 +20,11 @@ CREATE TABLE IF NOT EXISTS `systems` (
 
 CREATE TABLE IF NOT EXISTS `menu_types` (
   `menu_type_id` int(5) unsigned NOT NULL auto_increment,
-  `menu_type` varchar(64) NOT NULL default '',
-  `seq_no` int(5),
-  `created_by` int(5),
+  `menu_type`    varchar(64) NOT NULL default '',
+  `seq_no`       int(5),
+  `created_by`   int(5),
   `created_date` datetime,
-  `updated_by` int(5),
+  `updated_by`   int(5),
   `updated_date` datetime,
   PRIMARY KEY  `menu_types_pk`  (`menu_type_id`),
   UNIQUE KEY  `menu_types_uk` (`menu_type`)
@@ -34,15 +34,15 @@ CREATE TABLE IF NOT EXISTS `menu_types` (
 
 
 CREATE TABLE IF NOT EXISTS `menu` (
-  `menu_id` int(5) unsigned NOT NULL auto_increment,
-  `menu_name` varchar(64) NOT NULL default '',
-  `menu_url` varchar(100) NOT NULL default '',
+  `menu_id`      int(5) unsigned NOT NULL auto_increment,
+  `menu_name`    varchar(64) NOT NULL default '',
+  `menu_url`     varchar(100) NOT NULL default '',
   `menu_type_id` int(5),
-  `system_id` int(5),
-  `seq_no` int(5),
-  `created_by` int(5),
+  `system_id`    int(5),
+  `seq_no`       int(5),
+  `created_by`   int(5),
   `created_date` datetime,
-  `updated_by` int(5),
+  `updated_by`   int(5),
   `updated_date` datetime,
   PRIMARY KEY `menu_pk`  (`menu_id`),
   UNIQUE KEY `menu_uk` (`menu_name`)
@@ -51,12 +51,12 @@ CREATE TABLE IF NOT EXISTS `menu` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
   
 CREATE TABLE IF NOT EXISTS `roles` (
-  `role_id` int(5) unsigned NOT NULL auto_increment,
-  `role_code` varchar(5) NOT NULL default '',
-  `role_desc` varchar(64) NOT NULL default '',
-  `created_by` int(5),
+  `role_id`      int(5) unsigned NOT NULL auto_increment,
+  `role_code`    varchar(5) NOT NULL default '',
+  `role_desc`    varchar(64) NOT NULL default '',
+  `created_by`   int(5),
   `created_date` datetime,
-  `updated_by` int(5),
+  `updated_by`   int(5),
   `updated_date` datetime,
   PRIMARY KEY `roles_pk`  (`role_id`),
   UNIQUE KEY `roles_uk` (`role_desc`)
@@ -66,11 +66,11 @@ CREATE TABLE IF NOT EXISTS `roles` (
 
 CREATE TABLE IF NOT EXISTS `role_menus` (
   `role_menu_id` int(5) unsigned NOT NULL auto_increment, 
-  `menu_id` int(5),
-  `role_id` int(5),
-  `created_by` int(5),
+  `menu_id`      int(5),
+  `role_id`      int(5),
+  `created_by`   int(5),
   `created_date` datetime,
-  `updated_by` int(5),
+  `updated_by`   int(5),
   `updated_date` datetime,
   PRIMARY KEY `role_menus_pk` (`role_menu_id`),
   UNIQUE KEY `role_menus_uk` (`role_id`,`menu_id`)
@@ -81,22 +81,22 @@ CREATE TABLE IF NOT EXISTS `role_menus` (
 
 CREATE TABLE IF NOT EXISTS `denomination_ref` (
   `denomination`   decimal(5,2),
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `created_by`     int(5),
+  `created_date`   datetime,
+  `updated_by`     int(5),
+  `updated_date`   datetime,
   PRIMARY KEY `denomination_pk` (`denomination`)
 )
   COMMENT='Money Denomination Reference'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
   CREATE TABLE IF NOT EXISTS `brands` (
-  `brand_id` int(5) unsigned NOT NULL auto_increment,
-  `brand_name` varchar(64) NOT NULL default '', 
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `brand_id`      int(5) unsigned NOT NULL auto_increment,
+  `brand_name`    varchar(64) NOT NULL default '', 
+  `created_by`    int(5),
+  `created_date`  datetime,
+  `updated_by`    int(5),
+  `updated_date`  datetime,
   PRIMARY KEY  `brands_pk`  (`brand_id`),
   UNIQUE KEY  `brands_uk` (`brand_name`)
 )
@@ -104,12 +104,12 @@ CREATE TABLE IF NOT EXISTS `denomination_ref` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
   
   CREATE TABLE IF NOT EXISTS `add_on_rate` (
-    `holiday_pct`   decimal(5,2),
-    `sunday_pct`   decimal(5,2),
-    `created_by` int(5),
-    `created_date` datetime,
-    `updated_by` int(5),
-    `updated_date` datetime
+    `holiday_pct`    decimal(5,2),
+    `sunday_pct`     decimal(5,2),
+    `created_by`     int(5),
+    `created_date`   datetime,
+    `updated_by`     int(5),
+    `updated_date`   datetime
   )
     COMMENT='Add on pct rate Reference'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
@@ -117,13 +117,13 @@ CREATE TABLE IF NOT EXISTS `denomination_ref` (
 CREATE TABLE IF NOT EXISTS `suppliers` (
   `supplier_id`     int(5) unsigned NOT NULL auto_increment,
   `supplier_name`   varchar(64) NOT NULL default '',
-  `contact_name`   varchar(64) NOT NULL default '',
-  `contact_no`   varchar(64) NOT NULL default '',
-  `active` int(5) NOT NULL default '1',   
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `contact_name`    varchar(64) NOT NULL default '',
+  `contact_no`      varchar(64) NOT NULL default '',
+  `active`          int(5) NOT NULL default '1',   
+  `created_by`      int(5),
+  `created_date`    datetime,
+  `updated_by`      int(5),
+  `updated_date`    datetime,
   PRIMARY KEY `suppliers_pk`  (`supplier_id`),
   UNIQUE KEY `suppliers_uk` (`supplier_name`)
 )
@@ -133,11 +133,11 @@ CREATE TABLE IF NOT EXISTS `suppliers` (
 
 CREATE TABLE IF NOT EXISTS `supply_types` (
   `supply_type_id` int(5) unsigned NOT NULL auto_increment,
-  `supply_type` varchar(64) NOT NULL default '',
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `supply_type`    varchar(64) NOT NULL default '',
+  `created_by`     int(5),
+  `created_date`   datetime,
+  `updated_by`     int(5),
+  `updated_date`   datetime,
   PRIMARY KEY  `supply_types_pk`  (`supply_type_id`),
   UNIQUE KEY  `supply_types_uk` (`supply_type`)
 )
@@ -145,9 +145,9 @@ CREATE TABLE IF NOT EXISTS `supply_types` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin; 
  
 CREATE TABLE IF NOT EXISTS `supplies` (
-  `supply_id`     int(5) unsigned NOT NULL auto_increment,
-  `supply_code`   varchar(25) NOT NULL default '',
-  `supply_desc`   varchar(64) NOT NULL default '',
+  `supply_id`      int(5) unsigned NOT NULL auto_increment,
+  `supply_code`    varchar(25) NOT NULL default '',
+  `supply_desc`    varchar(64) NOT NULL default '',
   `supply_type_id` int(5),
   `unit_id`        int(5),  
   `supply_cost`    decimal(7,2),
@@ -156,8 +156,8 @@ CREATE TABLE IF NOT EXISTS `supplies` (
   `seq_no`         int(5), 
   `created_by`     int(5),
   `created_date`   datetime,
-  `updated_by`    int(5),
-  `updated_date` datetime,
+  `updated_by`     int(5),
+  `updated_date`   datetime,
   PRIMARY KEY `supplies_pk`  (`supply_id`),
   UNIQUE KEY `supplies_uk` (`supply_code`)
 )
@@ -166,14 +166,14 @@ CREATE TABLE IF NOT EXISTS `supplies` (
 
 CREATE TABLE IF NOT EXISTS `supply_brands` (
   `supply_brand_id` int(5) unsigned NOT NULL auto_increment,
-  `brand_id` int(5),
-  `supply_id` int(5),
-  `conv_id` int(5),
-  `supply_cost`  decimal(5,2),  
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `brand_id`        int(5),
+  `supply_id`       int(5),
+  `conv_id`         int(5),
+  `supply_cost`     decimal(5,2),  
+  `created_by`      int(5),
+  `created_date`    datetime,
+  `updated_by`      int(5),
+  `updated_date`    datetime,
   PRIMARY KEY `supply_brands_pk`  (`supply_brand_id`),
   UNIQUE KEY `supply_brands_uk` (`brand_id`,`supply_id`,`conv_id`)
 )
@@ -181,12 +181,12 @@ CREATE TABLE IF NOT EXISTS `supply_brands` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `positions` (
-  `position_id` int(5) unsigned NOT NULL auto_increment,
+  `position_id`   int(5) unsigned NOT NULL auto_increment,
   `position_desc` varchar(64) NOT NULL default '',
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `created_by`    int(5),
+  `created_date`  datetime,
+  `updated_by`    int(5),
+  `updated_date`  datetime,
   PRIMARY KEY `positions_pk`  (`position_id`),
   UNIQUE KEY `positions_uk` (`position_desc`)
 )
@@ -194,13 +194,13 @@ CREATE TABLE IF NOT EXISTS `positions` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `units` (
-  `unit_id` int(5) unsigned NOT NULL auto_increment,
-  `unit_sdesc` varchar(10) NOT NULL default '',
-  `unit_desc` varchar(64) NOT NULL default '',
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `unit_id`       int(5) unsigned NOT NULL auto_increment,
+  `unit_sdesc`    varchar(10) NOT NULL default '',
+  `unit_desc`     varchar(64) NOT NULL default '',
+  `created_by`    int(5),
+  `created_date`  datetime,
+  `updated_by`    int(5),
+  `updated_date`  datetime,
   PRIMARY KEY  `units_pk`  (`unit_id`),
   UNIQUE KEY  `units_uk` (`unit_desc`)
 )
@@ -208,14 +208,14 @@ CREATE TABLE IF NOT EXISTS `units` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin; 
 
 CREATE TABLE IF NOT EXISTS `conv_units` (
-  `conv_id` int(5) unsigned NOT NULL auto_increment,
-  `from_unit_id` varchar(64) NOT NULL default '',
-  `conv_unit_id` varchar(64) NOT NULL default '',
+  `conv_id`        int(5) unsigned NOT NULL auto_increment,
+  `from_unit_id`   varchar(64) NOT NULL default '',
+  `conv_unit_id`   varchar(64) NOT NULL default '',
   `conv_unit_qty`  decimal(5,2),
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `created_by`     int(5),
+  `created_date`   datetime,
+  `updated_by`     int(5),
+  `updated_date`   datetime,
   PRIMARY KEY  `conv_units_pk`  (`conv_id`),
   UNIQUE KEY  `conv_units_uk` (`from_unit_id`,`conv_unit_id`,`conv_unit_qty` )
 )
@@ -223,11 +223,11 @@ CREATE TABLE IF NOT EXISTS `conv_units` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin; 
 
 CREATE TABLE IF NOT EXISTS `stores` (
-  `store_id` int(5) unsigned NOT NULL auto_increment,
-  `store_name` varchar(100) NOT NULL default '',
-  `created_by` int(5),
+  `store_id`     int(5) unsigned NOT NULL auto_increment,
+  `store_name`   varchar(100) NOT NULL default '',
+  `created_by`   int(5),
   `created_date` datetime,
-  `updated_by` int(5),
+  `updated_by`   int(5),
   `updated_date` datetime,
   PRIMARY KEY `stores_pk`  (`store_id`),
   UNIQUE KEY `stores_uk` (`store_name`)
@@ -236,12 +236,12 @@ CREATE TABLE IF NOT EXISTS `stores` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `locations` (
-  `loc_id` int(5) unsigned NOT NULL auto_increment,
-  `location` varchar(100) NOT NULL default '',
+  `loc_id`       int(5) unsigned NOT NULL auto_increment,
+  `location`     varchar(100) NOT NULL default '',
   `loc_group_id` int(5),
-  `created_by` int(5),
+  `created_by`   int(5),
   `created_date` datetime,
-  `updated_by` int(5),
+  `updated_by`   int(5),
   `updated_date` datetime,
   PRIMARY KEY `locations_pk`  (`loc_id`),
   UNIQUE KEY `locations_uk` (`location`)
@@ -251,14 +251,14 @@ CREATE TABLE IF NOT EXISTS `locations` (
 
 CREATE TABLE IF NOT EXISTS `store_loc` (
   `store_loc_id` int(5) unsigned NOT NULL auto_increment,
-  `store_loc` varchar(100) NOT NULL default '',
-  `loc_id` int(5),
-  `store_id` int(5),
-  `is_cart` int(5) NOT NULL default '0', 
-  `active` int(5) NOT NULL default '1', 
-  `created_by` int(5),
+  `store_loc`    varchar(100) NOT NULL default '',
+  `loc_id`       int(5),
+  `store_id`     int(5),
+  `is_cart`      int(5) NOT NULL default '0', 
+  `active`       int(5) NOT NULL default '1', 
+  `created_by`   int(5),
   `created_date` datetime,
-  `updated_by` int(5),
+  `updated_by`   int(5),
   `updated_date` datetime,
   PRIMARY KEY `store_loc_pk`  (`store_loc_id`),
   UNIQUE KEY `store_loc_uk` (`loc_id`,`store_id`, `store_loc`)
@@ -267,16 +267,16 @@ CREATE TABLE IF NOT EXISTS `store_loc` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 CREATE TABLE IF NOT EXISTS `employees` (
-  `empl_id` int(5) unsigned NOT NULL auto_increment,
-  `empl_name` varchar(64) NOT NULL default '',
-  `loc_id` int(5),
+  `empl_id`      int(5) unsigned NOT NULL auto_increment,
+  `empl_name`    varchar(64) NOT NULL default '',
+  `loc_id`       int(5),
   `store_loc_id` int(5),
-  `position_id` int(5),
-  `daily_rate` decimal(7,2),
-  `active` int(5) NOT NULL default '1', 
-  `created_by` int(5),
+  `position_id`  int(5),
+  `daily_rate`   decimal(7,2),
+  `active`       int(5) NOT NULL default '1', 
+  `created_by`   int(5),
   `created_date` datetime,
-  `updated_by` int(5),
+  `updated_by`   int(5),
   `updated_date` datetime,
   PRIMARY KEY `employees_pk` (`empl_id`),
   UNIQUE KEY `employees_uk` (`empl_name`)
@@ -286,27 +286,27 @@ CREATE TABLE IF NOT EXISTS `employees` (
 
 
 CREATE TABLE IF NOT EXISTS `users` (
-  `user_id` int(5) unsigned NOT NULL,
-  `user_password` varchar(64) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `user_name` varchar(64) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `empl_id` int(5) DEFAULT NULL,
-  `role_id` int(5) DEFAULT NULL,
-  `active` int(5) NOT NULL DEFAULT '1',
-  `created_by` int(5) DEFAULT NULL,
-  `created_date` datetime DEFAULT NULL,
-  `updated_by` int(5) DEFAULT NULL,
-  `updated_date` datetime DEFAULT NULL
+  `user_id`         int(5) unsigned NOT NULL,
+  `user_password`   varchar(64) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_name`       varchar(64) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `empl_id`         int(5) DEFAULT NULL,
+  `role_id`         int(5) DEFAULT NULL,
+  `active`          int(5) NOT NULL DEFAULT '1',
+  `created_by`      int(5) DEFAULT NULL,
+  `created_date`    datetime DEFAULT NULL,
+  `updated_by`      int(5) DEFAULT NULL,
+  `updated_date`    datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 
 CREATE TABLE IF NOT EXISTS `user_locations` (
-  `user_loc_id` int(5) unsigned NOT NULL auto_increment,
-  `user_id` int(5),
-  `loc_id` int(5),
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `user_loc_id`    int(5) unsigned NOT NULL auto_increment,
+  `user_id`        int(5),
+  `loc_id`         int(5),
+  `created_by`     int(5),
+  `created_date`   datetime,
+  `updated_by`     int(5),
+  `updated_date`   datetime,
   PRIMARY KEY `user_locations_pk`  (`user_loc_id`),
   UNIQUE KEY `user_locations_uk` (`user_id`,`loc_id`)
 )
@@ -316,12 +316,12 @@ CREATE TABLE IF NOT EXISTS `user_locations` (
 
  CREATE TABLE IF NOT EXISTS `store_supplies` (
   `store_supply_id` int(5) unsigned NOT NULL auto_increment,
-  `store_id` int(5),
-  `supply_id`    int(5),
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `store_id`        int(5),
+  `supply_id`       int(5),
+  `created_by`      int(5),
+  `created_date`    datetime,
+  `updated_by`      int(5),
+  `updated_date`    datetime,
   PRIMARY KEY `store_supplies_pk`  (`store_supply_id`),
   UNIQUE KEY `store_supplies_uk` (`store_id`,`supply_id`)
 )
@@ -329,15 +329,15 @@ CREATE TABLE IF NOT EXISTS `user_locations` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;     
 
 CREATE TABLE IF NOT EXISTS `loc_supplies` (
-  `loc_supply_id` int(5) unsigned NOT NULL auto_increment,
-  `loc_id` int(5),
-  `supply_id` int(5),
-  `reorder_level` int(5),
-  `max_level` int(5),
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `loc_supply_id`   int(5) unsigned NOT NULL auto_increment,
+  `loc_id`          int(5),
+  `supply_id`       int(5),
+  `reorder_level`   int(5),
+  `max_level`       int(5),
+  `created_by`      int(5),
+  `created_date`    datetime,
+  `updated_by`      int(5),
+  `updated_date`    datetime,
   PRIMARY KEY `loc_supplies_pk`  (`loc_supply_id`),
   UNIQUE KEY `loc_supplies_uk` (`loc_id`,`supply_id`)
 )
@@ -347,13 +347,13 @@ CREATE TABLE IF NOT EXISTS `loc_supplies` (
 
 CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `loc_supply_brand_id` int(5) unsigned NOT NULL auto_increment,
-  `loc_supply_id` int(5),
-  `supply_brand_id` int(5),  
-  `stock_qty` decimal(10,2),
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `loc_supply_id`       int(5),
+  `supply_brand_id`     int(5),  
+  `stock_qty`           decimal(10,2),
+  `created_by`          int(5),
+  `created_date`        datetime,
+  `updated_by`          int(5),
+  `updated_date`        datetime,
   PRIMARY KEY `loc_supply_brands_pk`  (`loc_supply_brand_id`),
   UNIQUE KEY `loc_supply_brands_uk` (`loc_supply_id`,`supply_brand_id`)
 )
@@ -361,16 +361,16 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
  CREATE TABLE IF NOT EXISTS `po` (
-  `po_id` int(5) unsigned NOT NULL auto_increment,
-  `po_no`  int(5),
-  `po_date` datetime,
-  `loc_id` int(5),
-  `supplier_id` int(5),
-  `posted` int(5) NOT NULL default '0',     
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `po_id`           int(5) unsigned NOT NULL auto_increment,
+  `po_no`           int(5),
+  `po_date`         datetime,
+  `loc_id`          int(5),
+  `supplier_id`     int(5),
+  `posted`          int(5) NOT NULL default '0',     
+  `created_by`      int(5),
+  `created_date`    datetime,
+  `updated_by`      int(5),
+  `updated_date`    datetime,
   PRIMARY KEY `po_pk`  (`po_id`),
   UNIQUE KEY `po_uk` (`po_no`, `loc_id`,`po_id`)
 )
@@ -395,15 +395,15 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
  CREATE TABLE IF NOT EXISTS `receiving` (
-  `receiving_id` int(5) unsigned NOT NULL auto_increment,
-  `dr_no`  int(5),
-  `dr_date` datetime,
-  `po_id`  int(5),
-  `posted` int(5) NOT NULL default '0',     
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `receiving_id`    int(5) unsigned NOT NULL auto_increment,
+  `dr_no`           int(5),
+  `dr_date`         datetime,
+  `po_id`           int(5),
+  `posted`          int(5) NOT NULL default '0',     
+  `created_by`      int(5),
+  `created_date`    datetime,
+  `updated_by`      int(5),
+  `updated_date`    datetime,
   PRIMARY KEY `receiving_pk`  (`receiving_id`),
   UNIQUE KEY `receiving_uk` (`dr_no`, `po_id`)
 )
@@ -411,16 +411,16 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
 
  CREATE TABLE IF NOT EXISTS `receiving_dtls` (
-  `receiving_dtl_id` int(5) unsigned NOT NULL auto_increment,
-  `receiving_id` int(5),
-  `po_dtl_id`    int(5),
-  `supply_brand_id`  int(5),
-  `dr_qty`       decimal(10,2),
-  `bal_qty`      decimal(10,2),
-  `created_by`  int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `receiving_dtl_id`   int(5) unsigned NOT NULL auto_increment,
+  `receiving_id`       int(5),
+  `po_dtl_id`          int(5),
+  `supply_brand_id`    int(5),
+  `dr_qty`             decimal(10,2),
+  `bal_qty`            decimal(10,2),
+  `created_by`         int(5),
+  `created_date`       datetime,
+  `updated_by`         int(5),
+  `updated_date`       datetime,
   PRIMARY KEY `receiving_dtls_pk`  (`receiving_dtl_id`),
   UNIQUE KEY `receiving_dtls_uk` (`receiving_id`,`po_dtl_id`)
 )
@@ -465,14 +465,14 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
  CREATE TABLE IF NOT EXISTS `adj_types` (
-  `adj_type_id` int(5) unsigned NOT NULL auto_increment,
+  `adj_type_id`   int(5) unsigned NOT NULL auto_increment,
   `adj_type`      varchar(20) NOT NULL default '',
   `adj_math`      varchar(1) NOT NULL default '',
-  `posted` int(5) NOT NULL default '0',     
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `posted`        int(5) NOT NULL default '0',     
+  `created_by`    int(5),
+  `created_date`  datetime,
+  `updated_by`    int(5),
+  `updated_date`  datetime,
   PRIMARY KEY `adj_types_pk`  (`adj_type_id`),
   UNIQUE KEY `adj_types_uk` (`adj_type`)
 )
@@ -480,18 +480,18 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
 
  CREATE TABLE IF NOT EXISTS `supply_adj` (
-  `supply_adj_id` int(5) unsigned NOT NULL auto_increment,
-  `adj_date` datetime,
-  `loc_id` int(5),
-  `adj_type_id` int(5),
-  `adj_remarks`      varchar(200) NOT NULL default '',
-  `supply_brand_id` int(5),
-  `adj_qty` decimal(5,2),
-  `posted` int(5) NOT NULL default '0',     
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `supply_adj_id`         int(5) unsigned NOT NULL auto_increment,
+  `adj_date`              datetime,
+  `loc_id`                int(5),
+  `adj_type_id`           int(5),
+  `adj_remarks`           varchar(200) NOT NULL default '',
+  `supply_brand_id`       int(5),
+  `adj_qty`               decimal(5,2),
+  `posted`                int(5) NOT NULL default '0',     
+  `created_by`            int(5),
+  `created_date`          datetime,
+  `updated_by`            int(5),
+  `updated_date`          datetime,
   PRIMARY KEY `adj_pk`  (`supply_adj_id`)
 )
   COMMENT='Supply Adjustment'
@@ -500,13 +500,13 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
 
  CREATE TABLE IF NOT EXISTS `store_loc_supplies` (
   `store_loc_supply_id` int(5) unsigned NOT NULL auto_increment,
-  `store_loc_id` int(5),
-  `loc_supply_id` int(5),
-  `stock_daily_qty`   decimal(5,2),
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
+  `store_loc_id`        int(5),
+  `loc_supply_id`       int(5),
+  `stock_daily_qty`     decimal(5,2),
+  `created_by`          int(5),
+  `created_date`        datetime,
+  `updated_by`          int(5),
+  `updated_date`        datetime,
   PRIMARY KEY `store_loc_supplies_pk`  (`store_loc_supply_id`),
   UNIQUE KEY `store_loc_supplies_uk` (`store_loc_id`,`loc_supply_id`)
 )
@@ -516,13 +516,13 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   
   CREATE TABLE IF NOT EXISTS `store_loc_exp` (
    `store_loc_exp_id`   int(5) unsigned NOT NULL auto_increment,
-   `store_loc_id`  int(5),
-   `exp_date` datetime,
-   `posted` int(5) NOT NULL default '0',     
-   `created_by`    int(5),
-   `created_date`  datetime,
-   `updated_by`    int(5),
-   `updated_date`  datetime,
+   `store_loc_id`       int(5),
+   `exp_date`           datetime,
+   `posted`             int(5) NOT NULL default '0',     
+   `created_by`         int(5),
+   `created_date`       datetime,
+   `updated_by`         int(5),
+   `updated_date`       datetime,
    PRIMARY KEY `store_loc_exp_pk`  (`store_loc_exp_id`),
    UNIQUE KEY `store_loc_exp_uk` (`exp_date`,`store_loc_id`)
  )
@@ -532,15 +532,15 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
    
   CREATE TABLE IF NOT EXISTS `store_loc_exp_dtls` (
    `store_loc_exp_dtl_id`   int(5) unsigned NOT NULL auto_increment,
-   `store_loc_exp_id`  int(5),
-   `exp_desc`          VARCHAR(100),
-   `exp_amt`           decimal(7,2),
-   `or_no`             VARCHAR(20),
-   `fr_cb_amt`         int(1) NOT NULL default '0',
-   `created_by`    int(5),
-   `created_date`  datetime,
-   `updated_by`    int(5),
-   `updated_date`  datetime,
+   `store_loc_exp_id`       int(5),
+   `exp_desc`               VARCHAR(100),
+   `exp_amt`                decimal(7,2),
+   `or_no`                  VARCHAR(20),
+   `fr_cb_amt`              int(1) NOT NULL default '0',
+   `created_by`             int(5),
+   `created_date`           datetime,
+   `updated_by`             int(5),
+   `updated_date`           datetime,
    PRIMARY KEY `store_loc_exp_dtls_pk`  (`store_loc_exp_dtl_id`),
    UNIQUE KEY `store_loc_exp_dtls_uk` (`store_loc_exp_id`,`exp_desc`)
  )
@@ -572,9 +572,9 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
    `store_loc_supply_id`  int(5),
    `pc_qty`               decimal(7,2),
    `created_by`           int(5),
-   `created_date`  datetime,
-   `updated_by`    int(5),
-   `updated_date`  datetime,
+   `created_date`         datetime,
+   `updated_by`           int(5),
+   `updated_date`         datetime,
    PRIMARY KEY `loc_pc_dtls_pk`  (`loc_pc_dtl_id`),
    UNIQUE KEY `loc_pc_dtls_uk` (`loc_pc_id`,`loc_supply_brand_id`,`store_loc_supply_id` )
  )
@@ -584,14 +584,14 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
  
   CREATE TABLE IF NOT EXISTS `supply_is` (
    `supply_is_id`   int(5) unsigned NOT NULL auto_increment,
-   `is_no`  int(5),
-   `is_date` datetime,
-   `store_loc_id`  int(5),
-   `posted` int(5) NOT NULL default '0',    
-   `created_by`    int(5),
-   `created_date`  datetime,
-   `updated_by`    int(5),
-   `updated_date`  datetime,
+   `is_no`          int(5),
+   `is_date`        datetime,
+   `store_loc_id`   int(5),
+   `posted`         int(5) NOT NULL default '0',    
+   `created_by`     int(5),
+   `created_date`   datetime,
+   `updated_by`     int(5),
+   `updated_date`   datetime,
    PRIMARY KEY `supply_is_pk`  (`supply_is_id`),
    UNIQUE KEY `supply_is_uk` (`is_no`,`store_loc_id`)
  )
@@ -604,9 +604,9 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
    `supply_is_qty`           decimal(7,2),
    `loc_supply_brand_id`     int(5),
    `created_by`              int(5),
-   `created_date`  datetime,
-   `updated_by`    int(5),
-   `updated_date`  datetime,
+   `created_date`            datetime,
+   `updated_by`              int(5),
+   `updated_date`            datetime,
    PRIMARY KEY `supply_is_dtls_pk`  (`supply_is_dtl_id`),
    UNIQUE KEY `supply_is_dtls_uk` (`supply_is_id`,`loc_supply_brand_id`)
  )
@@ -616,19 +616,19 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
  
  CREATE TABLE IF NOT EXISTS `store_loc_supply_daily` (
   `store_loc_supply_daily_id` int(5) unsigned NOT NULL auto_increment,
-  `store_loc_supply_id`     int(5),
-  `stock_date`              date,
-  `beg_qty`                 decimal(7,2) DEFAULT 0,
-  `remaining_qty`           decimal(7,2) DEFAULT 0,
-  `is_qty`                  decimal(7,2) DEFAULT 0,
-  `out_qty`                 decimal(7,2) DEFAULT 0,
-  `end_qty`                 decimal(7,2) DEFAULT 0,
-  `unit_price`              decimal(7,2) DEFAULT 0,
-  `unit_cost`              decimal(7,2) DEFAULT 0,
-  `created_by`             int(5),
-  `created_date`           datetime,
-  `updated_by`             int(5),
-  `updated_date`           datetime,
+  `store_loc_supply_id`       int(5),
+  `stock_date`                date,
+  `beg_qty`                   decimal(7,2) DEFAULT 0,
+  `remaining_qty`             decimal(7,2) DEFAULT 0,
+  `is_qty`                    decimal(7,2) DEFAULT 0,
+  `out_qty`                   decimal(7,2) DEFAULT 0,
+  `end_qty`                   decimal(7,2) DEFAULT 0,
+  `unit_price`                decimal(7,2) DEFAULT 0,
+  `unit_cost`                 decimal(7,2) DEFAULT 0,
+  `created_by`                int(5),
+  `created_date`              datetime,
+  `updated_by`                int(5),
+  `updated_date`              datetime,
   PRIMARY KEY `store_loc_supply_daily_pk`  (`store_loc_supply_daily_id`),
   UNIQUE KEY `store_loc_supply_daily_uk` (`store_loc_supply_id`,`stock_date`)
 )
@@ -636,11 +636,11 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
    
    CREATE TABLE IF NOT EXISTS `stock_transfer` (
-   `st_id`   int(5) unsigned NOT NULL auto_increment,
-   `st_no`  int(5),
-   `st_date` datetime,
-   `loc_id`  int(5),
-   `loc_id_to`  int(5),
+   `st_id`         int(5) unsigned NOT NULL auto_increment,
+   `st_no`         int(5),
+   `st_date`       datetime,
+   `loc_id`        int(5),
+   `loc_id_to`     int(5),
    `posted` int(5) NOT NULL default '0',    
    `created_by`    int(5),
    `created_date`  datetime,
@@ -659,9 +659,9 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
    `st_qty`                  decimal(7,2),
    `loc_supply_brand_id`     int(5),
    `created_by`              int(5),
-   `created_date`  datetime,
-   `updated_by`    int(5),
-   `updated_date`  datetime,
+   `created_date`            datetime,
+   `updated_by`              int(5),
+   `updated_date`            datetime,
    PRIMARY KEY `stock_transfer_dtls_pk`  (`st_dtl_id`),
    UNIQUE KEY `stock_transfer_dtls_uk` (`st_id`,`loc_supply_brand_id`)
  )
@@ -671,20 +671,20 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
 
  CREATE TABLE IF NOT EXISTS `inv_summ` (
   `inv_summ_id`           int(5) unsigned NOT NULL auto_increment,
-  `inv_summ_year`       int(5),
-  `inv_summ_month`    int(5),
-  `loc_id`                     int(5),
-  `supply_id`               int(5),
-  `beg_qty`                decimal(10,2),
-  `dr_qty`                  decimal(10,2),
+  `inv_summ_year`         int(5),
+  `inv_summ_month`        int(5),
+  `loc_id`                int(5),
+  `supply_id`             int(5),
+  `beg_qty`               decimal(10,2),
+  `dr_qty`                decimal(10,2),
   `used_qty`              decimal(10,2),
   `adj_plus_qty`          decimal(10,2),
   `adj_minus_qty`         decimal(10,2),
   `end_qty`               decimal(10,2),
-  `created_by`          int(5),
-  `created_date`      datetime,
-  `updated_by`        int(5),
-  `updated_date`     datetime,
+  `created_by`            int(5),
+  `created_date`          datetime,
+  `updated_by`            int(5),
+  `updated_date`          datetime,
   PRIMARY KEY `inv_summ_pk`  (`inv_summ_id`),
   UNIQUE KEY `inv_summ_uk` (`inv_summ_year`,`inv_summ_month`,`loc_id`,`supply_id`)
 )
@@ -694,14 +694,14 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
 
  CREATE TABLE IF NOT EXISTS `sales_summ` (
   `sales_summ_id`           int(5) unsigned NOT NULL auto_increment,
-  `sales_summ_year`       int(5),
-  `sales_summ_month`    int(5),
-  `store_loc_id`               int(5),
+  `sales_summ_year`         int(5),
+  `sales_summ_month`        int(5),
+  `store_loc_id`            int(5),
   `sales_amount`            decimal(10,2),
-  `created_by`               int(5),
-  `created_date`           datetime,
-  `updated_by`        int(5),
-  `updated_date`     datetime,
+  `created_by`              int(5),
+  `created_date`            datetime,
+  `updated_by`              int(5),
+  `updated_date`            datetime,
   PRIMARY KEY `sales_summ_pk`  (`sales_summ_id`),
   UNIQUE KEY `sales_summ_uk` (`sales_summ_year`,`sales_summ_month`,`store_loc_id`)
 )
@@ -711,15 +711,15 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
 
  CREATE TABLE IF NOT EXISTS `sales_supply_summ` (
   `sales_supply_id`           int(5) unsigned NOT NULL auto_increment,
-  `sales_supply_year`       int(5),
-  `sales_supply_month`    int(5),
-  `store_loc_id`               int(5),
-  `supply_id`                   int(5),
-  `sales_amount`            decimal(10,2),
+  `sales_supply_year`         int(5),
+  `sales_supply_month`        int(5),
+  `store_loc_id`              int(5),
+  `supply_id`                 int(5),
+  `sales_amount`              decimal(10,2),
   `created_by`                int(5),
-  `created_date`             datetime,
-  `updated_by`              int(5),
-  `updated_date`          datetime,
+  `created_date`              datetime,
+  `updated_by`                int(5),
+  `updated_date`              datetime,
   PRIMARY KEY `sales_supply_pk`  (`sales_supply_id`),
   UNIQUE KEY `sales_supply_uk` (`sales_supply_year`,`sales_supply_month`,`store_loc_id`, `supply_id`)
 )
@@ -728,19 +728,19 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
 
 CREATE TABLE IF NOT EXISTS `bank_ref` (
  `bank_ref_id`           int(5) unsigned NOT NULL auto_increment,
- `bank_acctno` varchar(30) NOT NULL default '',
- `bank_acctname` varchar(50) NOT NULL default '', 
- `bank_name` varchar(50) NOT NULL default '',
- `acct_amount`              decimal(10,2),
- `depo_pct_share`         int(5),
+ `bank_acctno`           varchar(30) NOT NULL default '',
+ `bank_acctname`         varchar(50) NOT NULL default '', 
+ `bank_name`             varchar(50) NOT NULL default '',
+ `acct_amount`           decimal(10,2),
+ `depo_pct_share`        int(5),
  `depo_amt_share`        decimal(10,2),
- `priority_no`                   int(5),
-  `active` int(5) NOT NULL default '1', 
-  `created_by` int(5),
-  `created_date` datetime,
-  `updated_by` int(5),
-  `updated_date` datetime,
-  PRIMARY KEY `bank_ref_pk` (`bank_ref_id` ),
+ `priority_no`           int(5),
+ `active`                int(5) NOT NULL default '1', 
+ `created_by`            int(5),
+ `created_date`          datetime,
+ `updated_by`            int(5),
+ `updated_date`          datetime,
+ PRIMARY KEY `bank_ref_pk` (`bank_ref_id` ),
  UNIQUE KEY `bank_ref_pk_uk` (`bank_acctno`)
 
 )
@@ -748,17 +748,17 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
  
    CREATE TABLE IF NOT EXISTS `store_bank_depo` (
-  `store_bank_depo_id`     int(5) unsigned NOT NULL auto_increment,
-  `store_loc_id`                 int(5),
-  `bank_ref_id`                 int(5),
-  `tran_no`                       varchar(50),
-  `depo_date`                  datetime,  
-  `depo_amount`              decimal(7,2),
-  `posted` int(5) NOT NULL default '0',      
+  `store_bank_depo_id`  int(5) unsigned NOT NULL auto_increment,
+  `store_loc_id`        int(5),
+  `bank_ref_id`         int(5),
+  `tran_no`             varchar(50),
+  `depo_date`           datetime,  
+  `depo_amount`         decimal(7,2),
+  `posted`              int(5) NOT NULL default '0',      
   `created_by`          int(5),
-  `created_date`      datetime,
-  `updated_by`        int(5),
-  `updated_date`     datetime,
+  `created_date`        datetime,
+  `updated_by`          int(5),
+  `updated_date`        datetime,
   PRIMARY KEY `store_bank_depo_pk`  (`store_bank_depo_id`),
   UNIQUE KEY `store_bank_depo_uk` (`store_loc_id`,`bank_ref_id`,`depo_date`)
 )
@@ -766,18 +766,18 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
    CREATE TABLE IF NOT EXISTS `store_bank_wd` (
-  `store_bank_wd_id`     int(5) unsigned NOT NULL auto_increment,
-  `store_loc_id`               int(5),
-  `bank_ref_id`              int(5),
-  `tran_no`                      varchar(50),
-  `cheque_no`                 varchar(50),
-  `wd_date`                    datetime,  
-  `wd_amount`                decimal(7,2),
-  `posted` int(5) NOT NULL default '0',      
+  `store_bank_wd_id`    int(5) unsigned NOT NULL auto_increment,
+  `store_loc_id`        int(5),
+  `bank_ref_id`         int(5),
+  `tran_no`             varchar(50),
+  `cheque_no`           varchar(50),
+  `wd_date`             datetime,  
+  `wd_amount`           decimal(7,2),
+  `posted`              int(5) NOT NULL default '0',      
   `created_by`          int(5),
-  `created_date`      datetime,
-  `updated_by`        int(5),
-  `updated_date`     datetime,
+  `created_date`        datetime,
+  `updated_by`          int(5),
+  `updated_date`        datetime,
   PRIMARY KEY `store_bank_wd_pk`  (`store_bank_wd_id`),
   UNIQUE KEY `store_bank_wd_uk` (`store_loc_id`,`bank_ref_id`,`wd_date`)
 )
@@ -785,16 +785,16 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
  CREATE TABLE IF NOT EXISTS `store_bank_depo_summ` (
-  `bank_depo_summ_id`           int(5) unsigned NOT NULL auto_increment,
-  `bank_depo_summ_year`       int(5),
-  `bank_depo_summ_month`    int(5),
+  `bank_depo_summ_id`        int(5) unsigned NOT NULL auto_increment,
+  `bank_depo_summ_year`      int(5),
+  `bank_depo_summ_month`     int(5),
   `bank_ref_id`              int(5),
-  `store_loc_id`               int(5),
-  `depo_amount`            decimal(10,2),
+  `store_loc_id`             int(5),
+  `depo_amount`              decimal(10,2),
   `created_by`               int(5),
-  `created_date`           datetime,
-  `updated_by`        int(5),
-  `updated_date`     datetime,
+  `created_date`             datetime,
+  `updated_by`               int(5),
+  `updated_date`             datetime,
   PRIMARY KEY `bank_depo_summ_pk`  (`bank_depo_summ_id`),
   UNIQUE KEY `bank_depo_summ_uk` (`bank_depo_summ_year`,`bank_depo_summ_month`,`bank_ref_id`,`store_loc_id`)
 )
@@ -802,16 +802,16 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
  CREATE TABLE IF NOT EXISTS `store_bank_wd_summ` (
-  `bank_wd_summ_id`           int(5) unsigned NOT NULL auto_increment,
+  `bank_wd_summ_id`         int(5) unsigned NOT NULL auto_increment,
   `bank_wd_summ_year`       int(5),
-  `bank_wd_summ_month`    int(5),
-  `bank_ref_id`              int(5),
- `store_loc_id`               int(5),
-  `wd_amount`            decimal(10,2),
-  `created_by`               int(5),
-  `created_date`           datetime,
-  `updated_by`        int(5),
-  `updated_date`     datetime,
+  `bank_wd_summ_month`      int(5),
+  `bank_ref_id`             int(5),
+ `store_loc_id`             int(5),
+  `wd_amount`               decimal(10,2),
+  `created_by`              int(5),
+  `created_date`            datetime,
+  `updated_by`              int(5),
+  `updated_date`            datetime,
   PRIMARY KEY `bank_wd_summ_pk`  (`bank_wd_summ_id`),
   UNIQUE KEY `bank_wd_summ_uk` (`bank_wd_summ_year`,`bank_wd_summ_month`,`bank_ref_id`,`store_loc_id`)
 )
