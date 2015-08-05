@@ -259,6 +259,32 @@ BEGIN
  RETURN (ifnull(lvl,0));
 END;
 
+CREATE FUNCTION getStoreLocDailyDenomSum(p_store_loc_id int(5), p_date VARCHAR(20)) RETURNS decimal(7,2) 
+    DETERMINISTIC
+BEGIN
+ DECLARE lvl decimal(7,2);
+    select SUM(return_amt) INTO lvl from store_daily_cash_dtls_v  where store_loc_id = p_store_loc_id
+    and DATE_FORMAT(tran_date,'%m/%d/%Y') = p_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
+CREATE FUNCTION getStoreLocSalesExpSum(p_store_loc_id int(5), p_date VARCHAR(20)) RETURNS decimal(7,2) 
+    DETERMINISTIC
+BEGIN
+ DECLARE lvl decimal(7,2);
+    select SUM(exp_amt) INTO lvl from store_loc_sales_exp_dtls_v where store_loc_id = p_store_loc_id
+    and DATE_FORMAT(exp_date,'%m/%d/%Y') = p_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
+
+CREATE PROCEDURE getStoreLocSupplyDailySum(p_store_loc_id int(5), p_date VARCHAR(20)) 
+BEGIN
+    SELECT getStoreLocSalesExpSum(p_store_loc_id,p_date) sales_exp, getStoreLocSupplyDailySum(p_store_loc_id,p_date) sales_amount,  from store_loc_supply_daily_v where store_loc_id = p_store_loc_id
+    and DATE_FORMAT(stock_date,'%m/%d/%Y') = p_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
 
 CREATE PROCEDURE delPC_Unposted (IN p_loc_pc_id int(5))
 BEGIN
@@ -320,25 +346,33 @@ BEGIN
  RETURN (ifnull(lvl,0));
 END;
 
+CREATE FUNCTION get_store_daily_cash_denom_amt(p_store_loc_id int,  p_denomination int, p_tran_date DATE) RETURNS INT(5) 
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl INT(5);
+    SELECT cash_amount INTO lvl FROM store_daily_cash_dtls_v WHERE store_loc_id = p_store_loc_id and denomination=p_denomination AND  tran_date = p_tran_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
 CREATE PROCEDURE store_daily_cash_report(p_store_loc_id int, p_tran_date varchar(20))
 BEGIN
-   SELECT *, get_store_daily_cash_denom_qty(store_loc_id, denomination, date_add(str_to_date(p_tran_date,'%m/%d/%Y'),interval -2 day)) as prev_qty
+   SELECT *, get_store_daily_cash_denom_qty(store_loc_id, denomination, date_add(str_to_date(p_tran_date,'%m/%d/%Y'),interval +1 day)) as today_qty
    FROM store_daily_cash_dtls_v
-   WHERE store_loc_id = p_store_loc_id AND DATE_FORMAT(tran_date,'%m/%d/%Y') = p_tran_date;
+   WHERE store_loc_id = p_store_loc_id AND tran_date = date_add(str_to_date(p_tran_date,'%m/%d/%Y'),interval -1 day);
 END;
 
 CREATE PROCEDURE store_loc_exp_report(p_store_loc_id int, p_tran_date varchar(20))
 BEGIN
    SELECT *
    FROM store_loc_exp_dtls_v 
-   WHERE store_loc_id = p_store_loc_id AND DATE_FORMAT(exp_date,'%m/%d/%Y') = p_tran_date;
+   WHERE store_loc_id = p_store_loc_id AND exp_date = date_add(str_to_date(p_tran_date,'%m/%d/%Y'),interval -1 day);
 END;
 
 CREATE PROCEDURE store_loc_sales_exp_report(p_store_loc_id int, p_tran_date varchar(20))
 BEGIN
    SELECT *
    FROM store_loc_sales_exp_dtls_v 
-   WHERE store_loc_id = p_store_loc_id AND DATE_FORMAT(exp_date,'%m/%d/%Y') = p_tran_date;
+   WHERE store_loc_id = p_store_loc_id AND exp_date = date_add(str_to_date(p_tran_date,'%m/%d/%Y'),interval -1 day);
 END;
 
 CREATE PROCEDURE Receiving_post(p_receiving_id int(5))

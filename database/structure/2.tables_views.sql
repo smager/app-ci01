@@ -1074,7 +1074,14 @@ WHERE a.store_daily_cash_id=b.store_daily_cash_id;
 CREATE OR REPLACE VIEW store_loc_exp_dtls_v as
 SELECT a.*, b.store_loc_id,  b.exp_date
 FROM store_loc_exp_dtls a, store_loc_exp b
-WHERE a.store_loc_exp_id=b.store_loc_exp_id;
+WHERE a.store_loc_exp_id=b.store_loc_exp_id
+AND fr_sales=0;
+
+CREATE OR REPLACE VIEW store_loc_sales_exp_dtls_v as
+SELECT a.*, b.store_loc_id,  b.exp_date
+FROM store_loc_exp_dtls a, store_loc_exp b
+WHERE a.store_loc_exp_id=b.store_loc_exp_id
+AND fr_sales=1;
 
 CREATE OR REPLACE VIEW loc_pc_dtls_v as
 SELECT a.*, b.loc_id, b.store_loc_id,  b.tran_date
