@@ -857,7 +857,18 @@ CREATE TABLE `select_options` (
   PRIMARY KEY (`select_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-
+CREATE TABLE IF NOT EXISTS `revision_logs` (
+  `revision_id` int(11) NOT NULL AUTO_INCREMENT,
+  `path` varchar(100) NOT NULL,  
+  `filename` varchar(50) NOT NULL,
+  `filetype` varchar(50) NOT NULL,
+  `content` text NOT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`revision_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 /* Views */
 create or replace view menu_v as
