@@ -67,6 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             echo "\r\n<li><a href=\"javascript:getInfo(" . "'c','" . $c . "');\">$c</a></li>";
         }
         echo "\r\n</ul>";
+        echo "\r\n<button type='button' class='btn btn-primary btn-sm' id='btnNewC'><span class='glyphicon glyphicon-plus-sign'></span> New</button>";
         echo "\r\n</div>";
 
         echo "\r\n<div class='filegroup model col-xs-6 col-sm-4 col-md-3 col-lg-3'>";
@@ -76,6 +77,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             echo "\r\n<li><a href=\"javascript:getInfo(" . "'m','" . $m . "');\">$m</a></li>";
         }
         echo "\r\n</ul>";
+        echo "\r\n<button type='button' class='btn btn-primary btn-sm' id='btnNewM'><span class='glyphicon glyphicon-plus-sign'></span> New</button>";
         echo "\r\n</div>";
  
 
@@ -88,6 +90,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             }
         }
         echo "\r\n</ul>";
+        echo "\r\n<button type='button' class='btn btn-primary btn-sm' id='btnNewV'><span class='glyphicon glyphicon-plus-sign'></span> New</button>";
         echo "\r\n</div>";
 
         echo "\r\n<div class='filegroup view col-xs-6 col-sm-4 col-md-3 col-lg-3'>";
@@ -97,6 +100,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 echo "\r\n<li><a href=\"javascript:getInfo(" . "'css','" . $c . "');\">$c</a></li>";
         }
         echo "\r\n</ul>";
+        echo "\r\n<button type='button' class='btn btn-primary btn-sm' id='btnNewCSS'><span class='glyphicon glyphicon-plus-sign'></span> New</button>";
         echo "\r\n</div>";
 
     echo "\r\n</div>";
@@ -206,8 +210,24 @@ function submit(p_IsHide){
     $.post(base_url + "source/update",data,function(d){   
         zsi.form.showAlert("alert");
     });    
-}    
-      
+}   
+
+$("#btnNewM").click(function(){
+    showWindow("m","Filename_model.php");
+});    
+
+$("#btnNewV").click(function(){
+    showWindow("v","filename_view.php");
+});    
+
+$("#btnNewC").click(function(){
+    showWindow("c","Filename.php");    
+});    
+$("#btnNewCSS").click(function(){
+    showWindow("css","filename.css");
+});    
+    
+    
 </script>    
   
 <?php includeFooter(); ?> 
