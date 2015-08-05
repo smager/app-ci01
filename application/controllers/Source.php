@@ -13,7 +13,8 @@ class source extends Base_Controller {
         $data["controllers"]  = $this->dir_map_sort(directory_map('./application/controllers'));
         $data["models"]  = $this->dir_map_sort(directory_map('./application/models'));        
         $data["views"]  = $this->dir_map_sort(directory_map('./application/views'));
-        $data["css"]  = $this->dir_map_sort(directory_map('./assets/css'));
+        $data["helpers"]  = $this->dir_map_sort(directory_map('./application/helpers'));
+        $data["css"]  = $this->dir_map_sort(directory_map('./assets/css'));        
         $this->load->view('source_view',$data);                
 	}
     
@@ -38,6 +39,7 @@ class source extends Base_Controller {
             case "m" : $path = "./application/models/"; break;
             case "v" : $path = "./application/views/"; break;
             case "c" : $path = "./application/controllers/"; break;
+            case "h" : $path = "./application/helpers/"; break;
             case "css" : $path = "./assets/css/"; break;
             
             default:break;

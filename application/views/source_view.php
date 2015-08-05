@@ -94,6 +94,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         echo "\r\n</div>";
 
         echo "\r\n<div class='filegroup view col-xs-6 col-sm-4 col-md-3 col-lg-3'>";
+        echo "\r\n<div class='title'>Helpers</div>";
+        echo "\r\n<ul class='files'>";
+        foreach ($helpers as &$h) {
+                echo "\r\n<li><a href=\"javascript:getInfo(" . "'h','" . $h . "');\">$h</a></li>";
+        }
+        echo "\r\n</ul>";
+        echo "\r\n<button type='button' class='btn btn-primary btn-sm' id='btnNewH'><span class='glyphicon glyphicon-plus-sign'></span> New</button>";
+        echo "\r\n</div>";
+
+
+        echo "\r\n<div class='filegroup view col-xs-6 col-sm-4 col-md-3 col-lg-3'>";
         echo "\r\n<div class='title'>CSS</div>";
         echo "\r\n<ul class='files'>";
         foreach ($css as &$c) {
@@ -222,7 +233,12 @@ $("#btnNewV").click(function(){
 
 $("#btnNewC").click(function(){
     showWindow("c","Filename.php");    
+});   
+
+$("#btnNewH").click(function(){
+    showWindow("h","filename_helper.php");
 });    
+    
 $("#btnNewCSS").click(function(){
     showWindow("css","filename.css");
 });    
