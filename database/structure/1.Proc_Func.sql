@@ -1,5 +1,16 @@
 /*Procedure, Function*/
 
+ create function getlatestrevid(p_filename varchar(100)) returns varchar(100)
+ DETERMINISTIC
+ begin
+   declare lvl varchar(100);
+   select revision_id into lvl
+   from revision_logs
+   where filename=p_filename
+   order by revision_id desc limit 1;
+   return (lvl);
+ end;
+
 create function  getUnitSDesc(p_unit_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
@@ -453,3 +464,4 @@ BEGIN
    AND a.supply_brand_id=getSupplyBrandIdFromLoc(b.loc_supply_brand_id)
    AND a.loc_id = p_loc_id_to;
 END; 
+
