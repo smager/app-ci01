@@ -358,6 +358,15 @@ UPDATE store_daily_cash
  WHERE store_daily_cash_id=p_store_daily_cash_id;    
 END;
 
+CREATE FUNCTION getTotalStockSalesAmt(p_store_loc_id int, p_date DATE) DECIMAL(7,2)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl DECIMAL(7,2);
+    SELECT ttl_stock_sales_amnt INTO lvl FROM store_daily_cash WHERE store_loc_id = p_store_loc_id and tran_date = str_to_date(p_date,'%m/%d/%Y');
+ RETURN (ifnull(lvl,0));
+END;
+
+
 CREATE FUNCTION get_store_daily_cash_denom_qty(p_store_loc_id int,  p_denomination int, p_tran_date DATE) RETURNS INT(5) 
     DETERMINISTIC
 BEGIN
@@ -465,3 +474,9 @@ BEGIN
    AND a.loc_id = p_loc_id_to;
 END; 
 
+CREATE PROCEDURE getBankDepoInfo(p_store_loc_id int(5), p_date VARCHAR(20))
+BEGIN
+select *, getBankDepoShare() as depo_amount from bank_ref
+END;
+
+CREATE FUNCTION getBankDepoShare()

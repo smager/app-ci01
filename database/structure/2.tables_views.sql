@@ -434,7 +434,8 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `ttl_cash_box_amt`              decimal(7,2),
   `ttl_return_amt`                decimal(7,2),
   `ttl_cash_sales_amt`            decimal(7,2),
-  `ttl_stock_sales_amt`            decimal(7,2),
+  `ttl_stock_sales_amt`           decimal(7,2),
+  `depo_amt`                      decimal(7,2),
   `short_amt`                     decimal(7,2),
   `excess_amt`                    decimal(7,2),  
   `posted_dcash` int(5)           NOT NULL default '0',  
@@ -754,19 +755,33 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
    CREATE TABLE IF NOT EXISTS `store_bank_depo` (
   `store_bank_depo_id`  int(5) unsigned NOT NULL auto_increment,
   `store_loc_id`        int(5),
-  `bank_ref_id`         int(5),
-  `tran_no`             varchar(50),
   `depo_date`           datetime,  
-  `depo_amount`         decimal(7,2),
+  `ttl_depo_amount`     decimal(7,2),
   `posted`              int(5) NOT NULL default '0',      
   `created_by`          int(5),
   `created_date`        datetime,
   `updated_by`          int(5),
   `updated_date`        datetime,
   PRIMARY KEY `store_bank_depo_pk`  (`store_bank_depo_id`),
-  UNIQUE KEY `store_bank_depo_uk` (`store_loc_id`,`bank_ref_id`,`depo_date`)
+  UNIQUE KEY `store_bank_depo_uk` (`store_loc_id`,`depo_date`)
 )
   COMMENT='Store Bank Deposits'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+
+   CREATE TABLE IF NOT EXISTS `store_bank_depo_dtls` (
+  `store_bank_depo_dtl_id`  int(5) unsigned NOT NULL auto_increment,
+  `store_bank_depo_id`  int(5),
+  `bank_ref_id`         int(5),
+  `depo_amount`         decimal(7,2),
+  `created_by`          int(5),
+  `created_date`        datetime,
+  `updated_by`          int(5),
+  `updated_date`        datetime,
+  PRIMARY KEY `store_bank_depo_dtls_pk`  (`store_bank_depo_dtl_id`),
+  UNIQUE KEY `store_bank_depo_dtls_uk` (`store_bank_depo_id`,`bank_ref_id`)
+)
+  COMMENT='Store Bank Deposits Details'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
    CREATE TABLE IF NOT EXISTS `store_bank_wd` (
