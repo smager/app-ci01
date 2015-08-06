@@ -434,6 +434,9 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `ttl_cash_box_amt`              decimal(7,2),
   `ttl_return_amt`                decimal(7,2),
   `ttl_cash_sales_amt`            decimal(7,2),
+  `ttl_stock_sales_amt`            decimal(7,2),
+  `short_amt`                     decimal(7,2),
+  `excess_amt`                    decimal(7,2),  
   `posted_dcash` int(5)           NOT NULL default '0',  
   `posted_dsales` int(5)          NOT NULL default '0',  
   `created_by`                    int(5),
@@ -503,6 +506,7 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `store_loc_id`        int(5),
   `loc_supply_id`       int(5),
   `stock_daily_qty`     decimal(5,2),
+  `prev_qty`            decimal(7,2), 
   `created_by`          int(5),
   `created_date`        datetime,
   `updated_by`          int(5),
@@ -953,7 +957,7 @@ WHERE a.supply_id = b.supply_id;
 
 
 CREATE OR REPLACE VIEW store_loc_supplies_v AS
-select a.store_loc_supply_id, a.store_loc_id, c.store_id, b.supply_id, a.loc_supply_id, b.supply_code, b.unit_desc, stock_daily_qty, 
+select a.store_loc_supply_id, a.store_loc_id, c.store_id, b.supply_id, a.loc_supply_id, b.supply_code, b.unit_desc, stock_daily_qty, prev_qty,
 getSupplyUprice(b.supply_id) as unit_price, getSupplyUcost(b.supply_id) as unit_cost,"" as loc_supply_brand_id
 from store_loc_supplies a, loc_supplies_v b, store_loc c
 WHERE a.store_loc_id = c.store_loc_id
@@ -962,7 +966,7 @@ order by b.seq_no;
 
 
 CREATE OR REPLACE VIEW store_loc_supplies2_v AS
-select "" as store_loc_supply_id, "" as store_loc_id, a.store_id, a.supply_id, "" as loc_supply_id, b.supply_code, b.unit_desc, "" as stock_daily_qty, 
+select "" as store_loc_supply_id, "" as store_loc_id, a.store_id, a.supply_id, "" as loc_supply_id, b.supply_code, b.unit_desc, "" as stock_daily_qty, "" as prev_qty,
 getSupplyUprice(b.supply_id) as unit_price, getSupplyUcost(b.supply_id) as unit_cost, "" as loc_supply_brand_id
 from  store_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
