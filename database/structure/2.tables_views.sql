@@ -431,10 +431,13 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `store_daily_cash_id`           int(5) unsigned NOT NULL auto_increment,
   `store_loc_id`                  int(5),
   `tran_date`                     datetime,
+  `fr_store_daily_cash_id`        int(5),
+  `emp_id`                        int(5), 
   `ttl_cash_box_amt`              decimal(7,2),
   `ttl_return_amt`                decimal(7,2),
   `ttl_cash_sales_amt`            decimal(7,2),
   `ttl_stock_sales_amt`           decimal(7,2),
+  `ttl_exp_amt`                   decimal(7,2),
   `depo_amt`                      decimal(7,2),
   `short_amt`                     decimal(7,2),
   `excess_amt`                    decimal(7,2),  
@@ -466,6 +469,95 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   UNIQUE KEY `store_daily_cash_dtls_uk` (`store_daily_cash_id`,`denomination`)
 )
   COMMENT='Store Daily Cash Details'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+  CREATE TABLE IF NOT EXISTS `store_loc_exp` (
+   `store_loc_exp_id`     int(5) unsigned NOT NULL auto_increment,
+   `store_loc_id`         int(5),
+   `store_daily_cash_id`  int(5),
+   `exp_date`             datetime,
+   `posted`               int(5) NOT NULL default '0',     
+   `created_by`           int(5),
+   `created_date`         datetime,
+   `updated_by`           int(5),
+   `updated_date`         datetime,
+   PRIMARY KEY `store_loc_exp_pk`  (`store_loc_exp_id`),
+   UNIQUE KEY `store_loc_exp_uk` (`exp_date`,`store_loc_id`)
+ )
+   COMMENT='Store Location Expenses'
+   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+   
+   
+  CREATE TABLE IF NOT EXISTS `store_loc_exp_dtls` (
+   `store_loc_exp_dtl_id`   int(5) unsigned NOT NULL auto_increment,
+   `store_loc_exp_id`       int(5),
+   `exp_desc`               VARCHAR(100),
+   `exp_amt`                decimal(7,2),
+   `or_no`                  VARCHAR(20),
+   `fr_cb_amt`              int(1) NOT NULL default '0',
+   `created_by`             int(5),
+   `created_date`           datetime,
+   `updated_by`             int(5),
+   `updated_date`           datetime,
+   PRIMARY KEY `store_loc_exp_dtls_pk`  (`store_loc_exp_dtl_id`),
+   UNIQUE KEY `store_loc_exp_dtls_uk` (`store_loc_exp_id`,`exp_desc`)
+ )
+   COMMENT='Store Location Expense Details'
+   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+
+CREATE TABLE IF NOT EXISTS `bank_ref` (
+ `bank_ref_id`           int(5) unsigned NOT NULL auto_increment,
+ `bank_acctno`           varchar(30) NOT NULL default '',
+ `bank_acctname`         varchar(50) NOT NULL default '', 
+ `bank_name`             varchar(50) NOT NULL default '',
+ `acct_amount`           decimal(10,2),
+ `depo_pct_share`        int(5),
+ `depo_amt_share`        decimal(10,2),
+ `priority_no`           int(5),
+ `active`                int(5) NOT NULL default '1', 
+ `created_by`            int(5),
+ `created_date`          datetime,
+ `updated_by`            int(5),
+ `updated_date`          datetime,
+ PRIMARY KEY `bank_ref_pk` (`bank_ref_id` ),
+ UNIQUE KEY `bank_ref_pk_uk` (`bank_acctno`)
+
+)
+  COMMENT='Bank Accounts Reference'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+ 
+   CREATE TABLE IF NOT EXISTS `store_bank_depo` (
+  `store_bank_depo_id`  int(5) unsigned NOT NULL auto_increment,
+  `store_daily_cash_id` int(5),
+  `store_loc_id`        int(5),
+  `depo_date`           datetime,  
+  `ttl_depo_amount`     decimal(7,2),
+  `posted`              int(5) NOT NULL default '0',      
+  `created_by`          int(5),
+  `created_date`        datetime,
+  `updated_by`          int(5),
+  `updated_date`        datetime,
+  PRIMARY KEY `store_bank_depo_pk`  (`store_bank_depo_id`),
+  UNIQUE KEY `store_bank_depo_uk` (`store_loc_id`,`depo_date`)
+)
+  COMMENT='Store Bank Deposits'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+
+   CREATE TABLE IF NOT EXISTS `store_bank_depo_dtls` (
+  `store_bank_depo_dtl_id`  int(5) unsigned NOT NULL auto_increment,
+  `store_bank_depo_id`  int(5),
+  `bank_ref_id`         int(5),
+  `depo_amount`         decimal(7,2),
+  `created_by`          int(5),
+  `created_date`        datetime,
+  `updated_by`          int(5),
+  `updated_date`        datetime,
+  PRIMARY KEY `store_bank_depo_dtls_pk`  (`store_bank_depo_dtl_id`),
+  UNIQUE KEY `store_bank_depo_dtls_uk` (`store_bank_depo_id`,`bank_ref_id`)
+)
+  COMMENT='Store Bank Deposits Details'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
  CREATE TABLE IF NOT EXISTS `adj_types` (
@@ -501,6 +593,19 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   COMMENT='Supply Adjustment'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
 
+ CREATE TABLE IF NOT EXISTS `events` (
+  `event_id` int(5) unsigned NOT NULL auto_increment,
+  `event_desc`          int(5),
+  `created_by`          int(5),
+  `created_date`        datetime,
+  `updated_by`          int(5),
+  `updated_date`        datetime,
+  PRIMARY KEY `eventss_pk`  (`event_id`),
+  UNIQUE KEY `events_uk` (`event_desc`)
+)
+  COMMENT='Events reference'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
 
  CREATE TABLE IF NOT EXISTS `store_loc_supplies` (
   `store_loc_supply_id` int(5) unsigned NOT NULL auto_increment,
@@ -519,40 +624,6 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
   
   
-  CREATE TABLE IF NOT EXISTS `store_loc_exp` (
-   `store_loc_exp_id`   int(5) unsigned NOT NULL auto_increment,
-   `store_loc_id`       int(5),
-   `exp_date`           datetime,
-   `posted`             int(5) NOT NULL default '0',     
-   `created_by`         int(5),
-   `created_date`       datetime,
-   `updated_by`         int(5),
-   `updated_date`       datetime,
-   PRIMARY KEY `store_loc_exp_pk`  (`store_loc_exp_id`),
-   UNIQUE KEY `store_loc_exp_uk` (`exp_date`,`store_loc_id`)
- )
-   COMMENT='Store Location Expenses'
-   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
-   
-   
-  CREATE TABLE IF NOT EXISTS `store_loc_exp_dtls` (
-   `store_loc_exp_dtl_id`   int(5) unsigned NOT NULL auto_increment,
-   `store_loc_exp_id`       int(5),
-   `exp_desc`               VARCHAR(100),
-   `exp_amt`                decimal(7,2),
-   `or_no`                  VARCHAR(20),
-   `fr_cb_amt`              int(1) NOT NULL default '0',
-   `created_by`             int(5),
-   `created_date`           datetime,
-   `updated_by`             int(5),
-   `updated_date`           datetime,
-   PRIMARY KEY `store_loc_exp_dtls_pk`  (`store_loc_exp_dtl_id`),
-   UNIQUE KEY `store_loc_exp_dtls_uk` (`store_loc_exp_id`,`exp_desc`)
- )
-   COMMENT='Store Location Expense Details'
-   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
-
-
   CREATE TABLE IF NOT EXISTS `loc_pc` (
    `loc_pc_id`      int(5) unsigned NOT NULL auto_increment,
    `pc_no`          int(5),
@@ -619,21 +690,38 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;    
 
  
- CREATE TABLE IF NOT EXISTS `store_loc_supply_daily` (
-  `store_loc_supply_daily_id` int(5) unsigned NOT NULL auto_increment,
-  `store_loc_supply_id`       int(5),
-  `stock_date`                date,
-  `beg_qty`                   decimal(7,2) DEFAULT 0,
-  `remaining_qty`             decimal(7,2) DEFAULT 0,
-  `is_qty`                    decimal(7,2) DEFAULT 0,
-  `out_qty`                   decimal(7,2) DEFAULT 0,
-  `end_qty`                   decimal(7,2) DEFAULT 0,
-  `unit_price`                decimal(7,2) DEFAULT 0,
-  `unit_cost`                 decimal(7,2) DEFAULT 0,
-  `created_by`                int(5),
-  `created_date`              datetime,
-  `updated_by`                int(5),
-  `updated_date`              datetime,
+   CREATE TABLE IF NOT EXISTS `store_loc_supply_daily` (
+    `store_loc_supply_daily_id`   int(5) unsigned NOT NULL auto_increment,
+    `event_id`       int(5),
+    `stock_date`     datetime,
+    `store_loc_id`   int(5),
+    `posted`         int(5) NOT NULL default '0',    
+    `created_by`     int(5),
+    `created_date`   datetime,
+    `updated_by`     int(5),
+    `updated_date`   datetime,
+    PRIMARY KEY `supply_is_pk`  (`supply_is_id`),
+    UNIQUE KEY `supply_is_uk` (`is_no`,`store_loc_id`)
+  )
+    COMMENT='Stock Issuance header to stores'
+    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+
+ 
+ CREATE TABLE IF NOT EXISTS `store_loc_supply_daily_dtls` (
+  `store_loc_supply_daily_dtl_id` int(5) unsigned NOT NULL auto_increment,
+  `store_loc_supply_daily_id`     int(5)
+  `store_loc_supply_id`           int(5),
+  `beg_qty`                       decimal(7,2) DEFAULT 0,
+  `remaining_qty`                 decimal(7,2) DEFAULT 0,
+  `is_qty`                        decimal(7,2) DEFAULT 0,
+  `out_qty`                       decimal(7,2) DEFAULT 0,
+  `end_qty`                       decimal(7,2) DEFAULT 0,
+  `unit_price`                    decimal(7,2) DEFAULT 0,
+  `unit_cost`                     decimal(7,2) DEFAULT 0,
+  `created_by`                    int(5),
+  `created_date`                  datetime,
+  `updated_by`                    int(5),
+  `updated_date`                  datetime,
   PRIMARY KEY `store_loc_supply_daily_pk`  (`store_loc_supply_daily_id`),
   UNIQUE KEY `store_loc_supply_daily_uk` (`store_loc_supply_id`,`stock_date`)
 )
@@ -729,59 +817,6 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
   UNIQUE KEY `sales_supply_uk` (`sales_supply_year`,`sales_supply_month`,`store_loc_id`, `supply_id`)
 )
   COMMENT='Store Sales Summary per Supply'
-  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
-
-CREATE TABLE IF NOT EXISTS `bank_ref` (
- `bank_ref_id`           int(5) unsigned NOT NULL auto_increment,
- `bank_acctno`           varchar(30) NOT NULL default '',
- `bank_acctname`         varchar(50) NOT NULL default '', 
- `bank_name`             varchar(50) NOT NULL default '',
- `acct_amount`           decimal(10,2),
- `depo_pct_share`        int(5),
- `depo_amt_share`        decimal(10,2),
- `priority_no`           int(5),
- `active`                int(5) NOT NULL default '1', 
- `created_by`            int(5),
- `created_date`          datetime,
- `updated_by`            int(5),
- `updated_date`          datetime,
- PRIMARY KEY `bank_ref_pk` (`bank_ref_id` ),
- UNIQUE KEY `bank_ref_pk_uk` (`bank_acctno`)
-
-)
-  COMMENT='Bank Accounts Reference'
-  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
- 
-   CREATE TABLE IF NOT EXISTS `store_bank_depo` (
-  `store_bank_depo_id`  int(5) unsigned NOT NULL auto_increment,
-  `store_loc_id`        int(5),
-  `depo_date`           datetime,  
-  `ttl_depo_amount`     decimal(7,2),
-  `posted`              int(5) NOT NULL default '0',      
-  `created_by`          int(5),
-  `created_date`        datetime,
-  `updated_by`          int(5),
-  `updated_date`        datetime,
-  PRIMARY KEY `store_bank_depo_pk`  (`store_bank_depo_id`),
-  UNIQUE KEY `store_bank_depo_uk` (`store_loc_id`,`depo_date`)
-)
-  COMMENT='Store Bank Deposits'
-  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
-
-
-   CREATE TABLE IF NOT EXISTS `store_bank_depo_dtls` (
-  `store_bank_depo_dtl_id`  int(5) unsigned NOT NULL auto_increment,
-  `store_bank_depo_id`  int(5),
-  `bank_ref_id`         int(5),
-  `depo_amount`         decimal(7,2),
-  `created_by`          int(5),
-  `created_date`        datetime,
-  `updated_by`          int(5),
-  `updated_date`        datetime,
-  PRIMARY KEY `store_bank_depo_dtls_pk`  (`store_bank_depo_dtl_id`),
-  UNIQUE KEY `store_bank_depo_dtls_uk` (`store_bank_depo_id`,`bank_ref_id`)
-)
-  COMMENT='Store Bank Deposits Details'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
    CREATE TABLE IF NOT EXISTS `store_bank_wd` (

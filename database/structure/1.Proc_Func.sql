@@ -336,6 +336,11 @@ WHERE store_daily_cash_id=p_store_daily_cash_id;
 UPDATE store_daily_cash 
    SET ttl_cash_box_amt   = l_cash_amt
  WHERE store_daily_cash_id=p_store_daily_cash_id;    
+ 
+UPDATE store_daily_cash
+   SET depo_amt = depo_amt-l_cash_amt
+ WHERE store_daily_cash_id = (select fr_store_daily_cash_id FROM store_daily_cash WHERE store_daily_cash_id=p_store_daily_cash_id; 
+
 END;
 
 
