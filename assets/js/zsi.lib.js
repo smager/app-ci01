@@ -1,4 +1,4 @@
-/* JS Package Names or Namespaces */
+﻿/* JS Package Names or Namespaces */
    var zsi           = {};
    zsi.form          = {};
    zsi.table         = {};
@@ -81,9 +81,15 @@ function monitorAjaxResponse(){
     $(document).ajaxStart(function(){});      
     $( document ).ajaxSend(function(event,request,settings) {
         if(typeof zsi_request_count === 'undefined') zsi_request_count=0;
-        zsi_request_count++;
         if(zsi._strValueExist(settings.url,"checkDataExist") ) return;
-        if(zsi._strValueExist(settings.url,"employee_search_json") ) return;      
+        if(zsi._strValueExist(settings.url,"employee_search_json") ) return;  
+    
+        var isExclude=false;
+        if(typeof zsi.excludeUrl!=='undefined' ){
+            if(settings.url.toLowerCase().indexOf(zsi.excludeUrl.toLowerCase()) > -1) isExclude=true;
+        } 
+        if(isExclude===false) zsi_request_count++;
+
         zsi.ShowHideProgressWindow(true);
     });
 
@@ -111,6 +117,9 @@ function monitorAjaxResponse(){
       
       CloseProgressWindow();
 
+      if(typeof zsi.excludeUrl!=='undefined' ){
+          if(settings.url.toLowerCase().indexOf(zsi.excludeUrl.toLowerCase()) > -1) return;
+      }    
       if( zsi._strValueExist(settings.url,error_url) ){
          console.log("url: " + settings.url);         
          return false;
@@ -123,7 +132,7 @@ function monitorAjaxResponse(){
          });
       }
       else{
-         console.log("zsi.Ajax.Request Status = Ïailed %c, url: " + settings.url, "color:red;", "color:#000;");
+         console.log("zsi.Ajax.Request Status = Failed %c, url: " + settings.url, "color:red;", "color:#000;");
          console.log(errorObject);              
 
 
