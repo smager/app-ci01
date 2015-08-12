@@ -59,8 +59,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         if($ctr!=0) echo "</div>";
 ?>    
     
-</div>    
-<?php includePageJS(); ?>        
+</div>          
 <?php includeFooter(); ?>     
 </body>
 </html>

@@ -98,7 +98,11 @@ $(window).bind('keydown', function(e) {
     
  $(document).ready(function(){
      initAceEditor();
-     
+     var dbName ="<?php echo $this->db->database;?>";
+     var commentText ="# show tables; show full tables where Table_Type = 'BASE TABLE'; show full tables where Table_Type = 'VIEW';";
+         commentText +="\r\n# show procedure status where db='" + dbName + "'; show function status where db='" + dbName + "';";
+         commentText +="\r\nselect * from tablename;\r\n";
+     editor.getSession().setValue(commentText); 
  });
 
 $("#btnRun").click(function(){
@@ -141,7 +145,8 @@ $("#btnRun").click(function(){
             for(var x=0;x< colsLength;x++){                
                 var info = d[y];
                 var val = info[keys[x]];
-                 h+="<td>"+ val +"</td>";
+                var new_val = $('<div/>').text(val).html();
+                 h+="<td>"+ new_val +"</td>";
             }
             h+="</tr>";
             $(".zTable").append(h);
@@ -172,10 +177,6 @@ function initAceEditor(){
     });    
 
 }    
-
-    
-   
- 
     
 </script>    
    

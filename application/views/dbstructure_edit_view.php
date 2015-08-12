@@ -155,14 +155,8 @@ function initAceEditor(){
     });    
 
 }    
-
-    
-   
  
-    
 </script>    
-   
-    
 
 <div class="alert alert-success">
    <p>Data has been saved.</p>
