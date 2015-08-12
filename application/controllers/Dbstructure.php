@@ -102,7 +102,27 @@ class dbstructure extends Base_Controller {
          $data["object_type"] = $type;
          $this->load->view('dbstructure_edit_view',$data);
     }    
-    
+
+    public function sql(){
+        
+         $this->load->view('dbstructure_sql_view');
+    }  
+
+    public function runsql(){
+        $sql = $this->input->post("p_sql");
+        $query= $this->db->query($sql);
+        
+        if(gettype($query)=="object"){
+            if($query->num_rows() >0){
+                jsonOut( $query->result());
+            }
+        }
+        else{
+            jsonOut(array(array("Result"=>(int)$query)));            
+        }
+        
+    }  
+ 
     
     public function update()
 	{

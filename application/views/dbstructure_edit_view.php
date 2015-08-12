@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title><?php getPageTitle(); ?></title>
+<title>Database Structure: Edit</title>
 <?php
     includeHeader();    
 ?>    
@@ -78,10 +78,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  var w1=null;
  var obj_name ="<?php echo $object_name;?>";
  var obj_type ="<?php echo $object_type;?>";
-    
-
-
-    
+   
 $(window).bind('keydown', function(e) {
     var isCtrlS = (e.ctrlKey && e.which == 83);
     if(isCtrlS){
@@ -91,16 +88,18 @@ $(window).bind('keydown', function(e) {
     }    
 });   
     
- $(document).ready(function(){
-     initAceEditor();
-     getInfo(obj_name);
- });
+$(document).ready(function(){
+    zsi.excludeUrl ="dbstructure";
+    initAceEditor();
+    getInfo(obj_name);
+});
 
 $("#btnSubmit").click(function(){
     submit();
 });  
     
 function getInfo(p_name){
+    if(p_name==="") return;
     $.get(defaultUrl + "getcode/" +  p_name + "/" + obj_type
        ,function(data){
             editor.getSession().setValue(unescape(data.replace(/^\s+/,"")));
