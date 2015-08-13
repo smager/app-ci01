@@ -10,35 +10,41 @@ class dbstructure extends Base_Controller {
   
 	public function index()
 	{
+        check_login();
         $data["tables"] = $this->db->query("show full tables")->result_array();        
         $this->load->view('dbstructure_view',$data);
 	}    
 	public function tables()
 	{
+        check_login();
         $data["tables"] = $this->db->query("show full tables where Table_Type = 'BASE TABLE'")->result_array();        
         $this->load->view('dbstructure_view',$data);
 	}
     
 	public function views()
 	{
+        check_login();
         $data["tables"] = $this->db->query("show full tables where Table_Type = 'VIEW'")->result_array();        
         $this->load->view('dbstructure_view',$data);
 	}
         
 	public function procedures()
 	{
-       $data["tables"] = $this->getProceduresAndFunctions('procedure');        
-       $this->load->view('dbstructure_view',$data);    
+        check_login();
+        $data["tables"] = $this->getProceduresAndFunctions('procedure');        
+        $this->load->view('dbstructure_view',$data);    
 	}
     
 	public function functions()
 	{
-       $data["tables"] = $this->getProceduresAndFunctions('function');        
-       $this->load->view('dbstructure_view',$data);    
+        check_login();
+        $data["tables"] = $this->getProceduresAndFunctions('function');        
+        $this->load->view('dbstructure_view',$data);    
 	}  
     
     public function procs_funcs()
 	{
+        check_login();
         $procs = $this->getProceduresAndFunctions('procedure');  
         $funcs = $this->getProceduresAndFunctions('function');        
         $data["tables"] = array_merge($procs,$funcs);
@@ -63,6 +69,7 @@ class dbstructure extends Base_Controller {
     
     
     public function getddl($name,$type=''){
+        check_login();
         $type=strtoupper($type);
          $query = $this->db->query("SHOW CREATE $type $name");
          if($type=='TABLE' || $type=='VIEW'){
@@ -70,11 +77,11 @@ class dbstructure extends Base_Controller {
          }else{
             $data["info"]  = array_values($query->row_array())[2];         
          }        
-         $this->load->view('dbstructure_info_view',$data);
-        
+         $this->load->view('dbstructure_info_view',$data);        
     }
     
     public function getcode($name,$type=''){
+        check_login();
         $content="";
         $isTableViews=false;
          $query= $this->db->query("select content from dbstructures where object_name='$name' limit 1");
@@ -97,18 +104,20 @@ class dbstructure extends Base_Controller {
     }    
     
     
-    public function edit($name='',$type=''){        
-         $data["object_name"] = $name;
-         $data["object_type"] = $type;
-         $this->load->view('dbstructure_edit_view',$data);
+    public function edit($name='',$type=''){  
+        check_login();
+        $data["object_name"] = $name;
+        $data["object_type"] = $type;
+        $this->load->view('dbstructure_edit_view',$data);
     }    
 
     public function sql(){
-        
-         $this->load->view('dbstructure_sql_view');
+        check_login();
+        $this->load->view('dbstructure_sql_view');
     }  
 
     public function runsql(){
+        check_login();
         $sql = $this->input->post("p_sql");
         $query= $this->db->query($sql);
         
