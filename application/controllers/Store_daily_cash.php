@@ -18,7 +18,7 @@ class store_daily_cash extends Base_Controller {
 	public function sales()
 	{
         check_login();
-		$this->load->view('store_daily_cashsales_list');
+		$this->load->view('default_view');
 	}
     
 
