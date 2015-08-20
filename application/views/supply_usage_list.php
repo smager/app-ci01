@@ -31,7 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </div>    
  
 <div class="col-xs-10">   
-<table class="table row" >    
+<table class="zTable fullWidth" >    
     <thead>
         <tr>
             <th width="40" ></th>    
