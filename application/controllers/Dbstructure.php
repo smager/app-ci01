@@ -24,9 +24,9 @@ class dbstructure extends Base_Controller {
 	public function getdata($objectType='')
 	{
         $where ="";
-        if(isset($objectName))  $where = "where object_type='$objectType'";
-        $query = $this->db->query("SELECT * FROM dbstructures $where ORDER BY object_type,seq_no,object_name");
-        
+        if($objectType!='')  $where = "where object_type='$objectType'";
+        $sql="SELECT * FROM dbstructures $where ORDER BY object_type,seq_no,object_name";
+        $query = $this->db->query($sql);        
         jsonOut($query->result());        
 	}
 
