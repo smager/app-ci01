@@ -41,11 +41,15 @@ class menu_model extends CI_Model{
     }
 
     function getMenuByUrl(){
-        $result="";
-        $action = $this->router->fetch_method(); 
-        $urlAction = $this->router->fetch_class() . '/' . $action;
+        $result="";        
+        $where="";
         $url = $this->router->fetch_class();
-        $sql = "SELECT menu_name FROM menu_v where lower(menu_url)='$url' or lower(menu_url)='$urlAction'";
+        $action = $this->router->fetch_method();         
+        $urlAction = $url . '/' . $action;
+        
+        $where ="where lower(menu_url)='$url'";
+        if($action != "index") $where ="where lower(menu_url)='$urlAction'";
+        $sql = "SELECT menu_name FROM menu_v $where";
         $query = $this->db->query($sql);
         if($query->num_rows() > 0) $result = $query->result()[0]->menu_name;        
         return $result;    
