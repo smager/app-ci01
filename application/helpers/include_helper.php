@@ -22,7 +22,9 @@ function includeHeader($p=null){
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
+<?php $ci =& get_instance(); ?>    
   var base_url ="<?php echo base_url('');?>";
+  var controller_url ="<?php echo base_url('') . $ci->router->fetch_class() . '/';?>";    
 </script>   
 <script src="<?php echo base_url('assets/js/jquery-1.11.3.min.js');?>"></script>   
 <?php includePageJS("zsi_lib"); ?>

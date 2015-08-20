@@ -14,6 +14,38 @@ class dbstructure extends Base_Controller {
         $data["tables"] = $this->db->query("show full tables")->result_array();        
         $this->load->view('dbstructure_view',$data);
 	}    
+    
+	public function db()
+	{
+        check_login();
+        $this->load->view('default_view');
+	}
+    
+	public function getdata($objectType='')
+	{
+        $where ="";
+        if(isset($objectName))  $where = "where object_type='$objectType'";
+        $query = $this->db->query("SELECT * FROM dbstructures $where ORDER BY object_type,seq_no,object_name");
+        
+        jsonOut($query->result());        
+	}
+
+   
+    public function dbupdate(){
+        $params=array(
+             'pk'=> 'dbstruct_id'
+            ,'dbKeys'=> array('seq_no')
+            ,'mustNotEmptyKeys'=> array('seq_no')
+            ,'table'=>'dbstructures'
+        );
+        $this->common_model->update($this->input->post(),$params);           
+    }        
+    
+    function dbdelete($post){        
+        $this->load->model('common_model'); 
+        $this->common_model->delete($this->input->post(),"dbstructures","dbstruct_id");        
+    }    
+    
 	public function tables()
 	{
         check_login();
@@ -184,16 +216,7 @@ class dbstructure extends Base_Controller {
             }
             
         }
-        $query=$this->db->query($post['p_content']);
-        print_r($query);
-
 	}    
    
-
-    public function delete()
-	{
-        
-        $this->test_model->delete($this->input->post());
-	}   
     
 }
