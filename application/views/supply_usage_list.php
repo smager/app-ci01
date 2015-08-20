@@ -34,7 +34,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <table class="zTable fullWidth" >    
     <thead>
         <tr>
-            <th width="40" ></th>    
+            <th style="width: 25px"></th>   
             <th>Items</th>  
             <th>Brand/Unit</th> 
             <th>Beg. Qty</th> 

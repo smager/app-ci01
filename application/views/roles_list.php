@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <form id="frm" action="<?php echo base_url('roles/update');?>" method="post" >
 <table class="zTable fullWidth">    
     <tr>
-        <th style="width:30px;"></th>
+        <th style="width: 25px"></th>
         <th style="width:80px;">Code</th>        
         <th>Role</th>
     </tr>

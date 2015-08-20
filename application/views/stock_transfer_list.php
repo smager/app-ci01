@@ -42,10 +42,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>    
 </div>
 <div class="col-xs-9">    
-    <table id="grid" class="table">
+    <table id="grid" class="zTable fullWidth">
         <thead>
             <tr>
-                <th></th>
+                <th style="width: 25px"></th>
                 <th>Item</th>
                 <th>Qty</th>
 

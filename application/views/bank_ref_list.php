@@ -18,7 +18,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <form id="frm" action="<?php echo base_url('bank_ref/update');?>" method="post" >
 <table class="zTable fullWidth">    
     <tr>
-        <th></th>
+        <th style="width: 25px"></th>
         <th>Acct. No</th>
         <th>Acct. Name</th>
         <th>Bank Name</th>

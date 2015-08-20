@@ -72,10 +72,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>    
             </div> 
         </div>                
-    <table id="grid" class="table">  
+    <table id="grid" class="zTable fullWidth">  
         <thead>
         <tr>
-            <th></th>
+            <th style="width: 25px"></th>
             <th>Page URL</th>
             <th>Revision</th>
             <th>Create By</th>

@@ -16,7 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <form id="frm" action="<?php echo base_url('brands/update');?>" method="post" >
 <table class="zTable fullWidth">    
     <tr>
-        <th></th>
+        <th style="width: 25px"></th>
         <th>Brand Name</th>
     </tr>
 <?php

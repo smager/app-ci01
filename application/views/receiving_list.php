@@ -56,7 +56,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <table id="grid" class="zTable fullWidth">
     <thead>
         <tr>
-            <th></th>
+            <th style="width: 25px"></th>
             <th>Supply</th>
             <th>Brand/Unit</th>
             <th>Qty</th>

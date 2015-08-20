@@ -15,9 +15,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     
 <div class="container page">
 <form id="frm" action="<?php echo base_url('menu_types/update');?>" method="post" >
-<table class="table">    
+<table class="zTable fullWidth">    
     <tr>
-        <th></th>
+        <th style="width: 25px"></th>
         <th>Seq#</th>
         <th>Menu Type</th>
     </tr>
