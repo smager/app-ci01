@@ -1158,6 +1158,11 @@ select a.*, b.store_loc_id, b.supply_code, b.unit_desc, ifnull(a.unit_price,0) *
 from store_loc_supply_daily a, store_loc_supplies_v b
 where a.store_loc_supply_id=b.store_loc_supply_id;
 
-create or replace view revisions_latest_v as
+CREATE OR REPLACE VIEW revisions_latest_v as
 select * from revision_logs
 where revision_id in (select distinct getlatestrevid(filename) as revision_id from revision_logs);
+
+CREATE OR REPLACE VIEW sales_staffs_v as
+SELECT * FROM employees
+where position_id = 4;
+

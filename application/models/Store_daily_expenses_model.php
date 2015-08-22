@@ -46,7 +46,12 @@ class store_daily_expenses_model extends CI_Model{
                 ,'table'=>'store_loc_exp_dtls'
             )
         );       
-       return $this->common_model->update($post,$params);          
+        $store_loc_exp_id=$this->common_model->update($post,$params);    
+        $store_loc_id=$post['p_store_loc_id'];
+        $exp_date=$post['p_exp_date'];
+        if($post["p_posted"]==true) {
+              $this->db->query("call setStoreDailyExpPosted($store_loc_exp_id,$store_loc_id,'$exp_date')");
+        }
     
     }        
         
