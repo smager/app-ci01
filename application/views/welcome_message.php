@@ -18,10 +18,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 .login-form{
     background-color: #f5f6f6;
     border: 1pt solid #3071a8;
-    margin: 10px auto 0;
     min-height: 127px;
     padding-top: 19px;
-    width: 300px;
 } 
 
 .login-status{
@@ -56,7 +54,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     //check if not yet logged in
     if( isset( $this->session->userdata['current_user'] ) ==false){
 ?>        
-        <form class="login-form" action="<?php echo base_url("users/login") ?>" method="post">  
+        <form class="login-form col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4" action="<?php echo base_url("users/login") ?>" method="post">  
         
             <div class="form-horizontal">
                 <?php 
