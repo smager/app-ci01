@@ -15,7 +15,6 @@ class events_model extends CI_Model{
              'pk'=> 'event_id'
             ,'dbKeys'=> array('event_desc')
             ,'mustNotEmptyKeys'=> array('event_desc')
-            ,'mustNotEmptyOnInsert'=> array('event_desc')
             ,'table'=>'events'
         );
         $this->common_model->update($post,$params); 
