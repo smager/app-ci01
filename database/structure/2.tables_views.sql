@@ -433,6 +433,7 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `tran_date`                     datetime,
   `fr_store_daily_cash_id`        int(5),
   `emp_id`                        int(5), 
+  `event_id`                      int(5),  
   `ttl_cash_box_amt`              decimal(7,2),
   `ttl_return_amt`                decimal(7,2),
   `ttl_cash_sales_amt`            decimal(7,2),
@@ -1165,4 +1166,9 @@ where revision_id in (select distinct getlatestrevid(filename) as revision_id fr
 CREATE OR REPLACE VIEW sales_staffs_v as
 SELECT * FROM employees
 where position_id = 4;
+
+CREATE OR REPLACE VIEW store_daily_cash_v as
+SELECT *, getEmplName(empl_id) as empl_name  FROM store_daily_cash;
+
+
 

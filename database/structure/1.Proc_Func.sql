@@ -52,6 +52,14 @@ BEGIN
  RETURN (lvl);
 END;
 
+create function  getEmplName(p_empl_id int) RETURNS VARCHAR(100)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl varchar(100);
+    SELECT empl_name INTO lvl FROM employees WHERE empl_id=p_empl_id;
+ RETURN (lvl);
+END
+
 create function  getSupplier(p_supplier_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
