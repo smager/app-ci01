@@ -14,7 +14,12 @@ class bank_ref extends Base_Controller {
 	}
     
     
-    
+    public function getdata()
+	{
+        jsonOut($this->bank_ref_model->getdata()->result());
+      
+	} 	
+
     public function getjson(){    
         $chkStart = "<input type=''checkbox'' onclick=''zsi.table.setCheckBox(this,";
         $chkEnd = ");'' />";    
