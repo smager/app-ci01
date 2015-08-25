@@ -60,9 +60,17 @@ BEGIN
  RETURN (lvl);
 END;
 
+CREATE PROCEDURE getStoreDailyCash(p_store_loc_id INT(10),p_date VARCHAR(20))
+BEGIN
+     SELECT *, getEmplName(empl_id) as empl_name, getEvent(event_id) as event_desc
+       FROM store_daily_cash 
+      WHERE store_loc_id =p_store_loc_id
+        AND tran_date = str_to_date(p_date,'%m/%d/%Y');
+END;
+
 CREATE PROCEDURE getStoreDailyCashById(IN p_store_daily_cash_id INT(10))
 BEGIN
-     SELECT *, getEmplName(empl_id), getEvent(event_id) FROM store_daily_cash WHERE store_daily_cash_id =p_store_daily_cash_id;
+     SELECT *, getEmplName(empl_id) as empl_name,, getEvent(event_id) as event_desc FROM store_daily_cash WHERE store_daily_cash_id =p_store_daily_cash_id;
 END;
 
 create function  getSupplier(p_supplier_id int) RETURNS VARCHAR(100)
@@ -497,9 +505,17 @@ BEGIN
    AND a.loc_id = p_loc_id_to;
 END; 
 
-CREATE PROCEDURE getBankDepoInfo(p_store_loc_id int(5), p_date VARCHAR(20))
+CREATE FUNCTION getStoreDailyCashDepoAmt(p_store_loc_id int(5), p_date VARCHAR(20)) RETURNS decimal(7,2)
+    DETERMINISTIC
 BEGIN
-select *, getBankDepoShare() as depo_amount from bank_ref
+    DECLARE lvl decimal(7,2);
+    SELECT depo_amt INTO lvl FROM store_daily_cash WHERE store_loc_id = p_store_loc_id AND  tran_date = str_to_date(p_date,'%m/%d/%Y'); 
+ RETURN (ifnull(lvl,0));
 END;
 
-CREATE FUNCTION getBankDepoShare()
+
+
+
+
+
+

@@ -6,7 +6,7 @@ class bank_ref_model extends CI_Model{
     }
     
     function getdata(){
-        $query = $this->db->query("SELECT * FROM bank_ref");
+        $query = $this->db->query("SELECT * FROM bank_ref order by priority_no");
         return $query;    
     }
     
