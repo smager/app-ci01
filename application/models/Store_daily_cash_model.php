@@ -5,8 +5,9 @@ class store_daily_cash_model extends CI_Model{
 
     }
 
-    function getStoreDailyCashById($store_daily_cash_id){
-        $query = $this->db->query("call getStoreDailyCashById($store_daily_cash_id)");
+    function getStoreDailyCash($store_loc_id,$date){
+        $str = "call getStoreDailyCash($store_loc_id,'$date')";
+        $query = $this->db->query($str);
         return $query;    
     }
     
