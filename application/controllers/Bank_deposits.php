@@ -1,38 +1,31 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-
-class common extends Base_Controller {
-    function __construct() {
-        parent::__construct();        
-    }    
-
-	public function get_select_data($table,$text,$value,$condition='')
-	{
-        $query = $this->db->query("SELECT $text as text, $value as value  FROM $table");        
-        jsonOut($query->result());
-        
-    }
-    
-	public function select_data()        
-	{
-        $l_condition="";
-        $d=$this->input->get();
-        
-        if(isset($d['p_con']))  $l_condition="where " . $d['p_con'];
-        $sql = "SELECT  " . $d['p_text'] . " as text, " . $d['p_value'] . " as value  FROM " . $d['p_table'] . " " . $l_condition;        
-        $query = $this->db->query( $sql);        
-        jsonOut($query->result());
-        
-    }
-    
-
-    
-	public function checkDataExist($table,$field,$value)
-	{
-        $str = "SELECT count(*) as value FROM $table WHERE lower($field)=lower('$value')";
-        $query = $this->db->query($str);         
-        $result ='{"exist":false}';
-        if ($query->row()->value > 0 )  $result  = '{"exist":true}';
-        jsonOut($result);
-    }
-}
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class bank_deposits extends Base_Controller {
+    function __construct() {
+        parent::__construct();
+        $this->load->model('bank_deposits_model'); 
+    }
+    
+	public function index()
+	{
+        check_login();
+        $this->load->view('default_view');
+	}
+	
+    public function get_store_daily_cash_depo_amount()
+	{
+        $store_loc_id = $this->input->get("p_store_loc_id");
+        $tran_date = $this->input->get("p_tran_date");
+        jsonOut($this->bank_deposits_model->getStoreDailyCashDepoAmt($store_loc_id,$tran_date)->result());
+      
+	} 	
+    
+
+    public function update()
+	{
+        $this->bank_deposits_model->update($this->input->post());
+        redirect( base_url($this->router->fetch_class()) );
+	}
+    
+}
