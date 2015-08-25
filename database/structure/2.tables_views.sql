@@ -514,7 +514,6 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
  `bank_name`             varchar(50) NOT NULL default '',
  `acct_amount`           decimal(10,2),
  `depo_pct_share`        int(5),
- `depo_amt_share`        decimal(10,2),
  `priority_no`           int(5),
  `active`                int(5) NOT NULL default '1', 
  `created_by`            int(5),
@@ -531,7 +530,6 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
    CREATE TABLE IF NOT EXISTS `store_bank_depo` (
   `store_bank_depo_id`  int(5) unsigned NOT NULL auto_increment,
   `store_daily_cash_id` int(5),
-  `store_loc_id`        int(5),
   `depo_date`           datetime,  
   `ttl_depo_amount`     decimal(7,2),
   `posted`              int(5) NOT NULL default '0',      
@@ -550,6 +548,7 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
   `store_bank_depo_dtl_id`  int(5) unsigned NOT NULL auto_increment,
   `store_bank_depo_id`  int(5),
   `bank_ref_id`         int(5),
+  `depo_pct_share`      int(5),
   `depo_amount`         decimal(7,2),
   `created_by`          int(5),
   `created_date`        datetime,

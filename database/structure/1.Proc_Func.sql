@@ -513,6 +513,31 @@ BEGIN
  RETURN (ifnull(lvl,0));
 END;
 
+CREATE FUNCTION getBankName(p_bank_ref_id int(5)) RETURNS VARCHAR(100)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl VARCHAR(100);
+    SELECT bank_name INTO lvl FROM bank_ref WHERE bank_ref_id = p_bank_ref_id;
+ RETURN (ifnull(lvl,''));
+END;
+
+CREATE PROCEDURE getBankDepo(p_store_loc_id int(5), p_date VARCHAR(20))
+BEGIN
+   DECLARE l_id INT(5);
+      select ifnull(a.store_daily_cash_id,0) INTO l_id 
+       FROM store_daily_cash a
+      WHERE a.store_loc_id = p_store_loc_id 
+        AND a.tran_date = str_to_date(p_date,'%m/%d/%Y')
+        AND EXISTS (SELECT b.store_daily_cash_id FROM store_bank_depo b WHERE a.store_daily_cash_id=b.store_daily_cash_id);
+
+   IF IfNull(l_id,0) = 0 THEN
+      SELECT *, null as store_bank_depo_dtl_id FROM bank_ref ORDER BY priority_no;
+   ELSE
+      SELECT *, getBankName(bank_ref_id) as bank_name FROM bank_depo_dtls;
+   END IF;
+  
+END; 
+
 
 
 
