@@ -28,7 +28,14 @@ class store_daily_cash extends Base_Controller {
         $tran_date = $this->input->get("tran_date");
         jsonOut($this->store_daily_cash_model->getdata($store_loc_id,$tran_date)->result());
       
-	}   
+	}  
+	
+    public function get_storedailycash_by_id($store_daily_cash_id)
+	{  
+       
+        jsonOut($this->store_daily_cash_model->getStoreDailyCashById($store_daily_cash_id)->result());
+      
+	}   	
     
     public function get_detail_json($store_daily_cash_id)
 	{

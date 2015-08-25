@@ -4,6 +4,11 @@ class store_daily_cash_model extends CI_Model{
         parent::__construct();
 
     }
+
+    function getStoreDailyCashById($store_daily_cash_id){
+        $query = $this->db->query("call getStoreDailyCashById($store_daily_cash_id)");
+        return $query;    
+    }
     
     function getdata($store_loc_id,$date){
         $str = "SELECT * FROM store_daily_cash where store_loc_id='$store_loc_id' and DATE_FORMAT(tran_date,'%m/%d/%Y')='$date'";
