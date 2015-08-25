@@ -28,6 +28,8 @@ class store_daily_cash_model extends CI_Model{
         $store_daily_cash_id =  $post['p_store_daily_cash_id'];   
         $data = array(
              'store_loc_id' => $post['p_store_loc_id']
+            ,'empl_id' => $post['p_empl_id']
+            ,'event_id' => $post['p_event_id']             
             ,'tran_date' =>   date('Y-m-d', strtotime($post['p_tran_date']))  
         );
         
