@@ -58,7 +58,12 @@ BEGIN
     DECLARE lvl varchar(100);
     SELECT empl_name INTO lvl FROM employees WHERE empl_id=p_empl_id;
  RETURN (lvl);
-END
+END;
+
+CREATE PROCEDURE getStoreDailyCashById(IN p_store_daily_cash_id INT(10))
+BEGIN
+     SELECT *, getEmplName(empl_id), getEvent(event_id) FROM store_daily_cash WHERE store_daily_cash_id =p_store_daily_cash_id;
+END;
 
 create function  getSupplier(p_supplier_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
@@ -140,6 +145,11 @@ BEGIN
     DECLARE lvl int(5);
     SELECT COUNT(po_id) INTO lvl FROM po_dtls WHERE po_id=p_po_id and ifnull(bal_qty,0) > 0 ;
  RETURN (lvl);
+END;
+
+CREATE PROCEDURE getStoreDailyCash(IN p_store_daily_cash_id INT(10))
+BEGIN
+     SELECT *, getEmplName(empl_id), getEvent(event_id) FROM store_daily_cash WHERE store_daily_cash_id =p_store_daily_cash_id;
 END;
 
 CREATE PROCEDURE getStoreLocSupplies (IN p_store_loc_id INT(10))
