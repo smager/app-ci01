@@ -266,6 +266,22 @@ CREATE TABLE IF NOT EXISTS `store_loc` (
   COMMENT='Store locations'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
+  CREATE TABLE IF NOT EXISTS `deductions_ref` (
+  `deduction_ref_id`  int(5) unsigned NOT NULL auto_increment,
+  `deduction_code`    varchar(64) NOT NULL default '', 
+  `deduction_desc`    varchar(64) NOT NULL default '', 
+  `deduction_pct`     decimal(7,2),
+  `default_amt`       decimal(7,2),
+  `created_by`        int(5),
+  `created_date`      datetime,
+  `updated_by`        int(5),
+  `updated_date`      datetime,
+  PRIMARY KEY  `deductions_ref_pk`  (`deduction_ref_id`),
+  UNIQUE KEY  `deductions_ref_uk` (`deduction_code`)
+)
+  COMMENT='Deductions Reference file'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
 CREATE TABLE IF NOT EXISTS `employees` (
   `empl_id`        int(5) unsigned NOT NULL auto_increment,
   `empl_name`      varchar(64) NOT NULL default '',
