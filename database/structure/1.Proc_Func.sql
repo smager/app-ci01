@@ -521,7 +521,7 @@ BEGIN
  RETURN (ifnull(lvl,''));
 END;
 
-CREATE PROCEDURE getBankDepo(p_store_loc_id int(5), p_date VARCHAR(20))
+CREATE PROCEDURE getStoreBanksDepo(p_store_loc_id int(5), p_date VARCHAR(20))
 BEGIN
    DECLARE l_id INT(5);
       select ifnull(a.store_daily_cash_id,0) INTO l_id 
