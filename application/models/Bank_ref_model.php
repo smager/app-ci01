@@ -13,7 +13,7 @@ class bank_ref_model extends CI_Model{
     function update($post){            
         $params=array(
              'pk'=> 'bank_ref_id'
-            ,'dbKeys'=> array('bank_acctno','bank_acctname','bank_name','depo_pct_share','depo_amt_share','priority_no','active')
+            ,'dbKeys'=> array('bank_acctno','bank_acctname','bank_name','depo_pct_share','priority_no','active')
             ,'mustNotEmptyKeys'=> array('bank_acctno')
             ,'mustNotEmptyOnInsert'=> array('bank_acctname')
             ,'table'=>'bank_ref'
