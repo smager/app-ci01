@@ -60,19 +60,6 @@ BEGIN
  RETURN (lvl);
 END;
 
-CREATE PROCEDURE getStoreDailyCash(p_store_loc_id INT(10),p_date VARCHAR(20))
-BEGIN
-     SELECT *, getEmplName(empl_id) as empl_name, getEvent(event_id) as event_desc
-       FROM store_daily_cash 
-      WHERE store_loc_id =p_store_loc_id
-        AND tran_date = str_to_date(p_date,'%m/%d/%Y');
-END;
-
-CREATE PROCEDURE getStoreDailyCashById(IN p_store_daily_cash_id INT(10))
-BEGIN
-     SELECT *, getEmplName(empl_id) as empl_name,, getEvent(event_id) as event_desc FROM store_daily_cash WHERE store_daily_cash_id =p_store_daily_cash_id;
-END;
-
 create function  getSupplier(p_supplier_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
@@ -139,6 +126,14 @@ BEGIN
  RETURN (ifnull(lvl,0));
 END;
 
+create function  getStoreLocSupplyId(p_store_loc_id, p_loc_supply_id int) RETURNS INT(5)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl int(5);
+    SELECT store_loc_supply_id INTO lvl FROM store_loc_supplies WHERE store_loc_id=p_store_loc_id and loc_supply_id=p_loc_supply_id;
+ RETURN (lvl);
+END;
+
 create function  getSupplyBrandIdFromLoc(p_loc_supply_brand_id int) RETURNS int(5)
     DETERMINISTIC
 BEGIN
@@ -155,22 +150,99 @@ BEGIN
  RETURN (lvl);
 END;
 
-CREATE PROCEDURE getStoreDailyCash(IN p_store_daily_cash_id INT(10))
+CREATE FUNCTION getStoreLocSupplyDailySum(p_store_loc_id int(5), p_date VARCHAR(20)) RETURNS decimal(7,2) 
+    DETERMINISTIC
 BEGIN
-     SELECT *, getEmplName(empl_id), getEvent(event_id) FROM store_daily_cash WHERE store_daily_cash_id =p_store_daily_cash_id;
+ DECLARE lvl decimal(7,2);
+    select SUM(out_qty * unit_price) INTO lvl from store_loc_supply_daily_v where store_loc_id = p_store_loc_id
+    and DATE_FORMAT(stock_date,'%m/%d/%Y') = p_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
+CREATE FUNCTION getStoreLocDailyDenomSum(p_store_loc_id int(5), p_date VARCHAR(20)) RETURNS decimal(7,2) 
+    DETERMINISTIC
+BEGIN
+ DECLARE lvl decimal(7,2);
+    select SUM(return_amt) INTO lvl from store_daily_cash_dtls_v  where store_loc_id = p_store_loc_id
+    and DATE_FORMAT(tran_date,'%m/%d/%Y') = p_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
+CREATE FUNCTION getStoreLocSalesExpSum(p_store_loc_id int(5), p_date VARCHAR(20)) RETURNS decimal(7,2) 
+    DETERMINISTIC
+BEGIN
+ DECLARE lvl decimal(7,2);
+    select SUM(exp_amt) INTO lvl from store_loc_sales_exp_dtls_v where store_loc_id = p_store_loc_id
+    and DATE_FORMAT(exp_date,'%m/%d/%Y') = p_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
+CREATE FUNCTION get_store_pc_qty(p_store_loc_id int,  p_loc_supply_brand_id int, p_tran_date DATE) RETURNS decimal(7,2) 
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl decimal(7,2);
+    SELECT pc_qty INTO lvl FROM loc_pc_dtls_v WHERE store_loc_id = p_store_loc_id and loc_supply_brand_id=p_loc_supply_brand_id AND  DATE_FORMAT(pc_date,'%m/%d/%Y') = p_tran_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
+CREATE FUNCTION getTotalStockSalesAmt(p_store_loc_id int, p_date DATE) DECIMAL(7,2)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl DECIMAL(7,2);
+    SELECT ttl_stock_sales_amnt INTO lvl FROM store_daily_cash WHERE store_loc_id = p_store_loc_id and tran_date = str_to_date(p_date,'%m/%d/%Y');
+ RETURN (ifnull(lvl,0));
+END;
+
+CREATE FUNCTION get_store_daily_cash_denom_qty(p_store_loc_id int,  p_denomination int, p_tran_date DATE) RETURNS INT(5) 
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl INT(5);
+    SELECT denomination_qty INTO lvl FROM store_daily_cash_dtls_v WHERE store_loc_id = p_store_loc_id and denomination=p_denomination AND  tran_date = p_tran_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
+CREATE FUNCTION get_store_daily_cash_denom_amt(p_store_loc_id int,  p_denomination int, p_tran_date DATE) RETURNS INT(5) 
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl INT(5);
+    SELECT cash_amount INTO lvl FROM store_daily_cash_dtls_v WHERE store_loc_id = p_store_loc_id and denomination=p_denomination AND  tran_date = p_tran_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
+CREATE FUNCTION getStoreDailyCashDepoAmt(p_store_loc_id int(5), p_date VARCHAR(20)) RETURNS decimal(7,2)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl decimal(7,2);
+    SELECT depo_amt INTO lvl FROM store_daily_cash WHERE store_loc_id = p_store_loc_id AND  tran_date = str_to_date(p_date,'%m/%d/%Y'); 
+ RETURN (ifnull(lvl,0));
+END;
+
+CREATE FUNCTION getBankName(p_bank_ref_id int(5)) RETURNS VARCHAR(100)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl VARCHAR(100);
+    SELECT bank_name INTO lvl FROM bank_ref WHERE bank_ref_id = p_bank_ref_id;
+ RETURN (ifnull(lvl,''));
+END;
+
+/*PROCEDURES*/
+
+CREATE PROCEDURE getStoreDailyCash(p_store_loc_id INT(10),p_date VARCHAR(20))
+BEGIN
+     SELECT *, getEmplName(empl_id) as empl_name, getEvent(event_id) as event_desc
+       FROM store_daily_cash 
+      WHERE store_loc_id =p_store_loc_id
+        AND tran_date = str_to_date(p_date,'%m/%d/%Y');
+END;
+
+CREATE PROCEDURE getStoreDailyCashById(IN p_store_daily_cash_id INT(10))
+BEGIN
+     SELECT *, getEmplName(empl_id) as empl_name,, getEvent(event_id) as event_desc FROM store_daily_cash WHERE store_daily_cash_id =p_store_daily_cash_id;
 END;
 
 CREATE PROCEDURE getStoreLocSupplies (IN p_store_loc_id INT(10))
 BEGIN
      SELECT * FROM store_loc_supplies_v WHERE store_loc_id =p_store_loc_id;
-END;
-
-create function  getStoreLocSupplyId(p_store_loc_id, p_loc_supply_id int) RETURNS INT(5)
-    DETERMINISTIC
-BEGIN
-    DECLARE lvl int(5);
-    SELECT store_loc_supply_id INTO lvl FROM store_loc_supplies WHERE store_loc_id=p_store_loc_id and loc_supply_id=p_loc_supply_id;
- RETURN (lvl);
 END;
 
 CREATE PROCEDURE getSupplyIsUnposted (IN p_store_loc_id int, IN p_loc_supply_id int)
@@ -292,34 +364,6 @@ select * from store_loc_supply_daily_v where store_loc_id = p_store_loc_id
 and DATE_FORMAT(stock_date,'%m/%d/%Y') = p_date; 
 END;
 
-CREATE FUNCTION getStoreLocSupplyDailySum(p_store_loc_id int(5), p_date VARCHAR(20)) RETURNS decimal(7,2) 
-    DETERMINISTIC
-BEGIN
- DECLARE lvl decimal(7,2);
-    select SUM(out_qty * unit_price) INTO lvl from store_loc_supply_daily_v where store_loc_id = p_store_loc_id
-    and DATE_FORMAT(stock_date,'%m/%d/%Y') = p_date; 
- RETURN (ifnull(lvl,0));
-END;
-
-CREATE FUNCTION getStoreLocDailyDenomSum(p_store_loc_id int(5), p_date VARCHAR(20)) RETURNS decimal(7,2) 
-    DETERMINISTIC
-BEGIN
- DECLARE lvl decimal(7,2);
-    select SUM(return_amt) INTO lvl from store_daily_cash_dtls_v  where store_loc_id = p_store_loc_id
-    and DATE_FORMAT(tran_date,'%m/%d/%Y') = p_date; 
- RETURN (ifnull(lvl,0));
-END;
-
-CREATE FUNCTION getStoreLocSalesExpSum(p_store_loc_id int(5), p_date VARCHAR(20)) RETURNS decimal(7,2) 
-    DETERMINISTIC
-BEGIN
- DECLARE lvl decimal(7,2);
-    select SUM(exp_amt) INTO lvl from store_loc_sales_exp_dtls_v where store_loc_id = p_store_loc_id
-    and DATE_FORMAT(exp_date,'%m/%d/%Y') = p_date; 
- RETURN (ifnull(lvl,0));
-END;
-
-
 CREATE PROCEDURE getStoreLocSupplyDailySum(p_store_loc_id int(5), p_date VARCHAR(20)) 
 BEGIN
     SELECT getStoreLocSalesExpSum(p_store_loc_id,p_date) sales_exp, getStoreLocSupplyDailySum(p_store_loc_id,p_date) sales_amount,  from store_loc_supply_daily_v where store_loc_id = p_store_loc_id
@@ -341,13 +385,6 @@ BEGIN
 END; 
 
 
-CREATE FUNCTION get_store_pc_qty(p_store_loc_id int,  p_loc_supply_brand_id int, p_tran_date DATE) RETURNS decimal(7,2) 
-    DETERMINISTIC
-BEGIN
-    DECLARE lvl decimal(7,2);
-    SELECT pc_qty INTO lvl FROM loc_pc_dtls_v WHERE store_loc_id = p_store_loc_id and loc_supply_brand_id=p_loc_supply_brand_id AND  DATE_FORMAT(pc_date,'%m/%d/%Y') = p_tran_date; 
- RETURN (ifnull(lvl,0));
-END;
 
 
 CREATE PROCEDURE store_daily_cash_postedCB(IN p_store_daily_cash_id int(5))
@@ -389,30 +426,7 @@ UPDATE store_daily_cash
  WHERE store_daily_cash_id=p_store_daily_cash_id;    
 END;
 
-CREATE FUNCTION getTotalStockSalesAmt(p_store_loc_id int, p_date DATE) DECIMAL(7,2)
-    DETERMINISTIC
-BEGIN
-    DECLARE lvl DECIMAL(7,2);
-    SELECT ttl_stock_sales_amnt INTO lvl FROM store_daily_cash WHERE store_loc_id = p_store_loc_id and tran_date = str_to_date(p_date,'%m/%d/%Y');
- RETURN (ifnull(lvl,0));
-END;
 
-
-CREATE FUNCTION get_store_daily_cash_denom_qty(p_store_loc_id int,  p_denomination int, p_tran_date DATE) RETURNS INT(5) 
-    DETERMINISTIC
-BEGIN
-    DECLARE lvl INT(5);
-    SELECT denomination_qty INTO lvl FROM store_daily_cash_dtls_v WHERE store_loc_id = p_store_loc_id and denomination=p_denomination AND  tran_date = p_tran_date; 
- RETURN (ifnull(lvl,0));
-END;
-
-CREATE FUNCTION get_store_daily_cash_denom_amt(p_store_loc_id int,  p_denomination int, p_tran_date DATE) RETURNS INT(5) 
-    DETERMINISTIC
-BEGIN
-    DECLARE lvl INT(5);
-    SELECT cash_amount INTO lvl FROM store_daily_cash_dtls_v WHERE store_loc_id = p_store_loc_id and denomination=p_denomination AND  tran_date = p_tran_date; 
- RETURN (ifnull(lvl,0));
-END;
 
 CREATE PROCEDURE store_daily_cash_report(p_store_loc_id int, p_tran_date varchar(20))
 BEGIN
@@ -504,22 +518,6 @@ BEGIN
    AND a.supply_brand_id=getSupplyBrandIdFromLoc(b.loc_supply_brand_id)
    AND a.loc_id = p_loc_id_to;
 END; 
-
-CREATE FUNCTION getStoreDailyCashDepoAmt(p_store_loc_id int(5), p_date VARCHAR(20)) RETURNS decimal(7,2)
-    DETERMINISTIC
-BEGIN
-    DECLARE lvl decimal(7,2);
-    SELECT depo_amt INTO lvl FROM store_daily_cash WHERE store_loc_id = p_store_loc_id AND  tran_date = str_to_date(p_date,'%m/%d/%Y'); 
- RETURN (ifnull(lvl,0));
-END;
-
-CREATE FUNCTION getBankName(p_bank_ref_id int(5)) RETURNS VARCHAR(100)
-    DETERMINISTIC
-BEGIN
-    DECLARE lvl VARCHAR(100);
-    SELECT bank_name INTO lvl FROM bank_ref WHERE bank_ref_id = p_bank_ref_id;
- RETURN (ifnull(lvl,''));
-END;
 
 CREATE PROCEDURE getStoreBanksDepo(p_store_loc_id int(5), p_date VARCHAR(20))
 BEGIN
