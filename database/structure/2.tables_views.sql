@@ -1015,10 +1015,9 @@ from store_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW loc_supplies_v AS
-select a.loc_id, a.loc_supply_id, a.supply_id, b.seq_no, b.supply_code, a.reorder_level, a.max_level, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks
+select a.loc_id, a.loc_supply_id, a.supply_id, b.seq_no, b.supply_code, a.reorder_level, a.max_level, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks, 
 from loc_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
-
 
 CREATE OR REPLACE VIEW loc_supplies2_v AS
 select a.*, b.seq_no, b.supply_code, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks
@@ -1072,7 +1071,6 @@ from store_loc_supplies a, loc_supplies_v b, store_loc c
 WHERE a.store_loc_id = c.store_loc_id
 AND a.loc_supply_id = b.loc_supply_id
 order by b.seq_no;
-
 
 CREATE OR REPLACE VIEW store_loc_supplies2_v AS
 select "" as store_loc_supply_id, "" as store_loc_id, a.store_id, a.supply_id, "" as loc_supply_id, b.supply_code, b.unit_desc, "" as stock_daily_qty, "" as prev_qty,
@@ -1162,7 +1160,7 @@ WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
 AND a.loc_pc_id=c.loc_pc_id;
 
 CREATE OR REPLACE VIEW loc_pc_dtls_by_store_loc_v AS
-SELECT a.*,c.loc_id, c.store_loc_id, c.pc_date, b.seq_no, b.supply_code, "" as brand_name, b.unit_desc as cu_desc
+SELECT a.*,c.loc_id, c.store_loc_id, c.pc_date, b.supply_code, b.unit_desc
 FROM loc_pc_dtls a, store_loc_supplies_v b, loc_pc c
 WHERE a.store_loc_supply_id = b.store_loc_supply_id
 AND a.loc_pc_id=c.loc_pc_id;
@@ -1228,5 +1226,9 @@ where position_id = 4;
 CREATE OR REPLACE VIEW store_daily_cash_v as
 SELECT *, getEmplName(empl_id) as empl_name  FROM store_daily_cash;
 
+CREATE OR REPLACE VIEW loc_pc_dtls_group_v AS
+SELECT loc_pc_id, getLocSupplyIdByBrandId(loc_supply_brand_id) AS loc_supply_id, sum(pc_qty * getSupplyConvQty(loc_supply_brand_id)) as sum_stock_qty
+FROM loc_pc_dtls
+GROUP BY loc_pc_id, getLocSupplyIdByBrandId(loc_supply_brand_id);
 
 

@@ -109,6 +109,22 @@ BEGIN
  RETURN (ifnull(lvl,0));
 END;
 
+create function  getLocSupplyIdByBrandId(p_loc_supply_brand_id int) RETURNS int(5)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl int;
+    SELECT loc_supply_id INTO lvl FROM loc_supply_brands WHERE loc_supply_brand_id = p_loc_supply_brand_id; 
+ RETURN (ifnull(lvl,0));
+END;
+
+create function  getSupplyConvQty(p_loc_supply_brand_id int) RETURNS decimal(5,2)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl decimal(5,2);
+    SELECT conv_unit_qty INTO lvl FROM loc_supply_brands_v WHERE loc_supply_brand_id = p_loc_supply_brand_id; 
+ RETURN (ifnull(lvl,0));
+END;
+
 create function  getLocSupplyBrandId(p_loc_id int, p_supply_id int, p_supply_brand_id int) RETURNS int(5)
     DETERMINISTIC
 BEGIN
@@ -226,6 +242,12 @@ BEGIN
 END;
 
 /*PROCEDURES*/
+
+CREATE PROCEDURE getLocSuppliesReorder(p_loc_id int(5))
+BEGIN
+select * from loc_supplies_v where ttl_stocks <= reorder_level
+and loc_id=p_loc_id;
+END;
 
 CREATE PROCEDURE getStoreDailyCash(p_store_loc_id INT(10),p_date VARCHAR(20))
 BEGIN
@@ -492,17 +514,17 @@ END;
 CREATE PROCEDURE loc_pc_post(p_loc_pc_id int(5), p_store_loc_id int(5), p_date varchar(20))
 BEGIN
 DECLARE l_found VARCHAR(5);
-IF ifnull(p_store_loc_id,0) = 0 THEN
-   UPDATE loc_supply_brands a, loc_pc_dtls b 
-   SET a.stock_qty = b.pc_qty
-   WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
-   AND b.loc_pc_id = p_loc_pc_id;
-ELSE
-  UPDATE store_loc_supplies a, loc_pc_dtls b
-     SET a.prev_qty = b.pc_qty
-   WHERE b.loc_pc_id = p_loc_pc_id
-     AND a.store_loc_supply_id = b.store_loc_supply_id_id;
-END IF;
+   IF ifnull(p_store_loc_id,0) = 0 THEN
+      UPDATE loc_supply_brands a, loc_pc_dtls b 
+      SET a.stock_qty = b.pc_qty
+      WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
+      AND b.loc_pc_id = p_loc_pc_id;    
+   ELSE
+     UPDATE store_loc_supplies a, loc_pc_dtls b
+        SET a.prev_qty = b.pc_qty
+      WHERE b.loc_pc_id = p_loc_pc_id
+        AND a.store_loc_supply_id = b.store_loc_supply_id;
+   END IF;
 END; 
 
 CREATE PROCEDURE stock_transfer_post(p_st_id int(5), p_loc_id_to int)
