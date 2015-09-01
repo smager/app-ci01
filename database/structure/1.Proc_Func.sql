@@ -407,8 +407,6 @@ BEGIN
 END; 
 
 
-
-
 CREATE PROCEDURE store_daily_cash_postedCB(IN p_store_daily_cash_id int(5))
 BEGIN
 DECLARE l_cash_amt decimal(7,2);
@@ -418,14 +416,15 @@ INTO l_cash_amt
 FROM store_daily_cash_dtls 
 WHERE store_daily_cash_id=p_store_daily_cash_id;
 
-UPDATE store_daily_cash 
-   SET ttl_cash_box_amt   = l_cash_amt
- WHERE store_daily_cash_id=p_store_daily_cash_id;    
+   UPDATE store_daily_cash 
+      SET ttl_cash_box_amt   = l_cash_amt
+   WHERE store_daily_cash_id=p_store_daily_cash_id;    
  
-UPDATE store_daily_cash
-   SET depo_amt = depo_amt-l_cash_amt
- WHERE store_daily_cash_id = (select fr_store_daily_cash_id FROM store_daily_cash WHERE store_daily_cash_id=p_store_daily_cash_id; 
-
+   UPDATE store_daily_cash 
+      SET depo_amt = ttl_return_amt - (l_cash_amt + IFNUL(ttl_exp_amt,0))
+   WHERE store_daily_cash_id=fr_store_daily_cash_id; 
+END IF;  
+ 
 END;
 
 
