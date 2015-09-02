@@ -5,14 +5,15 @@ class bank_deposits_model extends CI_Model{
         parent::__construct();
     }
 
-    function getStoreDailyCashDepoAmt($store_loc_id,$date){
-        $str = "select getStoreDailyCashDepoAmt($store_loc_id,'$date') as depo_amt";
-        $query = $this->db->query($str);
+    function getStoreBanksDepoInfo($store_loc_id,$date){
+        $str = "call getStoreBankDepoInfo($store_loc_id,'$date')";
+        $query = $this->db->query($str);        
         return $query;    
     }
-
-    function getStoreBanksDepo($store_loc_id,$date){
-        $str = "call getStoreBanksDepo($store_loc_id,'$date')";
+    
+    function getStoreBanksDepo($storeBankDepoId,$dpAmount){
+        
+        $str = "call getStoreBanksDepo($storeBankDepoId,$dpAmount)";
         $query = $this->db->query($str);
         return $query;    
     }

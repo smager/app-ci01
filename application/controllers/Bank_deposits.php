@@ -13,18 +13,17 @@ class bank_deposits extends Base_Controller {
             
         }	    
         
-        public function get_store_daily_cash_depo_amount()	
+        public function get_store_banks_depo_info()	
         {   
             $store_loc_id = $this->input->get("p_store_loc_id");        
-            $tran_date = $this->input->get("p_tran_date");        
-            jsonOut($this->bank_deposits_model->getStoreDailyCashDepoAmt($store_loc_id,$tran_date)->result());	
+            $tran_date = $this->input->get("p_tran_date");  
+            
+            jsonOut($this->bank_deposits_model->getStoreBanksDepoInfo($store_loc_id,$tran_date)->result());	
             
         } 	    
         
-        public function get_store_banks_depo()	{        
-            $store_loc_id = $this->input->get("p_store_loc_id");        
-            $tran_date = $this->input->get("p_tran_date");        
-            jsonOut($this->bank_deposits_model->getStoreBanksDepo($store_loc_id,$tran_date)->result());
+        public function get_store_banks_depo($storeBankDepoId,$dpAmount)	{        
+            jsonOut($this->bank_deposits_model->getStoreBanksDepo($storeBankDepoId,$dpAmount)->result());
         } 	        
         
         public function update()	{        
