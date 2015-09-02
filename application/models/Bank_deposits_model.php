@@ -1,29 +1,58 @@
 <?php
-class bank_ref_model extends CI_Model{
+
+class bank_deposits_model extends CI_Model{
     function __construct() {
         parent::__construct();
-
     }
-    
-    function getdata(){
-        $query = $this->db->query("SELECT * FROM bank_ref order by priority_no");
+
+    function getStoreDailyCashDepoAmt($store_loc_id,$date){
+        $str = "select getStoreDailyCashDepoAmt($store_loc_id,'$date') as depo_amt";
+        $query = $this->db->query($str);
         return $query;    
     }
-    
-    function update($post){            
-        $params=array(
-             'pk'=> 'bank_ref_id'
-            ,'dbKeys'=> array('bank_acctno','bank_acctname','bank_name','depo_pct_share','depo_amt_share','priority_no','active')
-            ,'mustNotEmptyKeys'=> array('bank_acctno')
-            ,'mustNotEmptyOnInsert'=> array('bank_acctname')
-            ,'table'=>'bank_ref'
-        );
-        $this->common_model->update($post,$params); 
+
+    function getStoreBanksDepo($store_loc_id,$date){
+        $str = "call getStoreBanksDepo($store_loc_id,'$date')";
+        $query = $this->db->query($str);
+        return $query;    
     }
 
-    function delete($post){        
-        $this->common_model->delete($this->input->post(),"bank_ref","bank_ref_id");        
-    }    
 
+    //issuance
+
+    function getdata_detail($store_loc_id){
+
+        $query = $this->db->query("call getStoreLocSupplies($store_loc_id)");
+
+        return $query;    
+
+    }
+
+    //update for issuance
+
+    function update($post){        
+        $params=array(            
+            'parent' => array(
+                 'pk'=> 'bank_deposits_id'
+                ,'dbKeys'=> array('store_loc_id','is_no','depo_date',"posted")
+                ,'table'=>'bank_deposits'
+            )           
+            ,'details' => array(
+                'pk'=> 'bank_deposits_dtl_id'
+                ,'dbKeys'=> array('loc_supply_brand_id','bank_deposits_qty')
+                ,'mustNotEmptyKeys'=> array('loc_supply_brand_id')
+                ,'table'=>'bank_deposits_dtls'
+            )
+        );       
+        $is_id = $this->common_model->update($post,$params);                        
+        // posted=true;
+        $store_loc_id=$post['p_store_loc_id'];
+        $is_date=$post['p_is_date'];
+        if($post["p_posted"]==true) {
+             $this->db->query("call setLocStockIsPost($is_id)");
+             $this->db->query("call setStoreStockIsPost($is_id,$store_loc_id,'$is_date')");
+        }
+    } 
 }
+
 ?>

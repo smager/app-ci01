@@ -1,4 +1,4 @@
-<?phpdefined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class bank_deposits extends Base_Controller {    
         function __construct() {        
