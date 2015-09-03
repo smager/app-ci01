@@ -499,8 +499,7 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `ttl_stock_sales_amt`           decimal(7,2),
   `ttl_exp_amt`                   decimal(7,2),
   `depo_amt`                      decimal(7,2),
-  `short_amt`                     decimal(7,2),
-  `excess_amt`                    decimal(7,2),  
+  `short_excess_amt`              decimal(7,2),
   `posted_dcash` int(5)           NOT NULL default '0',  
   `posted_dsales` int(5)          NOT NULL default '0',  
   `created_by`                    int(5),
@@ -588,16 +587,17 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
  
    CREATE TABLE IF NOT EXISTS `store_bank_depo` (
   `store_bank_depo_id`  int(5) unsigned NOT NULL auto_increment,
-  `store_daily_cash_id` int(5),
-  `depo_date`           datetime,  
-  `ttl_depo_amount`     decimal(7,2),
+  `store_loc_id`        int(5),
+  `sales_date`          datetime,  
+  `act_depo_date`       datetime,  
+  `depo_amt`            decimal(7,2),
   `posted`              int(5) NOT NULL default '0',      
   `created_by`          int(5),
   `created_date`        datetime,
   `updated_by`          int(5),
   `updated_date`        datetime,
   PRIMARY KEY `store_bank_depo_pk`  (`store_bank_depo_id`),
-  UNIQUE KEY `store_bank_depo_uk` (`store_loc_id`,`depo_date`)
+  UNIQUE KEY `store_bank_depo_uk` (`store_loc_id`,`sales_date`)
 )
   COMMENT='Store Bank Deposits'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
@@ -1232,3 +1232,7 @@ FROM loc_pc_dtls
 GROUP BY loc_pc_id, getLocSupplyIdByBrandId(loc_supply_brand_id);
 
 
+CREATE OR REPLACE VIEW store_bank_depo_dtls_v as
+SELECT a.*, b.bank_name, b.depo_pct_share 
+  FROM store_bank_depo_v a, bank_ref b
+ WHERE a.bank_ref_id = a.bank_ref_id;
