@@ -33,26 +33,13 @@ class bank_deposits_model extends CI_Model{
 
     function update($post){        
         $params=array(            
-            'parent' => array(
-                 'pk'=> 'bank_deposits_id'
-                ,'dbKeys'=> array('store_loc_id','is_no','depo_date',"posted")
-                ,'table'=>'bank_deposits'
-            )           
-            ,'details' => array(
-                'pk'=> 'bank_deposits_dtl_id'
-                ,'dbKeys'=> array('loc_supply_brand_id','bank_deposits_qty')
-                ,'mustNotEmptyKeys'=> array('loc_supply_brand_id')
-                ,'table'=>'bank_deposits_dtls'
-            )
+                 'pk'=> 'store_bank_depo_id'
+                ,'dbKeys'=> array('act_depo_date',"posted")
+                //,'mustNotEmptyKeys'=> array('store_bank_depo_id')
+                ,'table'=>'store_bank_depo'
         );       
         $is_id = $this->common_model->update($post,$params);                        
-        // posted=true;
-        $store_loc_id=$post['p_store_loc_id'];
-        $is_date=$post['p_is_date'];
-        if($post["p_posted"]==true) {
-             $this->db->query("call setLocStockIsPost($is_id)");
-             $this->db->query("call setStoreStockIsPost($is_id,$store_loc_id,'$is_date')");
-        }
+    
     } 
 }
 

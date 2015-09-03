@@ -28,7 +28,6 @@ class bank_deposits extends Base_Controller {
         
         public function update()	{        
             $this->bank_deposits_model->update($this->input->post());        
-            redirect( base_url($this->router->fetch_class()) );	
         }    
     
 }
