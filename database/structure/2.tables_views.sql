@@ -284,6 +284,7 @@ CREATE TABLE IF NOT EXISTS `store_loc` (
 
 CREATE TABLE IF NOT EXISTS `employees` (
   `empl_id`        int(5) unsigned NOT NULL auto_increment,
+  `empl_idno`      varchar(10) NOT NULL default '',,
   `empl_name`      varchar(64) NOT NULL default '',
   `loc_id`         int(5),
   `store_loc_id`   int(5),
@@ -291,15 +292,17 @@ CREATE TABLE IF NOT EXISTS `employees` (
   `daily_rate`     decimal(7,2),
   `sss_no`         varchar(20),
   `pagibig_no`     varchar(20),
-  `ti_no`          varchar(20),
+  `tin`            varchar(20),
   `philhealth_no`  varchar(20),
+  `civil_status`   varchar(20),
   `active`         int(5) NOT NULL default '1', 
   `created_by`     int(5),
   `created_date`   datetime,
   `updated_by`     int(5),
   `updated_date`   datetime,
   PRIMARY KEY `employees_pk` (`empl_id`),
-  UNIQUE KEY `employees_uk` (`empl_name`)
+  UNIQUE KEY `employees_name` (`empl_name`),
+  UNIQUE KEY `employees_idno` (`empl_idno`)
 )
   COMMENT='Employees'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;

@@ -18,7 +18,7 @@ class store_daily_cash_model extends CI_Model{
     }
     
     function getdata_detail($store_daily_cash_id){
-        $query = $this->db->query("SELECT * FROM store_daily_cash_dtls where store_daily_cash_id=$store_daily_cash_id");
+        $query = $this->db->query("SELECT * FROM store_daily_cash_dtls where store_daily_cash_id=$store_daily_cash_id order by denomination desc");
         return $query;    
     }
     

@@ -619,8 +619,14 @@ BEGIN
 END; 
 
 
-
-
+CREATE PROCEDURE getDenominations(p_order VARCHAR(5))
+BEGIN
+   DECLARE l_stmt VARCHAR(2000);
+   SET @s = CONCAT('SELECT * FROM denomination_ref ORDER BY 1 ', ifnull(p_order,'DESC'));
+    PREPARE stmt FROM @s;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;   
+END;    
 
 
 

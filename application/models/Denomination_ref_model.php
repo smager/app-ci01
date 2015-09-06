@@ -6,7 +6,7 @@ class denomination_ref_model extends CI_Model{
     }
     
     function getdata(){
-        $query = $this->db->query("SELECT * FROM denomination_ref");
+        $query = $this->db->query("call getDenominations('desc')");
         return $query;    
     }
     
