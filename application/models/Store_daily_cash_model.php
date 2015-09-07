@@ -34,16 +34,17 @@ class store_daily_cash_model extends CI_Model{
         $store_daily_cash_id =  $post['p_store_daily_cash_id'];   
         $data = array(
              'store_loc_id' => $post['p_store_loc_id']
-            ,'empl_id' => $post['p_empl_id']
-            ,'event_id' => $post['p_event_id']             
             ,'tran_date' =>   date('Y-m-d', strtotime($post['p_tran_date']))  
         );
-        
+                
         if($post["p_tran_type"]=="cashbox")
             $data['posted_dcash'] = $post['p_posted'];                 
-        else
+        else{            
             $data['posted_dsales'] = $post['p_posted'];            
-
+            $data['empl_id'] = $post['p_empl_id'];            
+            $data['event_id'] = $post['p_event_id'];            
+        }
+        
         if($store_daily_cash_id==''){
             //insert        
             $data['created_by'] =current_user()->empl_id;
