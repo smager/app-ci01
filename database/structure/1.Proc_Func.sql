@@ -251,11 +251,11 @@ BEGIN
  RETURN (ifnull(lvl,0));
 END;
 
-CREATE FUNCTION getStoreDailyCashDepoAmt(p_store_loc_id int(5), p_date VARCHAR(20)) RETURNS decimal(7,2)
+CREATE FUNCTION getStoreDailyCashDepoAmt(p_store_loc_id int(5), p_date DATE) RETURNS decimal(7,2)
     DETERMINISTIC
 BEGIN
     DECLARE lvl decimal(7,2);
-    SELECT depo_amt INTO lvl FROM store_daily_cash WHERE store_loc_id = p_store_loc_id AND  tran_date = str_to_date(p_date,'%m/%d/%Y'); 
+    SELECT depo_amt INTO lvl FROM store_daily_cash WHERE store_loc_id = p_store_loc_id AND  tran_date = p_date; 
  RETURN (ifnull(lvl,0));
 END;
 
@@ -429,16 +429,17 @@ DECLARE l_store_loc_id INT;
 DECLARE l_tran_date date;
 DECLARE l_created_by INT;
 DECLARE l_created_date DATE;
+DECLARE l_store_bank_depo_id INT;
 
-SELECT store_loc_id, tran_date, l_created_by, l_created_date
- INTO l_store_loc_id, l_tran_date, created_by, created_date
- FROM store_daily_cash
-WHERE store_daily_cash_id=p_store_daily_cash_id;
+SELECT store_loc_id, date_add(tran_date,interval -2 day), created_by, created_date
+  INTO l_store_loc_id, l_tran_date, l_created_by, l_created_date
+  FROM store_daily_cash
+ WHERE store_daily_cash_id=p_store_daily_cash_id;
 
 SELECT sum(IFNULL(cash_amount,0))
-INTO l_cash_amt
-FROM store_daily_cash_dtls 
-WHERE store_daily_cash_id=p_store_daily_cash_id;
+  INTO l_cash_amt
+  FROM store_daily_cash_dtls 
+ WHERE store_daily_cash_id=p_store_daily_cash_id;
 
 UPDATE store_daily_cash 
    SET ttl_cash_box_amt   = l_cash_amt
@@ -447,13 +448,27 @@ UPDATE store_daily_cash
 UPDATE store_daily_cash 
    SET depo_amt = ttl_return_amt - (l_cash_amt + IFNULL(ttl_exp_amt,0))
  WHERE store_loc_id=l_store_loc_id
-  AND tran_date = date_add(l_tran_date,interval -2 day);
-     
-INSERT INTO store_bank_depo       
-     (store_daily_cash_id, store_loc_id, sales_date, depo_amt, created_by, created_date) 
-      SELECT store_daily_cash_id, l_store_loc_id, date_add(l_tran_date,interval -2 day),depo_amt, l_created_by, l_created_date FROM store_daily_cash    
-       WHERE store_loc_id=l_store_loc_id
-         AND tran_date = date_add(l_tran_date,interval -2 day); 
+  AND tran_date =l_tran_date;
+
+select IFNULL(store_bank_depo_id,0) 
+  INTO l_store_bank_depo_id
+  FROM store_bank_depo        
+ WHERE store_loc_id=l_store_loc_id
+   AND sales_date=l_tran_date;     
+
+IF IFNULL(l_store_bank_depo_id,0)=0 THEN
+   INSERT INTO store_bank_depo       
+        (store_loc_id, sales_date, depo_amt, created_by, created_date) 
+         SELECT l_store_loc_id, l_tran_date,depo_amt, l_created_by, l_created_date FROM store_daily_cash    
+          WHERE store_loc_id=l_store_loc_id
+            AND sales_date =l_tran_date; 
+ELSE
+   UPDATE store_bank_depo
+      SET depo_amt= getStoreDailyCashDepoAmt(l_store_loc_id,l_tran_date)
+    WHERE store_bank_depo_id = l_store_bank_depo_id;
+    
+   DELETE FROM store_bank_depo_dtls WHERE store_bank_depo_id = l_store_bank_depo_id; 
+END IF;
 END;
 
 
@@ -618,7 +633,6 @@ BEGIN
    
 END; 
 
-
 CREATE PROCEDURE getDenominations(p_order VARCHAR(5))
 BEGIN
    DECLARE l_stmt VARCHAR(2000);
@@ -628,5 +642,28 @@ BEGIN
     DEALLOCATE PREPARE stmt;   
 END;    
 
+CREATE PROCEDURE getEmployees(p_loc_id INT, p_store_loc_id INT, p_position_id INT)
+BEGIN
+   DECLARE l_stmt VARCHAR(2000);
+   DECLARE l_where VARCHAR(2000);
+   SET l_where = ' WHERE 1=1';
+   
+   IF IFNULL(p_loc_id,0) <> 0 THEN
+      SET l_where = CONCAT(l_where, ' AND loc_id = ', p_loc_id);
+   END IF;
+   
+   IF IFNULL(p_store_loc_id,0) <> 0 THEN
+      SET l_where = CONCAT(l_where, ' AND store_loc_id = ', p_store_loc_id);
+   END IF;
 
+   IF IFNULL(p_position_id,0) <> 0 THEN
+      SET l_where = CONCAT(l_where, ' AND position_id = ', p_position_id);
+   END IF;
+
+
+   SET @s = CONCAT('SELECT * FROM employees ', l_where,  ' ORDER BY empl_name asc ');
+    PREPARE stmt FROM @s;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;   
+END; 
 

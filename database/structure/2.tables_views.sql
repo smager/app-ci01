@@ -622,39 +622,45 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
   COMMENT='Store Bank Deposits Details'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
- CREATE TABLE IF NOT EXISTS `adj_types` (
-  `adj_type_id`   int(5) unsigned NOT NULL auto_increment,
-  `adj_type`      varchar(20) NOT NULL default '',
-  `adj_math`      varchar(1) NOT NULL default '',
+ CREATE TABLE IF NOT EXISTS `adjustments_ref` (
+  `adjmt_id`   int(5) unsigned NOT NULL auto_increment,
+  `adjmt_desc` varchar(20) NOT NULL default '',
   `posted`        int(5) NOT NULL default '0',     
   `created_by`    int(5),
   `created_date`  datetime,
   `updated_by`    int(5),
   `updated_date`  datetime,
-  PRIMARY KEY `adj_types_pk`  (`adj_type_id`),
-  UNIQUE KEY `adj_types_uk` (`adj_type`)
+  PRIMARY KEY `adjustments_ref_pk`  (`adjmt_id`),
+  UNIQUE KEY `adjustments_ref_uk` (`adjmt_desc`)
 )
   COMMENT='Supply Adjustment'
-  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
-
- CREATE TABLE IF NOT EXISTS `supply_adj` (
-  `supply_adj_id`         int(5) unsigned NOT NULL auto_increment,
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+  
+CREATE TABLE IF NOT EXISTS `stock_adjustments` (
+  `stock_adjmt_id`        int(5) unsigned NOT NULL auto_increment,
+  `stock_adjmt_no`        int(5),
   `adj_date`              datetime,
   `loc_id`                int(5),
-  `adj_type_id`           int(5),
+  `store_loc_id`          int(5),
+  `adjmt_id`              int(5),
   `adj_remarks`           varchar(200) NOT NULL default '',
   `supply_brand_id`       int(5),
+  `store_loc_supply_id`   int(5), 
+  `curr_qty`              decimal(5,2),
   `adj_qty`               decimal(5,2),
+  `diff_qty`              decimal(5,2),
   `posted`                int(5) NOT NULL default '0',     
   `created_by`            int(5),
   `created_date`          datetime,
   `updated_by`            int(5),
   `updated_date`          datetime,
-  PRIMARY KEY `adj_pk`  (`supply_adj_id`)
+  PRIMARY KEY `stock_adjustments_pk`  (`stock_adjmt_id`),
+  UNIQUE KEY `stock_adjustments_uk` (`stock_adjmt_no`)
 )
-  COMMENT='Supply Adjustment'
-  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;   
-
+  COMMENT='Stock Adjustment'
+  DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
+  
+  
  CREATE TABLE IF NOT EXISTS `events` (
   `event_id` int(5) unsigned NOT NULL auto_increment,
   `event_desc`          int(5),
