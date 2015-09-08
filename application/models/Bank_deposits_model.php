@@ -34,7 +34,7 @@ class bank_deposits_model extends CI_Model{
     function update($post){        
         $params=array(            
                  'pk'=> 'store_bank_depo_id'
-                ,'dbKeys'=> array('act_depo_date',"posted")
+                ,'dbKeys'=> array('act_depo_date',"depo_by_empl_id","posted")
                 //,'mustNotEmptyKeys'=> array('store_bank_depo_id')
                 ,'table'=>'store_bank_depo'
         );       
