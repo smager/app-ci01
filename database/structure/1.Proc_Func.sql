@@ -403,10 +403,12 @@ BEGIN
    END IF;
 END;
 
-CREATE PROCEDURE getStoreLocSupplyDaily(p_store_loc_id int(5), p_date VARCHAR(20))
+CREATE PROCEDURE getStoreLocSupplyDaily(p_store_loc_id int(5), p_date VARCHAR(20), p_posted INT)
 BEGIN
-select * from store_loc_supply_daily_v where store_loc_id = p_store_loc_id
-and DATE_FORMAT(stock_date,'%m/%d/%Y') = p_date; 
+   SELECT * FROM store_loc_supply_daily_v 
+    WHERE store_loc_id = p_store_loc_id
+      AND DATE_FORMAT(stock_date,'%m/%d/%Y') = p_date
+      AND posted=p_posted; 
 END;
 
 

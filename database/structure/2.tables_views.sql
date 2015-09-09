@@ -659,7 +659,7 @@ CREATE TABLE IF NOT EXISTS `stock_adjustments` (
 )
   COMMENT='Stock Adjustment'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
-  
+ 
   
  CREATE TABLE IF NOT EXISTS `events` (
   `event_id` int(5) unsigned NOT NULL auto_increment,
@@ -757,32 +757,15 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
    COMMENT='Stock Issuance details to stores'
    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;    
 
- 
-   CREATE TABLE IF NOT EXISTS `store_loc_supply_daily` (
-    `store_loc_supply_daily_id`   int(5) unsigned NOT NULL auto_increment,
-    `event_id`       int(5),
-    `stock_date`     datetime,
-    `store_loc_id`   int(5),
-    `posted`         int(5) NOT NULL default '0',    
-    `created_by`     int(5),
-    `created_date`   datetime,
-    `updated_by`     int(5),
-    `updated_date`   datetime,
-    PRIMARY KEY `supply_is_pk`  (`supply_is_id`),
-    UNIQUE KEY `supply_is_uk` (`is_no`,`store_loc_id`)
-  )
-    COMMENT='Stock Issuance header to stores'
-    DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
-
- 
- CREATE TABLE IF NOT EXISTS `store_loc_supply_daily_dtls` (
-  `store_loc_supply_daily_dtl_id` int(5) unsigned NOT NULL auto_increment,
-  `store_loc_supply_daily_id`     int(5)
+ CREATE TABLE IF NOT EXISTS `store_loc_supply_daily` (
+  `store_loc_supply_daily_id` int(5) unsigned NOT NULL auto_increment,
   `store_loc_supply_id`           int(5),
+  `stock_date`                    datetime,
   `beg_qty`                       decimal(7,2) DEFAULT 0,
   `remaining_qty`                 decimal(7,2) DEFAULT 0,
   `is_qty`                        decimal(7,2) DEFAULT 0,
   `out_qty`                       decimal(7,2) DEFAULT 0,
+  `returned_qty`                  decimal(7,2) DEFAULT 0,
   `end_qty`                       decimal(7,2) DEFAULT 0,
   `unit_price`                    decimal(7,2) DEFAULT 0,
   `unit_cost`                     decimal(7,2) DEFAULT 0,
