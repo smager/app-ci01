@@ -1,6 +1,6 @@
 /*Procedure, Function*/
 
- create function getlatestrevid(p_filename varchar(100)) returns varchar(100)
+ CREATE FUNCTION getlatestrevid(p_filename varchar(100)) returns varchar(100)
  DETERMINISTIC
  begin
    declare lvl varchar(100);
@@ -11,7 +11,7 @@
    return (lvl);
  end;
 
-create function  getUnitSDesc(p_unit_id int) RETURNS VARCHAR(100)
+CREATE FUNCTION  getUnitSDesc(p_unit_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
     DECLARE lvl varchar(100);
@@ -19,7 +19,7 @@ BEGIN
  RETURN (lvl);
 END;
 
-create function  getSupplyType(p_supply_type_id int) RETURNS VARCHAR(100)
+CREATE FUNCTION  getSupplyType(p_supply_type_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
     DECLARE lvl varchar(100);
@@ -28,7 +28,7 @@ BEGIN
 END;
 
 
-create function  getSupplyUprice(p_supply_id int) RETURNS decimal(7,2)
+CREATE FUNCTION  getSupplyUprice(p_supply_id int) RETURNS decimal(7,2)
     DETERMINISTIC
 BEGIN
     DECLARE lvl decimal(7,2);
@@ -36,7 +36,7 @@ BEGIN
  RETURN (lvl);
 END;
 
-create function  getSupplyUcost(p_supply_id int) RETURNS decimal(7,2)
+CREATE FUNCTION  getSupplyUcost(p_supply_id int) RETURNS decimal(7,2)
     DETERMINISTIC
 BEGIN
     DECLARE lvl decimal(7,2);
@@ -44,7 +44,7 @@ BEGIN
  RETURN (lvl);
 END;
 
-create function  getSupplyUcostByBrandUnit(p_supply_brand_id int) RETURNS decimal(7,2)
+CREATE FUNCTION  getSupplyUcostByBrandUnit(p_supply_brand_id int) RETURNS decimal(7,2)
     DETERMINISTIC
 BEGIN
     DECLARE lvl decimal(7,2);
@@ -52,7 +52,7 @@ BEGIN
  RETURN (lvl);
 END;
 
-create function  getEmplName(p_empl_id int) RETURNS VARCHAR(100)
+CREATE FUNCTION  getEmplName(p_empl_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
     DECLARE lvl varchar(100);
@@ -60,7 +60,7 @@ BEGIN
  RETURN (lvl);
 END;
 
-create function  getSupplier(p_supplier_id int) RETURNS VARCHAR(100)
+CREATE FUNCTION  getSupplier(p_supplier_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
     DECLARE lvl varchar(100);
@@ -68,7 +68,7 @@ BEGIN
  RETURN (lvl);
 END;
 
-create function  getLocation(p_loc_id int) RETURNS VARCHAR(100)
+CREATE FUNCTION  getLocation(p_loc_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
     DECLARE lvl varchar(100);
@@ -76,7 +76,7 @@ BEGIN
  RETURN (lvl);
 END;
 
-create function  getLocIdFromStoreLoc(p_store_loc_id int) RETURNS VARCHAR(100)
+CREATE FUNCTION  getLocIdFromStoreLoc(p_store_loc_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
     DECLARE lvl int(5);
@@ -84,7 +84,7 @@ BEGIN
  RETURN (lvl);
 END;
 
-create function  getPOLocId(p_po_id int) RETURNS INT(5)
+CREATE FUNCTION  getPOLocId(p_po_id int) RETURNS INT(5)
     DETERMINISTIC
 BEGIN
     DECLARE lvl varchar(100);
@@ -92,7 +92,7 @@ BEGIN
  RETURN (lvl);
 END;
 
-create function  getStockCount(p_loc_supply_id int) RETURNS decimal(7,2)
+CREATE FUNCTION  getStockCount(p_loc_supply_id int) RETURNS decimal(7,2)
     DETERMINISTIC
 BEGIN
     DECLARE lvl decimal(7,2);
@@ -101,7 +101,7 @@ BEGIN
 END;
 
 
-create function  getLocSupplyId(p_loc_id int, p_supply_id int) RETURNS int(5)
+CREATE FUNCTION  getLocSupplyId(p_loc_id int, p_supply_id int) RETURNS int(5)
     DETERMINISTIC
 BEGIN
     DECLARE lvl int;
@@ -109,7 +109,7 @@ BEGIN
  RETURN (ifnull(lvl,0));
 END;
 
-create function  getLocSupplyIdByBrandId(p_loc_supply_brand_id int) RETURNS int(5)
+CREATE FUNCTION  getLocSupplyIdByBrandId(p_loc_supply_brand_id int) RETURNS int(5)
     DETERMINISTIC
 BEGIN
     DECLARE lvl int;
@@ -117,7 +117,15 @@ BEGIN
  RETURN (ifnull(lvl,0));
 END;
 
-create function  getSupplyConvQty(p_loc_supply_brand_id int) RETURNS decimal(5,2)
+CREATE FUNCTION  getLocSupplyBrandIdByLocSupplyId(p_loc_supply_id int) RETURNS int(5)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl int;
+    SELECT loc_supply_brand_id INTO lvl FROM loc_supply_brands WHERE loc_supply_id = p_loc_supply_id order by stock_qty desc limit 1; 
+ RETURN (ifnull(lvl,0));
+END;
+
+CREATE FUNCTION  getSupplyConvQty(p_loc_supply_brand_id int) RETURNS decimal(5,2)
     DETERMINISTIC
 BEGIN
     DECLARE lvl decimal(5,2);
@@ -125,7 +133,7 @@ BEGIN
  RETURN (ifnull(lvl,0));
 END;
 
-create function  getLocSupplyBrandId(p_loc_id int, p_supply_id int, p_supply_brand_id int) RETURNS int(5)
+CREATE FUNCTION  getLocSupplyBrandId(p_loc_id int, p_supply_id int, p_supply_brand_id int) RETURNS int(5)
     DETERMINISTIC
 BEGIN
     DECLARE lvl int;
@@ -134,7 +142,7 @@ BEGIN
  RETURN (ifnull(lvl,0));
 END;
 
-create function  getSupplyIdFromLoc(p_loc_supply_id int) RETURNS int(5)
+CREATE FUNCTION  getSupplyIdFromLoc(p_loc_supply_id int) RETURNS int(5)
     DETERMINISTIC
 BEGIN
     DECLARE lvl int;
@@ -142,7 +150,7 @@ BEGIN
  RETURN (ifnull(lvl,0));
 END;
 
-create function  getStoreLocSupplyId(p_store_loc_id, p_loc_supply_id int) RETURNS INT(5)
+CREATE FUNCTION  getStoreLocSupplyId(p_store_loc_id, p_loc_supply_id int) RETURNS INT(5)
     DETERMINISTIC
 BEGIN
     DECLARE lvl int(5);
@@ -150,7 +158,7 @@ BEGIN
  RETURN (lvl);
 END;
 
-create function  getSupplyBrandIdFromLoc(p_loc_supply_brand_id int) RETURNS int(5)
+CREATE FUNCTION  getSupplyBrandIdFromLoc(p_loc_supply_brand_id int) RETURNS int(5)
     DETERMINISTIC
 BEGIN
     DECLARE lvl int;
@@ -158,7 +166,7 @@ BEGIN
  RETURN (ifnull(lvl,0));
 END;
 
-create function  getPOBalCount(p_po_id int) RETURNS INT(5)
+CREATE FUNCTION  getPOBalCount(p_po_id int) RETURNS INT(5)
     DETERMINISTIC
 BEGIN
     DECLARE lvl int(5);
@@ -349,36 +357,32 @@ BEGIN
  DELETE FROM supply_is_dtls WHERE supply_is_id=p_supply_is_id and ifnull(supply_is_qty,0)=0;
 END;
 
+CREATE PROCEDURE getStoreLocSupplyDaily(p_store_loc_id int(5), p_date VARCHAR(20), p_posted INT)
+BEGIN
+   SELECT * FROM store_loc_supply_daily_v 
+    WHERE store_loc_id = p_store_loc_id
+      AND DATE_FORMAT(stock_date,'%m/%d/%Y') = p_date
+      AND posted=p_posted; 
+END;
+
 CREATE PROCEDURE setStoreLocSuppDailyRemQty(p_store_loc_id INT, p_date VARCHAR(20))
 BEGIN
 
-UPDATE store_loc_supplies a, store_loc_supply_daily b
+  UPDATE store_loc_supplies a, store_loc_supply_daily_v b
      SET a.prev_qty = b.end_qty
    WHERE a.store_loc_supply_id = b.store_loc_supply_id
-     AND DATE_FORMAT(b.stock_date,'%m/%d/%Y') = p_date;    
+     AND store_loc_id = p_store_loc_id
+     AND b.stock_date = str_to_date(p_date,'%m/%d/%Y');    
+
+  UPDATE loc_supply_brands a, store_loc_supply_daily_v b
+     SET a.stock_qty = a.stock_qty + b.returned_qty
+   WHERE a.loc_supply_brand_id = getLocSupplyBrandIdByLocSupplyId(b.loc_supply_brand_id)
+     AND store_loc_id = p_store_loc_id
+     AND b.stock_date = str_to_date(p_date,'%m/%d/%Y');    
+
 END;
+
    
-CREATE PROCEDURE setLocStockIsUsagePost (IN p_supply_is_id INT)   
-BEGIN
-  DECLARE l_store_loc_id INT(5);
-  SELECT store_loc_id INTO l_store_loc_id FROM supply_is where supply_is_id = p_supply_is_id;
-  
-  UPDATE loc_supply_brands a, supply_is_dtls b
-  SET a.stock_qty = a.stock_qty + b.returned_qty
-  WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
-  AND b.supply_is_id = p_supply_is_id;
-
-  UPDATE store_loc_supply_brands a, supply_is_dtls b
-  SET a.stock_qty = b.beg_qty - b.used_qty
-  WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
-  AND b.supply_is_id = p_supply_is_id
-  AND EXISTS (SELECT c.store_loc_supply_id 
-                FROM store_loc_supplies c 
-               WHERE c.store_loc_supply_id=a.store_loc_supply_id 
-                 AND c.store_loc_id = l_store_loc_id);
-
-END;
-
 CREATE PROCEDURE getLocPC_Unposted(p_loc_id int(5))
 BEGIN
 select * from loc_pc where posted=0
@@ -403,15 +407,6 @@ BEGIN
    END IF;
 END;
 
-CREATE PROCEDURE getStoreLocSupplyDaily(p_store_loc_id int(5), p_date VARCHAR(20), p_posted INT)
-BEGIN
-   SELECT * FROM store_loc_supply_daily_v 
-    WHERE store_loc_id = p_store_loc_id
-      AND DATE_FORMAT(stock_date,'%m/%d/%Y') = p_date
-      AND posted=p_posted; 
-END;
-
-
 CREATE PROCEDURE delPC_Unposted (IN p_loc_pc_id int(5))
 BEGIN
    DELETE FROM loc_pc_dtls WHERE loc_pc_id = p_loc_pc_id;
@@ -429,12 +424,12 @@ BEGIN
 DECLARE l_cash_amt decimal(7,2);
 DECLARE l_store_loc_id INT;
 DECLARE l_tran_date date;
-DECLARE l_created_by INT;
-DECLARE l_created_date DATE;
+DECLARE l_CREATEd_by INT;
+DECLARE l_CREATEd_date DATE;
 DECLARE l_store_bank_depo_id INT;
 
-SELECT store_loc_id, date_add(tran_date,interval -2 day), created_by, created_date
-  INTO l_store_loc_id, l_tran_date, l_created_by, l_created_date
+SELECT store_loc_id, date_add(tran_date,interval -2 day), CREATEd_by, CREATEd_date
+  INTO l_store_loc_id, l_tran_date, l_CREATEd_by, l_CREATEd_date
   FROM store_daily_cash
  WHERE store_daily_cash_id=p_store_daily_cash_id;
 
@@ -460,8 +455,8 @@ select IFNULL(store_bank_depo_id,0)
 
 IF IFNULL(l_store_bank_depo_id,0)=0 THEN
    INSERT INTO store_bank_depo       
-        (store_loc_id, sales_date, depo_amt, created_by, created_date) 
-         SELECT l_store_loc_id, l_tran_date,depo_amt, l_created_by, l_created_date FROM store_daily_cash    
+        (store_loc_id, sales_date, depo_amt, CREATEd_by, CREATEd_date) 
+         SELECT l_store_loc_id, l_tran_date,depo_amt, l_CREATEd_by, l_CREATEd_date FROM store_daily_cash    
           WHERE store_loc_id=l_store_loc_id
             AND sales_date =l_tran_date; 
 ELSE
