@@ -335,8 +335,8 @@ BEGIN
   IF l_found='1' THEN
     UPDATE store_loc_supply_daily a, supply_is_dtls_v b
        SET a.is_qty = a.is_qty + b.supply_is_qty,
-           a.beg_qty = beg_qty + b.supply_is_qty,
-           a.end_qty = beg_qty + b.supply_is_qty
+           a.beg_qty = a.beg_qty + b.supply_is_qty,
+           a.end_qty = a.beg_qty + b.supply_is_qty
      WHERE b.supply_is_id = p_supply_is_id
        AND a.store_loc_supply_id = getStoreLocSupplyId(b.store_loc_id,b.loc_supply_id);
   ELSE
@@ -354,6 +354,13 @@ BEGIN
        AND DATE_FORMAT(a.stock_date,'%m/%d/%Y') = p_date;
        
   END IF;
+  
+   UPDATE store_loc_supplies a, supply_is_dtls_v b
+     SET a.prev_qty = a.prev_qty + supply_is_qty
+   WHERE a.store_loc_supply_id = b.store_loc_supply_id
+     AND b.store_loc_id = p_store_loc_id
+     AND b.stock_date = str_to_date(p_date,'%m/%d/%Y');    
+ 
  DELETE FROM supply_is_dtls WHERE supply_is_id=p_supply_is_id and ifnull(supply_is_qty,0)=0;
 END;
 
