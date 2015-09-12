@@ -13,6 +13,25 @@ class select_options extends Base_Controller {
             $this->load->view('select_options_list');        
 	}
     
+	public function proc()
+	{   
+	    $segments = $this->uri->segments;
+	    $sLength  =  sizeof($segments);
+	    $params ="";
+	    if($sLength>3){
+	         
+            for ($x = 4; $x <= $sLength; $x++) {
+                if($params!=="") $params .=",";
+                $params .= $segments[$x];
+            } 
+	        
+	    }
+	    
+        check_login();
+        $query =$this->db->query("call ".$segments[3]."($params)");
+        jsonOut( $query->result());
+	}    
+        
 	public function code($code)
 	{
         check_login();
