@@ -1,0 +1,57 @@
+<form id="frm">
+<div class="col-xs-12 col-sm-12 col-md-11 col-lg-11">
+    <div class="form-horizontal ">
+        <input type="hidden" name="p_store_daily_cash_id" id="p_store_daily_cash_id">
+        <input type="hidden" value="cashsales" name="p_tran_type" id="p_tran_type">
+        <div class="form-group  ">  
+            <label class=" col-xs-1 control-label">Store</label>
+            <div class=" col-xs-3"> 
+                <select class="form-control input-sm" id="p_store_loc_id" name="p_store_loc_id"></select>
+            </div>  
+            
+            <label class=" col-xs-1 control-label">Date</label>
+            <div class=" col-xs-3">
+                <input type="text" placeholder="mm/dd/yyyy" class="form-control input-sm " id="p_tran_date" name="p_tran_date">
+            </div>
+            
+             <label class=" col-xs-1 control-label">Employee</label>
+            <div class=" col-xs-3"> 
+                <select class="form-control input-sm" id="p_empl_id" name="p_empl_id"></select>
+            </div> 
+         </div>    
+         <div class="form-group  ">     
+            <label class=" col-xs-1 control-label">Event</label>
+            <div class=" col-xs-3"> 
+                <select class="form-control input-sm" id="p_event_id" name="p_event_id"></select>
+            </div> 
+            
+            <label class=" col-xs-1 control-label">Posted</label>
+            <div class="col-xs-3">
+                <select name="p_posted" id="p_posted" class="form-control input-sm">
+                    <option value="0">No</option><option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="col-xs-1">
+                <button type="button"  class="btn btn-primary btn-sm" id="btnGo"><span class=" glyphicon glyphicon-folder-open"></span></button>
+            </div>            
+            
+        </div> 
+    </div>
+</div>    
+<div class="col-xs-12 col-sm-12 col-md-11 col-lg-11">    
+<table id="tblStoreDailyCash" class="zTable fullWidth">    
+    <thead>
+        <tr>
+            <th width="40">Denomination</th>    
+            <th>Qty</th>    
+            <th class='align-r' >Amount</th>    
+        </tr>  
+    </thead>        
+
+</table>
+<div class="buttonGroup">
+    <button type="button" class="btn btn-primary btn-sm" id="btnSave"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>    
+</div>    
+    
+</div>
+</form>

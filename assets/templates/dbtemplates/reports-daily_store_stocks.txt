@@ -1,0 +1,46 @@
+<form method="post" id="frm">
+<div class="col-xs-10 ">
+    <div class="form-horizontal ">
+        <input type="hidden" name="p_store_loc_exp_id" id="p_store_loc_exp_id">
+        <div class="form-group  ">  
+            <label class=" col-xs-1 control-label">Store</label>
+            <div class=" col-xs-3"> 
+                <select name="p_store_loc_id" id="p_store_loc_id" class="form-control input-sm"></select>
+            </div>
+            
+            <label class=" col-xs-1 control-label">Date</label>
+            <div class=" col-xs-2">
+                <input type="text" name="p_stock_date" id="p_stock_date" class="form-control input-sm " placeholder="mm/dd/yyyy">
+            </div>
+            <button type="button"  class="btn btn-primary btn-sm" id="btnGo"><span class="glyphicon glyphicon-search"></span></button>    
+        </div> 
+    </div>
+</div>    
+
+<div class="col-xs-12">   
+    <table id="grid" class="zTable fullWidth">    
+        <thead>
+            <tr>
+                 <th colspan="6" class="align-c title1">Sent Stocks</th> 
+                 <th colspan="4" class="align-c title1">Sales</th> 
+            </tr>
+            <tr>
+                <th class="align-c">Item</th> 
+                <th class="align-c">Remaining</th>    
+                <th class="align-c">Add</th>  
+                <th class="align-c">Total</th>  
+                <th class="align-c">Outstanding</th>  
+                <th class="align-c">Out</th>  
+                
+                <th class="align-c">Unit Price</th>  
+                <th class="align-c">Amount</th>  
+                <th class="align-c">Unit Cost</th>  
+                <th class="align-c">Amount</th>                  
+            </tr>  
+        </thead>        
+    
+    </table>
+ 
+    
+</div>
+</form>

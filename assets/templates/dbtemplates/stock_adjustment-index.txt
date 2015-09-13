@@ -1,0 +1,107 @@
+<style>
+    #supply1,#supply2{
+        display:none;
+    }
+</style>
+
+<form method="post" id="frm">
+<div class="col-xs-3 itemLeftBox">
+<div class="panel panel-default">
+  <div class="panel-heading">Unposted Item(s)</div>
+  <div class="panel-body">
+
+        <div class="list-group"></div>
+    
+   </div>
+</div>
+    
+</div>
+<div class="col-xs-9">    
+<div class="form-horizontal ">
+<br />
+
+    <input type="hidden" name="p_stock_adjmt_id" id="p_stock_adjmt_id">
+    <div class="form-group  ">  
+        <label class=" col-xs-2 control-label">Date</label>
+        <div class=" col-xs-2">
+            <input type="text" name="p_pc_date" id="p_pc_date" class="form-control input-sm " placeholder="mm/dd/yyyy" >
+        </div>
+    </div>
+    
+    <div class="form-group  ">  
+        <label class=" col-xs-2 control-label">Warehouse</label>
+            <div class=" col-xs-4">
+            <select name="p_loc_id" id="p_loc_id" class="form-control input-sm"></select>
+        </div>  
+    </div>    
+
+    <div class="form-group  ">  
+        <label class=" col-xs-2 control-label">Store</label>
+        <div class=" col-xs-4">
+            <select name="p_store_loc_id" id="p_store_loc_id" class="form-control input-sm" ></select>
+        </div>
+    </div>
+
+    <div class="form-group  "> 
+    
+            <label class=" col-xs-2 control-label">Adjustment #:</label>
+            <div class=" col-xs-1">
+                <input type="text" name="p_stock_adjmt_no" id="p_stock_adjmt_no" class="form-control input-sm ">
+            </div>  
+    </div>
+    
+    <div class="form-group  "> 
+            <div id="supply1">
+               <label class=" col-xs-2 control-label">Supply</label>
+                <div class=" col-xs-4">
+                     <select name="p_loc_supply_brand_id" id="p_loc_supply_brand_id" class="form-control input-sm"></select>
+                </div>
+            </div>
+           <div id="supply2">
+               <label class=" col-xs-2 control-label">Supply</label>
+                <div class=" col-xs-4">
+                     <select name="p_store_loc_supply_id" id="p_store_loc_supply_id" class="form-control input-sm"></select>
+                </div>
+            </div>        
+    </div>
+    
+    <div class="form-group  "> 
+           <label class=" col-xs-2 control-label">From Qty</label>
+            <div class=" col-xs-1">
+                 <p id="from_qty" class="form-control-static">0.00</p>
+            </div>            
+    </div>
+    
+    <div class="form-group  "> 
+           <label class=" col-xs-2 control-label">To Qty</label>
+            <div class=" col-xs-1">
+                <input type="text" name="p_adj_qty" id="p_adj_qty" class="form-control input-sm ">
+            </div>  
+    </div>
+
+
+    <div class="form-group  ">  
+        <label class=" col-xs-2 control-label">Posted</label>
+        <div class="col-xs-1">
+            <select name="p_posted" id="p_posted" class="form-control input-sm">
+                <option value="0">No</option><option value="1">Yes</option>
+            </select>
+        </div>
+    </div> 
+        
+</div>
+<br /><br />
+ 
+<div class="buttonGroup">
+    <button type="button" class="btn btn-primary btn-sm" id="btnNew">
+        <span class="glyphicon glyphicon-plus-sign"></span> New
+    </button>
+    
+    <button type="submit" class="btn btn-primary btn-sm" id="btnSave">
+        <span class="glyphicon glyphicon-floppy-disk"></span> Save
+    </button>    
+</div>
+</div>
+
+
+</form>

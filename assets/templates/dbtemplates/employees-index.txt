@@ -1,0 +1,23 @@
+<form id="frm"  >
+    <table id="grid" class="zTable fullWidth">    
+        <thead>>
+        <tr>
+            <th></th>
+            <th>ID No.</th>
+            <th>Employee Name</th>
+            <th>Date Hired</th>
+            <th>Position</th>
+            <th>Daily Rate</th>
+            <th>Area</th>
+            <th>Store Location</th>
+            <th>SSS No</th>
+            <th>Tax ID. No</th>
+            <th>PhilHealth No.</th>
+            <th>Pag-ibig No.</th>
+            <th>Civil Status</th>
+            <th>Active?</th>
+        </tr>
+        </thead>
+    </table>    
+    <div class="buttonGroup"></div>
+</form>    

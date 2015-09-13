@@ -1,0 +1,109 @@
+<form method="post" id="frm">
+<div class="col-xs-10 ">
+    <div class="form-horizontal ">
+        <input type="hidden" name="p_store_loc_exp_id" id="p_store_loc_exp_id">
+        <div class="form-group  ">  
+            <label class=" col-xs-1 control-label">Store</label>
+            <div class=" col-xs-3"> 
+                <select name="p_store_loc_id" id="p_store_loc_id" class="form-control input-sm"></select>
+            </div>
+            
+            <label class=" col-xs-1 control-label">Date</label>
+            <div class=" col-xs-2">
+                <input type="text" name="p_is_date" id="p_is_date" class="form-control input-sm " placeholder="mm/dd/yyyy">
+            </div>
+            <button type="button"  class="btn btn-primary btn-sm" id="btnGo"><span class="glyphicon glyphicon-search"></span></button>    
+        </div> 
+    </div>
+</div>    
+
+<div class="col-xs-12">   
+    <table id="cashbox" class="zTable fullWidth">    
+        <thead>
+            <tr>
+                <th colspan="1" class="align-r" >Sales Staff</th>
+                <th colspan="4" class="emplname" >Employee Name</th>
+                <th colspan="1" class="align-r" >Event</th>
+                <th colspan="2" class="eventdesc" >Event Name</th>
+            </tr>
+            <tr>
+                 <th rowspan="3" class="title1 align-c" >Denomination</th>
+                 <th colspan="4" class="title1 align-c" >To Cash Box.</th>
+                 <th rowspan="2" class="title1 align-c" colspan="2" >Cash Returns</th> 
+            </tr>            
+            <tr>
+                 <th colspan="2" class="title2 align-c yesterday" >Yesterday</th>
+                 <th colspan="2" class="title2 align-c today" >Today</th>
+            </tr>
+            <tr>
+                <th class="align-c">Qty</th>    
+                <th class="align-r">Amount</th>
+                <th class="align-c">Qty</th>  
+                <th class="align-r">Amount</th>  
+                <th class="align-c">Qty</th>  
+                <th class="align-r">Amount</th>  
+            </tr>  
+        </thead>        
+    
+    </table>
+</div>
+
+<div class="col-xs-12">   
+    <table id="salseexpense" class="zTable fullWidth">    
+        <thead>
+            <tr>
+                 <th colspan="2" class="title1 align-c">Sales Expenses</th>
+            </tr>            
+            <tr>
+                 <th class="align-l" >Particular</th>
+                 <th class="align-r" >Amount</th>
+            </tr>  
+        </thead>        
+    
+    </table>
+</div>
+
+<div class="col-xs-12">   
+    <table id="expense" class="zTable fullWidth">    
+        <thead>
+            <tr>
+                 <th colspan="2" class="title1 align-c">After Sales Expenses</th>
+            </tr>            
+            <tr>
+                 <th class="align-l" >Particular</th>
+                 <th class="align-r" >Amount</th>
+            </tr>  
+        </thead>        
+    
+    </table>
+</div>
+
+
+
+<div class="col-xs-12">   
+    <table id="cashreport" class="zTable fullWidth">    
+        <thead>
+            <tr>
+                 <th colspan="10" class="title1 align-c" style="">Cash Report</th>
+            </tr>               
+            <tr>
+                 <th class="align-c">From Cash Box</th>
+                 <th class="align-c" >Total Cash</th>
+                 <th class="align-c" >Expenses</th>
+                 <th class="align-c" >Grand Total</th>
+                 <th class="align-c" >Sales Report</th>
+                 <th class="align-c" >Difference</th>
+                 <th class="align-c" >Remarks</th>
+                 <th class="align-c" >To Cash Box</th>
+                 <th class="align-c" >Expenses</th>
+                 <th class="align-c" >Outstanding</th>
+            </tr>
+        </thead>        
+    
+    </table>
+</div>
+
+
+
+
+</form>

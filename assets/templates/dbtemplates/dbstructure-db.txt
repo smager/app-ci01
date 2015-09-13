@@ -1,0 +1,13 @@
+<form id="frm"  >
+    <table id="grid" class="zTable fullWidth">    
+        <thead>
+        <tr>
+            <th></th>
+            <th>object Name</th>
+            <th>Seq. #</th>
+            <th>Type</th>
+        </tr>
+        </thead>
+    </table>    
+    <div class="buttonGroup"></div>
+</form>    

@@ -12,7 +12,20 @@ class page_templates extends Base_Controller {
         check_login();
 		$this->load->view('page_templates_list');
 	}
-    
+
+	public function generatebackup()
+	{
+        check_login();
+        $this->load->helper('file'); 
+         $query = $this->db->query("SELECT CONCAT(REPLACE(page_url, '/', '-') , '.txt') as filename,content FROM page_templates");
+         $path = "./assets/templates/dbtemplates/";
+         
+        foreach ($query->result() as $row)
+        {
+            write_file( $path.$row->filename , $row->content );       
+        }
+        jsonOut(array("msg"=>"All page template files successfully created."));
+	}        
     
 	public function form()
 	{

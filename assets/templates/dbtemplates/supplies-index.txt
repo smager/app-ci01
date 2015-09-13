@@ -1,0 +1,19 @@
+<form id="frm"  >
+    <table id="grid" class="zTable fullWidth">    
+        <thead>
+        <tr>
+            <th></th>
+            <th>Seq#</th>
+            <th>Code</th>
+            <th>Description</th>
+            <th>Unit</th>  
+            <th>Unit Price</th>  
+            <th>Unit Cost</th> 
+            <th>Weight Per Serving (g)</th>
+            <th>Type</th>   
+            <th>Item Brands</th>
+        </tr>
+        </thead>
+    </table>    
+    <div class="buttonGroup"></div>
+</form>    

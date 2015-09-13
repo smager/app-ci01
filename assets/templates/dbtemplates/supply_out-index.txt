@@ -1,0 +1,48 @@
+<form id="frm" method="post" >
+<div class="col-xs-10 ">    
+    <div class="form-horizontal ">
+        <div class="form-group  ">  
+            <label class=" col-xs-1 control-label">Store</label>
+            <div class=" col-xs-3">
+                 <select name="p_store_loc_id" id="p_store_loc_id" class="form-control input-sm"></select>
+            </div>  
+    
+            <label class=" col-xs-1 control-label">Date</label>
+            <div class=" col-xs-2">
+                <input type="text" value="07/30/2015" name="p_date" id="p_date" class="form-control input-sm " placeholder="mm/dd/yyyy" >
+            </div>
+            <label class=" col-xs-1 control-label">Posted</label>
+            <div class="col-xs-1">
+                <select name="p_posted" id="p_posted" class="form-control input-sm" >
+                    <option value="0">No</option><option value="1">Yes</option>
+                </select>
+            </div>
+
+             <button type="button"  class="btn btn-primary btn-sm" id="btnGo"><span class=" glyphicon glyphicon-folder-open"></span></button>
+        </div> 
+</div>
+</div>
+<div class="col-xs-10 ">
+   
+    <table id="grid" class="zTable fullWidth">    
+        <thead>
+            <tr>
+                <th>Supply/Item</th>  
+                <th>Unit Desc</th> 
+                <th>Carry over Qty</th> 
+                <th>Sent Qty</th> 
+                <th>Beg Qty</th> 
+                <th>Out Qty</th> 
+                <th>Returned Qty</th>                 
+                <th>End Qty</th> 
+            </tr>  
+        </thead>        
+    
+    </table>
+    <div class="buttonGroup">
+        <button id="btnSave" class="btn btn-primary btn-sm" type="submit">
+            <span class="glyphicon glyphicon-floppy-disk"></span> Save
+        </button>    
+    </div>    
+</div>
+</form>

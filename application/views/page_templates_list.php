@@ -83,7 +83,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <div class="buttonGroup">
     <?php 
         Button(array('name'=>'New', 'type'=>'button'));             
-        Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("page_templates/delete")  . "');"));        
+        Button(array('name'=>'Delete','onclick'=>"return checkDelete('" . base_url("page_templates/delete")  . "');"));   
+        Button(array('name'=>'Generate Files','type'=>'button'));
     ?>    
     </div>
 
@@ -111,6 +112,15 @@ $(window).bind('keydown', function(e) {
  
 $(document).ready(function(){
     displayDataToGrid(defaultUrl);
+    
+    $("#btnGenerateFiles").click(function(){
+       $.getJSON(controller_url + "generatebackup"
+            ,function(data){
+                alert(data.msg);
+            }
+       );
+    });
+    
 });
     
     
