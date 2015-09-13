@@ -323,7 +323,7 @@ if ( ! function_exists('Button'))
     if(isset($p["data_target"]) ) $l_data_target = ' data-target="' . $p['data_target'] . '"';
 
 
-    echo '<button id="btn' . $p['name'] . '" class="btn btn-primary btn-'. $default_button_size .'"' . $l_type . $l_onclick . $l_data_toggle . $l_data_target . '  >';
+    echo '<button id="btn' . str_replace(" ", "", $p['name']) . '" class="btn btn-primary btn-'. $default_button_size .'"' . $l_type . $l_onclick . $l_data_toggle . $l_data_target . '  >';
     echo GetIcon($p['name']) . $p['name'];
     echo '</button>';
 

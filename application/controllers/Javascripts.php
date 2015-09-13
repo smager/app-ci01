@@ -12,7 +12,20 @@ class javascripts extends Base_Controller {
         check_login();
 		$this->load->view('javascripts_list');
 	}
-    
+
+	public function generatebackup()
+	{
+        check_login();
+        $this->load->helper('file'); 
+         $query = $this->db->query("SELECT CONCAT(REPLACE(page_url, '/', '-') , '.js') as filename,content FROM javascripts");
+         $path = "./assets/js/jsdb/";
+         
+        foreach ($query->result() as $row)
+        {
+            write_file( $path.$row->filename , $row->content );       
+        }
+        jsonOut(array("msg"=>"All javascript files successfully created."));
+	}    
     
 	public function form()
 	{
