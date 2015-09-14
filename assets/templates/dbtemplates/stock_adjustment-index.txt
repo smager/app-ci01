@@ -24,7 +24,7 @@
     <div class="form-group  ">  
         <label class=" col-xs-2 control-label">Date</label>
         <div class=" col-xs-2">
-            <input type="text" name="p_pc_date" id="p_pc_date" class="form-control input-sm " placeholder="mm/dd/yyyy" >
+            <input type="text" name="p_adjmt_date" id="p_adjmt_date" class="form-control input-sm " placeholder="mm/dd/yyyy" >
         </div>
     </div>
     
@@ -60,22 +60,16 @@
            <div id="supply2">
                <label class=" col-xs-2 control-label">Supply</label>
                 <div class=" col-xs-4">
-                     <select name="p_store_loc_supply_id" id="p_store_loc_supply_id" class="form-control input-sm"></select>
+                     <select name="p_store_loc_supply_daily_id" id="p_store_loc_supply_daily_id" class="form-control input-sm"></select>
                 </div>
             </div>        
     </div>
     
-    <div class="form-group  "> 
-           <label class=" col-xs-2 control-label">From Qty</label>
-            <div class=" col-xs-1">
-                 <p id="from_qty" class="form-control-static">0.00</p>
-            </div>            
-    </div>
     
     <div class="form-group  "> 
            <label class=" col-xs-2 control-label">To Qty</label>
             <div class=" col-xs-1">
-                <input type="text" name="p_adj_qty" id="p_adj_qty" class="form-control input-sm ">
+                <input type="text" name="p_adjmt_qty" id="p_adjmt_qty" class="form-control input-sm ">
             </div>  
     </div>
 
