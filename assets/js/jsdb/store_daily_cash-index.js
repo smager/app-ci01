@@ -4,7 +4,6 @@ var p_store_daily_cash_id = $("#p_store_daily_cash_id");
 var p_store_loc_id        = $("#p_store_loc_id");
 var p_tran_date           = $("#p_tran_date"); 
 var p_posted              = $("#p_posted"); 
-var l_timer;    
 
 
 $("#btnSave").click(function(){

@@ -4,7 +4,6 @@ var p_empl_id             = $("#p_empl_id");
 var p_tran_date           = $("#p_tran_date"); 
 var p_posted              = $("#p_posted"); 
 var p_event_id            = $("#p_event_id");
-var l_timer;    
 
 $(document).ready(function(){
     p_store_loc_id.dataBind( base_url + "select_options/code/store_locs");
