@@ -18,7 +18,7 @@ class stock_adjustment extends Base_Controller {
     }
     
     
-    public function getunpostedpc(){
+    public function getunposteditems(){
     
         jsonOut($this->stock_adjustment_model->getUnpostedData()->result());
         
@@ -27,7 +27,7 @@ class stock_adjustment extends Base_Controller {
         
     public function update()
 	{
-        jsonOut(  $this->stock_adjustment_model->update($this->input->post()) );        
+        $this->stock_adjustment_model->update($this->input->post());        
     }    
    
     public function delete($stock_adjmt_id)

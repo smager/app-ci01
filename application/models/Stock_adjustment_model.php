@@ -20,7 +20,7 @@ class stock_adjustment_model extends CI_Model{
     function update($post){
         $params=array(           
              'pk'=> 'stock_adjmt_id'
-            ,'dbKeys'=> array('pc_no','pc_date','loc_id','store_loc_id','posted')
+            ,'dbKeys'=> array('stock_adjmt_no','adjmt_date','loc_id','store_loc_id','loc_supply_brand_id','store_loc_supply_daily_id','adjmt_qty','posted')
             ,'table'=>'stock_adjustments'
             ,'allowNull'=>true
         );       
@@ -29,16 +29,14 @@ class stock_adjustment_model extends CI_Model{
 
         // posted=true;
         if($post["p_posted"]==true){        
-            /*$store_loc_id =0;
+            $store_loc_id =0;
             if(isset($post["p_store_loc_id"] )) $store_loc_id = $post["p_store_loc_id"];    
-            $pc_date=$post["p_pc_date"];
-            $sql = "call stock_adjustment_post($stock_adjmt_id,$store_loc_id,'$pc_date')";
+            $adjmt_date=$post["p_adjmt_date"];
+            $sql = "call setStockAdjustmentPosted($stock_adjmt_id,$store_loc_id,'$adjmt_date')";
             $this->db->query($sql);
-            */
+            
         }
         
-        $query = $this->db->query("select * from stock_adjustments where stock_adjustment_id=$stock_adjmt_id");        
-        return  $query->result()[0];
     }        
     
     
