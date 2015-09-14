@@ -52,6 +52,9 @@ BEGIN
  RETURN (lvl);
 END;
 
+
+
+
 CREATE FUNCTION  getEmplName(p_empl_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
@@ -76,6 +79,15 @@ BEGIN
  RETURN (lvl);
 END;
 
+CREATE FUNCTION  getStoreLoc(p_store_loc_id int) RETURNS VARCHAR(100)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl int(5);
+    SELECT store_loc INTO lvl FROM store_loc WHERE store_loc_id=p_store_loc_id;
+ RETURN (lvl);
+END;
+
+
 CREATE FUNCTION  getLocIdFromStoreLoc(p_store_loc_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
@@ -99,7 +111,6 @@ BEGIN
     SELECT sum(stock_qty) INTO lvl FROM loc_supply_brands WHERE loc_supply_id=p_loc_supply_id;
  RETURN (lvl);
 END;
-
 
 CREATE FUNCTION  getLocSupplyId(p_loc_id int, p_supply_id int) RETURNS int(5)
     DETERMINISTIC
@@ -671,3 +682,61 @@ BEGIN
     DEALLOCATE PREPARE stmt;   
 END; 
 
+CREATE PROCEDURE getStockAdjustments(p_stock_adjmt_id INT, p_store_loc_id INT)  
+BEGIN
+   DECLARE l_stmt VARCHAR(2000);
+   DECLARE l_from VARCHAR(2000);
+   DECLARE l_where VARCHAR(2000);
+   
+   SET l_stmt = 'SELECT a.* ';
+   SET l_from = 'FROM stock_adjustments a ';
+   SET l_where = CONCAT(' WHERE a.stock_adjmt_id=',p_stock_adjmt_id) ;
+   
+   IF IFNULL(p_store_loc_id,0)<> 0 THEN
+      SET l_stmt = CONCAT(l_stmt, ', b.supply_code, b.unit_desc as unit');
+      SET l_from = CONCAT(l_from, ', store_loc_supplies_v b ');
+   ELSE
+      SET l_stmt = CONCAT(l_stmt, ', b.supply_code, CONCAT(b.brand_name,"/",b.cu_desc) as unit');
+      SET l_from = CONCAT(l_from, ', loc_supply_brands_v b ');
+   END IF;
+
+   SET @s = CONCAT(l_stmt, l_from, l_where);
+    PREPARE stmt FROM @s;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;   
+      
+END;
+
+CREATE PROCEDURE getStockAdjustmentsUnposted(p_loc_id INT)  
+BEGIN
+   DECLARE l_stmt VARCHAR(2000);
+   DECLARE l_from VARCHAR(2000);
+   DECLARE l_where VARCHAR(2000);
+   
+   SET l_stmt = 'SELECT *, getLocation(loc_id) as warehouse, getStoreLoc(store_loc_id) as store  FROM stock_adjustments ';
+   SET l_where = CONCAT(' WHERE posted=0 AND loc_id=',p_loc_id) ;
+   
+
+   SET @s = CONCAT(l_stmt, l_where);
+    PREPARE stmt FROM @s;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;   
+      
+END;
+
+CREATE PROCEDURE setStockAdjustmentPosted(p_stock_adjmt_id INT, p_store_loc_id INT, p_date VARCHAR(20))
+BEGIN
+   IF IFNULL(p_store_loc_id,0)=0 THEN
+      UPDATE loc_supply_brands a, stock_adjusments b
+         SET a.stock_qty = b.adj_qty
+       WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
+         AND b.stock_adjmt_id=p_stock_adjmt_id;
+   ELSE
+      UPDATE store_loc_supply_daily a, stock_adjusments b
+         SET a.remaining_qty = b.adj_qty,
+             a.beg_qty = b.adj_qty + IFNULL(is_qty,0),
+             a.end_qty = (b.adj_qty + IFNULL(a.is_qty,0)) - (IFNULL(a.out_qty,0) + IFNULL(a.returned_qty,0))
+       WHERE a.store_loc_supply_daily_id = b.store_loc_supply_daily_id
+         AND b.stock_adjmt_id=p_stock_adjmt_id;
+  END IF;
+END;

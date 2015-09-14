@@ -644,8 +644,8 @@ CREATE TABLE IF NOT EXISTS `stock_adjustments` (
   `store_loc_id`          int(5),
   `adjmt_id`              int(5),
   `adj_remarks`           varchar(200) NOT NULL default '',
-  `supply_brand_id`       int(5),
-  `store_loc_supply_id`   int(5), 
+  `loc_supply_brand_id`   int(5),
+  `store_loc_supply_daily_id`   int(5), 
   `curr_qty`              decimal(5,2),
   `adj_qty`               decimal(5,2),
   `diff_qty`              decimal(5,2),
@@ -1055,6 +1055,11 @@ select a.store_id, a.store_supply_id, a.supply_id, b.supply, b.supply_cost
 from store_supplies a, supply_brands_v b
 WHERE a.supply_id = b.supply_id;
 
+CREATE OR REPLACE VIEW store_loc_supplies_dd_v as
+SELECT a.store_loc_supply_id, store_loc_id, b.supply_code, b.unit_desc, CONCAT(b.supply_code, '/' , b.unit_desc) as supply, prev_stock_qty as stock_qty
+FROM store_loc_supplies a, loc_supplies_v b
+WHERE a.loc_supply_id = b.loc_supply_id
+order by b.supply_code;
 
 CREATE OR REPLACE VIEW store_loc_supplies_v AS
 select a.store_loc_supply_id, a.store_loc_id, c.store_id, b.supply_id, a.loc_supply_id, b.supply_code, b.unit_desc, stock_daily_qty, prev_qty,
@@ -1228,3 +1233,4 @@ CREATE OR REPLACE VIEW store_bank_depo_dtls_v as
 SELECT a.*, b.bank_name, b.depo_pct_share 
   FROM store_bank_depo_v a, bank_ref b
  WHERE a.bank_ref_id = a.bank_ref_id;
+ 
