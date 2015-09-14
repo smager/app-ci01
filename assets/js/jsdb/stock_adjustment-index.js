@@ -62,13 +62,16 @@ function getUnpostedItems(){
     $.getJSON(controller_url + "getunposteditems",function(data){
         $.each(data,function(){
             var params = {
-                 stock_adjmt_id: this.stock_adjmt_id
-                ,stock_adjmt_no:     this.stock_adjmt_no
-                ,adjmt_date:   this.adjmt_date
-                ,loc_id:    this.loc_id
-                ,store_loc_id: this.store_loc_id
-                ,adjmt_qty : this.adjmt_qty
-                ,posted :  this.posted
+                 stock_adjmt_id             : this.stock_adjmt_id
+                ,stock_adjmt_no             : this.stock_adjmt_no
+                ,adjmt_date                 : this.adjmt_date
+                ,loc_id                     : this.loc_id
+                ,store_loc_id               : this.store_loc_id
+                ,adjmt_qty                  : this.adjmt_qty
+                ,posted                     : this.posted
+                ,loc_supply_brand_id        : this.loc_supply_brand_id
+                ,store_loc_supply_daily_id  : this.store_loc_supply_daily_id
+                
             };
             var removeicon = "<a class='glyphicon glyphicon-remove-sign itemRemove' onclick='removeItems(" + this.stock_adjmt_id  + ");' href='javascript:void(0);'></a>";
             $(".list-group").append("<a href='javascript:void(0);' onclick='displayData("   + JSON.stringify(params) +  ");' class='list-group-item' >" + this.stock_adjmt_no + "</a>" + removeicon);
@@ -121,10 +124,15 @@ function displayData(p){
     stock_adjmt_no.val(p.stock_adjmt_no);
     adjmt_date.val(p.adjmt_date.toDateFormat());
     loc_id.val(p.loc_id);
-    store_loc_id.attr("selectedvalue",p.store_loc_id);
     adjmt_qty.val(p.adjmt_qty);
-    displayStoreLocation(p.loc_id);
+    store_loc_id.attr("selectedvalue",p.store_loc_id);
     posted.val(p.posted);
+    
+    displayStoreLocation(p.loc_id);
+    var selVal = (p.loc_supply_brand_id>0?p.loc_supply_brand_id:p.store_loc_supply_daily_id);
+ 
+    ShowHideSupplyItems(p.loc_id, p.store_loc_id, selVal);
+
  }
 
  
@@ -142,7 +150,7 @@ function onLocationChange(){
     store_loc_id.change(function(){ $("#grid").clearGrid(); });
 }
 
-function ShowHideSupplyItems(loc_id,storeLocId){
+function ShowHideSupplyItems(loc_id,storeLocId,_selectedValue){
     var l_loc_id = parseInt("0" + loc_id );
     var l_store_loc_id = parseInt("0" + storeLocId );
     
@@ -150,7 +158,11 @@ function ShowHideSupplyItems(loc_id,storeLocId){
     store_loc_supply_daily_id.val("");
     
    if (l_loc_id !== 0 && l_store_loc_id===0){
-      loc_supply_brand_id.dataBind( base_url + "select_options/code/loc_supply_brands_bycode?where=loc_id=" + l_loc_id);
+        loc_supply_brand_id.dataBind({ 
+             url:base_url + "select_options/code/loc_supply_brands_bycode?where=loc_id=" + l_loc_id
+            ,selectedValue :   _selectedValue
+        });
+      
        $("#supply1").css("display","block");
        $("#supply2").css("display","none");
 
@@ -161,10 +173,12 @@ function ShowHideSupplyItems(loc_id,storeLocId){
            adjmt_date.focus();
        }
        else{
-            store_loc_supply_daily_id.dataBind( 
-               base_url + "select_options/code/store_loc_supply_daily?where=store_loc_id=" + l_store_loc_id 
-               + ' and stock_date=str_to_date("' + adjmt_date.val() + '","%m/%d/%Y")'  
-            );
+            store_loc_supply_daily_id.dataBind({ 
+                 url: base_url + "select_options/code/store_loc_supply_daily?where=store_loc_id=" + l_store_loc_id 
+                               + ' and stock_date=str_to_date("' + adjmt_date.val() + '","%m/%d/%Y")' 
+                ,selectedValue :   _selectedValue
+            });
+        
            $("#supply2").css("display","block");
            $("#supply1").css("display","none");
        }
