@@ -1,3 +1,9 @@
+<a href="/dbstructure/db/table">Tables Only</a> |
+<a href="/dbstructure/db/view">Views Only</a> |
+<a href="/dbstructure/db/procedure">Procedures Only</a> |
+<a href="/dbstructure/db/function">Functions Only</a> |
+<a href="/dbstructure">Database Structures</a>
+
 <form id="frm"  >
     <table id="grid" class="zTable fullWidth">    
         <thead>

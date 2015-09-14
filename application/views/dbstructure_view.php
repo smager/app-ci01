@@ -32,6 +32,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     echo " | <a href='". base_url() . $this->router->fetch_class() . "/procs_funcs'>Procedures & Functions</a>"; 
     echo " | <a href='". base_url() . $this->router->fetch_class() . "/procedures'>Procedures Only</a>"; 
     echo " | <a href='". base_url() . $this->router->fetch_class() . "/functions'>Functions Only</a>"; 
+    echo " | <a href='". base_url() . $this->router->fetch_class() . "/db'>Manage Objects</a>"; 
     
         echo "<h4>List of Objects:</h4>";
 
