@@ -7,14 +7,18 @@ $(document).ready(function(){
     $(".buttonGroup").append( 
           bsButton({name:"Save",type:"submit"})
         + bsButton({name:'Delete',onclick:"checkDelete('"  +  controller_url  + "dbdelete',false);"}) 
-        + bsButton({name:"GenerateSQL",onclick:"generateSQL();"}) 
+        + bsButton({name:"GenerateFiles",onclick:"generateSQL();"}) 
     );
     displayRecords();
     
 });
 
 function generateSQL(){
-    alert("generate sql");
+  $.getJSON(controller_url + "generatebackup"
+        ,function(data){
+            alert(data.msg);
+        }
+   );
 }
 
 function getParam(){

@@ -20,6 +20,51 @@ class dbstructure extends Base_Controller {
         check_login();
         $this->load->view('default_view');
 	}
+	
+	public function generatebackup()
+	{
+        check_login();
+        $this->load->helper('file'); 
+         $path = "./database/structure/dbfiles/";
+         $content="";
+
+         $query = $this->db->query("select 	content from dbstructures where object_type='function' order by seq_no;");
+        foreach ($query->result() as $row)
+        {   
+              if($content!=="") $content .="\r\n\r\n";
+              $content .= $row->content;
+        }
+        
+        $content .="\r\n\r\n\r\n/*PROCEDURES*/\r\n";
+         $query = $this->db->query("select 	content from dbstructures where object_type='procedure' order by seq_no;");
+        foreach ($query->result() as $row)
+        {   
+              $content .="\r\n\r\n";
+              $content .= $row->content;
+        }
+        
+        write_file( $path."1.Proc_Func.sql" ,$content );   
+        
+         $content="";
+         $query = $this->db->query("select 	content from dbstructures where object_type='table' order by seq_no;");
+        foreach ($query->result() as $row)
+        {   
+              if($content!=="") $content .="\r\n\r\n";
+              $content .= $row->content;
+        }
+        
+        $content .="\r\n\r\n\r\n/*VIEWS*/\r\n";
+         $query = $this->db->query("select 	content from dbstructures where object_type='view' order by seq_no;");
+        foreach ($query->result() as $row)
+        {   
+              $content .="\r\n\r\n";
+              $content .= $row->content;
+        }
+
+        write_file( $path."2.tables_views.sql" ,$content );   
+        jsonOut(array("msg"=>"All database files successfully created."));
+	} 
+	
     
 	public function getdata($objectType='')
 	{
