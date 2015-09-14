@@ -13,7 +13,7 @@ class select_options extends Base_Controller {
             $this->load->view('select_options_list');        
 	}
     
-	public function proc()
+	public function procedure()
 	{   
 	    $segments = $this->uri->segments;
 	    $sLength  =  sizeof($segments);
