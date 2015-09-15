@@ -112,6 +112,23 @@ BEGIN
  RETURN (lvl);
 END;
 
+CREATE FUNCTION  getStockStoreLocSupplyDaily(p_store_loc_supply_daily_id int) RETURNS decimal(7,2)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl decimal(7,2);
+    SELECT remaining_qty INTO lvl FROM store_loc_supply_daily WHERE store_loc_supply_daily_id=p_store_loc_supply_daily_id;
+ RETURN (lvl);
+END;
+
+
+CREATE FUNCTION  getStockCountByBrand(p_loc_supply_brand_id int) RETURNS decimal(7,2)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl decimal(7,2);
+    SELECT stock_qty INTO lvl FROM loc_supply_brands WHERE loc_supply_brand_id=p_loc_supply_brand_id;
+ RETURN (lvl);
+END;
+
 CREATE FUNCTION  getLocSupplyId(p_loc_id int, p_supply_id int) RETURNS int(5)
     DETERMINISTIC
 BEGIN
@@ -185,11 +202,30 @@ BEGIN
  RETURN (lvl);
 END;
 
-CREATE FUNCTION getStoreLocSupplyDailySum(p_store_loc_id int(5), p_date date) RETURNS decimal(7,2) 
+CREATE FUNCTION getStoreLocDailySalesSum(p_store_loc_id int(5), p_date date) RETURNS decimal(7,2) 
     DETERMINISTIC
 BEGIN
  DECLARE lvl decimal(7,2);
     select SUM(out_qty * unit_price) INTO lvl from store_loc_supply_daily_v where store_loc_id = p_store_loc_id
+    and stock_date = p_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
+CREATE FUNCTION getStoreLocMonthlySalesSum(p_store_loc_id int(5), p_month INT, p_year INT) RETURNS decimal(7,2) 
+    DETERMINISTIC
+BEGIN
+ DECLARE lvl decimal(7,2);
+    SELECT SUM(out_qty * unit_price) INTO lvl from store_loc_supply_daily_v where store_loc_id = p_store_loc_id
+    AND MONTH(stock_date) = p_month 
+    AND YEAR(stock_date) = p_year; 
+ RETURN (ifnull(lvl,0));
+END;
+
+CREATE FUNCTION getLocDailySalesSum(p_loc_id int(5), p_date date) RETURNS decimal(7,2) 
+    DETERMINISTIC
+BEGIN
+ DECLARE lvl decimal(7,2);
+    select SUM(out_qty * unit_price) INTO lvl from store_loc_supply_daily_v where loc_id = p_loc_id
     and stock_date = p_date; 
  RETURN (ifnull(lvl,0));
 END;
@@ -499,7 +535,7 @@ INTO l_return_amt
 FROM store_daily_cash_dtls 
 WHERE store_daily_cash_id=p_store_daily_cash_id;
 
-SELECT getStoreLocSalesExpSum(store_loc_id, tran_date), getStoreLocExpSum(store_loc_id, tran_date), getStoreLocSupplyDailySum(store_loc_id, tran_date) INTO l_sales_exp_amt, l_exp_amt, l_ttl_stock_sales_amt  FROM store_daily_cash WHERE store_daily_cash_id=p_store_daily_cash_id; 
+SELECT getStoreLocSalesExpSum(store_loc_id, tran_date), getStoreLocExpSum(store_loc_id, tran_date), getStoreLocDailySalesSum(store_loc_id, tran_date) INTO l_sales_exp_amt, l_exp_amt, l_ttl_stock_sales_amt  FROM store_daily_cash WHERE store_daily_cash_id=p_store_daily_cash_id; 
 
 UPDATE store_daily_cash 
    SET ttl_return_amt     = l_return_amt
@@ -726,17 +762,40 @@ END;
 
 CREATE PROCEDURE setStockAdjustmentPosted(p_stock_adjmt_id INT, p_store_loc_id INT, p_date VARCHAR(20))
 BEGIN
+   DECLARE l_stock_qty DECIMAL(7,2);
    IF IFNULL(p_store_loc_id,0)=0 THEN
-      UPDATE loc_supply_brands a, stock_adjusments b
-         SET a.stock_qty = b.adj_qty
+      SELECT getStockCountByBrand(loc_supply_brand_id) 
+        INTO l_stock_qty 
+        FROM stock_adjustments 
+       WHERE stock_adjmt_id=p_stock_adjmt_id; 
+       
+      UPDATE stock_adjustments 
+         SET curr_qty = l_stock_qty,
+             diff_qty = adjmt_qty - l_stock_qty
+       WHERE stock_adjmt_id=p_stock_adjmt_id;  
+
+      UPDATE loc_supply_brands a, stock_adjustments b
+         SET a.stock_qty = b.adjmt_qty
        WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
          AND b.stock_adjmt_id=p_stock_adjmt_id;
    ELSE
-      UPDATE store_loc_supply_daily a, stock_adjusments b
+      SELECT getStockStoreLocSupplyDaily(store_loc_supply_daily_id) 
+        INTO l_stock_qty 
+        FROM stock_adjustments 
+        WHERE stock_adjmt_id=p_stock_adjmt_id; 
+        
+      UPDATE stock_adjustments 
+         SET curr_qty = l_stock_qty,
+             diff_qty = adjmt_qty - l_stock_qty
+       WHERE stock_adjmt_id=p_stock_adjmt_id;  
+
+      UPDATE store_loc_supply_daily a, stock_adjustments b
          SET a.remaining_qty = b.adj_qty,
-             a.beg_qty = b.adj_qty + IFNULL(is_qty,0),
-             a.end_qty = (b.adj_qty + IFNULL(a.is_qty,0)) - (IFNULL(a.out_qty,0) + IFNULL(a.returned_qty,0))
+             a.beg_qty = b.adjmt_qty + IFNULL(is_qty,0),
+             a.end_qty = (b.adjmt_qty + IFNULL(a.is_qty,0)) - (IFNULL(a.out_qty,0) + IFNULL(a.returned_qty,0))
        WHERE a.store_loc_supply_daily_id = b.store_loc_supply_daily_id
          AND b.stock_adjmt_id=p_stock_adjmt_id;
   END IF;
 END;
+
+

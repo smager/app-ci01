@@ -639,15 +639,15 @@ CREATE TABLE IF NOT EXISTS `bank_ref` (
 CREATE TABLE IF NOT EXISTS `stock_adjustments` (
   `stock_adjmt_id`        int(5) unsigned NOT NULL auto_increment,
   `stock_adjmt_no`        int(5),
-  `adj_date`              datetime,
+  `adjmt_date`            datetime,
   `loc_id`                int(5),
   `store_loc_id`          int(5),
   `adjmt_id`              int(5),
-  `adj_remarks`           varchar(200) NOT NULL default '',
+  `adjmt_remarks`         varchar(200) NOT NULL default '',
   `loc_supply_brand_id`   int(5),
   `store_loc_supply_daily_id`   int(5), 
   `curr_qty`              decimal(5,2),
-  `adj_qty`               decimal(5,2),
+  `adjmt_qty`             decimal(5,2),
   `diff_qty`              decimal(5,2),
   `posted`                int(5) NOT NULL default '0',     
   `created_by`            int(5),
@@ -923,6 +923,19 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
   COMMENT='Store Bank Withdrawal Summary'
   DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;  
 
+CREATE TABLE IF NOT EXISTS `months` (
+  `month_id` int(5) NOT NULL,
+  `month_fletter`   varchar(1) DEFAULT NULL,
+  `month_sdesc`     varchar(3) DEFAULT NULL,
+  `month_ldesc`     varchar(15 NOT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`month_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
 CREATE TABLE IF NOT EXISTS `javascripts` (
   `js_id` int(11) NOT NULL AUTO_INCREMENT,
   `version_id` int(11) DEFAULT NULL,
@@ -1063,7 +1076,7 @@ order by b.supply_code;
 
 CREATE OR REPLACE VIEW store_loc_supplies_v AS
 select a.store_loc_supply_id, a.store_loc_id, c.store_id, b.supply_id, a.loc_supply_id, b.supply_code, b.unit_desc, stock_daily_qty, prev_qty,
-getSupplyUprice(b.supply_id) as unit_price, getSupplyUcost(b.supply_id) as unit_cost,"" as loc_supply_brand_id
+getSupplyUprice(b.supply_id) as unit_price, getSupplyUcost(b.supply_id) as unit_cost,"" as loc_supply_brand_id, c.loc_id
 from store_loc_supplies a, loc_supplies_v b, store_loc c
 WHERE a.store_loc_id = c.store_loc_id
 AND a.loc_supply_id = b.loc_supply_id
@@ -1071,7 +1084,7 @@ order by b.seq_no;
 
 CREATE OR REPLACE VIEW store_loc_supplies2_v AS
 select "" as store_loc_supply_id, "" as store_loc_id, a.store_id, a.supply_id, "" as loc_supply_id, b.supply_code, b.unit_desc, "" as stock_daily_qty, "" as prev_qty,
-getSupplyUprice(b.supply_id) as unit_price, getSupplyUcost(b.supply_id) as unit_cost, "" as loc_supply_brand_id
+getSupplyUprice(b.supply_id) as unit_price, getSupplyUcost(b.supply_id) as unit_cost, "" as loc_supply_brand_id, '' as loc_id
 from  store_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
@@ -1162,8 +1175,6 @@ FROM loc_pc_dtls a, store_loc_supplies_v b, loc_pc c
 WHERE a.store_loc_supply_id = b.store_loc_supply_id
 AND a.loc_pc_id=c.loc_pc_id;
 
-
-
 create or replace view is_dtls_v as
 select a.*, b.supply_code, b.brand_name, b.cu_desc 
 from supply_is_dtls a, loc_supply_brands_v b
@@ -1208,7 +1219,7 @@ FROM loc_pc_dtls a, loc_pc b
 WHERE a.loc_pc_id=b.loc_pc_id;
 
 CREATE OR REPLACE VIEW store_loc_supply_daily_v AS
-select a.*, b.store_loc_id, b.supply_code, b.unit_desc, ifnull(a.unit_price,0) * ifnull(a.out_qty,0) as sales_amount, ifnull(a.unit_cost,0) * ifnull(a.out_qty,0) as cost_amount
+select a.*, b.loc_id, b.store_loc_id, b.supply_code, b.unit_desc, ifnull(a.unit_price,0) * ifnull(a.out_qty,0) as sales_amount, ifnull(a.unit_cost,0) * ifnull(a.out_qty,0) as cost_amount, CONCAT(b.supply_code, ' (', a.remaining_qty, b.unit_desc, ')') as supply
 from store_loc_supply_daily a, store_loc_supplies_v b
 where a.store_loc_supply_id=b.store_loc_supply_id;
 
