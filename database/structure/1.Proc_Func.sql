@@ -202,6 +202,16 @@ BEGIN
  RETURN (lvl);
 END;
 
+CREATE FUNCTION getStoreLocDailyStockSales(p_store_loc_id int(5), p_date date) RETURNS decimal(7,2) 
+    DETERMINISTIC
+BEGIN
+ DECLARE lvl decimal(7,2);
+    select ttl_stock_sales_amt INTO lvl from store_daily_cash where store_loc_id = p_store_loc_id
+    and tran_date = p_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
+
 CREATE FUNCTION getStoreLocDailySalesSum(p_store_loc_id int(5), p_date date) RETURNS decimal(7,2) 
     DETERMINISTIC
 BEGIN
@@ -798,4 +808,37 @@ BEGIN
   END IF;
 END;
 
+CREATE PROCEDURE repLocDailyStocksSales(p_month int, p_year int, p_loc_id INT)
+BEGIN
+   DECLARE l_stmt    VARCHAR(2000);
+   DECLARE l_union   VARCHAR(2000);
+   DECLARE l_where   VARCHAR(2000);
+   DECLARE l_comma   VARCHAR(1);
+   DECLARE l_id      INT(5);
+   DECLARE l_text    VARCHAR(50);
+   DECLARE exit_loop BOOLEAN; 
+   DECLARE store_loc_cur CURSOR FOR
+                         SELECT store_loc_id, store_loc FROM store_loc WHERE loc_id=p_loc_id ORDER BY store_loc;
 
+   DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = TRUE;
+   SET l_comma = '';
+   SET l_stmt = 'SELECT " " as tran_date, ';
+   SET l_union = ' UNION SELECT tran_date, ';
+   OPEN store_loc_cur;
+        store_loc_loop: LOOP
+   FETCH store_loc_cur INTO l_id, l_text;
+         IF exit_loop THEN
+           CLOSE store_loc_cur;
+           LEAVE store_loc_loop;
+        END IF;
+        SET l_stmt = CONCAT(l_stmt, l_comma, '"', l_text,'"');
+        SET l_union = CONCAT(l_union, l_comma, 'getStoreLocDailyStockSales(',l_id,',tran_date)');
+        SET l_comma = ',';
+        
+   END LOOP store_loc_loop;
+   SET @s = CONCAT(l_stmt, l_union, ' FROM store_daily_cash WHERE MONTH(tran_date)=', p_month, ' AND YEAR(tran_date)=', p_year, ' ORDER BY tran_date ');
+   PREPARE stmt FROM @s;
+   
+   EXECUTE stmt;
+   DEALLOCATE PREPARE stmt;   
+END;   

@@ -761,6 +761,7 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
   `store_loc_supply_daily_id` int(5) unsigned NOT NULL auto_increment,
   `store_loc_supply_id`           int(5),
   `stock_date`                    datetime,
+  `onhand_qty`                    decimal(7,2) DEFAULT 0,
   `beg_qty`                       decimal(7,2) DEFAULT 0,
   `remaining_qty`                 decimal(7,2) DEFAULT 0,
   `is_qty`                        decimal(7,2) DEFAULT 0,
