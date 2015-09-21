@@ -822,8 +822,8 @@ BEGIN
 
    DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = TRUE;
    SET l_comma = '';
-   SET l_stmt = 'SELECT " " as tran_date, ';
-   SET l_union = ' UNION SELECT tran_date, ';
+   SET l_stmt = 'SELECT " Date " as tran_date, ';
+   SET l_union = ' UNION SELECT DATE_FORMAT(tran_date,"%m/%d/%Y"), ';
    OPEN store_loc_cur;
         store_loc_loop: LOOP
    FETCH store_loc_cur INTO l_id, l_text;
