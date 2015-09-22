@@ -55,7 +55,14 @@ class reports extends Base_Controller {
 	{
         check_login();
 		$this->load->view('default_view');
-	}     
+	}   
+	
+    public function get_sales_loc_inq($month,$year,$loc_id,$store_id)
+	{
+        check_login();
+	    $query = $this->db->query("call repLocDailyStocksSales($month,$year,$loc_id,$store_id)");
+	    jsonOut($query->result());
+	}   	
     
     
 }

@@ -19,14 +19,16 @@ function setInputs(){
 
 
 $("#btnGo").click(function(){
-    /*if(store_loc_id.val()==="") {
+    /*
+    //	call repLocDailyStocksSales(7,2015,2,1);
+    if(store_loc_id.val()==="") {
         alert("Please select Store.");
         store_loc_id.focus(); 
         return;
     }
-
-    DisplayReport();
     */
+    DisplayReport();
+    
 });   
 
 
@@ -35,7 +37,7 @@ $("#btnGo").click(function(){
 function DisplayReport(){
     $(tbl).html(""); 
 
-    $.post(controller_url + "sales_loc_inq_data" ,data,function(d){
+    $.post(controller_url + "get_sales_loc_inq/" + p_month.val() + "/"+ p_year.val() +"/"+ p_loc_id.val() +"/" + p_store_id.val(),function(d){
         if (d.length===0) {
             $(tbl).html("No Result."); 
             return;
