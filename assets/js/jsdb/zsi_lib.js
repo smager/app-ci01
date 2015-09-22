@@ -435,16 +435,7 @@ zsi.control.SelectList = function(p_url,p_selector,p_selval,p_req,p_onLoadComple
    });
 }
 
-/*--[zsi.calendar]------------------------------------------------------------------------------*/
-zsi.calendar.LoadMonths = function(p_select){
-   p_select.add(new Option(" ", ""),null);
-   var monthNames = [ "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December" ];
-   for(var x=0;x<12;x++){
-      var l_option = new Option(monthNames[x], x+1);
-      p_select.add(l_option, null);
-   }
-}
+
 /*--[zsi.form]------------------------------------------------------------------------------*/
 zsi.form.checkNumber = function(e) {
    var keynum;
@@ -1267,6 +1258,18 @@ $.fn.center = function () {
     return this;
 }
 
+
+/*--[zsi.calendar]------------------------------------------------------------------------------*/
+$.fn.loadMonths = function(){
+    var _select  = this[0];
+    _select.add(new Option(" ", ""),null);
+    var monthNames = [ "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December" ];
+    for(var x=0;x<12;x++){
+      var l_option = new Option(monthNames[x], x+1);
+      _select.add(l_option, null);
+    }
+}
 
 /*--------[cookie]-----------------------------------------------------------------*/
 function createCookie(name,value,days) {

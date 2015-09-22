@@ -18,13 +18,19 @@ class select_options_model extends CI_Model{
             $i = $query->result()[0];
             
             $l_condition="where 1=1";        
+            $l_order_by = " order by " . $i->text ; 
+            
             //database where condition
-            if($i->condition_text!='' )  $l_condition .=" and " . $i->condition_text;            
+            if($i->condition_text!='' )  $l_condition .=" and " . $i->condition_text;          
+            
+            //order by
+            if($i->order_by!='' )  $l_order_by = " order by " . $i->order_by;          
+
             //client where condition
             if(isset($get["where"])) $l_condition .= " and " . $get["where"];
             
             
-            $sql = "SELECT  " . $i->text . " as text, " . $i->value  . " as value  FROM " . $i->table_name  . " " . $l_condition . " order by " . $i->text ;               
+            $sql = "SELECT  " . $i->text . " as text, " . $i->value  . " as value  FROM " . $i->table_name  . " " . $l_condition . $l_order_by ;               
             $result = $this->db->query($sql);
         }
         return $result;    
@@ -45,6 +51,7 @@ class select_options_model extends CI_Model{
                     ,'text' => $post['p_text'][$x]
                     ,'value' => $post['p_value'][$x]
                     ,'condition_text' => $post['p_condition_text'][$x]
+                    ,'order_by' => $post['p_order_by'][$x]
 
                 );
 

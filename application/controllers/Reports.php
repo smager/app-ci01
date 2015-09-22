@@ -51,7 +51,11 @@ class reports extends Base_Controller {
         jsonOut($this->store_daily_expenses_model->storeLocExpInq($store_loc_id,$isDate)->result());        
     }
     
-
+	public function sales_loc_inq()
+	{
+        check_login();
+		$this->load->view('default_view');
+	}     
     
     
 }

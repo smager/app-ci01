@@ -28,6 +28,7 @@ function displayRecords(){
             ,function(d){ return bs({name:"text[]",value: d.text}); }
             ,function(d){ return bs({name:"value[]",value: d.value}); }
             ,function(d){ return bs({name:"condition_text[]",value: d.condition_text}); }
+            ,function(d){ return bs({name:"order_by[]",value: (d.order_by!==null?d.order_by:"") }); }
         ]
         ,onComplete : function(){
             displayBlankRows();
@@ -52,6 +53,7 @@ function displayBlankRows(){
             ,function(d){ return bs({name:"text[]",class:inputCls}); }
             ,function(d){ return bs({name:"value[]",class:inputCls}); }
             ,function(d){ return bs({name:"condition_text[]",class:inputCls}); }
+            ,function(d){ return bs({name:"order_by[]"}); }
         ]
         ,onComplete : function(){
             //console.log("display done.");

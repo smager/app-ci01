@@ -8,6 +8,7 @@
             <th>Text</th>
             <th>Value</th>
             <th>Condition</th>
+            <th>Order By</th>
         </tr>
         </thead>
     </table>    
