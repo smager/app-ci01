@@ -332,6 +332,14 @@ BEGIN
  RETURN (ifnull(lvl,''));
 END;
 
+CREATE FUNCTION getStoreLocDailyBankDepoAmt(p_bank_ref_id int, p_store_loc_id int, p_date DATE) RETURNS decimal(7,2)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl decimal(7,2);
+    SELECT depo_amount INTO lvl FROM store_bank_depo_dtls_V WHERE bank_ref_id = p_bank_ref_id AND store_loc_id = p_store_loc_id AND  act_depo_date = p_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
 /*PROCEDURES*/
 
 CREATE PROCEDURE getLocSuppliesReorder(p_loc_id int(5))
@@ -377,13 +385,6 @@ BEGIN
    END IF;   
 END;
 
-CREATE PROCEDURE setLocStockIsPost (IN p_supply_is_id INT)   
-BEGIN
-  UPDATE loc_supply_brands a, supply_is_dtls b
-  SET a.stock_qty = a.stock_qty - b.supply_is_qty
-  WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
-  AND b.supply_is_id = p_supply_is_id;
-END;
 
 CREATE PROCEDURE setStoreStockIsPost (IN p_supply_is_id INT, p_store_loc_id INT, p_date VARCHAR(20))   
 BEGIN
@@ -398,8 +399,8 @@ BEGIN
        AND a.store_loc_supply_id = getStoreLocSupplyId(b.store_loc_id,b.loc_supply_id);
   ELSE
     
-    INSERT INTO store_loc_supply_daily (store_loc_supply_id,  stock_date,  unit_price, unit_cost, is_qty, beg_qty, remaining_qty)
-    SELECT store_loc_supply_id, str_to_date(p_date,'%m/%d/%Y'), unit_price, unit_cost,0,0, prev_qty FROM store_loc_supplies_v
+    INSERT INTO store_loc_supply_daily (store_loc_supply_id,  stock_date,  unit_price, unit_cost, is_qty, beg_qty, remaining_qty, loc_qty)
+    SELECT store_loc_supply_id, str_to_date(p_date,'%m/%d/%Y'), unit_price, unit_cost,0,0, prev_qty, getStockCount(loc_supply_id)  FROM store_loc_supplies_v
     WHERE store_loc_id = p_store_loc_id;
     
     UPDATE store_loc_supply_daily a, supply_is_dtls_grp_v b
@@ -414,12 +415,21 @@ BEGIN
   
    UPDATE store_loc_supplies a, supply_is_dtls_v b
      SET a.prev_qty = a.prev_qty + supply_is_qty
-   WHERE a.store_loc_supply_id = b.store_loc_supply_id
+   WHERE a.store_loc_supply_id = getStoreLocSupplyId(b.store_loc_id,b.loc_supply_id)
      AND b.store_loc_id = p_store_loc_id
-     AND b.stock_date = str_to_date(p_date,'%m/%d/%Y');    
+     AND b.i_date = str_to_date(p_date,'%m/%d/%Y');    
  
  DELETE FROM supply_is_dtls WHERE supply_is_id=p_supply_is_id and ifnull(supply_is_qty,0)=0;
 END;
+
+CREATE PROCEDURE setLocStockIsPost (IN p_supply_is_id INT)   
+BEGIN
+  UPDATE loc_supply_brands a, supply_is_dtls b
+  SET a.stock_qty = a.stock_qty - b.supply_is_qty
+  WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
+  AND b.supply_is_id = p_supply_is_id;
+END;
+
 
 CREATE PROCEDURE getStoreLocSupplyDaily(p_store_loc_id int(5), p_date VARCHAR(20), p_posted INT)
 BEGIN
@@ -808,7 +818,7 @@ BEGIN
   END IF;
 END;
 
-CREATE PROCEDURE repLocDailyStocksSales(p_month int, p_year int, p_loc_id INT)
+CREATE PROCEDURE repLocDailyStocksSales(p_month int, p_year int, p_loc_id INT, p_store_id INT)
 BEGIN
    DECLARE l_stmt    VARCHAR(2000);
    DECLARE l_union   VARCHAR(2000);
@@ -818,12 +828,11 @@ BEGIN
    DECLARE l_text    VARCHAR(50);
    DECLARE exit_loop BOOLEAN; 
    DECLARE store_loc_cur CURSOR FOR
-                         SELECT store_loc_id, store_loc FROM store_loc WHERE loc_id=p_loc_id ORDER BY store_loc;
+                         SELECT store_loc_id, store_loc FROM store_loc WHERE loc_id=p_loc_id and store_id = p_store_id ORDER BY store_loc;
 
    DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = TRUE;
    SET l_comma = '';
-   SET l_stmt = 'SELECT " Date " as tran_date, ';
-   SET l_union = ' UNION SELECT DATE_FORMAT(tran_date,"%m/%d/%Y"), ';
+   SET l_stmt = ' SELECT DATE_FORMAT(tran_date,"%m/%d/%Y") as Date, ';
    OPEN store_loc_cur;
         store_loc_loop: LOOP
    FETCH store_loc_cur INTO l_id, l_text;
@@ -831,14 +840,50 @@ BEGIN
            CLOSE store_loc_cur;
            LEAVE store_loc_loop;
         END IF;
-        SET l_stmt = CONCAT(l_stmt, l_comma, '"', l_text,'"');
-        SET l_union = CONCAT(l_union, l_comma, 'getStoreLocDailyStockSales(',l_id,',tran_date)');
+        SET l_stmt = CONCAT(l_stmt, l_comma, 'getStoreLocDailyStockSales(',l_id,',tran_date) as','"', l_text,'"');
         SET l_comma = ',';
         
    END LOOP store_loc_loop;
-   SET @s = CONCAT(l_stmt, l_union, ' FROM store_daily_cash WHERE MONTH(tran_date)=', p_month, ' AND YEAR(tran_date)=', p_year, ' ORDER BY tran_date ');
+   SET @s = CONCAT(l_stmt,' FROM store_daily_cash WHERE MONTH(tran_date)=', p_month, ' AND YEAR(tran_date)=', p_year, ' ORDER BY tran_date ');
    PREPARE stmt FROM @s;
    
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;   
-END;   
+END;
+
+CREATE PROCEDURE repStoreDailyBankDepo(p_month int, p_year int, p_store_loc_id INT)
+BEGIN
+   DECLARE l_stmt    VARCHAR(2000);
+   DECLARE l_where   VARCHAR(2000);
+   DECLARE l_comma   VARCHAR(1);
+   DECLARE l_id      INT(5);
+   DECLARE l_text    VARCHAR(50);
+   DECLARE exit_loop BOOLEAN; 
+   DECLARE bank_ref_cur CURSOR FOR
+                         SELECT bank_ref_id, bank_name FROM bank_ref ORDER BY priority_no;
+
+   DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = TRUE;
+   SET l_comma = '';
+   SET l_stmt = ' SELECT DISTINCT DATE_FORMAT(act_depo_date,"%m/%d/%Y") as Date, ';
+   OPEN bank_ref_cur;
+        bank_ref_loop: LOOP
+   FETCH bank_ref_cur INTO l_id, l_text;
+         IF exit_loop THEN
+           CLOSE bank_ref_cur;
+           LEAVE bank_ref_loop;
+        END IF;
+        SET l_stmt = CONCAT(l_stmt, l_comma, 'getStoreLocDailyBankDepoAmt(',l_id,',', p_store_loc_id,',act_depo_date) as','"', l_text,'"');
+        SET l_comma = ',';
+        
+   END LOOP bank_ref_loop;
+   SET @s = CONCAT(l_stmt,' FROM store_bank_depo_dtls_v WHERE MONTH(act_depo_date)=', p_month, ' AND YEAR(act_depo_date)=', p_year, ' ORDER BY act_depo_date ');
+   PREPARE stmt FROM @s;
+   
+   EXECUTE stmt;
+   DEALLOCATE PREPARE stmt;   
+END; 
+
+CREATE PROCEDURE console(p_content VARCHAR(1000))
+BEGIN
+  INSERT INTO console_logs (content) values (p_content);
+END;

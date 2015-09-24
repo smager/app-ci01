@@ -761,6 +761,7 @@ CREATE TABLE IF NOT EXISTS `supply_is_dtls` (
   `store_loc_supply_daily_id` int(5) unsigned NOT NULL auto_increment,
   `store_loc_supply_id`           int(5),
   `stock_date`                    datetime,
+  `loc_qty`                       decimal(7,2) DEFAULT 0,
   `onhand_qty`                    decimal(7,2) DEFAULT 0,
   `beg_qty`                       decimal(7,2) DEFAULT 0,
   `remaining_qty`                 decimal(7,2) DEFAULT 0,
@@ -989,6 +990,12 @@ CREATE TABLE IF NOT EXISTS `revision_logs` (
   PRIMARY KEY (`revision_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+CREATE TABLE IF NOT EXISTS `console_logs` (
+  `console_log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` text NOT NULL,
+  PRIMARY KEY (`console_log_id`)
+) DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
 /* Views */
 create or replace view menu_v as
 select *
@@ -1103,7 +1110,7 @@ and c.posted=0;
 
 CREATE OR REPLACE VIEW supply_is_dtls_v AS
 select a.*, b.store_loc_id, b.is_date, c.supply_code, c.brand_name, c.cu_desc, c.loc_supply_id, c.supply_id, 
-getSupplyUprice(supply_id) as unit_price, getSupplyUcost(supply_id) as unit_cost
+getSupplyUprice(supply_id) as unit_price, getSupplyUcost(supply_id) as unit_cost, c.store_loc_supply_id
 from supply_is_dtls a, supply_is b, loc_supply_brands_v c
 where a.supply_is_id=b.supply_is_id
 AND a.loc_supply_brand_id = c.loc_supply_brand_id;
@@ -1240,9 +1247,12 @@ SELECT loc_pc_id, getLocSupplyIdByBrandId(loc_supply_brand_id) AS loc_supply_id,
 FROM loc_pc_dtls
 GROUP BY loc_pc_id, getLocSupplyIdByBrandId(loc_supply_brand_id);
 
+CREATE OR REPLACE VIEW store_bank_depo_v AS
+SELECT *
+   FROM store_bank_depo
 
 CREATE OR REPLACE VIEW store_bank_depo_dtls_v as
-SELECT a.*, b.bank_name, b.depo_pct_share 
-  FROM store_bank_depo_v a, bank_ref b
- WHERE a.bank_ref_id = a.bank_ref_id;
+SELECT a.*, b.store_loc_id, b.act_depo_date, getBankName(a.bank_ref_id)
+  FROM store_bank_depo_dtls a, store_bank_depo b
+ WHERE a.store_bank_depo_id=b.store_bank_depo_id;
  
