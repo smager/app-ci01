@@ -62,6 +62,12 @@ class reports extends Base_Controller {
         check_login();
 		$this->load->view('default_view');
 	}   
-	 
+
+	public function daily_loc_stock_is()
+	{
+        check_login();
+		$this->load->view('default_view');
+	}   
+
     
 }
