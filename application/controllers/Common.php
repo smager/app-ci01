@@ -26,7 +26,6 @@ class common extends Base_Controller {
     }
     
 
-    
 	public function checkDataExist($table,$field,$value)
 	{
         $str = "SELECT count(*) as value FROM $table WHERE lower($field)=lower('$value')";
@@ -35,4 +34,14 @@ class common extends Base_Controller {
         if ($query->row()->value > 0 )  $result  = '{"exist":true}';
         jsonOut($result);
     }
+    
+   public function executeproc($sql)
+	{
+        check_login();
+        $params= $this->input->get("p");
+        $str = "call $sql($params)"; 
+	    $query = $this->db->query($str);
+	   jsonOut($query->result());
+	} 	
+	
 }

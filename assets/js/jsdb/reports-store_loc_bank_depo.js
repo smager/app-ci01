@@ -1,10 +1,8 @@
 var tbl="#tableResult"; 
 var proc_url = base_url + "common/executeproc/";
-
 setInputs();
 $(document).ready(function(){
-    p_loc_id.dataBind(base_url + "select_options/code/locations");
-    p_store_id.dataBind(base_url + "select_options/code/stores");
+    p_store_loc_id.dataBind(base_url + "select_options/code/store_locs");
     p_month.dataBind(base_url + "select_options/code/months_full");
     p_year.val( new Date().getFullYear() );
 
@@ -12,33 +10,20 @@ $(document).ready(function(){
 
 
 function setInputs(){
-    p_loc_id = $("#p_loc_id");
-    p_store_id = $("#p_store_id");
+    p_store_loc_id = $("#p_store_loc_id");
     p_month = $("#p_month");
     p_year = $("#p_year");
 }
 
 
 $("#btnGo").click(function(){
-    /*
-    //	call repLocDailyStocksSales(7,2015,2,1);
-    if(store_loc_id.val()==="") {
-        alert("Please select Store.");
-        store_loc_id.focus(); 
-        return;
-    }
-    */
     DisplayReport();
-    
 });   
-
-
-
 
 function DisplayReport(){
     $(tbl).html(""); 
 
-    $.post(proc_url +  "repLocDailyStocksSales?p=" + p_month.val() + ","+ p_year.val() +","+ p_loc_id.val() +"," + p_store_id.val(),function(d){
+    $.post( proc_url + "repStoreDailyBankDepo?p=" + p_month.val() + ","+ p_year.val() +"," + p_store_loc_id.val(),function(d){
         if (d.length===0) {
             $(tbl).html("No Result."); 
             return;
@@ -95,3 +80,4 @@ function DisplayReport(){
         $(tbl).html(result);
     })   
 } 
+
