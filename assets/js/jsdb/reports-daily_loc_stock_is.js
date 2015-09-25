@@ -61,8 +61,13 @@ function DisplayReport(){
                 var val2 =  (isNaN(val)===false ? val:0);
 
                 if( typeof aColTotal[x] ==="undefined") aColTotal[x]=0;
-                aColTotal[x] +=  parseFloat(val2);
-                totalX += (x>0? parseFloat(val2):0);
+                if(x===1){
+                    aColTotal[x] =  parseFloat(val2);
+                    totalX = (x>0? parseFloat(val2):0);
+                }else{
+                    aColTotal[x] -=  parseFloat(val2);
+                    totalX -= (x>0? parseFloat(val2):0);
+                }
             }
             h+="<td  class='align-r'>" + totalX.toMoney() + "</td>";
             h+="</tr>";
