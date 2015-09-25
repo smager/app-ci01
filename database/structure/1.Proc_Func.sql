@@ -120,6 +120,27 @@ BEGIN
  RETURN (lvl);
 END;
 
+CREATE FUNCTION getLocOHQty(p_loc_id int, p_date VARCHAR(20), p_supply_id int) RETURNS decimal(7,2)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl decimal(7,2);
+    SELECT loc_qty INTO lvl FROM store_loc_supply_daily_v 
+     WHERE loc_id=p_loc_id
+       AND stock_date=str_to_date(p_date,'%m/%d/%Y')
+       AND supply_id=p_supply_id limit 1;
+ RETURN (lvl);
+END;
+
+CREATE FUNCTION getSupplyISQty(p_store_loc_id int, p_date varchar(20), p_supply_id int) RETURNS decimal(7,2)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl decimal(7,2);
+    SELECT is_qty INTO lvl FROM store_loc_supply_daily_v 
+     WHERE store_loc_id=p_store_loc_id
+       AND stock_date=str_to_date(p_date,'%m/%d/%Y')
+       AND supply_id=p_supply_id limit 1;
+ RETURN (lvl);
+END;
 
 CREATE FUNCTION  getStockCountByBrand(p_loc_supply_brand_id int) RETURNS decimal(7,2)
     DETERMINISTIC
@@ -883,7 +904,41 @@ BEGIN
    DEALLOCATE PREPARE stmt;   
 END; 
 
+CREATE PROCEDURE repLocDailyIssuance(p_loc_id int, p_store_id int, p_date VARCHAR(20))
+BEGIN
+   DECLARE l_stmt    VARCHAR(2000);
+   DECLARE l_union   VARCHAR(2000);
+   DECLARE l_where   VARCHAR(2000);
+   DECLARE l_comma   VARCHAR(1);
+   DECLARE l_id      INT(5);
+   DECLARE l_text    VARCHAR(50);
+   DECLARE exit_loop BOOLEAN; 
+   DECLARE store_loc_cur CURSOR FOR
+                         SELECT store_loc_id, store_loc FROM store_loc WHERE loc_id=p_loc_id and store_id = p_store_id ORDER BY store_loc;
+
+   DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = TRUE;
+   SET l_comma = '';
+   SET l_stmt = ' SELECT supply_code as Supply, ';
+   OPEN store_loc_cur;
+        store_loc_loop: LOOP
+   FETCH store_loc_cur INTO l_id, l_text;
+         IF exit_loop THEN
+           CLOSE store_loc_cur;
+           LEAVE store_loc_loop;
+        END IF;
+        SET l_stmt = CONCAT(l_stmt, l_comma, 'IFNULL(getLocOHQty(',p_loc_id,',"',p_date,'", supply_id),0) as "On-hand Qty", IFNULL(getSupplyISQty(',l_id,',"',p_date,'", supply_id),0) as','"', l_text,'"');
+        SET l_comma = ',';
+        
+   END LOOP store_loc_loop;
+   SET @s = CONCAT(l_stmt,' FROM store_supplies_v where store_id=',p_store_id);
+   PREPARE stmt FROM @s;
+   EXECUTE stmt;
+   DEALLOCATE PREPARE stmt;   
+END; 
+
+
 CREATE PROCEDURE console(p_content VARCHAR(1000))
 BEGIN
   INSERT INTO console_logs (content) values (p_content);
 END;
+

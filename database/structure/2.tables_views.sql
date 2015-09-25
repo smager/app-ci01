@@ -225,6 +225,7 @@ CREATE TABLE IF NOT EXISTS `conv_units` (
 CREATE TABLE IF NOT EXISTS `stores` (
   `store_id`     int(5) unsigned NOT NULL auto_increment,
   `store_name`   varchar(100) NOT NULL default '',
+  `supplier_id`  int(5),  
   `created_by`   int(5),
   `created_date` datetime,
   `updated_by`   int(5),
@@ -1227,7 +1228,9 @@ FROM loc_pc_dtls a, loc_pc b
 WHERE a.loc_pc_id=b.loc_pc_id;
 
 CREATE OR REPLACE VIEW store_loc_supply_daily_v AS
-select a.*, b.loc_id, b.store_loc_id, b.supply_code, b.unit_desc, ifnull(a.unit_price,0) * ifnull(a.out_qty,0) as sales_amount, ifnull(a.unit_cost,0) * ifnull(a.out_qty,0) as cost_amount, CONCAT(b.supply_code, ' (', a.remaining_qty, b.unit_desc, ')') as supply
+select a.*, b.loc_id, b.store_loc_id, b.supply_code, b.unit_desc, 
+ifnull(a.unit_price,0) * ifnull(a.out_qty,0) as sales_amount, ifnull(a.unit_cost,0) * ifnull(a.out_qty,0) as cost_amount, 
+CONCAT(b.supply_code, ' (', a.remaining_qty, b.unit_desc, ')') as supply, b.supply_id
 from store_loc_supply_daily a, store_loc_supplies_v b
 where a.store_loc_supply_id=b.store_loc_supply_id;
 
