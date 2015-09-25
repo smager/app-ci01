@@ -49,9 +49,9 @@ function DisplayReport(){
         
         var h="<table class='zTable fullWidth'><thead><tr>";
         for(var i=0;i< colsLength;i++){                
-            h+="<th>" + keys[i] + "</th>";
+            h+="<th class='align-c'>" + keys[i] + "</th>";
         }
-        h+="<th>Total</th>";
+        h+="<th class='align-c'>Total</th>";
         h+="</tr></thead></table>"        
         $(tbl).html(h);
         
