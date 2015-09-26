@@ -1,0 +1,36 @@
+<form method="post" id="frm">
+<div class="col-xs-11">
+    <div class="form-horizontal ">
+        <input type="hidden" name="p_store_loc_exp_id" id="p_store_loc_exp_id">
+        <div class="form-group  ">
+              
+            <label class=" col-xs-2 control-label">Store Franchise</label>
+            <div class=" col-xs-2"> 
+                <select name="p_store_id" id="p_store_id" class="form-control input-sm"></select>
+            </div>
+            
+            <label class=" col-xs-1 control-label">Area</label>
+            <div class=" col-xs-2"> 
+                <select name="p_loc_id" id="p_loc_id" class="form-control input-sm"></select>
+            </div>
+
+            <div class="col-xs-1">
+                <button type="button"  class="btn btn-primary btn-sm" id="btnGo"><span class="glyphicon glyphicon-search"></span></button>
+            </div>
+           
+
+        </div> 
+    </div>
+</div>    
+
+<div id="tableResult" class="col-xs-12">   
+   
+</div>
+
+
+
+
+
+
+
+</form>

@@ -69,5 +69,10 @@ class reports extends Base_Controller {
 		$this->load->view('default_view');
 	}   
 
-    
+	public function loc_stocks_for_reorder()
+	{
+        check_login();
+		$this->load->view('default_view');
+	}   
+
 }
