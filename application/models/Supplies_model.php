@@ -10,6 +10,12 @@ class supplies_model extends CI_Model{
         return $query;    
     }
     
+    function getPoSupplies(){
+        $query = $this->db->query("SELECT * FROM loc_supplies_v ORDER BY seq_no");
+        return $query;    
+    }
+    
+    
     function update($post){
         $params=array(
              'pk'=> 'supply_id'

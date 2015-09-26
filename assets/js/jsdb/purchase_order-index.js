@@ -10,6 +10,7 @@ $(document).ready(function(){
     setSupply();
 });
 $("form[id=frm]").submit(function(){
+    this.action = controller_url + "update";    
      if( zsi.form.checkMandatory()!==true) return false;
      
      $.post(base_url + "purchase_order/update",$(this).serializeArray()
@@ -51,7 +52,7 @@ $("form[id=frm]").submit(function(){
  
 
 function setSupply(){
-  $.getJSON(base_url + "supplies/getdata_json", function(d){
+  $.getJSON(base_url + "supplies/get_po_supplies", function(d){
         supply = d;
     });
 }
@@ -64,7 +65,7 @@ function markMandatory(){
                 ,"type":"S"
             }             
             ,{
-                 "names" : ["p_po_qty[]","p_supply_id[]"]
+                 "names" : ["p_po_qty[]","p_loc_supply_id[]"]
                 ,"type":"M"
                 ,"required_one":"Y"            
             }
@@ -137,7 +138,7 @@ function displayRecords(id){
                         +  bs({name:"cb[]",type:"checkbox"});
 
             }            
-            ,function(d){ return bs({name:"supply_id[]",type:"select",value:d.supply_id}); }
+            ,function(d){ return bs({name:"loc_supply_id[]",type:"select",value:d.loc_supply_id}); }
             ,function(d){ return d.unit_desc; }
             ,function(d){ return bs({name:"po_qty[]",value:d.po_qty,class:"form-control numeric"}); }
         ]
@@ -154,11 +155,11 @@ function displayRecords(id){
 
 function onSupplyChange(){
     
-    $("select[name='p_supply_id[]']").change(function(){
+    $("select[name='p_loc_supply_id[]']").change(function(){
         var tdUnit = $(this.parentNode).next();
         var selVal = this.value;
         $.each(supply,function(){
-            if (this.supply_id == selVal){
+            if (this.loc_supply_id == selVal){
                 tdUnit.html(this.unit_desc);
                 return;
             }
@@ -170,12 +171,12 @@ function onSupplyChange(){
 function onLocationChange(){
     loc_id.change(function(){
         if(this.value==='') return false;
-        $("select[name='p_supply_id[]']").dataBind({ 
-             url: base_url + "select_options/code/loc_supplies?where=loc_id=" + this.value
+        $("select[name='p_loc_supply_id[]']").dataBind({ 
+             url: base_url + "select_options/code/loc_supplies_po?where=loc_id=" + this.value
             ,isUniqueOptions:true
             ,onAllComplete: function(){
                 markMandatory();
-                $("select[name='p_supply_id[]']").change();
+                $("select[name='p_loc_supply_id[]']").change();
                 $("input[name='p_po_qty[]']").change();
             }            
         });
@@ -196,7 +197,7 @@ function displayBlankRows(p_isNew){
                         +  bs({name:"select[]",type:"checkbox"});
 
             }            
-            ,function(d){ return bs({name:"supply_id[]",type:"select", class:"form-control new"}); }
+            ,function(d){ return bs({name:"loc_supply_id[]",type:"select", class:"form-control new"}); }
             ,function(d){ return ""; }
             ,function(d){ return bs({name:"po_qty[]",class:"form-control numeric"}); }
         ]
@@ -220,7 +221,7 @@ function checkDelete(l_cmd) {
     }
    if (l_stmt!=="") {
       if(confirm("Are you sure you want to delete selected items?")) {
-      $.post( l_cmd , l_stmt, function(d){
+      $.post( controller_url + "delete_dtls" , l_stmt, function(d){
             displayRecords(po_id.val());
          }).fail(function(d) {
             alert("Sorry, the curent transaction is not successfull.");

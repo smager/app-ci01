@@ -38,13 +38,19 @@ class purchase_order_model extends CI_Model{
             )           
             ,'details' => array(
                 'pk'=> 'po_dtl_id'
-                ,'uiKeys'=> array('supply_id','po_qty','po_qty')
-                ,'dbKeys'=> array('supply_id','po_qty','bal_qty')
+                ,'uiKeys'=> array('loc_supply_id','po_qty','po_qty')
+                ,'dbKeys'=> array('loc_supply_id','po_qty','bal_qty')
                 ,'mustNotEmptyKeys'=> array('po_qty')
                 ,'table'=>'po_dtls'
             )
         );       
-        return $this->common_model->update($post,$params);      
+        
+        $po_id = $this->common_model->update($post,$params);                     
+        if($post["p_posted"]==true){        
+            $this->db->query("call setLocSupplyOrderedQty($po_id)");
+        }
+        
+        return $po_id;     
     }        
     
     

@@ -18,6 +18,9 @@ class supplies extends Base_Controller {
         jsonOut($this->supplies_model->getdata()->result());        
     }
     
+    public function get_po_supplies(){    
+        jsonOut($this->supplies_model->getPoSupplies()->result());        
+    }
     
     public function update()
 	{

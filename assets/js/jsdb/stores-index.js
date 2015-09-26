@@ -1,3 +1,4 @@
+var ctrlSel = zsi.control.SelectList;  
 function collapseList(o,target){
     $(o).text(function(i,v) {
            return v === 'Show' ? 'Hide' : 'Show';
@@ -43,6 +44,7 @@ $(document).ready(function(){
         $(".modal-body").append('<input type="hidden" name="p_store_id">');
         
     });
+    ctrlSel( base_url + "select_options/code/suppliers","select[name='p_supplier_id[]']","","N");
 });
     
 function submitSelectedItems(){

@@ -1,0 +1,70 @@
+<form method="post" id="frm">
+
+<div>
+    <div class="form-horizontal ">
+        <input type="hidden" name="p_po_id" id="p_po_id">
+        <div class="form-group  ">  
+            <label class=" col-xs-1 control-label">P.O. #</label>
+            <div class=" col-xs-1">
+                <input type="text" name="p_po_no" id="p_po_no" class="form-control input-sm " >
+                </div>  
+                
+                <label class=" col-xs-1 control-label">Date</label>
+                <div class=" col-xs-1"><input type="text" value="09/26/2015" name="p_po_date" id="p_po_date" class="form-control input-sm " placeholder="mm/dd/yyyy" >
+                </div>  
+                
+                <label class=" col-xs-1 control-label">Supplier</label>
+                <div class=" col-xs-2"> 
+                    <select name="p_supplier_id" id="p_supplier_id" class="form-control input-sm" ></select>
+                </div>  
+                
+                <label class=" col-xs-1 control-label">Location</label>
+                <div class=" col-xs-2"> 
+                    <select name="p_loc_id" id="p_loc_id" class="form-control input-sm"  ></select>
+                </div>
+                
+                <label class=" col-xs-1 control-label">Posted</label>
+                <div class="col-xs-1">
+                    <select name="p_posted" id="p_posted" class="form-control input-sm" >
+                        <option value="0">No</option><option value="1">Yes</option>
+                    </select>
+                </div>
+            </div> 
+    </div>
+</div>    
+    
+<div class="col-xs-3 itemLeftBox">
+
+<div class="panel panel-default">
+  <div class="panel-heading">Unposted PO(s)</div>
+  <div class="panel-body">
+
+        <div class="list-group"></div>
+    
+   </div>
+</div>
+    
+</div>
+<div class="col-xs-9">    
+<table class="zTable fullWidth" id="grid">
+    <thead>
+        <tr>
+            <th style="width: 25px"></th>
+            <th>Item</th>
+            <th style="text-align: center;">Unit</th>
+            <th>Qty</th>
+
+        </tr>
+    </thead>        
+</table>    
+<div class="buttonGroup">
+<button type="button" class="btn btn-primary btn-sm" id="btnNew"><span class="glyphicon glyphicon-plus-sign"></span> New</button>
+<button type="submit" class="btn btn-primary btn-sm" id="btnSave"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+<button onclick="return checkDelete();" class="btn btn-primary btn-sm" id="btnDelete">
+     <span class="glyphicon glyphicon-trash"></span> Delete
+</button>    
+</div>
+</div>
+
+
+</form>
