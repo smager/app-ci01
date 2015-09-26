@@ -10,7 +10,7 @@ class purchase_order extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('purchase_order_list');
+		$this->load->view('default_view');
 	}
 
     public function getdata_json(){
