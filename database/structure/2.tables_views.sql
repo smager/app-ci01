@@ -358,6 +358,7 @@ CREATE TABLE IF NOT EXISTS `loc_supplies` (
   `supply_id`       int(5),
   `reorder_level`   int(5),
   `max_level`       int(5),
+  `ordered_qty`     int(5),  
   `created_by`      int(5),
   `created_date`    datetime,
   `updated_by`      int(5),
@@ -1029,7 +1030,7 @@ from store_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW loc_supplies_v AS
-select a.loc_id, a.loc_supply_id, a.supply_id, b.seq_no, b.supply_code, a.reorder_level, a.max_level, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks, 
+select a.loc_id, a.loc_supply_id, a.supply_id, b.seq_no, b.supply_code, a.reorder_level, a.max_level, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks, a.ordered_qty
 from loc_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
@@ -1140,8 +1141,8 @@ SELECT a.*
 
 create or replace view po_dtls_v as
 select a.*, b.supply_code, b.unit_desc 
-from po_dtls a, supplies_v b
-where a.supply_id = b.supply_id;
+from po_dtls a, loc_supplies_v b
+where a.loc_supply_id = b.loc_supply_id;
 
 create or replace view po_dtlswithbal_v as
 select a.*, b.supply_code, b.unit_desc 
@@ -1163,11 +1164,11 @@ AND a.po_id = b.po_id;
 
 CREATE OR REPLACE VIEW supply_brands_po_dtls_v AS
 select a.*,b.supply_brand_id, b.brand_name, b.cu_desc
-from po_dtls_v a, supply_brands_v b
-where a.supply_id = b.supply_id;
+from po_dtls_v a, loc_supply_brands_v b
+where a.loc_supply_id = b.loc_supply_id;
 
 create or replace view receiving_dtls_po_v as
-select a.*, b.supply_code, b.unit_desc, getPOLocId(b.po_id) loc_id, b.brand_name, b.cu_desc, (a.bal_qty - a.dr_qty) as end_qty
+select a.*, b.supply_code, b.unit_desc, getPOLocId(b.po_id) loc_id, b.brand_name, b.cu_desc, (a.bal_qty - a.dr_qty) as end_qty, b.loc_supply_id
 from receiving_dtls a, supply_brands_po_dtls_v b
 where a.po_dtl_id = b.po_dtl_id
 and a.supply_brand_id = b.supply_brand_id;

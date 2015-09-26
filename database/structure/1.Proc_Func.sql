@@ -365,8 +365,41 @@ END;
 
 CREATE PROCEDURE getLocSuppliesReorder(p_loc_id int(5))
 BEGIN
-select * from loc_supplies_v where ttl_stocks <= reorder_level
+select * from loc_supplies_v where (ttl_stocks + ordered_qty) <= reorder_level
 and loc_id=p_loc_id;
+END;
+
+CREATE PROCEDURE setLocSupplyOrderedQty(p_po_id INT)
+BEGIN
+   UPDATE loc_supplies a, po_dtls b
+      SET a.ordered_qty = a.ordered_qty + b.po_qty
+    WHERE a.loc_supply_id = b.loc_supply_id 
+      AND b.po_id = p_po_id;
+END;
+
+CREATE PROCEDURE Receiving_post(p_receiving_id int(5))
+BEGIN
+
+UPDATE po_dtls a, receiving_dtls b 
+SET a.bal_qty = a.bal_qty - b.dr_qty
+WHERE a.po_dtl_id = b.po_dtl_id
+AND b.receiving_id = p_receiving_id;
+
+UPDATE loc_supplies a, receiving_dtls_po_v b
+   SET a.ordered_qty = a.ordered_qty - b.dr_qty
+ WHERE a.loc_supply_id = b.loc_supply_id
+   AND b.receiving_id = p_receiving_id;
+   
+
+UPDATE loc_supply_brands a, receiving_dtls_po_v b
+SET a.stock_qty = a.stock_qty + b.dr_qty
+WHERE a.loc_supply_brand_id=getLocSupplyBrandId(b.loc_id, b.supply_id,b.supply_brand_id)
+AND b.receiving_id = p_receiving_id;
+
+INSERT INTO loc_supply_brands (loc_supply_id, supply_brand_id, stock_qty)
+SELECT getLocSupplyId(loc_id,supply_id), supply_brand_id, dr_qty FROM receiving_dtls_po_v
+WHERE receiving_id = p_receiving_id
+AND ifnull(getLocSupplyBrandId(loc_id, supply_id, supply_brand_id),0) = 0; 
 END;
 
 CREATE PROCEDURE getStoreDailyCash(p_store_loc_id INT(10),p_date VARCHAR(20))
@@ -606,25 +639,6 @@ BEGIN
    SELECT *
    FROM store_loc_sales_exp_dtls_v 
    WHERE store_loc_id = p_store_loc_id AND exp_date = str_to_date(p_tran_date,'%m/%d/%Y');
-END;
-
-CREATE PROCEDURE Receiving_post(p_receiving_id int(5))
-BEGIN
-
-UPDATE po_dtls a, receiving_dtls b 
-SET a.bal_qty = a.bal_qty - b.dr_qty
-WHERE a.po_dtl_id = b.po_dtl_id
-AND b.receiving_id = p_receiving_id;
-
-UPDATE loc_supply_brands a, receiving_dtls_po_v b
-SET a.stock_qty = a.stock_qty + b.dr_qty
-WHERE a.loc_supply_brand_id=getLocSupplyBrandId(b.loc_id, b.supply_id,b.supply_brand_id)
-AND b.receiving_id = p_receiving_id;
-
-INSERT INTO loc_supply_brands (loc_supply_id, supply_brand_id, stock_qty)
-SELECT getLocSupplyId(loc_id,supply_id), supply_brand_id, dr_qty FROM receiving_dtls_po_v
-WHERE receiving_id = p_receiving_id
-AND ifnull(getLocSupplyBrandId(loc_id, supply_id, supply_brand_id),0) = 0; 
 END;
 
 CREATE PROCEDURE store_loc_supplies_ins (p_store_loc_id INT(10),p_store_id INT(10))
