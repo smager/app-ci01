@@ -363,11 +363,15 @@ END;
 
 /*PROCEDURES*/
 
-CREATE PROCEDURE getLocSuppliesReorder(p_loc_id int(5))
+CREATE PROCEDURE getLocSuppliesReorder(p_loc_id int(5), p_store_id int(5))
 BEGIN
-select * from loc_supplies_v where (ttl_stocks + ordered_qty) <= reorder_level
+select * from loc_supplies_v 
+where (ttl_stocks + ordered_qty) <= reorder_level
 and loc_id=p_loc_id;
 END;
+
+
+
 
 CREATE PROCEDURE setLocSupplyOrderedQty(p_po_id INT)
 BEGIN
@@ -950,6 +954,23 @@ BEGIN
    DEALLOCATE PREPARE stmt;   
 END; 
 
+CREATE PROCEDURE repLocSuppliesReorder(p_loc_id int(5), p_store_id int(5))
+BEGIN
+
+   IF IFNULL(p_loc_id,0)<>0 THEN
+      SELECT supply_code as 'Supply', unit_desc as 'Unit', reorder_level as 'Reorder Qty', ttl_stocks as 'On-hand Qty', ordered_qty as 'Ordered Qty' 
+        FROM loc_supplies_v 
+       WHERE (ttl_stocks + ordered_qty) <= reorder_level
+         AND loc_id=p_loc_id
+         AND store_id = p_store_id;
+   ELSE
+      SELECT getLocation(loc_id) as 'Area', supply_code as 'Supply', unit_desc as 'Unit', reorder_level as 'Reorder Level', ttl_stocks as 'On-hand Qty', ordered_qty as 'Ordered Qty' 
+        FROM loc_supplies_v 
+       WHERE (ttl_stocks + ordered_qty) <= reorder_level
+         AND store_id = p_store_id;
+   END IF;
+END;
+ 
 
 CREATE PROCEDURE console(p_content VARCHAR(1000))
 BEGIN

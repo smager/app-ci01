@@ -1016,12 +1016,12 @@ from  supplies;
 
 
 CREATE OR REPLACE VIEW store_supplies_v AS
-select store_id, store_supply_id, a.supply_id, b.supply_code
+select store_id, store_supply_id, a.supply_id, b.supply_code, b.seq_no
 from store_supplies a, supplies b
 WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW store_supplies2_v AS
-select "" as store_id, "" as store_supply_id, supply_id, supply_code
+select "" as store_id, "" as store_supply_id, supply_id, supply_code, b.seq_no
 from supplies;
 
 CREATE OR REPLACE VIEW supplies2_v AS
@@ -1030,13 +1030,13 @@ from store_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW loc_supplies_v AS
-select a.loc_id, a.loc_supply_id, a.supply_id, b.seq_no, b.supply_code, a.reorder_level, a.max_level, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks, a.ordered_qty
-from loc_supplies a, supplies_v b
+select a.loc_id, a.loc_supply_id, a.supply_id, b.seq_no, b.supply_code, a.reorder_level, a.max_level, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks, a.ordered_qty, b.store_id
+from loc_supplies a, store_supplies_v b
 WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW loc_supplies2_v AS
-select a.*, b.seq_no, b.supply_code, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks
-from loc_supplies a, supplies_v b
+select a.*, b.seq_no, b.supply_code, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks, a.ordered_qty, b.store_id
+from loc_supplies a, store_supplies_v b
 WHERE a.supply_id = b.supply_id;
 
 CREATE OR REPLACE VIEW supply_brands_v AS
