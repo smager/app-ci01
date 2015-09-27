@@ -74,5 +74,18 @@ class reports extends Base_Controller {
         check_login();
 		$this->load->view('default_view');
 	}   
+	
+	public function po_status()
+	{
+        check_login();
+		$this->load->view('default_view');
+	}   
+
+
+	public function receiving_orders()
+	{
+        check_login();
+		$this->load->view('default_view');
+	}  	
 
 }
