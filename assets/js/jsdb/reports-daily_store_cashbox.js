@@ -31,14 +31,24 @@ $("#btnGo").click(function(){
         is_date.focus(); 
         return;
     }    
+    clearTotals();
     
     setYesterdayAndToday();    
-    tYesterdayAmt=0;
-    ttodayAmt=0;
-    tCRAmt=0;
     displayHeaderInfo();
     displayCashBoxRecords();
-});   
+    
+}); 
+
+function clearTotals(){
+    tYesterdayAmt       = 0;
+    tCRAmt              = 0;
+    tSalesExpAmt        = 0;
+    ttl_stock_sales_amt = 0; 
+    ttodayAmt           = 0;
+    tExpAmt             = 0;
+    
+    $("#cashreport").clearGrid();
+}
 
 function displayHeaderInfo(){
     $.getJSON(base_url + "store_daily_cash/get_storedailycash?store_loc_id=" + store_loc_id.val()  + "&tran_date=" + is_date.val()

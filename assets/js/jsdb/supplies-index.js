@@ -163,7 +163,7 @@ function checkDelete(isPopUp) {
     for(var x=0;x<data.length; x++){
         l_stmt.push( { name:"p_del_id[]",value : data[x] }  ); 
     }
-   if (l_stmt!=="") {
+   if (l_stmt.length > 0) {
       if(confirm("Are you sure you want to delete selected items?")) {
       $.post( controller_url + "delete" , l_stmt, function(d){
             if(isPopUp)  manageItems(g_supply_id); else displayRecords();

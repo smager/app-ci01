@@ -10,10 +10,14 @@ class suppliers extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('suppliers_list');
+		$this->load->view('default_view');
 	}
     
-    
+	public function getdata()
+	{
+        check_login();
+		jsonOut($this->suppliers_model->getdata()->result());
+	}    
     
     public function getjson(){    
         $chkStart = "<input type=''checkbox'' onclick=''zsi.table.setCheckBox(this,";
