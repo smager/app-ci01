@@ -1,4 +1,3 @@
-var ctrlSel = zsi.control.SelectList;  
 var bs = zsi.bs.ctrl;
 
 $("#frm").submit(function(){ this.action = controller_url + "update"; });

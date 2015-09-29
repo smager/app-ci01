@@ -1,0 +1,26 @@
+<form method="post" id="frm">
+<table id="grid" class="zTable fullWidth">    
+<thead>	
+    <tr>
+        <th style="width: 25px"></th>
+        <th>Acct. No</th>
+        <th>Acct. Name</th>
+        <th>Bank Name</th>
+        <th>% Deposit Share</th>
+        <th>Priority#</th>
+        <th>Active?</th>
+        
+    </tr>
+ </thead>	
+ </table>    
+
+<div class="buttonGroup">
+<button type="submit" class="btn btn-primary btn-sm" id="btnSave">
+	<span class="glyphicon glyphicon-floppy-disk"></span> Save
+</button>
+<button onclick="return checkDelete();" class="btn btn-primary btn-sm" id="btnDelete">
+	<span class="glyphicon glyphicon-trash"></span> Delete
+</button>    
+</div>
+
+</form>

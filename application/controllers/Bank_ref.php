@@ -10,7 +10,7 @@ class bank_ref extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('bank_ref_list');
+		$this->load->view('default_view');
 	}
     
     
