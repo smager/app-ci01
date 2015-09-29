@@ -88,15 +88,15 @@ function displayCashBoxRecords(){
              function(d){   
                 ttodayAmt+=pf(d.today_qty) * pf(d.denomination);
                 tYesterdayAmt +=pf(d.cash_amount);                
-                tCRAmt +=pf(d.return_amount);
+                tCRAmt +=pf(d.return_amount===null?0:d.return_amount)
                return d.denomination;
              }     
             ,function(d){ return d.denomination_qty;} 
             ,function(d){ return pf(d.cash_amount).toMoney();}
             ,function(d){ return d.today_qty; }
             ,function(d){ return (pf(d.today_qty) * pf(d.denomination)).toMoney(); }
-            ,function(d){ return d.return_denomination_qty;}
-            ,function(d){ return pf(d.return_amount).toMoney();}
+            ,function(d){ return (d.return_denomination_qty===null?0:d.return_denomination_qty);}
+            ,function(d){ return pf(d.return_amount===null?0:d.return_amount).toMoney();  }
         ]
         ,td_properties: [
              aRight,aCenter,aRight,aCenter,aRight,aCenter,aRight
@@ -187,13 +187,16 @@ function displayCashReportRecords(){
             if(typeof d==="undefined") return;
             var tableName ="#cashreport";
             $(tableName).clearGrid();
+            
+            var sales_amt   = (d.ttl_stock_sales_amt===null?0:d.ttl_stock_sales_amt );
+            
             var r  = "<tr>"
             +  "<td" + aCenter + ">" + tYesterdayAmt.toMoney() + "</td>"
             +  "<td" + aCenter + ">" + (tCRAmt - tYesterdayAmt).toMoney() + "</td>"
             +  "<td" + aCenter + ">" + tSalesExpAmt.toMoney() + "</td>"
             +  "<td" + aCenter + ">" + (tCRAmt - tYesterdayAmt + tSalesExpAmt).toMoney()  + "</td>"
-            +  "<td" + aCenter + ">" + d.ttl_stock_sales_amt.toMoney() + "</td>"
-            +  "<td" + aCenter + ">" + ((tCRAmt - tYesterdayAmt + tSalesExpAmt)- d.ttl_stock_sales_amt).toMoney() +"</td>"
+            +  "<td" + aCenter + ">" + sales_amt.toMoney() + "</td>"
+            +  "<td" + aCenter + ">" + ((tCRAmt - tYesterdayAmt + tSalesExpAmt)- sales_amt).toMoney() +"</td>"
             +  "<td" + aCenter + "></td>"
             +  "<td" + aCenter + ">" + ttodayAmt.toMoney() + "</td>"
             +  "<td" + aCenter + ">" + tExpAmt.toMoney() + "</td>"
