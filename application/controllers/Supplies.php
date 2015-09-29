@@ -9,8 +9,7 @@ class supplies extends Base_Controller {
     
 	public function index()
 	{
-  
-		$this->load->view('supplies_list');
+		$this->load->view('default_hb_view');
 	}
     
     

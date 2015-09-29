@@ -10,7 +10,16 @@ class locations extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('locations_list');
+		//$this->load->view('locations_list');
+		$this->load->view('default_hb_view');
+	}
+	
+	
+	public function getdata()
+	{
+        check_login();
+        jsonOut($this->locations_model->getdata()->result());
+
 	}
     
     

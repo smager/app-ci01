@@ -30,7 +30,8 @@ class supply_out_model extends CI_Model{
         $store_loc_id=$post["p_store_loc_id"];
         $date=$post["p_date"];   
         if($post["p_posted"]==true) { 
-        $this->db->query("call setStoreLocSuppDailyRemQty($store_loc_id,'$date')");  
+            $isReturned = $post["p_returned"];
+            $this->db->query("call setStoreLocSuppDailyRemQty($store_loc_id,'$date',$isReturned)");  
         }
     } 
 
