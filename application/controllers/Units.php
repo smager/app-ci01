@@ -10,9 +10,14 @@ class units extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('units_list');
+		$this->load->view('default_view');
 	}
     
+	public function getdata()
+	{
+        check_login();
+	    jsonOut($this->units_model->getdata()->result());
+	}
     
     
     public function getjson(){    
