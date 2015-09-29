@@ -15,7 +15,7 @@ class receiving extends Base_Controller {
 
     public function get_unposted_dr(){
     
-        jsonOut($this->receiving_model->get_unposted_dr()->redsult());
+        jsonOut($this->receiving_model->get_unposted_dr()->result());
         
     }
     public function get_unposted_dr_dtls($receiving_id){
