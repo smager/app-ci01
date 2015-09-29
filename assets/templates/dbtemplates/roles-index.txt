@@ -3,12 +3,8 @@
 <thead>	
     <tr>
         <th style="width: 25px"></th>
-        <th>Employee </th>
-        <th>User Name</th>
-        <th>Password</th>
+        <th style="width:80px;">Code</th>        
         <th>Role</th>
-        <th>Active?</th>
-        <th>Manage</th>
     </tr>
  </thead>	
  </table>    

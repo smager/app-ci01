@@ -10,9 +10,15 @@ class menu_types extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('menu_types_list');
+		$this->load->view('default_view');
 	}
-    
+	
+	public function getdata()
+	{
+        check_login();
+		jsonOut($this->menu_types_model->getdata()->result());
+	}
+        
     public function getdata_json(){
         $this->load->model('menu_model'); 
         $q=$this->menu_types_model->getdata_idname();

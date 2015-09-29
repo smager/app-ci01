@@ -10,10 +10,14 @@ class roles extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('roles_list');
+		$this->load->view('default_view');
 	}
     
-    
+	public function getdata()
+	{
+        check_login();
+		jsonOut($this->roles_model->getdata()->result());
+	}
     
     public function getjson(){    
         $chkStart = "<input type=''checkbox'' onclick=''zsi.table.setCheckBox(this,";
@@ -23,21 +27,17 @@ class roles extends Base_Controller {
         $query = $this->db->query("SELECT concat('$chkStart', s.snippet_id,'$chkEnd','$hid') AS a,s.* FROM roles as s");
         $result=toDHTMLXData($query);
         jsonOut($result);  
-
     }
-    
-    
+
     public function update()
 	{
         $this->roles_model->update($this->input->post());
         redirect( base_url("roles") );
       
 	}    
-   
 
     public function delete()
 	{
-        
         $this->roles_model->delete($this->input->post());
 	}   
     

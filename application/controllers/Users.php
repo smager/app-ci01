@@ -11,7 +11,7 @@ class users extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('users_list');
+		$this->load->view('default_hb_view');
 	}
     
 	public function login()
