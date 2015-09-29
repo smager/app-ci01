@@ -1,7 +1,8 @@
-var ctrlSel = zsi.control.SelectList;  
 var bs = zsi.bs.ctrl;
 var tblPopup = "tblStoreLocSupp";
 
+
+$("#frm").submit(function(){ this.action = controller_url + "update"; });
 
 function manageItems(p_id){
     $("input[name='p_store_loc_id']").val(p_id);

@@ -10,7 +10,7 @@ class denomination_ref extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('denomination_ref_list');
+		$this->load->view('default_view');
 	}
     
     public function get_json(){

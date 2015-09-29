@@ -19,9 +19,14 @@
                          <select name="p_loc_id" id="p_loc_id" class="form-control input-sm"></select>
                 </div>  
                 
-                <label class=" col-xs-1 control-label">Store</label>
+                <label class=" col-xs-1 control-label">Store Branch</label>
                 <div class=" col-xs-2">
                     <select name="p_store_loc_id" id="p_store_loc_id" class="form-control input-sm" ></select>
+                </div>
+
+                <label class=" col-xs-1 control-label">Store Franchise</label>
+                <div class=" col-xs-2">
+                    <select name="p_store_id" id="p_store_id" class="form-control input-sm" ></select>
                 </div>
                 
                 <label class=" col-xs-1 control-label">Posted</label>
