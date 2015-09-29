@@ -391,7 +391,8 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `po_date`         datetime,
   `loc_id`          int(5),
   `supplier_id`     int(5),
-  `posted`          int(5) NOT NULL default '0',     
+  `posted`          int(5) NOT NULL default '0',    
+  `status`          VACHAR(1) default 'O',      
   `created_by`      int(5),
   `created_date`    datetime,
   `updated_by`      int(5),
@@ -408,6 +409,7 @@ CREATE TABLE IF NOT EXISTS `loc_supply_brands` (
   `supply_id`          int(5),
   `po_qty`             decimal(10,2),
   `bal_qty`            decimal(10,2),
+  `cancelled_qty`      decimal(10,2),
   `unit_id`            int(5),
   `created_by`         int(5),
   `created_date`       datetime,
@@ -1025,7 +1027,7 @@ select "" as store_id, "" as store_supply_id, supply_id, supply_code, b.seq_no
 from supplies;
 
 CREATE OR REPLACE VIEW supplies2_v AS
-select "" as loc_id, ""  as loc_supply_id, b.supply_id, b.seq_no, b.supply_code, "" as reorder_level, "" as max_level, b.unit_desc, "" as ttl_stocks
+select "" as loc_id, ""  as loc_supply_id, b.supply_id, b.seq_no, b.supply_code, "" as reorder_level, "" as max_level, b.unit_desc, "" as ttl_stocks, "" as ordered_qty, "" as store_id
 from store_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
 
@@ -1260,3 +1262,9 @@ SELECT a.*, b.store_loc_id, b.act_depo_date, getBankName(a.bank_ref_id)
   FROM store_bank_depo_dtls a, store_bank_depo b
  WHERE a.store_bank_depo_id=b.store_bank_depo_id;
  
+CREATE OR REPLACE VIEW status_v as
+  SELECT 'O' as status_code, 'Open' as status
+   UNION 
+   SELECT 'C' as status_code, 'Closed' as status
+   UNION 
+   SELECT 'X' as status_code, 'Cancelled' as status;

@@ -53,8 +53,6 @@ BEGIN
 END;
 
 
-
-
 CREATE FUNCTION  getEmplName(p_empl_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
@@ -68,6 +66,14 @@ CREATE FUNCTION  getSupplier(p_supplier_id int) RETURNS VARCHAR(100)
 BEGIN
     DECLARE lvl varchar(100);
     SELECT supplier_name INTO lvl FROM suppliers WHERE supplier_id=p_supplier_id;
+ RETURN (lvl);
+END;
+
+CREATE FUNCTION  getStatus(p_status_code VARCHAR(5)) RETURNS VARCHAR(100)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl VARCHAR(100);
+    SELECT status INTO lvl FROM status_v WHERE status_code=p_status_code;
  RETURN (lvl);
 END;
 
@@ -223,6 +229,14 @@ BEGIN
  RETURN (lvl);
 END;
 
+CREATE FUNCTION  getPOIdFromReceiving(p_po_dtl_id int) RETURNS INT(5)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl int(5);
+    SELECT DISTINCT po_id INTO lvl FROM po_dtls WHERE po_dtl_id=p_po_dtl_id;
+ RETURN (lvl);
+END;
+
 CREATE FUNCTION getStoreLocDailyStockSales(p_store_loc_id int(5), p_date date) RETURNS decimal(7,2) 
     DETERMINISTIC
 BEGIN
@@ -370,9 +384,6 @@ where (ttl_stocks + ordered_qty) <= reorder_level
 and loc_id=p_loc_id;
 END;
 
-
-
-
 CREATE PROCEDURE setLocSupplyOrderedQty(p_po_id INT)
 BEGIN
    UPDATE loc_supplies a, po_dtls b
@@ -384,16 +395,35 @@ END;
 CREATE PROCEDURE Receiving_post(p_receiving_id int(5))
 BEGIN
 
+DECLARE l_id INT(5);
+DECLARE l_bal_qty DECIMAL(7,2);
+DECLARE exit_loop BOOLEAN; 
+DECLARE po_cur CURSOR FOR
+                      SELECT DISTINCT getPOIdFromReceiving(po_dtl_id) FROM receiving_dtls WHERE receiving_id=p_receiving_id;
+
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = TRUE;
+
 UPDATE po_dtls a, receiving_dtls b 
 SET a.bal_qty = a.bal_qty - b.dr_qty
 WHERE a.po_dtl_id = b.po_dtl_id
 AND b.receiving_id = p_receiving_id;
 
+OPEN po_cur;
+     po_loop: LOOP
+FETCH po_cur INTO l_id;
+      IF exit_loop THEN
+        CLOSE po_cur;
+        LEAVE po_loop;
+     END IF;
+     SELECT SUM(IFNULL(bal_qty,0)) INTO l_bal_qty FROM po_dtls WHERE po_id=l_id;
+     UPDATE po SET status_code='C' WHERE po_id = l_id AND l_bal_qty = 0;
+
+END LOOP po_loop;
+
 UPDATE loc_supplies a, receiving_dtls_po_v b
    SET a.ordered_qty = a.ordered_qty - b.dr_qty
  WHERE a.loc_supply_id = b.loc_supply_id
-   AND b.receiving_id = p_receiving_id;
-   
+   AND b.receiving_id = p_receiving_id; 
 
 UPDATE loc_supply_brands a, receiving_dtls_po_v b
 SET a.stock_qty = a.stock_qty + b.dr_qty
@@ -471,21 +501,40 @@ BEGIN
        
   END IF;
   
-   UPDATE store_loc_supplies a, supply_is_dtls_v b
-     SET a.prev_qty = a.prev_qty + supply_is_qty
-   WHERE a.store_loc_supply_id = getStoreLocSupplyId(b.store_loc_id,b.loc_supply_id)
-     AND b.store_loc_id = p_store_loc_id
-     AND b.i_date = str_to_date(p_date,'%m/%d/%Y');    
- 
- DELETE FROM supply_is_dtls WHERE supply_is_id=p_supply_is_id and ifnull(supply_is_qty,0)=0;
+   UPDATE store_loc_supplies
+     SET prev_qty = 0
+   WHERE store_loc_id = p_store_loc_id;     
 END;
 
 CREATE PROCEDURE setLocStockIsPost (IN p_supply_is_id INT)   
 BEGIN
   UPDATE loc_supply_brands a, supply_is_dtls b
-  SET a.stock_qty = a.stock_qty - b.supply_is_qty
+  SET a.stock_qty = a.stock_qty + b.supply_is_qty
   WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
   AND b.supply_is_id = p_supply_is_id;
+END;
+
+CREATE PROCEDURE setStoreStockIsUnposted(IN p_supply_is_id INT)
+BEGIN
+
+   UPDATE loc_supply_brands a, supply_is_dtls b
+      SET a.stock_qty = a.stock_qty + b.supply_is_qty
+    WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
+      AND b.supply_is_id = p_supply_is_id;
+      
+   UPDATE store_loc_supplies a, store_loc_supply_daily b, supply_is_dtls_grp_v c
+     SET a.prev_qty = b.remaining_qty
+   WHERE a.store_loc_supply_id = b.store_loc_supply_id
+     AND b.stock_date = c.is_date
+     AND c.supply_is_id = p_supply_is_id;
+
+    UPDATE store_loc_supply_daily a, supply_is_dtls_v b
+       SET a.is_qty = a.is_qty - b.supply_is_qty
+     WHERE b.supply_is_id=p_supply_is_id
+       AND a.store_loc_supply_id = getStoreLocSupplyId(b.store_loc_id,b.loc_supply_id)
+       AND a.stock_date = b.is_date;
+
+   UPDATE supply_is SET posted=0 WHERE supply_is_id=p_supply_is_id;   
 END;
 
 
@@ -497,22 +546,70 @@ BEGIN
       AND posted=p_posted; 
 END;
 
-CREATE PROCEDURE setStoreLocSuppDailyRemQty(p_store_loc_id INT, p_date VARCHAR(20))
+CREATE PROCEDURE setStoreLocSuppDailyRemQty(p_store_loc_id INT, p_date VARCHAR(20), p_returned INT)
 BEGIN
 
+ IF IFNULL(p_returned,0)=1 THEN
+   UPDATE store_loc_supplies 
+      SET a.prev_qty = 0
+    WHERE b.store_loc_id = p_store_loc_id
+      AND b.posted=0; 
+     
+  UPDATE loc_supply_brands a, store_loc_supply_daily_v b
+     SET a.stock_qty = a.stock_qty + b.end_qty
+   WHERE a.loc_supply_brand_id = getLocSupplyBrandIdByLocSupplyId(b.loc_supply_brand_id)
+     AND b.store_loc_id = p_store_loc_id
+     AND b.stock_date = str_to_date(p_date,'%m/%d/%Y')
+     AND b.posted=0; 
+     
+   UPDATE store_loc_supply_daily
+      SET posted=1
+         ,returned_qty = end_qty
+    WHERE store_loc_id = p_store_loc_id
+      AND stock_date = str_to_date(p_date,'%m/%d/%Y');
+      
+ ELSE
+
+   UPDATE store_loc_supplies a, store_loc_supply_daily_v b
+      SET a.prev_qty = b.end_qty
+    WHERE a.store_loc_supply_id = b.store_loc_supply_id
+      AND b.store_loc_id = p_store_loc_id
+      AND b.stock_date = str_to_date(p_date,'%m/%d/%Y')
+     AND b.posted=0; 
+     
+   UPDATE store_loc_supply_daily
+      SET posted=1
+         ,returned_qty = 0
+    WHERE store_loc_id = p_store_loc_id
+      AND stock_date = str_to_date(p_date,'%m/%d/%Y');     
+ END IF;
+END;
+
+
+CREATE PROCEDURE setStoreLocSupplyDailyUnposted(p_store_loc_id INT, p_date VARCHAR(20))
+BEGIN
+  
   UPDATE store_loc_supplies a, store_loc_supply_daily_v b
-     SET a.prev_qty = b.end_qty
+     SET a.prev_qty = b.remaining_qty
    WHERE a.store_loc_supply_id = b.store_loc_supply_id
-     AND store_loc_id = p_store_loc_id
-     AND b.stock_date = str_to_date(p_date,'%m/%d/%Y');    
+     AND a.store_loc_id = p_store_loc_id
+     AND b.stock_date = str_to_date(p_date,'%m/%d/%Y')
+     AND b.posted=1;    
 
   UPDATE loc_supply_brands a, store_loc_supply_daily_v b
-     SET a.stock_qty = a.stock_qty + b.returned_qty
+     SET a.stock_qty = a.stock_qty - b.returned_qty
    WHERE a.loc_supply_brand_id = getLocSupplyBrandIdByLocSupplyId(b.loc_supply_brand_id)
      AND store_loc_id = p_store_loc_id
-     AND b.stock_date = str_to_date(p_date,'%m/%d/%Y');    
+     AND b.stock_date = str_to_date(p_date,'%m/%d/%Y')
+     AND b.posted=1;    
+
+  UPDATE store_loc_supply_daily
+     SET posted=0
+   WHERE store_loc_id = p_store_loc_id
+     AND stock_date = str_to_date(p_date,'%m/%d/%Y');
 
 END;
+
 
    
 CREATE PROCEDURE getLocPC_Unposted(p_loc_id int(5))
@@ -556,12 +653,12 @@ BEGIN
 DECLARE l_cash_amt decimal(7,2);
 DECLARE l_store_loc_id INT;
 DECLARE l_tran_date date;
-DECLARE l_CREATEd_by INT;
-DECLARE l_CREATEd_date DATE;
+DECLARE l_created_by INT;
+DECLARE l_created_date DATE;
 DECLARE l_store_bank_depo_id INT;
 
-SELECT store_loc_id, date_add(tran_date,interval -2 day), CREATEd_by, CREATEd_date
-  INTO l_store_loc_id, l_tran_date, l_CREATEd_by, l_CREATEd_date
+SELECT store_loc_id, date_add(tran_date,interval -2 day), created_by, created_date
+  INTO l_store_loc_id, l_tran_date, l_created_by, l_created_date
   FROM store_daily_cash
  WHERE store_daily_cash_id=p_store_daily_cash_id;
 
@@ -587,8 +684,8 @@ select IFNULL(store_bank_depo_id,0)
 
 IF IFNULL(l_store_bank_depo_id,0)=0 THEN
    INSERT INTO store_bank_depo       
-        (store_loc_id, sales_date, depo_amt, CREATEd_by, CREATEd_date) 
-         SELECT l_store_loc_id, l_tran_date,depo_amt, l_CREATEd_by, l_CREATEd_date FROM store_daily_cash    
+        (store_loc_id, sales_date, depo_amt, created_by, created_date) 
+         SELECT l_store_loc_id, l_tran_date,depo_amt, l_created_by, l_created_date FROM store_daily_cash    
           WHERE store_loc_id=l_store_loc_id
             AND sales_date =l_tran_date; 
 ELSE
@@ -948,7 +1045,7 @@ BEGIN
         SET l_comma = ',';
         
    END LOOP store_loc_loop;
-   SET @s = CONCAT(l_stmt,' FROM store_supplies_v where store_id=',p_store_id);
+   SET @s = CONCAT(l_stmt,' FROM store_supplies_v where store_id=',p_store_id, ' ORDER BY seq_no');
    PREPARE stmt FROM @s;
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;   
@@ -971,6 +1068,58 @@ BEGIN
    END IF;
 END;
  
+CREATE PROCEDURE getSupplies(p_store_id int(5))
+BEGIN
+
+   IF IFNULL(p_store_id,0)=0 THEN
+      SELECT *
+        FROM supplies_v;
+   ELSE
+      SELECT a.*
+        FROM supplies_v a, store_supplies b
+       WHERE a.supply_id = b.supply_id
+         AND b.store_id = p_store_id;
+   END IF;
+END;
+
+
+CREATE PROCEDURE repPOSummary(p_loc_id INT, p_supplier_id int, p_month INT, p_year INT, p_status_code VARCHAR(3))
+BEGIN
+   DECLARE l_stmt    VARCHAR(2000);
+   DECLARE l_year     INT;
+   DECLARE l_where    VARCHAR(2000);
+   SET l_where = ' WHERE 1=1'; 
+   
+   IF IFNULL(p_loc_id,0) <> 0 THEN
+      SET l_where = CONCAT(l_where, ' AND loc_id=',p_loc_id);
+   END IF;
+   
+   IF IFNULL(p_supplier_id,0) <> 0 THEN
+      SET l_where = CONCAT(l_where, ' AND supplier_id=',p_supplier_id);
+   END IF;
+   
+   IF IFNULL(p_status_code,'null') <> 'null' THEN
+      SET l_where = CONCAT(l_where, ' AND status_code="',p_status_code,'"');
+   END IF;
+   
+   IF IFNULL(p_month,0) <> 0 THEN
+      SET l_year = IFNULL(p_year, YEAR(sysdate()));
+      SET l_where = CONCAT(l_where, ' AND month(po_date)=',p_month, ' AND YEAR(po_date)=',l_year);
+   ELSE
+      IF IFNULL(p_year,0) <> 0 THEN
+         SET l_where = CONCAT(l_where, ' AND YEAR(po_date)=',p_year);
+      END IF;
+   END IF; 
+   
+   SET l_stmt = 'SELECT po_no as "P.O. Number", DATE_FORMAT(po_date,"%m/%d/%Y") as "Date", getLocation(loc_id) as "Area", getSupplier(supplier_id) as "Supplier"
+                ,ELT(FIELD(status_code,"O","C","X"),"Open","Closed","Cancelled") as "Status"';
+   SET @s = CONCAT(l_stmt,' FROM po', l_where);
+   PREPARE stmt FROM @s;
+   
+   EXECUTE stmt;
+   DEALLOCATE PREPARE stmt;   
+END;
+
 
 CREATE PROCEDURE console(p_content VARCHAR(1000))
 BEGIN
