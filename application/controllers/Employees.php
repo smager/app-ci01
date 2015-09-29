@@ -10,9 +10,15 @@ class employees extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('employees_list');
+		$this->load->view('default_view');
 	}
     
+	public function getdata()
+	{
+        check_login();
+		jsonOut($this->employees_model->getdata()->result());
+		
+	}
     
     
     public function getjson(){    

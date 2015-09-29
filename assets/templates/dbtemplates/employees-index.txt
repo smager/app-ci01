@@ -1,23 +1,26 @@
-<form id="frm"  >
-    <table id="grid" class="zTable fullWidth">    
-        <thead>>
-        <tr>
-            <th></th>
-            <th>ID No.</th>
-            <th>Employee Name</th>
-            <th>Date Hired</th>
-            <th>Position</th>
-            <th>Daily Rate</th>
-            <th>Area</th>
-            <th>Store Location</th>
-            <th>SSS No</th>
-            <th>Tax ID. No</th>
-            <th>PhilHealth No.</th>
-            <th>Pag-ibig No.</th>
-            <th>Civil Status</th>
-            <th>Active?</th>
-        </tr>
-        </thead>
-    </table>    
-    <div class="buttonGroup"></div>
-</form>    
+<form method="post" id="frm">
+<table id="grid" class="zTable fullWidth">    
+<thead>	
+    <tr>
+        <th style="width: 25px"></th>
+        <th>Employee</th>
+        <th>Position</th>
+        <th>Daily Rate</th>
+        <th>Area</th>
+        <th>Store Location</th>
+        <th>Active?</th>
+        
+    </tr>
+ </thead>	
+ </table>    
+
+<div class="buttonGroup">
+<button type="submit" class="btn btn-primary btn-sm" id="btnSave">
+	<span class="glyphicon glyphicon-floppy-disk"></span> Save
+</button>
+<button onclick="return checkDelete();" class="btn btn-primary btn-sm" id="btnDelete">
+	<span class="glyphicon glyphicon-trash"></span> Delete
+</button>    
+</div>
+
+</form>
