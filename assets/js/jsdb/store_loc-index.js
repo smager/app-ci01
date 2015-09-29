@@ -1,6 +1,8 @@
 var ctrlSel = zsi.control.SelectList;  
 var bs = zsi.bs.ctrl;
 var tblPopup = "tblStoreLocSupp";
+
+
 function manageItems(p_id){
     $("input[name='p_store_loc_id']").val(p_id);
     zsi.form.displayLOV({
@@ -23,6 +25,8 @@ function manageItems(p_id){
     
 $(document).ready(function(){
     
+    displayRecords();
+    
     $.get(base_url + "assets/templates/bsDialogBox.txt",function(d){
         var template = Handlebars.compile(d);     
         
@@ -43,11 +47,57 @@ $(document).ready(function(){
         $(".modal-body").append('<input type="hidden" name="p_store_loc_id">');
         
     });    
-    
-  ctrlSel( base_url + "select_options/code/stores","select[name='p_store_id[]']","","N");
-  ctrlSel( base_url + "select_options/code/locations","select[name='p_loc_id[]']","","N");
+
 });    
+
+
+function displayRecords(){   
+    var rownum=0;
+    zsi.json.loadGrid({
+         table  : "#grid"
+        ,url   : controller_url +  "getdata"
+        ,td_body: [ 
+            function(d){
+                return     bs({name:"store_loc_id[]",type:"hidden",value: d.store_loc_id})
+                        +  bs({name:"cb[]",type:"checkbox"});
+            }
+            
+            ,function(d){ return bs({name:"store_id[]",value: d.store_id, type:"select"}); }
+            ,function(d){ return bs({name:"store_loc[]",value: d.store_loc}); }
+            ,function(d){ return bs({name:"loc_id[]",value: d.loc_id, type:"select"}); }
+            ,function(d){ return bs({name:"active[]",value: d.active, type:"yesno"}); }
+            
+            ,function(d){ return '<a href="javascript:manageItems( ' + d.store_loc_id+ ');">Manage Items</a>'; }
+
+        ]
+        ,onComplete : function(){
+            displayBlankRows();
+        }
+    });    
+}
+
+function displayBlankRows(){       
+    var inputCls = "form-control input-sm";
+    zsi.json.loadGrid({
+         table  : "#grid"
+        ,td_body: [ 
+            function(d){
+                return     bs({name:"store_loc_id[]",type:"hidden"})
+                        +  bs({name:"cb[]",type:"checkbox"});
+            }            
+            ,function(d){ return bs({name:"store_id[]",type:"select"}); }
+            ,function(d){ return bs({name:"store_loc[]"}); }
+            ,function(d){ return bs({name:"loc_id[]",type:"select"}); }
+            ,function(d){ return bs({name:"active[]",type:"yesno"}); }
+            ,function(d){ return '';}
+        ]
+    });
     
+    $("select[name='p_store_id[]']").dataBind( base_url + "select_options/code/stores");
+    $("select[name='p_loc_id[]']").dataBind( base_url + "select_options/code/locations");
+}
+    
+        
 function submitSelectedItems(){
         var data = $("#frm_modalWindow").serializeArray();
        $.post(base_url + "store_loc_supplies/update",data,function(d){
@@ -55,16 +105,16 @@ function submitSelectedItems(){
        });
 }    
     
-function checkDelete(l_cmd) {
+function checkDelete() {
    var l_stmt=[], l_count;
     
    var data = zsi.table.getCheckBoxesValues("input[name='p_cb[]']:checked");
     for(var x=0;x<data.length; x++){
         l_stmt.push( { name:"p_del_id[]",value : data[x] }  ); 
     }
-   if (l_stmt!=="") {
+   if (l_stmt.length >0) {
       if(confirm("Are you sure you want to delete selected items?")) {
-      $.post( l_cmd , l_stmt, function(d){
+      $.post( controller_url  + "delete", l_stmt, function(d){
             window.location.reload();
             //console.log(d);
          }).fail(function(d) {

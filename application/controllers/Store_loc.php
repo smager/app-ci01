@@ -10,9 +10,14 @@ class store_loc extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('store_loc_list');
+		$this->load->view('default_hb_view');
 	}
     
+	public function getdata()
+	{
+        check_login();
+		jsonOut($this->store_loc_model->getdata()->result());
+	}
     
     
     public function getjson(){    

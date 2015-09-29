@@ -36,7 +36,7 @@ function manageItems(p_id){
 
 $(document).ready(function(){
 
-    //displayRecords();
+    displayRecords();
 
     //get dialog template
     $.get(base_url + "assets/templates/bsDialogBox.txt",function(d){
@@ -109,7 +109,7 @@ function checkDelete() {
     for(var x=0;x<data.length; x++){
         l_stmt.push( { name:"p_del_id[]",value : data[x] }  ); 
     }
-   if (l_stmt!=="") {
+   if (l_stmt.length > 0) {
       if(confirm("Are you sure you want to delete selected items?")) {
       $.post( controller_url + "delete" , l_stmt, function(d){
             window.location.reload();
