@@ -2,18 +2,22 @@ var ctrlSel = zsi.control.SelectList;
 var bsButton = zsi.bs.button;
 var bs = zsi.bs.ctrl;    
 var g_supply_id;
+var proc_url = base_url + "common/executeproc/";
+
+setInputs();
+function setInputs(){
+    p_store_id = $("#p_store_id");
+}
 $(document).ready(function(){
-     
+    p_store_id.dataBind(base_url + "select_options/code/stores");
     $("#frm").attr("action",base_url + "supplies/update").attr("method","post");
     
    
     $(".buttonGroup").append( 
           bsButton({name:"Save",type:"submit"})
-        + bsButton({name:'Delete',onclick:"checkDelete('"  +  base_url  + "supplies/delete',false);"}) 
+        + bsButton({name:'Delete',onclick:"checkDelete(false);"}) 
     );
 
-    displayRecords();
-    
     //get dialog template
     $.get(base_url + "assets/templates/bsDialogBox.txt",function(d){
         var template = Handlebars.compile(d);     
@@ -21,7 +25,7 @@ $(document).ready(function(){
         var context = { id:"modalWindow"
                         , title: "Manage Supply Brand(s)/Unit and Cost"
                         , footer:   '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
-                                  +  bsButton({name:'Delete',onclick:"checkDelete('"  +  base_url  + "supply_brands/delete',true);"})
+                                  +  bsButton({name:'Delete',onclick:"checkDelete(true);"})
                                   +  bsButton({name:'Save',onclick:"submitSelectedItems();"}) 
                         , body: '<table id="tblPopup" class="table row">'
                                 + '<thead>'
@@ -41,11 +45,15 @@ $(document).ready(function(){
     });    
 });
 
+$("#btnGo").click(function(){
+    displayRecords();
+});
+
 function displayRecords(){       
     var bs = zsi.bs.ctrl;    
     zsi.json.loadGrid({
          table  : "#grid"
-        ,url   : base_url + "supplies/getdata_json/"
+        ,url   : proc_url +  "getsupplies?p=" + "0" + p_store_id.val()
         ,td_body: [ 
             function(d){
                 return     bs({name:"supply_id[]",type:"hidden",value: d.supply_id})
@@ -148,18 +156,16 @@ function submitSelectedItems(){
     $.post(base_url + "supply_brands/update",data,function(d){});
 }
     
-function checkDelete(l_cmd,isPopUp) {
+function checkDelete(isPopUp) {
    var l_stmt=[], l_count;
     
    var data = zsi.table.getCheckBoxesValues("input[name='p_cb[]']:checked");
     for(var x=0;x<data.length; x++){
         l_stmt.push( { name:"p_del_id[]",value : data[x] }  ); 
     }
-   if (l_stmt!="") {
+   if (l_stmt!=="") {
       if(confirm("Are you sure you want to delete selected items?")) {
-      $.post( l_cmd , l_stmt, function(d){
-            //window.location.reload();
-            //console.log(d);
+      $.post( controller_url + "delete" , l_stmt, function(d){
             if(isPopUp)  manageItems(g_supply_id); else displayRecords();
             
          }).fail(function(d) {

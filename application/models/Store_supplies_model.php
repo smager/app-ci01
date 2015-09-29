@@ -9,6 +9,12 @@ class store_supplies_model extends CI_Model{
         $query = $this->db->query("SELECT * FROM store_supplies_v where store_id=".$sid);
         return $query;    
     }
+
+    function getStoreSuppliesData(){
+        $query = $this->db->query("SELECT * FROM store_supplies_v ");
+        return $query;    
+    }
+	
     function getdata_ad($sid){
         $query = $this->db->query(
               "SELECT * FROM store_supplies_v where store_id=" . $sid 

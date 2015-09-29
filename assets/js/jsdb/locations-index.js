@@ -1,3 +1,5 @@
+var bs = zsi.bs.ctrl;
+
 function displayClear(v){
     var r='';
     if(v!==null){
@@ -6,8 +8,10 @@ function displayClear(v){
     return r;
 }
 
+$("#frm").submit(function(){ this.action = controller_url + "update"; });
+
 function manageItems(p_id){
-    var bs = zsi.bs.ctrl;
+    
     $("input[name='p_loc_id']").val(p_id);
     zsi.form.displayLOV({
          table  : "#tblProdSupp"
@@ -32,6 +36,8 @@ function manageItems(p_id){
 
 $(document).ready(function(){
 
+    //displayRecords();
+
     //get dialog template
     $.get(base_url + "assets/templates/bsDialogBox.txt",function(d){
         var template = Handlebars.compile(d);     
@@ -52,7 +58,43 @@ $(document).ready(function(){
         
     });
 });
-    
+
+
+function displayRecords(){       
+    zsi.json.loadGrid({
+         table  : "#grid"
+        ,url   : controller_url +  "getdata"
+        ,td_body: [ 
+            function(d){
+                return     bs({name:"loc_id[]",type:"hidden",value: d.loc_id})
+                        +  bs({name:"cb[]",type:"checkbox"});
+            }            
+            ,function(d){ return bs({name:"location[]",value: d.location}); }
+            ,function(d){ return '<a href="javascript:manageItems('+ d.loc_id +');">Manage Items</a>'; }
+        ]
+        ,onComplete : function(){
+            displayBlankRows();
+        }
+    });    
+}
+
+function displayBlankRows(){       
+    var inputCls = "form-control input-sm";
+    zsi.json.loadGrid({
+         table  : "#grid"
+        ,td_body: [ 
+            function(d){
+                return     bs({name:"loc_id[]",type:"hidden"})
+                        +  bs({name:"cb[]",type:"checkbox"});
+            }            
+            ,function(d){ return bs({name:"location[]"}); }
+            ,function(d){ return ""; }
+        ]
+    });    
+}
+
+
+
 function submitSelectedItems(){
     var data = $("#frm_modalWindow").serializeArray();
     $('#modalWindow').modal("hide");
@@ -60,18 +102,17 @@ function submitSelectedItems(){
 }
 
 
-function checkDelete(l_cmd) {
+function checkDelete() {
    var l_stmt=[], l_count;
     
    var data = zsi.table.getCheckBoxesValues("input[name='p_cb[]']:checked");
     for(var x=0;x<data.length; x++){
         l_stmt.push( { name:"p_del_id[]",value : data[x] }  ); 
     }
-   if (l_stmt!="") {
+   if (l_stmt!=="") {
       if(confirm("Are you sure you want to delete selected items?")) {
-      $.post( l_cmd , l_stmt, function(d){
+      $.post( controller_url + "delete" , l_stmt, function(d){
             window.location.reload();
-            //console.log(d);
          }).fail(function(d) {
             alert("Sorry, the curent transaction is not successfull.");
         });

@@ -51,51 +51,44 @@ $("#btnGo").click(function(){
         ,url   : action_url + "/getdetail?p_store_loc_id=" + store_loc_id.val() + "&p_date=" + l_date.val() + "&p_posted=0"  
         ,td_body: [ 
              function(d){return  bs({name:"store_loc_supply_daily_id[]",type:"hidden", value: d.store_loc_supply_daily_id})
-                                + bs({name:"end_qty[]",type:"hidden", value: d.end_qty})
+                                + bs({name:"out_qty[]",type:"hidden", value: d.out_qty})
                                 + d.supply_code;
              }     
             ,function(d){ return d.unit_desc; }
             ,function(d){ return d.remaining_qty; }
             ,function(d){ return d.is_qty;} 
             ,function(d){ return d.beg_qty;} 
-            ,function(d){ return bs({name:"out_qty[]",value: (parseInt(d.out_qty)===0?"":d.out_qty), class:"form-control numeric" });} 
-            ,function(d){ return bs({name:"returned_qty[]",value: (parseInt(d.returned_qty)===0?"":d.returned_qty), class:"form-control numeric" });} 
-            ,function(d){ return d.end_qty.toMoney();} 
+            ,function(d){ return bs({name:"end_qty[]",value: (parseInt(d.end_qty)===0?"":d.end_qty), class:"form-control numeric" });} 
+            ,function(d){ return d.out_qty.toMoney();} 
         ]
-        ,td_properties: ["","",aRight,aRight,aRight + "id='tdBeg_qty'","","",aRight+ "id='tdEnd_qty'"]
+        ,td_properties: ["","",aRight,aRight,aRight + "id='tdBeg_qty'","",aRight+ "id='tdOut_qty'"]
         
         ,onComplete: function(){
             
             zsi.initInputTypesAndFormats();
              
-            $("input[name='p_out_qty[]']").keyup(function(){
+            $("input[name='p_end_qty[]']").keyup(function(){
                 var tr = $(this.parentNode.parentNode);
-                var retQty = tr.find("input[name='p_returned_qty[]']");
-                computeBalance(this,$(this), retQty);
+                computeBalance(this);
             });
            
-            $("input[name='p_returned_qty[]']").keyup(function(){
-                var tr = $(this.parentNode.parentNode);
+           function computeBalance(input){
+                var endQty = $(input);
+                var tr = $(input.parentNode.parentNode);
+                var begQtyVal = tr.find("#tdBeg_qty").html(); 
                 var outQty = tr.find("input[name='p_out_qty[]']");
-                computeBalance(this,outQty, $(this));
-            });           
-           
-           function computeBalance(input,outQty,retQty){
-               var tr = $(input.parentNode.parentNode);
-               var begQtyVal = tr.find("#tdBeg_qty").html(); 
-               var endQty = tr.find("input[name='p_end_qty[]']");
-               var tdEndQty =  tr.find("#tdEnd_qty"); 
-                var l_outqty =  (outQty.val() !==""?  (isNaN(outQty.val())!==true?outQty.val():0) : 0);
-                var l_retQty =  (retQty.val() !==""?  (isNaN(retQty.val())!==true?retQty.val():0) : 0);
-                var r = parseFloat(begQtyVal) - ( parseFloat(l_outqty) + parseFloat(l_retQty) );
+                var tdOutQty=  tr.find("#tdOut_qty"); 
+                var l_endQty =  (endQty.val() !==""?  (isNaN(endQty.val())!==true?endQty.val():0) : 0);
+                var r = parseFloat(begQtyVal) - parseFloat(l_endQty)  ;
+                
                if( r < 0 ){
                     if( r < 0 ) input.value = parseFloat(input.value) + r ;
-                    tdEndQty.html("0.00");
-                    endQty.val(0);
+                    tdOutQty.html("0.00");
+                    outQty.val(0);
                }
                else{
-                    tdEndQty.html(r.toMoney());
-                    endQty.val(r);
+                    tdOutQty.html(r.toMoney());
+                    outQty.val(r);
                }
                return r;
                

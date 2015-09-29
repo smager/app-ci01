@@ -12,6 +12,11 @@ class store_supplies extends Base_Controller {
         jsonOut($this->store_supplies_model->getdata_ad($id)->result());
         
     }
+    public function get_store_supplies(){
+    
+        jsonOut($this->store_supplies_model->getStoreSuppliesData()->result());
+        
+    }
     
     
     public function update(){

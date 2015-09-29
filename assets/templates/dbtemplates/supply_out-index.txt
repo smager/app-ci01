@@ -17,6 +17,13 @@
                     <option value="0">No</option><option value="1">Yes</option>
                 </select>
             </div>
+            
+            <label class=" col-xs-1 control-label">Returned</label>
+            <div class="col-xs-1">
+                <select name="p_returned" id="p_returned" class="form-control input-sm" >
+                    <option value="0">No</option><option value="1">Yes</option>
+                </select>
+            </div>
 
              <button type="button"  class="btn btn-primary btn-sm" id="btnGo"><span class=" glyphicon glyphicon-folder-open"></span></button>
         </div> 
@@ -32,9 +39,8 @@
                 <th>Carry over Qty</th> 
                 <th>Sent Qty</th> 
                 <th>Beg Qty</th> 
-                <th>Out Qty</th> 
-                <th>Returned Qty</th>                 
-                <th>End Qty</th> 
+                <th>Outstanding Qty</th> 
+                <th>Out Qty</th>                 
             </tr>  
         </thead>        
     

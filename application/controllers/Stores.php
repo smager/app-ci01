@@ -10,10 +10,17 @@ class stores extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('stores_list');
+		$this->load->view('default_hb_view');
 	}
     
+
+	public function getdata()
+	{
+        check_login();
+		jsonOut($this->stores_model->getdata()->result());
+	}
     
+        
     
     public function getjson(){    
         $chkStart = "<input type=''checkbox'' onclick=''zsi.table.setCheckBox(this,";
