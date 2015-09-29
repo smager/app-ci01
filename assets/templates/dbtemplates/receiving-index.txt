@@ -1,0 +1,81 @@
+<form id="frm" method="post" >
+<div>
+    <div class="form-horizontal ">
+        <input type="hidden" name="p_receiving_id" id="p_receiving_id" value="">
+        <input type="hidden" name="p_po_id" id="p_po_id" value="1">
+        
+        <div class="form-group  ">  
+            <label class=" col-xs-1 control-label">P.O. #</label>
+            <div class=" col-xs-2"> <select class="form-control input-sm" id="p_po_filter" name="p_po_filter"></select>
+            </div>  
+            <label class=" col-xs-1 control-label">Supplier</label>
+            <div class=" col-xs-2">
+                <p class="form-control-static" id="p_supplier_name" >N/A</p>
+            </div>  
+            
+            <label class=" col-xs-1 control-label">Location</label>
+            <div class=" col-xs-2">
+                <p class="form-control-static" id="p_loc_id" >N/A</p>
+            </div>
+        </div>
+        
+        <div class="form-group  ">  
+            <label class=" col-xs-1 control-label">D.R#</label>
+            <div class=" col-xs-2">
+                <input type="text" class="form-control input-sm " id="p_dr_no" name="p_dr_no">
+            </div>  
+            
+            <label class=" col-xs-1 control-label">Date</label>
+            <div class=" col-xs-2">
+                <input type="text" placeholder="mm/dd/yyyy" class="form-control input-sm " id="p_dr_date" name="p_dr_date">
+            </div>
+            
+            <label class=" col-xs-1 control-label">Posted</label>
+            <div class="col-xs-1">
+                <select class="form-control input-sm" id="p_posted" name="p_posted">
+                    <option value="0">No</option><option value="1">Yes</option>
+                </select>
+            </div>
+        </div> 
+    </div>
+</div>
+
+<div class="col-xs-3 itemLeftBox">
+
+<div class="panel panel-default">
+  <div class="panel-heading">Unposted DR(s)</div>
+  <div class="panel-body">
+        <div class="list-group"> </div>
+   </div>
+</div>
+    
+</div>
+<div class="col-xs-9">    
+<table id="grid" class="zTable fullWidth">
+    <thead>
+        <tr>
+            <th style="width: 25px"></th>
+            <th>Supply</th>
+            <th>Brand/Unit</th>
+            <th>Qty</th>
+            <th style="text-align:center;">Current Bal.</th>
+            <th style="text-align:center;">Ending Bal.</th>
+        </tr>
+    </thead>        
+</table>    
+<div class="buttonGroup">
+    <button type="button" class="btn btn-primary btn-sm" id="btnNew">
+        <span class="glyphicon glyphicon-plus-sign"></span> New
+    </button>
+    <button type="submit" class="btn btn-primary btn-sm" id="btnSave">
+        <span class="glyphicon glyphicon-floppy-disk"></span> Save
+    </button>
+    <button onclick="return checkDelete('receiving/delete_dtls');" class="btn btn-primary btn-sm" id="btnDelete">
+        <span class="glyphicon glyphicon-trash"></span> Delete
+    </button>    
+</div>
+
+</div>
+
+
+</form>    

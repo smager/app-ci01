@@ -10,12 +10,12 @@ class receiving extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('receiving_list');
+		$this->load->view('default_view');
 	}
 
     public function get_unposted_dr(){
     
-        jsonOut($this->receiving_model->get_unposted_dr()->result());
+        jsonOut($this->receiving_model->get_unposted_dr()->redsult());
         
     }
     public function get_unposted_dr_dtls($receiving_id){

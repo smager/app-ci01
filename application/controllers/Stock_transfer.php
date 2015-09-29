@@ -10,7 +10,7 @@ class stock_transfer extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('stock_transfer_list');
+		$this->load->view('default_view');
 	}
 
     public function getUnpostedST(){

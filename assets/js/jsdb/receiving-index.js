@@ -1,6 +1,9 @@
 var po_info;
 var supply_brands_info;
 var g_isNew = true;
+
+$("#frm").submit(function(){ this.action = controller_url + "update"; });
+
 $(document).ready(function(){
     $("#p_po_filter").dataBind(base_url + "select_options/code/po_with_bal");
     initInputs();    
@@ -141,17 +144,14 @@ function initInputs(){
     dr_date = $("#p_dr_date");
     loc_id = $("#p_loc_id");
     supplier_name= $("#p_supplier_name");
-    loc_id.attr("readonly","");
-    supplier_name.attr("readonly","");
-    
 
     po_filter.change(function(){
         if(this.value==="") return false;
         po_id.val(this.value);
         receiving_id.val('');
         dr_no.val('');
-        supplier_name.val('');
-        loc_id.val('');
+        supplier_name.html('N/A');
+        loc_id.html('N/A');
         displayBlankRows(true);
         getPOInfo(this.value);
         loadSelectOptions(this.value);
@@ -161,8 +161,8 @@ function initInputs(){
 function getPOInfo(PO_id){
     $.each(po_info,function(){
       if(PO_id == this.po_id){              
-        supplier_name.val(this.supplier);
-        loc_id.val(this.location);
+        supplier_name.html(this.supplier);
+        loc_id.html(this.location);
         return;
       }
     });
@@ -297,16 +297,16 @@ function setDRQtyEvent(){
     $("input[name='p_dr_qty[]']").change();
 }
 
-function checkDelete(l_cmd) {
+function checkDelete() {
    var l_stmt=[], l_count;
     
    var data = zsi.table.getCheckBoxesValues("input[name='p_cb[]']:checked");
     for(var x=0;x<data.length; x++){
         l_stmt.push( { name:"p_del_id[]",value : data[x] }  ); 
     }
-   if (l_stmt!="") {
+   if (l_stmt.length > 0) {
       if(confirm("Are you sure you want to delete selected items?")) {
-      $.post( l_cmd , l_stmt, function(d){
+      $.post( controller_url + "delete_dtls" , l_stmt, function(d){
             window.location.reload();
             //console.log(d);
          }).fail(function(d) {

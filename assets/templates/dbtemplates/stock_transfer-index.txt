@@ -1,0 +1,67 @@
+<form method="post" id="frm">
+<div>
+    <div class="form-horizontal ">
+        <input type="hidden" name="p_st_id" id="p_st_id">
+        <div class="form-group  ">  
+            <label class=" col-xs-1 control-label">S.T #</label>
+            <div class=" col-xs-1">
+                <input type="text" class="form-control input-sm " id="p_st_no" name="p_st_no">
+            </div>  
+            
+            <label class=" col-xs-1 control-label">Date</label>
+            <div class=" col-xs-1">
+                <input type="text" placeholder="mm/dd/yyyy" class="form-control input-sm " id="p_st_date" name="p_st_date">
+            </div>  
+            
+            <label class=" col-xs-1 control-label">Loc. From</label>
+            <div class=" col-xs-2"> 
+                <select class="form-control input-sm" id="p_loc_id" name="p_loc_id"></select>
+            </div>  
+            
+            <label class=" col-xs-1 control-label">Loc. To</label>
+            <div class=" col-xs-2">
+                <select class="form-control input-sm" id="p_loc_id_to" name="p_loc_id_to"></select>
+            </div>
+            
+            <label class=" col-xs-1 control-label">Posted</label>
+            <div class="col-xs-1">
+                <select class="form-control input-sm" id="p_posted" name="p_posted">
+                    <option value="0">No</option><option value="1">Yes</option>
+                </select>
+            </div>
+        </div> 
+    </div>
+</div>  
+    
+<div class="col-xs-3 itemLeftBox">
+    <div class="panel panel-default">
+      <div class="panel-heading">Unposted Stock Transer(s)</div>
+      <div class="panel-body">
+            <div class="list-group"></div>    
+       </div>
+    </div>    
+</div>
+<div class="col-xs-9">    
+    <table id="grid" class="zTable fullWidth">
+        <thead>
+            <tr>
+                <th style="width: 25px"></th>
+                <th>Item</th>
+                <th>Qty</th>
+
+            </tr>
+        </thead>        
+    </table>    
+    <div class="buttonGroup">
+        <button type="button" class="btn btn-primary btn-sm" id="btnNew">
+            <span class="glyphicon glyphicon-plus-sign"></span> New
+        </button>
+        <button type="submit" class="btn btn-primary btn-sm" id="btnSave">
+        	<span class="glyphicon glyphicon-floppy-disk"></span> Save
+        </button>
+        <button type="button" onclick="return checkDelete();" class="btn btn-primary btn-sm" id="btnDelete">
+        	<span class="glyphicon glyphicon-trash"></span> Delete
+        </button>    
+    </div>
+</div>
+</form>
