@@ -27,7 +27,6 @@ BEGIN
  RETURN (lvl);
 END;
 
-
 CREATE FUNCTION  getSupplyUprice(p_supply_id int) RETURNS decimal(7,2)
     DETERMINISTIC
 BEGIN
@@ -76,6 +75,7 @@ BEGIN
     SELECT status INTO lvl FROM status_v WHERE status_code=p_status_code;
  RETURN (lvl);
 END;
+
 
 CREATE FUNCTION  getLocation(p_loc_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
@@ -575,9 +575,9 @@ BEGIN
     WHERE a.store_loc_supply_id = b.store_loc_supply_id
       AND b.store_loc_id = p_store_loc_id
       AND b.stock_date = str_to_date(p_date,'%m/%d/%Y')
-     AND b.posted=0; 
+      AND b.posted=0; 
      
-   UPDATE store_loc_supply_daily
+   UPDATE store_loc_supply_daily_v
       SET posted=1
          ,returned_qty = 0
     WHERE store_loc_id = p_store_loc_id
@@ -609,8 +609,6 @@ BEGIN
      AND stock_date = str_to_date(p_date,'%m/%d/%Y');
 
 END;
-
-
    
 CREATE PROCEDURE getLocPC_Unposted(p_loc_id int(5))
 BEGIN
@@ -618,21 +616,12 @@ select * from loc_pc where posted=0
 and loc_id=p_loc_id;
 END;
 
-
-CREATE PROCEDURE getLocPC(p_loc_id INT, p_store_loc_id INT, p_loc_pc_id INT ) 
+CREATE PROCEDURE getLocPC(p_loc_id INT, p_store_id INT, p_loc_pc_id INT ) 
 BEGIN
-   IF ifNull(p_loc_pc_id,0) = 0 THEN
-     IF ifNull(p_store_loc_id,0) = 0 THEN
-        SELECT * FROM loc_supply_brands_v WHERE loc_id = p_loc_id;
-     ELSE
-        SELECT * FROM store_loc_supplies_v WHERE store_loc_id = p_store_loc_id;
-     END IF;
+   IF IFNULL(p_loc_pc_id,0) = 0 THEN
+        SELECT * FROM loc_supply_brands_v WHERE loc_id = p_loc_id and store_id=p_store_id;
    ELSE
-     IF ifNull(p_store_loc_id,0) = 0 THEN
         SELECT * FROM loc_pc_dtls_v WHERE loc_pc_id = p_loc_pc_id;
-     ELSE
-        SELECT * FROM loc_pc_dtls_by_store_loc_v WHERE loc_pc_id = p_loc_pc_id;
-     END IF;  
    END IF;
 END;
 
@@ -657,7 +646,7 @@ DECLARE l_created_by INT;
 DECLARE l_created_date DATE;
 DECLARE l_store_bank_depo_id INT;
 
-SELECT store_loc_id, date_add(tran_date,interval -2 day), created_by, created_date
+SELECT store_loc_id, getLastPostedCBDate(), created_by, created_date
   INTO l_store_loc_id, l_tran_date, l_created_by, l_created_date
   FROM store_daily_cash
  WHERE store_daily_cash_id=p_store_daily_cash_id;
@@ -750,7 +739,7 @@ DECLARE l_loc_id INT;
        insert into store_loc_supplies (store_loc_id, loc_supply_id) 
        select p_store_loc_id, a.loc_supply_id
          from loc_supplies_v a
-        where a.loc_id = l_loc_id 
+        where a.loc_id = l_loc_id  and store_id=p_store_id
         AND EXISTS (SELECT supply_id FROM store_supplies_v b WHERE b.supply_id = a.supply_id AND b.store_id = p_store_id); 
     END IF;
 END;
@@ -763,20 +752,13 @@ FROM supply_brands a
 WHERE NOT EXISTS (SELECT supply_brand_id FROM loc_supply_brands b WHERE b.loc_supply_id =  getLocSupplyId(p_loc_id, a.supply_id));
 END;
 
-CREATE PROCEDURE loc_pc_post(p_loc_pc_id int(5), p_store_loc_id int(5), p_date varchar(20))
+CREATE PROCEDURE loc_pc_post(p_loc_pc_id int(5), p_date varchar(20))
 BEGIN
 DECLARE l_found VARCHAR(5);
-   IF ifnull(p_store_loc_id,0) = 0 THEN
       UPDATE loc_supply_brands a, loc_pc_dtls b 
       SET a.stock_qty = b.pc_qty
       WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
       AND b.loc_pc_id = p_loc_pc_id;    
-   ELSE
-     UPDATE store_loc_supplies a, loc_pc_dtls b
-        SET a.prev_qty = b.pc_qty
-      WHERE b.loc_pc_id = p_loc_pc_id
-        AND a.store_loc_supply_id = b.store_loc_supply_id;
-   END IF;
 END; 
 
 CREATE PROCEDURE stock_transfer_post(p_st_id int(5), p_loc_id_to int)

@@ -257,6 +257,8 @@ CREATE TABLE IF NOT EXISTS `store_loc` (
   `store_id`     int(5),
   `is_cart`      int(5) NOT NULL default '0', 
   `active`       int(5) NOT NULL default '1', 
+  `last_posted_dcash` datetime,
+  `last_posted_dsales` datetime,
   `created_by`   int(5),
   `created_date` datetime,
   `updated_by`   int(5),
@@ -701,6 +703,7 @@ CREATE TABLE IF NOT EXISTS `stock_adjustments` (
    `pc_no`          int(5),
    `pc_date`        datetime,
    `loc_id`         int(5),
+   `store_id`       int(5),
    `store_loc_id`   int(5),
    `posted` int(5)  NOT NULL default '0',    
    `created_by`     int(5),
@@ -1016,20 +1019,26 @@ CREATE OR REPLACE VIEW supplies_v AS
 select *, getUnitSDesc(unit_id) unit_desc, getSupplyType(supply_type_id) supply_type 
 from  supplies;
 
-
 CREATE OR REPLACE VIEW store_supplies_v AS
-select store_id, store_supply_id, a.supply_id, b.supply_code, b.seq_no
-from store_supplies a, supplies b
-WHERE a.supply_id = b.supply_id;
-
-CREATE OR REPLACE VIEW store_supplies2_v AS
-select "" as store_id, "" as store_supply_id, supply_id, supply_code, b.seq_no
-from supplies;
+select *, getUnitSDesc(unit_id) unit_desc, getSupplyType(supply_type_id) supply_type 
+from  supplies;
 
 CREATE OR REPLACE VIEW supplies2_v AS
 select "" as loc_id, ""  as loc_supply_id, b.supply_id, b.seq_no, b.supply_code, "" as reorder_level, "" as max_level, b.unit_desc, "" as ttl_stocks, "" as ordered_qty, "" as store_id
 from store_supplies a, supplies_v b
 WHERE a.supply_id = b.supply_id;
+
+
+CREATE OR REPLACE VIEW store_supplies_v AS
+select store_id, store_supply_id, a.supply_id, b.supply_code, b.seq_no, b.unit_desc
+from store_supplies a, supplies_v b
+WHERE a.supply_id = b.supply_id;
+
+CREATE OR REPLACE VIEW store_supplies2_v AS
+select "" as store_id, "" as store_supply_id, supply_id, supply_code, seq_no, unit_desc
+from supplies_v;
+
+
 
 CREATE OR REPLACE VIEW loc_supplies_v AS
 select a.loc_id, a.loc_supply_id, a.supply_id, b.seq_no, b.supply_code, a.reorder_level, a.max_level, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks, a.ordered_qty, b.store_id
@@ -1049,7 +1058,7 @@ AND a.supply_id = c.supply_id
 AND a.conv_id = d.conv_id;
 
 CREATE OR REPLACE VIEW loc_supply_brands_v AS
-select a.*, b.supply_id, b.seq_no, b.supply_code, b.loc_id, c.brand_name, c.cu_desc, concat(b.supply_code, ' ', c.brand_name, ' ', c.cu_desc, ' (',a.stock_qty ,')') as brand_supply, c.conv_unit_qty, "" as store_loc_supply_id
+select a.*, b.supply_id, b.seq_no, b.supply_code, b.loc_id, c.brand_name, c.cu_desc, concat(b.supply_code, ' ', c.brand_name, ' ', c.cu_desc, ' (',a.stock_qty ,')') as brand_supply, c.conv_unit_qty, "" as store_loc_supply_id, b.store_id
 from loc_supply_brands a, loc_supplies_v b, supply_brands_v c
 WHERE a.loc_supply_id = b.loc_supply_id
 AND a.supply_brand_id = c.supply_brand_id
@@ -1176,7 +1185,7 @@ where a.po_dtl_id = b.po_dtl_id
 and a.supply_brand_id = b.supply_brand_id;
 
 CREATE OR REPLACE VIEW loc_pc_dtls_v AS
-SELECT a.*,c.loc_id, c.store_loc_id, c.pc_date, b.seq_no, b.supply_code, b.brand_name, b.cu_desc
+SELECT a.loc_pc_dtl_id, a.loc_pc_id ,a.loc_supply_brand_id, a.pc_qty as stock_qty, c.loc_id, c.store_loc_id, c.pc_date, b.seq_no, b.supply_code, b.brand_name, b.cu_desc
 FROM loc_pc_dtls a, loc_supply_brands_v b, loc_pc c
 WHERE a.loc_supply_brand_id = b.loc_supply_brand_id
 AND a.loc_pc_id=c.loc_pc_id;
@@ -1268,3 +1277,24 @@ CREATE OR REPLACE VIEW status_v as
    SELECT 'C' as status_code, 'Closed' as status
    UNION 
    SELECT 'X' as status_code, 'Cancelled' as status;
+   
+/* truncate    
+truncate loc_pc
+truncate loc_pc_dtls
+truncate supply_is
+truncate supply_is_dtls
+turncate store_loc_supply_daily
+truncate store_daily_cash
+truncate store_daily_cash_dtls
+truncate store_loc_exp
+truncate store_loc_exp_dtls
+truncate store_bank_depo
+truncate store_bank_depo_dtls
+truncate stock_transfer
+truncate stock_transfer_dtls
+truncate stock_adjustments
+truncate po
+truncate po_dtls
+truncate receiving
+truncate receiving_dtls
+*/
