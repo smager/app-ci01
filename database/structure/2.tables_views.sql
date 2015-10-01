@@ -1096,7 +1096,7 @@ WHERE a.loc_supply_id = b.loc_supply_id
 order by b.supply_code;
 
 CREATE OR REPLACE VIEW store_loc_supplies_v AS
-select a.store_loc_supply_id, a.store_loc_id, c.store_id, b.supply_id, a.loc_supply_id, b.supply_code, b.unit_desc, stock_daily_qty, prev_qty,
+select a.store_loc_supply_id, a.store_loc_id, c.store_id, b.supply_id, a.loc_supply_id, b.supply_code, b.unit_desc, stock_daily_qty, ifnull(prev_qty,0) as prev_qty,
 getSupplyUprice(b.supply_id) as unit_price, getSupplyUcost(b.supply_id) as unit_cost,"" as loc_supply_brand_id, c.loc_id
 from store_loc_supplies a, loc_supplies_v b, store_loc c
 WHERE a.store_loc_id = c.store_loc_id
@@ -1240,9 +1240,9 @@ FROM loc_pc_dtls a, loc_pc b
 WHERE a.loc_pc_id=b.loc_pc_id;
 
 CREATE OR REPLACE VIEW store_loc_supply_daily_v AS
-select a.*, b.loc_id, b.store_loc_id, b.supply_code, b.unit_desc, 
+select a.*,b.loc_id, b.store_loc_id, b.supply_code, b.unit_desc, b.loc_supply_id, 
 ifnull(a.unit_price,0) * ifnull(a.out_qty,0) as sales_amount, ifnull(a.unit_cost,0) * ifnull(a.out_qty,0) as cost_amount, 
-CONCAT(b.supply_code, ' (', a.remaining_qty, b.unit_desc, ')') as supply, b.supply_id
+CONCAT(b.supply_code, ' (', a.remaining_qty, b.unit_desc, ')') as supply, b.supply_id, getLocSupplyBrandIdByLocSupplyId(loc_supply_id) 
 from store_loc_supply_daily a, store_loc_supplies_v b
 where a.store_loc_supply_id=b.store_loc_supply_id;
 

@@ -205,6 +205,14 @@ BEGIN
  RETURN (ifnull(lvl,0));
 END;
 
+CREATE FUNCTION  getStoreLocId(p_store_loc_supply_id int) RETURNS INT(5)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl int(5);
+    SELECT store_loc_id INTO lvl FROM store_loc_supplies WHERE store_loc_supply_id=p_store_loc_supply_id;
+ RETURN (lvl);
+END;
+
 CREATE FUNCTION  getStoreLocSupplyId(p_store_loc_id, p_loc_supply_id int) RETURNS INT(5)
     DETERMINISTIC
 BEGIN
@@ -551,21 +559,19 @@ BEGIN
 
  IF IFNULL(p_returned,0)=1 THEN
    UPDATE store_loc_supplies 
-      SET a.prev_qty = 0
-    WHERE b.store_loc_id = p_store_loc_id
-      AND b.posted=0; 
+      SET prev_qty = 0
+    WHERE store_loc_id = p_store_loc_id;
      
   UPDATE loc_supply_brands a, store_loc_supply_daily_v b
      SET a.stock_qty = a.stock_qty + b.end_qty
-   WHERE a.loc_supply_brand_id = getLocSupplyBrandIdByLocSupplyId(b.loc_supply_brand_id)
+   WHERE a.loc_supply_brand_id = getLocSupplyBrandIdByLocSupplyId(b.loc_supply_id)
      AND b.store_loc_id = p_store_loc_id
-     AND b.stock_date = str_to_date(p_date,'%m/%d/%Y')
-     AND b.posted=0; 
-     
+     AND b.stock_date = str_to_date(p_date,'%m/%d/%Y');
+
    UPDATE store_loc_supply_daily
       SET posted=1
-         ,returned_qty = end_qty
-    WHERE store_loc_id = p_store_loc_id
+          ,returned_qty = end_qty
+    WHERE getStoreLocId(store_loc_supply_id) = p_store_loc_id
       AND stock_date = str_to_date(p_date,'%m/%d/%Y');
       
  ELSE
@@ -574,17 +580,15 @@ BEGIN
       SET a.prev_qty = b.end_qty
     WHERE a.store_loc_supply_id = b.store_loc_supply_id
       AND b.store_loc_id = p_store_loc_id
-      AND b.stock_date = str_to_date(p_date,'%m/%d/%Y')
-      AND b.posted=0; 
+      AND b.stock_date = str_to_date(p_date,'%m/%d/%Y'); 
      
-   UPDATE store_loc_supply_daily_v
+   UPDATE store_loc_supply_daily
       SET posted=1
-         ,returned_qty = 0
-    WHERE store_loc_id = p_store_loc_id
+          ,returned_qty = 0
+    WHERE getStoreLocId(store_loc_supply_id) = p_store_loc_id
       AND stock_date = str_to_date(p_date,'%m/%d/%Y');     
  END IF;
 END;
-
 
 CREATE PROCEDURE setStoreLocSupplyDailyUnposted(p_store_loc_id INT, p_date VARCHAR(20))
 BEGIN
@@ -752,11 +756,11 @@ CREATE PROCEDURE store_loc_supplies_ins (p_store_loc_id INT(10),p_store_id INT(1
 BEGIN  
 DECLARE l_loc_id INT;
     SELECT loc_id INTO l_loc_id FROM store_loc WHERE store_loc_id=p_store_loc_id;
-    IF ifnull(p_store_id,0) <> 0 THEN
-       insert into store_loc_supplies (store_loc_id, loc_supply_id) 
-       select p_store_loc_id, a.loc_supply_id
-         from loc_supplies_v a
-        where a.loc_id = l_loc_id  and store_id=p_store_id
+    IF IFNULL(p_store_id,0) <> 0 THEN
+       INSERT INTO store_loc_supplies (store_loc_id, loc_supply_id) 
+       SELECT p_store_loc_id, a.loc_supply_id
+         FROM loc_supplies_v a
+        WHERE a.loc_id = l_loc_id  and store_id=p_store_id
         AND EXISTS (SELECT supply_id FROM store_supplies_v b WHERE b.supply_id = a.supply_id AND b.store_id = p_store_id); 
     END IF;
 END;
