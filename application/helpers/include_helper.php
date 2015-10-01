@@ -166,8 +166,8 @@ function includeFooter(){
 <script src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>   
 <?php 
     $url = $ci->router->fetch_class() . '/' . $ci->router->fetch_method();
- if( isset( $ci->session->userdata['current_user'] ) ==true ){        
-    if (current_user()->roleCode=="dev") {    
+ if( isset( $ci->session->userdata['current_user'] ) ==true ){  
+    if (strtolower(current_user()->roleInfo->role_code)=="dev") {    
         echo "<div class='debugPanel'>";
         echo "<label>Web Editor Manager : </label>";    
         echo "<a href='" .base_url("page_templates"). "?page_url=" .$url. "' target='_blank'>Edit Page Template</a>";

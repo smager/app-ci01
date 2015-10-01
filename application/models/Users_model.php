@@ -18,10 +18,8 @@ class users_model extends CI_Model{
             $result = true;
             $user = $query->result()[0];
             //get role code
-            $sql = "select role_code from roles where role_id=$user->role_id";
-            $role = $this->db->query($sql)->result()[0];        
-            //add new property role code.
-            $user->roleCode  = strtolower($role->role_code);
+            $sql = "select * from roles where role_id=$user->role_id";
+            $user->roleInfo = $this->db->query($sql)->result()[0];  
             $this->session->set_userdata('current_user', $user);
                 
         }

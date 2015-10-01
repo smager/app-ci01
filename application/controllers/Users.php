@@ -13,6 +13,15 @@ class users extends Base_Controller {
         check_login();
 		$this->load->view('default_hb_view');
 	}
+	
+	public function getuserinfo()
+	{
+        check_login();
+        $user= $this->session->userdata['current_user'];
+        $user->user_password="";
+		jsonOut( $user);
+	}
+	
     
 	public function login()
 	{
@@ -41,6 +50,11 @@ class users extends Base_Controller {
             unset($_COOKIE['menu']);
             setcookie('menu', null, -1, '/');
         }
+        
+       if (isset($_COOKIE['userinfo'])) {
+            unset($_COOKIE['userinfo']);
+            setcookie('userinfo', null, -1, '/');
+       }        
         redirect( base_url() );            
     }
 
