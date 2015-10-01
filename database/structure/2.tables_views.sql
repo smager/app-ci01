@@ -1048,9 +1048,10 @@ CREATE OR REPLACE VIEW loc_supplies_po_v AS
 select a.loc_id, a.loc_supply_id, a.supply_id, b.seq_no, b.supply_code, a.reorder_level, a.max_level, b.unit_desc, 
        getStockCount(loc_supply_id) as ttl_stocks, a.ordered_qty, b.store_id, getSupplierIdByStore(b.store_id) as supplier_id
 from loc_supplies a, store_supplies_v b 
-WHERE a.supply_id = b.supply_id  
+WHERE a.supply_id = b.supply_id 
+ORDER BY b.seq_no;
 
-CREATE OR REPLACE VIEW loc_supplies_v AS
+CREATE OR REPLACE VIEW loc_supplies_v AS 
 select a.loc_id, a.loc_supply_id, a.supply_id, b.seq_no, b.supply_code, a.reorder_level, a.max_level, b.unit_desc, 
        getStockCount(loc_supply_id) as ttl_stocks, a.ordered_qty, b.store_id
 from loc_supplies a, store_supplies_v b     

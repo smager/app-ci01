@@ -89,7 +89,8 @@ CREATE FUNCTION  getStatus(p_status_code VARCHAR(5)) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
     DECLARE lvl VARCHAR(100);
-    SELECT status INTO lvl FROM status_v WHERE status_code=p_status_code;
+    
+    SELECT ELT(FIELD(p_status_code,"O","C","X"),"Open","Closed","Cancelled") INTO lvl;
  RETURN (lvl);
 END;
 
@@ -1132,7 +1133,7 @@ BEGIN
    END IF; 
    
    SET l_stmt = 'SELECT po_no as "P.O. Number", DATE_FORMAT(po_date,"%m/%d/%Y") as "Date", getLocation(loc_id) as "Area", getSupplier(supplier_id) as "Supplier"
-                ,ELT(FIELD(status_code,"O","C","X"),"Open","Closed","Cancelled") as "Status"';
+                ,getStatus(status_code) as "Status"';
    SET @s = CONCAT(l_stmt,' FROM po', l_where);
    PREPARE stmt FROM @s;
    
