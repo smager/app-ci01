@@ -10,6 +10,14 @@
    order by revision_id desc limit 1;
    return (lvl);
  end;
+ 
+CREATE FUNCTION  getMenuName(p_menu_id int) RETURNS VARCHAR(100)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl varchar(100);
+    SELECT menu_name INTO lvl FROM menu WHERE menu_id=p_menu_id;
+ RETURN (lvl);
+END;
 
 CREATE FUNCTION  getUnitSDesc(p_unit_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
@@ -1135,10 +1143,29 @@ BEGIN
    SET l_stmt = 'SELECT po_no as "P.O. Number", DATE_FORMAT(po_date,"%m/%d/%Y") as "Date", getLocation(loc_id) as "Area", getSupplier(supplier_id) as "Supplier"
                 ,getStatus(status_code) as "Status"';
    SET @s = CONCAT(l_stmt,' FROM po', l_where);
+   call console(@s);
    PREPARE stmt FROM @s;
    
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;   
+END;
+
+
+CREATE PROCEDURE role_menus(p_role_id INT(5))
+BEGIN
+   SELECT role_menu_id, menu_id, getMenuName(menu_id) as menu_name 
+     FROM role_menus
+    WHERE role_id=p_role_id
+    UNION
+   SELECT '' as role_menu_id, menu_id, menu_name
+     FROM menu a 
+    WHERE NOT EXISTS (SELECT b.menu_id FROM role_menus b WHERE b.menu_id = a.menu_id and role_id = p_role_id);
+END;
+_
+CREATE PROCEDURE getUserLocations(p_user_id INT(5))
+BEGIN
+   SELECT loc_id, getLocation(loc_id) as location FROM user_locations
+   WHERE user_id = p_user_id;
 END;
 
 
