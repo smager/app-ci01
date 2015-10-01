@@ -10,7 +10,7 @@ class roles extends Base_Controller {
 	public function index()
 	{
         check_login();
-		$this->load->view('default_view');
+		$this->load->view('default_hb_view');
 	}
     
 	public function getdata()
