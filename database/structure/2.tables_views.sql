@@ -1038,12 +1038,25 @@ CREATE OR REPLACE VIEW store_supplies2_v AS
 select "" as store_id, "" as store_supply_id, supply_id, supply_code, seq_no, unit_desc
 from supplies_v;
 
-
-
-CREATE OR REPLACE VIEW loc_supplies_v AS
-select a.loc_id, a.loc_supply_id, a.supply_id, b.seq_no, b.supply_code, a.reorder_level, a.max_level, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks, a.ordered_qty, b.store_id
-from loc_supplies a, store_supplies_v b
+CREATE OR REPLACE VIEW supplier_supplies_v AS
+select a.loc_id, a.loc_supply_id, a.supply_id, b.seq_no, b.supply_code, a.reorder_level, a.max_level, b.unit_desc, 
+       getStockCount(loc_supply_id) as ttl_stocks, a.ordered_qty, b.store_id
+from loc_supplies,      
 WHERE a.supply_id = b.supply_id;
+
+CREATE OR REPLACE VIEW loc_supplies_po_v AS
+select a.loc_id, a.loc_supply_id, a.supply_id, b.seq_no, b.supply_code, a.reorder_level, a.max_level, b.unit_desc, 
+       getStockCount(loc_supply_id) as ttl_stocks, a.ordered_qty, b.store_id, getSupplierIdByStore(b.store_id) as supplier_id
+from loc_supplies a, store_supplies_v b 
+WHERE a.supply_id = b.supply_id 
+ORDER BY b.seq_no;
+
+CREATE OR REPLACE VIEW loc_supplies_v AS 
+select a.loc_id, a.loc_supply_id, a.supply_id, b.seq_no, b.supply_code, a.reorder_level, a.max_level, b.unit_desc, 
+       getStockCount(loc_supply_id) as ttl_stocks, a.ordered_qty, b.store_id
+from loc_supplies a, store_supplies_v b     
+WHERE a.supply_id = b.supply_id;
+  
 
 CREATE OR REPLACE VIEW loc_supplies2_v AS
 select a.*, b.seq_no, b.supply_code, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks, a.ordered_qty, b.store_id
@@ -1096,11 +1109,11 @@ WHERE a.loc_supply_id = b.loc_supply_id
 order by b.supply_code;
 
 CREATE OR REPLACE VIEW store_loc_supplies_v AS
-select a.store_loc_supply_id, a.store_loc_id, c.store_id, b.supply_id, a.loc_supply_id, b.supply_code, b.unit_desc, stock_daily_qty, ifnull(prev_qty,0) as prev_qty,
-getSupplyUprice(b.supply_id) as unit_price, getSupplyUcost(b.supply_id) as unit_cost,"" as loc_supply_brand_id, c.loc_id
-from store_loc_supplies a, loc_supplies_v b, store_loc c
-WHERE a.store_loc_id = c.store_loc_id
-AND a.loc_supply_id = b.loc_supply_id
+SELECT a.store_loc_supply_id, a.store_loc_id, b.store_id, b.supply_id, a.loc_supply_id, b.supply_code, b.unit_desc, a.stock_daily_qty, 
+ifnull(prev_qty,0) as prev_qty,
+getSupplyUprice(b.supply_id) as unit_price, getSupplyUcost(b.supply_id) as unit_cost,"" as loc_supply_brand_id, b.loc_id
+FROM store_loc_supplies a, loc_supplies_v b
+WHERE a.loc_supply_id = b.loc_supply_id
 order by b.seq_no;
 
 CREATE OR REPLACE VIEW store_loc_supplies2_v AS

@@ -10,6 +10,14 @@
    order by revision_id desc limit 1;
    return (lvl);
  end;
+ 
+CREATE FUNCTION  getMenuName(p_menu_id int) RETURNS VARCHAR(100)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl varchar(100);
+    SELECT menu_name INTO lvl FROM menu WHERE menu_id=p_menu_id;
+ RETURN (lvl);
+END;
 
 CREATE FUNCTION  getUnitSDesc(p_unit_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
@@ -68,11 +76,29 @@ BEGIN
  RETURN (lvl);
 END;
 
+CREATE FUNCTION  getSupplierIdByStore(p_store_id int) RETURNS INT(5)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl INT(5);
+    SELECT supplier_id as supplier_name INTO lvl FROM stores WHERE store_id=p_store_id;
+ RETURN (lvl);
+END;
+
+CREATE FUNCTION  getSupplierByStore(p_store_id int) RETURNS VARCHAR(100)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl varchar(100);
+    SELECT getSupplier(supplier_id) INTO lvl FROM stores WHERE store_id=store_id
+ RETURN (lvl);
+END;
+
+
 CREATE FUNCTION  getStatus(p_status_code VARCHAR(5)) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
     DECLARE lvl VARCHAR(100);
-    SELECT status INTO lvl FROM status_v WHERE status_code=p_status_code;
+    
+    SELECT ELT(FIELD(p_status_code,"O","C","X"),"Open","Closed","Cancelled") INTO lvl;
  RETURN (lvl);
 END;
 
@@ -467,7 +493,7 @@ BEGIN
    DECLARE l_id INT(5);
    SELECT supply_is_id INTO l_id FROM supply_is WHERE posted=0 and store_loc_id = p_store_loc_id limit 1;
    IF IFNULL(l_id,0)=0 THEN
-      SELECT *, "" as supply_is_id, "" as supply_is_dtl_id, "" as supply_is_qty FROM loc_supply_brands_v WHERE loc_supply_id =p_loc_supply_id and stock_qty > 0 ;
+      SELECT *, "" as supply_is_id, "" as supply_is_dtl_id, "" as supply_is_qty FROM loc_supply_brands_v WHERE loc_id = getLocIdFromStoreLoc(p_store_loc_id) and loc_supply_id =p_loc_supply_id and stock_qty > 0 ;
    ELSE
     SELECT a.supply_is_id, a.supply_is_dtl_id, b.loc_supply_id,  a.loc_supply_brand_id, b.stock_qty, b.brand_name, b.cu_desc, a.supply_is_qty
        FROM supply_is_dtls a, loc_supply_brands_v b
@@ -1115,12 +1141,31 @@ BEGIN
    END IF; 
    
    SET l_stmt = 'SELECT po_no as "P.O. Number", DATE_FORMAT(po_date,"%m/%d/%Y") as "Date", getLocation(loc_id) as "Area", getSupplier(supplier_id) as "Supplier"
-                ,ELT(FIELD(status_code,"O","C","X"),"Open","Closed","Cancelled") as "Status"';
+                ,getStatus(status_code) as "Status"';
    SET @s = CONCAT(l_stmt,' FROM po', l_where);
+   call console(@s);
    PREPARE stmt FROM @s;
    
    EXECUTE stmt;
    DEALLOCATE PREPARE stmt;   
+END;
+
+
+CREATE PROCEDURE role_menus(p_role_id INT(5))
+BEGIN
+   SELECT role_menu_id, menu_id, getMenuName(menu_id) as menu_name 
+     FROM role_menus
+    WHERE role_id=p_role_id
+    UNION
+   SELECT '' as role_menu_id, menu_id, menu_name
+     FROM menu a 
+    WHERE NOT EXISTS (SELECT b.menu_id FROM role_menus b WHERE b.menu_id = a.menu_id and role_id = p_role_id);
+END;
+_
+CREATE PROCEDURE getUserLocations(p_user_id INT(5))
+BEGIN
+   SELECT loc_id, getLocation(loc_id) as location FROM user_locations
+   WHERE user_id = p_user_id;
 END;
 
 
