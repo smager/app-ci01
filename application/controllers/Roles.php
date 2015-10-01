@@ -35,6 +35,12 @@ class roles extends Base_Controller {
         redirect( base_url("roles") );
       
 	}    
+	
+    public function role_menu_update()
+	{
+        $this->roles_model->roleMenuUpdate($this->input->post());
+       // redirect( base_url("roles") );
+	}    
 
     public function delete()
 	{

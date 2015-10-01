@@ -1,14 +1,24 @@
    
     var mData = readCookie("menu");
+    var userInfo = readCookie("userinfo");
+    
     if(mData){
         mData = JSON.parse(mData);
+        userInfo = JSON.parse(userInfo);
         displayMenu(mData);
     }else{
         $.getJSON(base_url + "menu_types/getdata_json",function(data){ 
             createCookie("menu", JSON.stringify(data),1);
             displayMenu(data);
         });
+        
+        $.getJSON(base_url + "users/getuserinfo",function(data){ 
+            createCookie("userinfo", JSON.stringify(data),1);
+            userInfo = data;
+        });
+
     }
+
     
     function displayMenu(data){
         var nav = $("#navbar-main");

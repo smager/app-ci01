@@ -5,8 +5,6 @@ $(document).ready(function(){
     $("#p_store_id").dataBind( base_url + "select_options/code/stores");
     initInputs();
     onLocationChange();
-    onStoreChange();
-    getUnpostedPC();
     markMandatory();
 });
 $("form[id=frm]").submit(function(){
@@ -16,13 +14,13 @@ $("form[id=frm]").submit(function(){
      $.post(base_url + "loc_pc/update",$(this).serializeArray()
         ,function(d){
             if(posted.val()===0){
-                 displayRecords( d.loc_id + "/"+  d.store_loc_id +  "/" + d.loc_pc_id );
+                 displayRecords( d.loc_id + "/"+  d.store_id + "/"+ d.loc_pc_id );
                  loc_pc_id.val(d.loc_pc_id);
             }else{
                  ClearHeader();
                  $("#grid").clearGrid();
             }
-            getUnpostedPC();
+            getUnpostedPC(d.loc_id);
             
         } 
         
@@ -53,7 +51,7 @@ function markMandatory(){
     zsi.form.markMandatory({       
       "groupNames":[
             {
-                 "names" : ["p_pc_no","p_pc_date","p_loc_id"]
+                 "names" : ["p_pc_no","p_pc_date","p_loc_id","p_store_id"]
                 ,"type":"S"
             }             
             ,{
@@ -63,7 +61,7 @@ function markMandatory(){
             }
       ]      
       ,"groupTitles":[ 
-             {"titles" :["P.C No","Date","Location"]}
+             {"titles" :["P.C No","Date","Location","Store Franchise"]}
             ,{"titles" :["Quantity"]}
       ]
    });
@@ -71,14 +69,13 @@ function markMandatory(){
 }
 function getUnpostedPC(){
      $(".list-group").html('');
-    $.getJSON(base_url + "loc_pc/getunpostedpc/",function(data){
+    $.getJSON(base_url + "loc_pc/getunpostedpc/" + loc_id.val(),function(data){
         $.each(data,function(){
             var params = {
                  loc_pc_id: this.loc_pc_id
                 ,pc_no:     this.pc_no
                 ,pc_date:   this.pc_date
                 ,loc_id:    this.loc_id
-                ,store_loc_id: this.store_loc_id
                 ,store_id: this.store_id
             };
             var removeicon = "<a class='glyphicon glyphicon-remove-sign itemRemove' onclick='removeloc_pc(" + this.loc_pc_id  + ");' href='javascript:void(0);'></a>";
@@ -93,7 +90,7 @@ function removeloc_pc(id){
       if(confirm("Are you sure you want to delete selected items?")) {
         ClearHeader();  
         $.post( base_url + "loc_pc/delete/" + id , function(d){
-                getUnpostedPC();
+                getUnpostedPC(loc_id.val());
             }).fail(function(d) {
                 alert("Sorry, the curent transaction is not successfull.");
             });
@@ -105,7 +102,6 @@ function initInputs(){
     pc_no = $("#p_pc_no");
     pc_date = $("#p_pc_date");
     loc_id = $("#p_loc_id");
-    store_loc_id = $("#p_store_loc_id");
     store_id = $("#p_store_id");
     posted = $("#p_posted");
 }
@@ -115,11 +111,8 @@ function displayDetails(p){
     pc_no.val(p.pc_no).change();
     pc_date.val(p.pc_date.toDateFormat()).change();
     loc_id.val(p.loc_id);//.change();
-    store_id.attr("selectedvalue",p.store_id);
-    store_loc_id.attr("selectedvalue",p.store_loc_id);
-    displayStoreLocation(p.loc_id,p.store_id);
- 
-    displayRecords( p.loc_id + "/"+  p.store_loc_id +  "/" + p.loc_pc_id );
+    store_id.val(p.store_id);
+    displayRecords( p.loc_id + "/"+  p.store_id + "/"+  p.loc_pc_id );
 }
 
  
@@ -133,15 +126,10 @@ function displayRecords(params){
             function(d){
                 return     bs({name:"loc_pc_dtl_id[]",type:"hidden",value: d.loc_pc_dtl_id})
                         +  bs({name:"loc_supply_brand_id[]",type:"hidden",value: d.loc_supply_brand_id})
-                        +  bs({name:"store_loc_supply_id[]",type:"hidden",value: d.store_loc_supply_id})
             }            
             ,function(d){ return d.supply_code;  }
-            ,function(d){ 
-                var r = d.brand_name + ' ' + d.cu_desc; 
-                if(d.store_loc_id!==null && d.store_loc_id!==0 ) r = d.unit_desc;
-                return r;
-            }
-            ,function(d){ return bs({name:"pc_qty[]",value:d.pc_qty,class:"form-control numeric"}); }
+            ,function(d){ return d.brand_name + ' ' + d.cu_desc; }
+            ,function(d){ return bs({name:"pc_qty[]",value:d.stock_qty,class:"form-control numeric"}); }
         ]
         ,onComplete : function(){ 
             zsi.initInputTypesAndFormats();
@@ -149,47 +137,27 @@ function displayRecords(params){
         }
     });    
 }
- 
+
 function onLocationChange(){
     loc_id.change(function(){
-        store_loc_id.clearSelect();
         if(this.value===''){  
             $("#grid").clearGrid(); 
             return false;
         }
-        displayStoreLocation(this.value,store_id.val());
-    });
-    
-    store_loc_id.change(function(){ $("#grid").clearGrid(); });
-}
-
-function onStoreChange(){
-    store_id.change(function(){
-        store_loc_id.clearSelect();
-        if(this.value===''){  
-            $("#grid").clearGrid(); 
-            return false;
-        }
-        displayStoreLocation(loc_id.val(),this.value);
-    });
-    
-    store_loc_id.change(function(){ $("#grid").clearGrid(); });
-}
+        getUnpostedPC(this.value);
+    });   
+} 
 
 $("#btnGo").click(function(){ 
      if(loc_id.val()!==''){
          var params="";
          params = loc_id.val();
-         if(store_loc_id.val()!==''){
-             params += "/" + store_loc_id.val();
+         if(store_id.val()!==''){
+             params += "/" + store_id.val();
          }
         displayRecords(params);
      }
 });
-
-function displayStoreLocation(id,sid){
-        store_loc_id.dataBind( base_url + "select_options/code/store_locs?where=loc_id=" + id + " and store_id=" + sid);
-}
 
 
 

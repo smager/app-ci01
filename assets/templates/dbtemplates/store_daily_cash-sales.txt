@@ -14,10 +14,6 @@
                 <input type="text" placeholder="mm/dd/yyyy" class="form-control input-sm " id="p_tran_date" name="p_tran_date">
             </div>
             
-             <label class=" col-xs-1 control-label">Employee</label>
-            <div class=" col-xs-3"> 
-                <select class="form-control input-sm" id="p_empl_id" name="p_empl_id"></select>
-            </div> 
          </div>    
          <div class="form-group  ">     
             <label class=" col-xs-1 control-label">Event</label>

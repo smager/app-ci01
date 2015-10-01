@@ -4,6 +4,17 @@
         <input type="hidden" name="p_loc_pc_id" id="p_loc_pc_id">
         <div class="form-group  ">  
             <div class="col-xs-11">
+
+                <label class=" col-xs-1 control-label">Warehouse</label>
+                <div class=" col-xs-2">
+                         <select name="p_loc_id" id="p_loc_id" class="form-control input-sm"></select>
+                </div>  
+                
+                <label class=" col-xs-1 control-label">Franchise</label>
+                <div class=" col-xs-2">
+                    <select name="p_store_id" id="p_store_id" class="form-control input-sm" ></select>
+                </div>
+                
                 <label class=" col-xs-1 control-label">P.C. #</label>
                 <div class=" col-xs-1">
                     <input type="text" name="p_pc_no" id="p_pc_no" class="form-control input-sm ">
@@ -12,21 +23,6 @@
                 <label class=" col-xs-1 control-label">Date</label>
                 <div class=" col-xs-1">
                     <input type="text" name="p_pc_date" id="p_pc_date" class="form-control input-sm " placeholder="mm/dd/yyyy" >
-                </div>
-                
-                <label class=" col-xs-1 control-label">Warehouse</label>
-                <div class=" col-xs-2">
-                         <select name="p_loc_id" id="p_loc_id" class="form-control input-sm"></select>
-                </div>  
-                
-                <label class=" col-xs-1 control-label">Store Branch</label>
-                <div class=" col-xs-2">
-                    <select name="p_store_loc_id" id="p_store_loc_id" class="form-control input-sm" ></select>
-                </div>
-
-                <label class=" col-xs-1 control-label">Store Franchise</label>
-                <div class=" col-xs-2">
-                    <select name="p_store_id" id="p_store_id" class="form-control input-sm" ></select>
                 </div>
                 
                 <label class=" col-xs-1 control-label">Posted</label>

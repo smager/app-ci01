@@ -1,6 +1,5 @@
 var p_store_daily_cash_id = $("#p_store_daily_cash_id");
 var p_store_loc_id        = $("#p_store_loc_id");
-var p_empl_id             = $("#p_empl_id");
 var p_tran_date           = $("#p_tran_date"); 
 var p_posted              = $("#p_posted"); 
 var p_event_id            = $("#p_event_id");
@@ -49,11 +48,11 @@ function setChangeEvent(){
 
 
 p_store_loc_id.change(function(){ 
-    if(this.value!==''){
+    /* if(this.value!==''){
          p_empl_id.dataBind( base_url + "select_options/code/sales_staffs?where=store_loc_id=" + this.value);
     }
     
-    /*if(this.value!=='' && new Date(p_tran_date.val()).isValid()){    
+   if(this.value!=='' && new Date(p_tran_date.val()).isValid()){    
         getStoreDailyCashData();
     } 
     */
@@ -67,7 +66,6 @@ function getStoreDailyCashData(){
                   var info =d[0];
                   p_store_daily_cash_id.val(info.store_daily_cash_id);
                   p_posted.val(info.posted_dsales);
-                  p_empl_id.val(info.empl_id);
                   getStoreDailyCashDetailData();
               } 
         }

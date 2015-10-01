@@ -54,7 +54,8 @@ function DisplayReport(){
             for(var x=0;x< colsLength;x++){
                 var info = d[y];
                 var val = info[keys[x]];
-                var new_val = $('<div/>').text(  (isNaN(val)===false?val.toMoney() : val) ).html();
+                //var new_val = $('<div/>').text(  (isNaN(val)===false?val.toMoney() : val) ).html();
+                var new_val = $('<div/>').text(val).html();
                  
                 h+="<td " + (isNaN(val)===false?"class='align-r'": "") + ">"+ new_val + "</td>";
 

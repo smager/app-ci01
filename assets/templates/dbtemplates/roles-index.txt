@@ -5,6 +5,7 @@
         <th style="width: 25px"></th>
         <th style="width:80px;">Code</th>        
         <th>Role</th>
+        <th>Manage</th>
     </tr>
  </thead>	
  </table>    

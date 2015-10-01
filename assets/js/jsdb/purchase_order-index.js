@@ -1,13 +1,15 @@
 var supply;
 $(document).ready(function(){
     $("#p_supplier_id").dataBind( base_url + "select_options/code/suppliers");
-    $("#p_loc_id").dataBind( base_url + "select_options/code/locations");
+    $("#p_loc_id").dataBind( base_url + "select_options/procedure/getUserLocations/" + userInfo.user_id);
     initInputs();
+    setSupply();
     onLocationChange();
+    onSupplierChange();
     displayBlankRows(true);
     getUnpostedPO();
     markMandatory();
-    setSupply();
+    
 });
 $("form[id=frm]").submit(function(){
     this.action = controller_url + "update";    
@@ -32,7 +34,6 @@ $("form[id=frm]").submit(function(){
  }); 
  
  $("#btnNew").click(function(){
-    if(loc_id.val()==='') { alert("Enter Location"); return false; }
     newBlankEntry();
  });
  
@@ -147,8 +148,6 @@ function displayRecords(id){
             onSupplyChange();
             displayBlankRows(false);
             loc_id.change();
-
-            
         }
     });    
 }
@@ -170,21 +169,31 @@ function onSupplyChange(){
 }
 function onLocationChange(){
     loc_id.change(function(){
-        if(this.value==='') return false;
+        if(supplier_id.val()===''){ 
+             displayBlankRows(true);
+            return false;
+        }
+        if(this.value===''){ 
+             displayBlankRows(true);
+            return false;
+        }
         $("select[name='p_loc_supply_id[]']").dataBind({ 
-             url: base_url + "select_options/code/loc_supplies_po?where=loc_id=" + this.value
+             url: base_url + "select_options/code/loc_supplies_po?where=loc_id=" + this.value + " and supplier_id=" + supplier_id.val()
             ,isUniqueOptions:true
             ,onAllComplete: function(){
                 markMandatory();
-                $("select[name='p_loc_supply_id[]']").change();
-                $("input[name='p_po_qty[]']").change();
-            }            
+               // $("input[name='p_po_qty[]']").change();
+            }
+           
         });
     });
-    
-   
 }
 
+function onSupplierChange(){
+    supplier_id.change(function(){
+       loc_id.change();
+    });
+}
 function displayBlankRows(p_isNew){       
     var bs = zsi.bs.ctrl;    
     zsi.json.loadGrid({
@@ -205,7 +214,7 @@ function displayBlankRows(p_isNew){
         ,onComplete : function(){
             onSupplyChange();
             markMandatory();
-            $("input[name='p_po_qty[]'],input[name='p_unit_price[]']").change();
+            //$("input[name='p_po_qty[]'],input[name='p_unit_price[]']").change();
             zsi.initInputTypesAndFormats();
         }
     });    

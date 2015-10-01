@@ -16,6 +16,7 @@ function displayRecords(){
                 return     bs({name:"empl_id[]",type:"hidden",value: d.empl_id})
                         +  bs({name:"cb[]",type:"checkbox"});
             }
+            ,function(d){ return bs({name:"empl_idno[]",value: d.empl_idno}); }
             ,function(d){ return bs({name:"empl_name[]",value: d.empl_name}); }
             ,function(d){ return bs({name:"position_id[]",value: d.position_id, type:"select"}); }
             ,function(d){ return bs({name:"daily_rate[]",value: d.daily_rate}); }
@@ -39,6 +40,7 @@ function displayBlankRows(){
                 return     bs({name:"empl_id[]",type:"hidden"})
                         +  bs({name:"cb[]",type:"checkbox"});
             }            
+            ,function(d){ return bs({name:"empl_idno[]"}); }
             ,function(d){ return bs({name:"empl_name[]"}); }
             ,function(d){ return bs({name:"position_id[]", type:"select"}); }
             ,function(d){ return bs({name:"daily_rate[]"}); }
