@@ -68,6 +68,23 @@ BEGIN
  RETURN (lvl);
 END;
 
+CREATE FUNCTION  getSupplierIdByStore(p_store_id int) RETURNS INT(5)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl INT(5);
+    SELECT supplier_id as supplier_name INTO lvl FROM stores WHERE store_id=p_store_id;
+ RETURN (lvl);
+END;
+
+CREATE FUNCTION  getSupplierByStore(p_store_id int) RETURNS VARCHAR(100)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl varchar(100);
+    SELECT getSupplier(supplier_id) INTO lvl FROM stores WHERE store_id=store_id
+ RETURN (lvl);
+END;
+
+
 CREATE FUNCTION  getStatus(p_status_code VARCHAR(5)) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
@@ -467,7 +484,7 @@ BEGIN
    DECLARE l_id INT(5);
    SELECT supply_is_id INTO l_id FROM supply_is WHERE posted=0 and store_loc_id = p_store_loc_id limit 1;
    IF IFNULL(l_id,0)=0 THEN
-      SELECT *, "" as supply_is_id, "" as supply_is_dtl_id, "" as supply_is_qty FROM loc_supply_brands_v WHERE loc_supply_id =p_loc_supply_id and stock_qty > 0 ;
+      SELECT *, "" as supply_is_id, "" as supply_is_dtl_id, "" as supply_is_qty FROM loc_supply_brands_v WHERE loc_id = getLocIdFromStoreLoc(p_store_loc_id) and loc_supply_id =p_loc_supply_id and stock_qty > 0 ;
    ELSE
     SELECT a.supply_is_id, a.supply_is_dtl_id, b.loc_supply_id,  a.loc_supply_brand_id, b.stock_qty, b.brand_name, b.cu_desc, a.supply_is_qty
        FROM supply_is_dtls a, loc_supply_brands_v b
