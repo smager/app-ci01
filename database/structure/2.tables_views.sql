@@ -1283,6 +1283,7 @@ CREATE OR REPLACE VIEW store_bank_depo_dtls_v as
 SELECT a.*, b.store_loc_id, b.act_depo_date, getBankName(a.bank_ref_id)
   FROM store_bank_depo_dtls a, store_bank_depo b
  WHERE a.store_bank_depo_id=b.store_bank_depo_id;
+  
  
 CREATE OR REPLACE VIEW status_v as
   SELECT 'O' as status_code, 'Open' as status

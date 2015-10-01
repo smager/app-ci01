@@ -1143,7 +1143,6 @@ BEGIN
    SET l_stmt = 'SELECT po_no as "P.O. Number", DATE_FORMAT(po_date,"%m/%d/%Y") as "Date", getLocation(loc_id) as "Area", getSupplier(supplier_id) as "Supplier"
                 ,getStatus(status_code) as "Status"';
    SET @s = CONCAT(l_stmt,' FROM po', l_where);
-   call console(@s);
    PREPARE stmt FROM @s;
    
    EXECUTE stmt;
@@ -1164,10 +1163,24 @@ END;
 _
 CREATE PROCEDURE getUserLocations(p_user_id INT(5))
 BEGIN
-   SELECT loc_id, getLocation(loc_id) as location FROM user_locations
+   SELECT loc_id as value, getLocation(loc_id) as text FROM user_locations
    WHERE user_id = p_user_id;
 END;
 
+CREATE PROCEDURE SelectOptions(p_table varchar(100), p_value int(5), p_text varchar(100), p_param varchar(1000))
+BEGIN
+   DECLARE l_stmt VARCHAR(4000);
+   
+   SET l_stmt = CONCAT('SELECT', p_value,' as value',  p_text, ' as text', ' FROM ', p_table);
+   IF IFNULL(p_param,'null') <> 'null' THEN
+      SET l_stmt = CONCAT(l_stmt,' WHERE '. p_param);
+   END IF;
+   SET @s = l_stmt;
+   PREPARE stmt FROM @s;
+   
+   EXECUTE stmt;
+   DEALLOCATE PREPARE stmt;    
+END;
 
 CREATE PROCEDURE console(p_content VARCHAR(1000))
 BEGIN
