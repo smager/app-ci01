@@ -390,6 +390,7 @@ if ( ! function_exists('getPageTitle'))
     function getPageTitle(){
         $ci =& get_instance();
         $ci->load->model('menu_model');        
-        echo $ci->menu_model->getMenuByUrl();
+		$t= $ci->menu_model->getMenuByUrl();
+		return $t;
     }
 }

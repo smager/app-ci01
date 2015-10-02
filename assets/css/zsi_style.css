@@ -6,6 +6,24 @@ body{
     margin-bottom:0px;
     background:#f5f6f6;
 }
+
+.pageTitle {
+    background-image: linear-gradient(to bottom, #d31743 0%, #d8506d 25%, #d92b52 51%, #d84363 100%);	
+    /*background-image: linear-gradient(to bottom, #ed315a 0px, #d92b52 100%);*/
+    color: white;
+    font-size: 11pt;
+    height: 27px;
+	margin-bottom: 10px;
+    margin-left: -10px;
+    margin-right: -5px;
+    margin-top: -10px;
+    padding-left: 12px;
+    padding-top: 2px;
+}
+.navbar {
+ margin-bottom: 5pt !important;
+}
+
 /*zsiTable*/
 table.zTable .align-l{ text-align:left;}
 table.zTable .align-r{ text-align:right;}

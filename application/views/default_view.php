@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title><?php getPageTitle(); ?></title>
+<title><?php echo $pTitle=getPageTitle(); ?></title>
 <?php
     includeHeader(array("datePicker"=>true));    
 ?>    
@@ -12,6 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <body>
 <?php menu(); ?>     
 <div class="container page">
+<div class="pageTitle"><?php echo $pTitle; ?></div>
 <?php includePageTemplate(); ?>         
 </div>    
 <?php includePageJS(); ?>        
