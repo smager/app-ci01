@@ -1,4 +1,4 @@
-/*Procedure, Function*/
+/*Procedure, Function*/in
 
  CREATE FUNCTION getlatestrevid(p_filename varchar(100)) returns varchar(100)
  DETERMINISTIC
@@ -73,6 +73,14 @@ CREATE FUNCTION  getSupplier(p_supplier_id int) RETURNS VARCHAR(100)
 BEGIN
     DECLARE lvl varchar(100);
     SELECT supplier_name INTO lvl FROM suppliers WHERE supplier_id=p_supplier_id;
+ RETURN (lvl);
+END;
+
+CREATE FUNCTION  getSupplierIdByLoc(p_loc_supply_id int) RETURNS INT(5)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl INT(5);
+    SELECT supply_id INTO lvl FROM loc_supplies_v WHERE loc_supply_id=p_loc_supply_id;
  RETURN (lvl);
 END;
 
@@ -214,12 +222,12 @@ BEGIN
  RETURN (ifnull(lvl,0));
 END;
 
-CREATE FUNCTION  getLocSupplyBrandId(p_loc_id int, p_supply_id int, p_supply_brand_id int) RETURNS int(5)
+CREATE FUNCTION  getLocSupplyBrandId(p_loc_id int, p_loc_supply_id int, p_supply_brand_id int) RETURNS int(5)
     DETERMINISTIC
 BEGIN
     DECLARE lvl int;
     SELECT loc_supply_brand_id INTO lvl FROM loc_supply_brands WHERE supply_brand_id=p_supply_brand_id 
-       AND loc_supply_id=(select loc_supply_id FROM loc_supplies WHERE loc_id = p_loc_id and supply_id = p_supply_id); 
+       AND loc_supply_id=p_loc_supply_id; 
  RETURN (ifnull(lvl,0));
 END;
 
@@ -236,6 +244,14 @@ CREATE FUNCTION  getStoreLocId(p_store_loc_supply_id int) RETURNS INT(5)
 BEGIN
     DECLARE lvl int(5);
     SELECT store_loc_id INTO lvl FROM store_loc_supplies WHERE store_loc_supply_id=p_store_loc_supply_id;
+ RETURN (lvl);
+END;
+
+CREATE FUNCTION  getStoreDailyCashStoreLocId(p_store_daily_cash_id int) RETURNS INT(5)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl int(5);
+    SELECT store_loc_id INTO lvl FROM store_daily_cash WHERE store_daily_cash_id=p_store_daily_cash_id;
  RETURN (lvl);
 END;
 
@@ -318,12 +334,11 @@ BEGIN
  RETURN (ifnull(lvl,0));
 END;
 
-CREATE FUNCTION getStoreLocCashBoxAmt(p_store_loc_id int(5), p_date date) RETURNS decimal(7,2) 
+CREATE FUNCTION getStoreLocCashBoxAmt(p_store_daily_cash_id date) RETURNS decimal(7,2) 
     DETERMINISTIC
 BEGIN
  DECLARE lvl decimal(7,2);
-    select ttl_cash_box_amt INTO lvl from store_daily_cash where store_loc_id = p_store_loc_id
-    and tran_date = p_date; 
+    select ttl_cash_box_amt INTO lvl from store_daily_cash where store_daily_cash_id = p_store_daily_cash_id;
  RETURN (ifnull(lvl,0));
 END;
 
@@ -461,7 +476,7 @@ UPDATE loc_supplies a, receiving_dtls_po_v b
 
 UPDATE loc_supply_brands a, receiving_dtls_po_v b
 SET a.stock_qty = a.stock_qty + b.dr_qty
-WHERE a.loc_supply_brand_id=getLocSupplyBrandId(b.loc_id, b.supply_id,b.supply_brand_id)
+WHERE a.loc_supply_brand_id=getLocSupplyBrandId(b.loc_id, b.loc_supply_id, b.supply_brand_id)
 AND b.receiving_id = p_receiving_id;
 
 INSERT INTO loc_supply_brands (loc_supply_id, supply_brand_id, stock_qty)
@@ -472,7 +487,7 @@ END;
 
 CREATE PROCEDURE getStoreDailyCash(p_store_loc_id INT(10),p_date VARCHAR(20))
 BEGIN
-     SELECT *, getEmplName(empl_id) as empl_name, getEvent(event_id) as event_desc
+     SELECT *, getEvent(event_id) as event_desc
        FROM store_daily_cash 
       WHERE store_loc_id =p_store_loc_id
         AND tran_date = str_to_date(p_date,'%m/%d/%Y');
@@ -480,9 +495,9 @@ END;
 
 CREATE PROCEDURE getStoreDailyCashById(IN p_store_daily_cash_id INT(10))
 BEGIN
-     SELECT *, getEmplName(empl_id) as empl_name,, getEvent(event_id) as event_desc FROM store_daily_cash WHERE store_daily_cash_id =p_store_daily_cash_id;
+     SELECT *, getEvent(event_id) as event_desc FROM store_daily_cash WHERE store_daily_cash_id =p_store_daily_cash_id;
 END;
-
+
 CREATE PROCEDURE getStoreLocSupplies (IN p_store_loc_id INT(10))
 BEGIN
      SELECT * FROM store_loc_supplies_v WHERE store_loc_id =p_store_loc_id;
@@ -676,6 +691,10 @@ DECLARE l_created_by INT;
 DECLARE l_created_date DATE;
 DECLARE l_store_bank_depo_id INT;
 
+SELECT last_posted_dcash INTO l_fr_store_daily_cash_id
+  FROM store_loc 
+ WHERE store_loc_id =getStoreDailyCashStoreLocId(p_store_daily_cash_id);    
+
 SELECT sum(IFNULL(cash_amount,0))
   INTO l_cash_amt
   FROM store_daily_cash_dtls 
@@ -683,22 +702,19 @@ SELECT sum(IFNULL(cash_amount,0))
 
 UPDATE store_daily_cash 
    SET ttl_cash_box_amt   = l_cash_amt
+      ,fr_store_daily_cash_id=l_fr_store_daily_cash_id
  WHERE store_daily_cash_id=p_store_daily_cash_id;    
 
-SELECT fr_store_daily_cash_id INTO l_fr_store_daily_cash_id
-  FROM store_daily_cash 
- WHERE store_daily_cash_id=p_store_daily_cash_id;    
-
-IF IFNULL(l_fr_store_daily_cash_id,0) <> 0 THEN
-
+   IF IFNULL(l_fr_store_daily_cash_id,0) <> 0 THEN
+      UPDATE store_daily_cash 
+         SET depo_amt = ttl_return_amt - (l_cash_amt + IFNULL(ttl_exp_amt,0))
+       WHERE store_daily_cash_id = l_fr_store_daily_cash_id;
+   END IF;  
+     
    SELECT depo_amt, created_by, created_date
      INTO l_depo_amt, l_created_by, l_created_date
      FROM store_daily_cash
-    WHERE fr_store_daily_cash_id=l_fr_store_daily_cash_id;
-
-   UPDATE store_daily_cash 
-      SET depo_amt = ttl_return_amt - (l_cash_amt + IFNULL(ttl_exp_amt,0))
-    WHERE fr_store_daily_cash_id=p_store_daily_cash_id;
+    WHERE store_daily_cash_id=l_fr_store_daily_cash_id;
 
    SELECT IFNULL(store_bank_depo_id,0) 
      INTO l_store_bank_depo_id
@@ -707,10 +723,10 @@ IF IFNULL(l_fr_store_daily_cash_id,0) <> 0 THEN
 
    IF IFNULL(l_store_bank_depo_id,0)=0 THEN
       INSERT INTO store_bank_depo       
-           (store_loc_id, sales_date, depo_amt, created_by, created_date) 
-            SELECT store_loc_id, tran_date, depo_amt, created_by, created_date 
+           (store_loc_id, sales_date, depo_amt, store_daily_cash_id, created_by, created_date) 
+            SELECT store_loc_id, tran_date, depo_amt, store_daily_cash_id, created_by, created_date 
               FROM store_daily_cash    
-             WHERE store_daily_cash_id=l_fr_store_daily_cash_id;   
+             WHERE store_daily_cash_id=l_fr_store_daily_cash_id;  
    ELSE
       UPDATE store_bank_depo
          SET depo_amt= l_depo_amt,
@@ -720,11 +736,7 @@ IF IFNULL(l_fr_store_daily_cash_id,0) <> 0 THEN
 
       DELETE FROM store_bank_depo_dtls WHERE store_bank_depo_id = l_store_bank_depo_id; 
    END IF;
-END IF;
-   UPDATE store_daily_cash a, store_loc b
-      SET a.fr_store_daily_cash_id = b.last_posted_dcash
-    WHERE a.store_loc_id = b.store_loc_id
-      AND a.store_daily_cash_id=p_store_daily_cash_id;     
+
 END;
 
 
@@ -747,7 +759,8 @@ UPDATE store_daily_cash
       ,ttl_stock_sales_amt= l_ttl_stock_sales_amt
       ,ttl_sales_exp_amt  = l_sales_exp_amt
       ,ttl_exp_amt        = l_exp_amt
-      ,ttl_cash_sales_amt = (l_return_amt + IFNULL(l_sales_exp_amt,0)) - getStoreLocCashBoxAmt(store_loc_id, date_add(tran_date,interval - 2 day))
+      ,ttl_cash_sales_amt = (l_return_amt + IFNULL(l_sales_exp_amt,0)) - ttl_cash_box_amt
+      ,depo_amt           = ttl_cash_sales_amt - l_sales_exp_amt
  WHERE store_daily_cash_id=p_store_daily_cash_id;    
 
 UPDATE store_loc a, store_daily_cash b
@@ -865,8 +878,7 @@ BEGIN
 
    END LOOP bank_ref_loop;
    END IF; 
-   SELECT *, getBankName(bank_ref_id) as bank_name FROM store_bank_depo_dtls where store_bank_depo_id=p_store_bank_depo_id;
-   
+   SELECT *, getBankName(bank_ref_id) as bank_name FROM store_bank_depo_dtls where store_bank_depo_id=p_store_bank_depo_id;   
 END; 
 
 CREATE PROCEDURE getDenominations(p_order VARCHAR(5))

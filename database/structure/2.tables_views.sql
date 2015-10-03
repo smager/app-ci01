@@ -1171,7 +1171,7 @@ where a.loc_supply_id = b.loc_supply_id;
 create or replace view po_dtlswithbal_v as
 select a.*, b.supply_code, b.unit_desc 
 from po_dtls a, supplies_v b
-where bal_qty > 0 and a.supply_id = b.supply_id;
+where bal_qty > 0 and getSupplierIdByLoc(a.supply_id) = b.supply_id;
 
 
 CREATE OR REPLACE VIEW po_receiving_unposted_v AS
