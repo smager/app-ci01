@@ -35,7 +35,7 @@ class select_options extends Base_Controller {
 	public function code($code)
 	{
         check_login();
-        $query = $this->select_options_model->getdata_by_code($code, $this->input->get() );
+        $query = $this->select_options_model->getdata_by_code($code, $this->input->get("p"));
         if($query==null)
             jsonOut( array());
         else 

@@ -10,32 +10,11 @@ class select_options_model extends CI_Model{
         return $query;    
     }
 
-    function getdata_by_code($code,$get){
-        $query = $this->db->query("SELECT * FROM select_options where code='$code'");
-        $result=null;
-        
-        if($query->num_rows()>0) {
-            $i = $query->result()[0];
-            
-            $l_condition="where 1=1";        
-            $l_order_by = " order by " . $i->text ; 
-            
-            //database where condition
-            if($i->condition_text!='' )  $l_condition .=" and " . $i->condition_text;          
-            
-            //order by
-            if($i->order_by!='' )  $l_order_by = " order by " . $i->order_by;          
+    function getdata_by_code($code,$params){
+        $sql = "call selectOptions(\"$code\",\"$params\")";               
+        return $this->db->query($sql); 
+    }
 
-            //client where condition
-            if(isset($get["where"])) $l_condition .= " and " . $get["where"];
-            
-            
-            $sql = "SELECT  " . $i->text . " as text, " . $i->value  . " as value  FROM " . $i->table_name  . " " . $l_condition . $l_order_by ;               
-            $result = $this->db->query($sql);
-        }
-        return $result;    
-    }  
-        
     function update($post){
     //print_r($post);
         
