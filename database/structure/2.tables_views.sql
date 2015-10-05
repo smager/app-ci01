@@ -1077,6 +1077,20 @@ WHERE a.loc_supply_id = b.loc_supply_id
 AND a.supply_brand_id = c.supply_brand_id
 ORDER BY seq_no;
 
+CREATE OR REPLACE VIEW users_v AS
+SELECT *, getEmplName(empl_id) as empl_name
+FROM users;
+
+CREATE OR REPLACE VIEW role_users_v AS
+select a.*, b.user_id, b.user_name, b.empl_name
+from roles a, users_v b
+WHERE a.role_id = b.role_id;
+
+CREATE OR REPLACE VIEW role_menus_v AS
+select a.*, b.*
+from role_menus a, menu b
+WHERE a.menu_id = b.menu_id;
+
 CREATE OR REPLACE VIEW user_locations_v AS
 select a.user_loc_id, a.loc_id, a.user_id, b.location
 from user_locations a, locations b
@@ -1280,7 +1294,7 @@ SELECT *
    FROM store_bank_depo
 
 CREATE OR REPLACE VIEW store_bank_depo_dtls_v as
-SELECT a.*, b.store_loc_id, b.act_depo_date, getBankName(a.bank_ref_id)
+SELECT a.*, b.store_loc_id, b.act_depo_date, getBankName(a.bank_ref_id), b.sales_date
   FROM store_bank_depo_dtls a, store_bank_depo b
  WHERE a.store_bank_depo_id=b.store_bank_depo_id;
   

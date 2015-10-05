@@ -10,7 +10,8 @@
    order by revision_id desc limit 1;
    return (lvl);
  end;
- 
+
+
 CREATE FUNCTION  getMenuName(p_menu_id int) RETURNS VARCHAR(100)
     DETERMINISTIC
 BEGIN
@@ -420,7 +421,15 @@ CREATE FUNCTION getStoreLocDailyBankDepoAmt(p_bank_ref_id int, p_store_loc_id in
     DETERMINISTIC
 BEGIN
     DECLARE lvl decimal(7,2);
-    SELECT depo_amount INTO lvl FROM store_bank_depo_dtls_V WHERE bank_ref_id = p_bank_ref_id AND store_loc_id = p_store_loc_id AND  act_depo_date = p_date; 
+    SELECT depo_amount INTO lvl FROM store_bank_depo_dtls_v WHERE bank_ref_id = p_bank_ref_id AND store_loc_id = p_store_loc_id AND  act_depo_date = p_date; 
+ RETURN (ifnull(lvl,0));
+END;
+
+CREATE FUNCTION getStoreLocDailyBankDepoAmtBySalesDate(p_bank_ref_id int, p_store_loc_id int, p_date DATE) RETURNS decimal(7,2)
+    DETERMINISTIC
+BEGIN
+    DECLARE lvl decimal(7,2);
+    SELECT depo_amount INTO lvl FROM store_bank_depo_dtls_v WHERE bank_ref_id = p_bank_ref_id AND store_loc_id = p_store_loc_id AND  sales_date = p_date; 
  RETURN (ifnull(lvl,0));
 END;
 
@@ -1028,7 +1037,7 @@ BEGIN
    DEALLOCATE PREPARE stmt;   
 END;
 
-CREATE PROCEDURE repStoreDailyBankDepo(p_month int, p_year int, p_store_loc_id INT)
+CREATE PROCEDURE repStoreDailyBankDepo(p_month int, p_year int, p_store_loc_id INT, p_date VARCHAR(20))
 BEGIN
    DECLARE l_stmt    VARCHAR(2000);
    DECLARE l_where   VARCHAR(2000);
@@ -1041,7 +1050,11 @@ BEGIN
 
    DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = TRUE;
    SET l_comma = '';
-   SET l_stmt = ' SELECT DISTINCT DATE_FORMAT(act_depo_date,"%m/%d/%Y") as Date, ';
+   IF p_date='' THEN
+      SET l_stmt = ' SELECT DISTINCT DATE_FORMAT(act_depo_date,"%m/%d/%Y") as Date, ';
+   ELSE
+      SET l_stmt = ' SELECT DINTINCT ';
+   END IF;
    OPEN bank_ref_cur;
         bank_ref_loop: LOOP
    FETCH bank_ref_cur INTO l_id, l_text;
@@ -1049,11 +1062,19 @@ BEGIN
            CLOSE bank_ref_cur;
            LEAVE bank_ref_loop;
         END IF;
-        SET l_stmt = CONCAT(l_stmt, l_comma, 'getStoreLocDailyBankDepoAmt(',l_id,',', p_store_loc_id,',act_depo_date) as','"', l_text,'"');
+        IF p_date='' THEN
+           SET l_stmt = CONCAT(l_stmt, l_comma, 'getStoreLocDailyBankDepoAmt(',l_id,',', p_store_loc_id,',act_depo_date) as','"', l_text,'"');
+        ELSE
+           SET l_stmt = CONCAT(l_stmt, l_comma, 'getStoreLocDailyBankDepoAmtBySalesDate(',l_id,',', p_store_loc_id,',sales_date) as','"', l_text,'"');
+        END IF;
         SET l_comma = ',';
         
    END LOOP bank_ref_loop;
-   SET @s = CONCAT(l_stmt,' FROM store_bank_depo_dtls_v WHERE MONTH(act_depo_date)=', p_month, ' AND YEAR(act_depo_date)=', p_year, ' ORDER BY act_depo_date ');
+   IF p_date='' THEN
+      SET @s = CONCAT(l_stmt,' FROM store_bank_depo_dtls_v WHERE MONTH(act_depo_date)=', p_month, ' AND YEAR(act_depo_date)=', p_year, ' ORDER BY act_depo_date ');
+   ELSE
+      SET @s = CONCAT(l_stmt,' FROM store_bank_depo_dtls_v WHERE MONTH(sales_date)=str_to_date("',p_date,'","%m/%d/%Y") ORDER BY sales_date ');
+   END IF;
    PREPARE stmt FROM @s;
    
    EXECUTE stmt;
@@ -1161,6 +1182,13 @@ BEGIN
    DEALLOCATE PREPARE stmt;   
 END;
 
+CREATE PROCEDURE getUserMenus(p_user_id INT(5))
+BEGIN
+   SELECT a.* 
+     FROM role_menus_v a, users b
+    WHERE a.role_id = b.role_id 
+      AND b.user_id = p_user_id;
+END;
 
 CREATE PROCEDURE role_menus(p_role_id INT(5))
 BEGIN
@@ -1172,21 +1200,43 @@ BEGIN
      FROM menu a 
     WHERE NOT EXISTS (SELECT b.menu_id FROM role_menus b WHERE b.menu_id = a.menu_id and role_id = p_role_id);
 END;
-_
+
 CREATE PROCEDURE getUserLocations(p_user_id INT(5))
 BEGIN
    SELECT loc_id as value, getLocation(loc_id) as text FROM user_locations
    WHERE user_id = p_user_id;
 END;
 
-CREATE PROCEDURE SelectOptions(p_table varchar(100), p_value int(5), p_text varchar(100), p_param varchar(1000))
+CREATE PROCEDURE selectOptions(p_code varchar(50), p_param varchar(1000))
 BEGIN
    DECLARE l_stmt VARCHAR(4000);
+   DECLARE l_table VARCHAR(50);
+   DECLARE l_value VARCHAR(50);
+   DECLARE l_text VARCHAR(50);
+   DECLARE l_condition VARCHAR(100);
+   DECLARE l_order VARCHAR(50);
+   DECLARE l_param VARCHAR(100);
    
-   SET l_stmt = CONCAT('SELECT', p_value,' as value',  p_text, ' as text', ' FROM ', p_table);
-   IF IFNULL(p_param,'null') <> 'null' THEN
-      SET l_stmt = CONCAT(l_stmt,' WHERE '. p_param);
+   SELECT table_name, value, text, condition_text, order_by 
+     INTO l_table, l_value, l_text, l_condition, l_order
+     FROM select_options
+   WHERE code=p_code;
+   
+   
+   SET l_stmt = CONCAT('SELECT ', l_value,' as value, ',  l_text, ' as text FROM ', l_table, ' WHERE 1=1 ' );
+   IF l_condition <> '' THEN
+      SET l_stmt = CONCAT(l_stmt, ' AND ', l_condition);
    END IF;
+   
+   IF p_param <> '' THEN
+      SET l_param =  REPLACE(p_param,',',' AND ');
+      SET l_stmt = CONCAT(l_stmt,' AND ', l_param );
+   END IF;
+   
+   IF l_order <> '' THEN
+      SET l_stmt = CONCAT(l_stmt, ' ORDER BY ', l_order);
+   END IF;
+   
    SET @s = l_stmt;
    PREPARE stmt FROM @s;
    
@@ -1199,3 +1249,4 @@ BEGIN
   INSERT INTO console_logs (content) values (p_content);
 END;
 
+info
