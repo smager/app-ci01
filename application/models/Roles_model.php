@@ -66,11 +66,11 @@ class roles_model extends CI_Model{
                     //update        
                     $data['updated_by'] =current_user()->empl_id;
                     $this->db->set('updated_date', 'NOW()', FALSE);
-                    $this->db->where('user_loc_id', $id);
+                    $this->db->where('role_menu_id', $id);
                     $this->db->update('role_menus', $data);
 
             }else if($isCheck==0 && $id!='')  {
-                    $this->db->where('user_loc_id', $id);
+                    $this->db->where('role_menu_id', $id);
                     $this->db->delete('role_menus');
             }
             
