@@ -1113,7 +1113,7 @@ BEGIN
    DEALLOCATE PREPARE stmt;   
 END; 
 
-CREATE PROCEDURE repLocSuppliesReorder(p_loc_id int(5), p_store_id int(5))
+CREATE PROCEDURE repLocSupplies(p_loc_id int(5), p_store_id int(5))
 BEGIN
 
    IF IFNULL(p_loc_id,0)<>0 THEN
@@ -1184,17 +1184,18 @@ END;
 
 CREATE PROCEDURE getUserMenus(p_user_id INT(5))
 BEGIN
-   SELECT a.* 
+   SELECT DISTINCT a.menu_id as id, a.menu_name as name, menu_url as url, a.menu_type_id
      FROM role_menus_v a, users b
-    WHERE a.role_id = b.role_id 
-      AND b.user_id = p_user_id;
+    WHERE (a.role_id = b.role_id 
+      AND b.user_id = p_user_id) OR (a.menu_def=1)
+    ORDER BY a.seq_no;
 END;
 
 CREATE PROCEDURE role_menus(p_role_id INT(5))
 BEGIN
    SELECT role_menu_id, menu_id, getMenuName(menu_id) as menu_name 
      FROM role_menus
-    WHERE role_id=p_role_id
+    WHERE role_id=p_role_id 
     UNION
    SELECT '' as role_menu_id, menu_id, menu_name
      FROM menu a 

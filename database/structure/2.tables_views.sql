@@ -686,6 +686,7 @@ CREATE TABLE IF NOT EXISTS `stock_adjustments` (
   `store_loc_id`        int(5),
   `loc_supply_id`       int(5),
   `stock_daily_qty`     decimal(5,2),
+  `unit_id`             int(5),
   `prev_qty`            decimal(7,2), 
   `created_by`          int(5),
   `created_date`        datetime,
@@ -1053,13 +1054,13 @@ ORDER BY b.seq_no;
 
 CREATE OR REPLACE VIEW loc_supplies_v AS 
 select a.loc_id, a.loc_supply_id, a.supply_id, b.seq_no, b.supply_code, a.reorder_level, a.max_level, b.unit_desc, 
-       getStockCount(loc_supply_id) as ttl_stocks, a.ordered_qty, b.store_id
+       IFNULL(getStockCount(loc_supply_id),0) as ttl_stocks, a.ordered_qty, b.store_id
 from loc_supplies a, store_supplies_v b     
 WHERE a.supply_id = b.supply_id;
   
 
 CREATE OR REPLACE VIEW loc_supplies2_v AS
-select a.*, b.seq_no, b.supply_code, b.unit_desc, getStockCount(loc_supply_id) as ttl_stocks, a.ordered_qty, b.store_id
+select a.*, b.seq_no, b.supply_code, b.unit_desc, IFNULL(getStockCount(loc_supply_id),0) as ttl_stocks, a.ordered_qty, b.store_id
 from loc_supplies a, store_supplies_v b
 WHERE a.supply_id = b.supply_id;
 
@@ -1087,7 +1088,7 @@ from roles a, users_v b
 WHERE a.role_id = b.role_id;
 
 CREATE OR REPLACE VIEW role_menus_v AS
-select a.*, b.*
+select a.*, b.menu_name, b.menu_url, b.menu_def, b.menu_type_id, b.system_id, b.seq_no
 from role_menus a, menu b
 WHERE a.menu_id = b.menu_id;
 
