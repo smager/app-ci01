@@ -55,15 +55,10 @@ class menu_model extends CI_Model{
         return $result;    
     }    
     
-    function getSubMenuItem($id){
-        $sql ="SELECT a.menu_id as id,a.menu_name as name, a.menu_url as url";
-        $sql .=" FROM role_menus_v a, users b";
-        $sql .=" WHERE a.role_id = b.role_id"; 
-        $sql .=" AND a.menu_type_id = $id";
-        $sql .=" AND b.user_id = " . current_user()->user_id;
-        $query = $this->db->query($sql);
+    function getSubMenuItems(){
+        $query = $this->db->query("call getUserMenus(". current_user()->user_id .")");
         return $query;    
-    }
+    }    
     
     function update($post){
     //print_r($post);

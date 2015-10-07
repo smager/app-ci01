@@ -21,13 +21,20 @@ class menu_types extends Base_Controller {
         
     public function getdata_json(){
         $this->load->model('menu_model'); 
-        $q=$this->menu_types_model->getdata_idname();
-        $d=$q->result();
-        foreach($d as $i){            
-             $q_mi=$this->menu_model->getSubMenuItem($i->id);            
-             $i->subMenus=$q_mi->result();
+        $mt=$this->menu_types_model->getdata_idname()->result();
+        $m=$this->menu_model->getSubMenuItems()->result();
+
+        foreach($mt as $i){            
+            $item= array();
+             foreach($m as $subM){  
+                 if($i->id==$subM->menu_type_id){
+                     array_push($item,$subM);
+                 }
+             }
+            $i->subMenus = $item;
+            
         }        
-        jsonOut($d);        
+        jsonOut($mt);        
     }        
     
     
