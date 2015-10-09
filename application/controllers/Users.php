@@ -78,7 +78,16 @@ class users extends Base_Controller {
         redirect( base_url("users") );
       
 	}    
-   
+
+    public function updatepwd()
+	{
+        jsonOut(
+            $this->users_model->updatepwd(
+                $this->input->post()
+            )
+        );
+	}    
+
 
     public function delete()
 	{

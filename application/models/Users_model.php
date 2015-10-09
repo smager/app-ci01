@@ -26,7 +26,6 @@ class users_model extends CI_Model{
         return $result;
     }
     
-    
     function update($post){
     //print_r($post);
         
@@ -39,7 +38,6 @@ class users_model extends CI_Model{
 
                 $data = array(
                      'user_name' =>  $user_name
-                    ,'user_password '=>  $post['p_user_password'][$x]
                     ,'empl_id' =>  $post['p_empl_id'][$x]
                     ,'role_id' =>  $post['p_role_id'][$x]
                     ,'active'    =>  $post['p_active'][$x]                
@@ -48,6 +46,7 @@ class users_model extends CI_Model{
                 if($id==''){
                     //insert        
                     $data['created_by'] =current_user()->empl_id;
+                    $data['user_password'] ="pass@123";
                     $this->db->set('created_date', 'NOW()', FALSE);
                     $this->db->insert('users', $data);
 
@@ -66,6 +65,28 @@ class users_model extends CI_Model{
      } //end of loop
 
     }        
+
+    function updatepwd($post){
+        $result =  array("status"=>0);
+        $currentPwd = $post['p_current_pwd'];
+        $newPwd     = $post['p_new_pwd'];
+        
+        $sql = "select * from users  where user_id=" . current_user()->user_id;
+        $info= $this->db->query($sql)->result()[0];  
+        
+        if($info->user_password == $currentPwd){
+            $data['updated_by'] =current_user()->empl_id;
+            $data['user_password'] = $newPwd;
+            $this->db->set('updated_date', 'NOW()', FALSE);
+            $this->db->where('user_id', current_user()->user_id);
+            $this->db->update('users', $data);
+            
+            $result =  array("status"=>1);
+        }
+            
+        return $result;
+    }        
+
     
     function delete($post){        
         $this->common_model->delete($this->input->post(),"users","user_id");        

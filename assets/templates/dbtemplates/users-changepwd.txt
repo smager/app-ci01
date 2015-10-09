@@ -1,8 +1,9 @@
+<form id="frm">
 <div class="form-horizontal ">
     <div class="form-group  ">  
         <label class=" col-xs-4 control-label">Current Password</label>
         <div class=" col-xs-3">
-            <input type="text" name="p_current_pwd" id="p_current_pwd" class="form-control input-sm ">
+            <input type="password" name="p_current_pwd" id="p_current_pwd" class="form-control input-sm ">
         </div>
     </div>
 
@@ -10,7 +11,7 @@
     
             <label class=" col-xs-4 control-label">New Password</label>
             <div class=" col-xs-3">
-                <input type="text" name="p_new_pwd" id="p_new_pwd" class="form-control input-sm ">
+                <input type="password" name="p_new_pwd" id="p_new_pwd" class="form-control input-sm ">
             </div>  
     </div>
     
@@ -19,7 +20,7 @@
     <div class="form-group  "> 
            <label class=" col-xs-4 control-label">Confirm Password</label>
             <div class=" col-xs-3">
-                <input type="text" name="p_confirm_pwd" id="p_confirm_pwd" class="form-control input-sm ">
+                <input type="password" name="p_confirm_pwd" id="p_confirm_pwd" class="form-control input-sm ">
             </div>  
     </div>
     
@@ -33,4 +34,4 @@
 
 </div>    
  
-</div>
+</form>
