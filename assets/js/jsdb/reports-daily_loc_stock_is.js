@@ -21,7 +21,9 @@ $("#btnGo").click(function(){
     DisplayReport();
 });   
 
-
+$("#btnPrint").click(function(){
+    window.print();
+});  
 
 
 function DisplayReport(){

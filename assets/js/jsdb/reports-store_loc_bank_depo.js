@@ -20,10 +20,14 @@ $("#btnGo").click(function(){
     DisplayReport();
 });   
 
+$("#btnPrint").click(function(){
+    window.print();
+});  
+
 function DisplayReport(){
     $(tbl).html(""); 
 
-    $.post( proc_url + "repStoreDailyBankDepo?p=" + p_month.val() + ","+ p_year.val() +"," + p_store_loc_id.val(),function(d){
+    $.post( proc_url + "repStoreDailyBankDepo?p=" + p_month.val() + ","+ p_year.val() +"," + p_store_loc_id.val() + "," +"''",function(d){
         if (d.length===0) {
             $(tbl).html("No Result."); 
             return;

@@ -1,0 +1,41 @@
+<form method="post" id="frm">
+<div class="col-xs-11">
+    <div class="form-horizontal ">
+         <div class="form-group  ">  
+            <label class=" col-xs-1 control-label">Area</label>
+            <div class=" col-xs-3"> 
+                <select name="p_loc_id" id="p_loc_id" class="form-control input-sm"></select>
+            </div>
+            
+            
+            <label class=" col-xs-1 control-label">Supplier</label>
+            <div class=" col-xs-3"> 
+                <select name="p_supplier_id" id="p_supplier_id" class="form-control input-sm"></select>
+            </div>
+            
+            
+            <label class=" col-xs-1 control-label">Month</label>
+            <div class=" col-xs-1">
+                <select name="p_month" id="p_month" class="form-control input-sm"></select>
+            </div>
+            
+            <label class=" col-xs-1 control-label">Year</label>
+            <div class=" col-xs-1">
+                <input type="text" name="p_year" id="p_year" class="form-control input-sm">
+            </div>
+            
+        </div>
+     </div>
+
+    
+</div>  
+<div class="col-xs-1">
+    <button type="button"  class="btn btn-primary btn-sm" id="btnGo"><span class="glyphicon glyphicon-search"></span></button>
+    <button type="button"  class="btn btn-primary btn-sm" id="btnPrint"><span class="glyphicon glyphicon-print"></span></button>
+</div>
+
+<div id="tableResult" class="col-xs-12">   
+   
+</div>
+
+</form>

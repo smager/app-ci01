@@ -1,5 +1,5 @@
 <form method="post" id="frm">
-<div class="col-xs-10 ">
+<div class="col-xs-12 ">
     <div class="form-horizontal ">
         <input type="hidden" name="p_supply_is_id" id="p_supply_is_id">
         <div class="col-xs-11 ">
@@ -33,7 +33,7 @@
     </div>
 </div>    
  
-<div class="col-xs-10">   
+<div class="col-xs-12">   
 <table id="grid" class="zTable fullWidth">    
     <thead>
         <tr>

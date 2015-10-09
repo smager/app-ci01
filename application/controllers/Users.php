@@ -58,6 +58,12 @@ class users extends Base_Controller {
         redirect( base_url() );            
     }
 
+	public function changepwd()
+	{
+        check_login();
+		$this->load->view('default_view');
+	}
+
     public function getdata_json(){
     
         jsonOut($this->users_model->getdata()->result());

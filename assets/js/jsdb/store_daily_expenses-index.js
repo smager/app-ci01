@@ -1,7 +1,7 @@
 var bs = zsi.bs.ctrl;
 setInputs();
 $(document).ready(function(){
-    $("#p_store_loc_id").dataBind(base_url + "select_options/code/store_locs");
+    $("#p_store_loc_id").dataBind(base_url + "select_options/code/user_store_locations?p=user_id=" + userInfo.user_id);
     displayBlankRows(true);
     $("#p_exp_date").val( new Date().toShortDate() );
 });   

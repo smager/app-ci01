@@ -5,14 +5,14 @@ var depoAmt =0;
 
 setInputs();
 $(document).ready(function(){
-    $("#p_store_loc_id").dataBind(base_url + "select_options/code/store_locs");
+    $("#p_store_loc_id").dataBind(base_url + "select_options/code/user_store_locations?p=user_id=" + userInfo.user_id);
     markMandatory();
     //act_depo_date.val( new Date().toShortDate() );
     
     
     store_loc_id.change(function(){ 
         if(this.value!==''){
-             depo_by_empl_id.dataBind( base_url + "select_options/code/sales_staffs?where=store_loc_id=" + this.value);
+             depo_by_empl_id.dataBind( base_url + "select_options/code/sales_staffs?p=store_loc_id=" + this.value);
         }
     });    
 

@@ -1,5 +1,5 @@
 <form method="post" id="frm">
-<div class="col-xs-10 ">
+<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
         <div class="form-horizontal ">
             <input type="hidden" name="p_store_loc_exp_id" id="p_store_loc_exp_id">
             <div class="form-group  ">  
@@ -28,7 +28,7 @@
   
 </div>    
  
-<div class="col-xs-9">   
+<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">   
     <table id="grid" class="zTable fullWidth">    
         <thead>
             <tr>

@@ -2,6 +2,7 @@ var bs = zsi.bs.ctrl;
 var  aRight = " style='text-align:right'";
 var  aCenter = " style='text-align:center'";
 var  aLeft = " style='text-align:left'";
+var proc_url = base_url + "common/executeproc/";
 
 //public computation:
 var tYesterdayAmt=0;
@@ -35,9 +36,15 @@ $("#btnGo").click(function(){
     
     setYesterdayAndToday();    
     displayHeaderInfo();
+    displayBankDepo();
     displayCashBoxRecords();
+
     
 }); 
+
+$("#btnPrint").click(function(){
+    window.print();
+});    
 
 function clearTotals(){
     tYesterdayAmt       = 0;
@@ -174,10 +181,9 @@ function displayExpeseRecords(){
                     +  "</tr>";
             $(tableName).append(r);
             displayCashReportRecords();
-
         }
-        
-    });       
+      
+    }); 
 } 
 
 function displayCashReportRecords(){
@@ -207,3 +213,42 @@ function displayCashReportRecords(){
     );
 } 
  
+function displayBankDepo(){
+    var tbl="#tableBankDepo"; 
+    $(tbl).html(""); 
+    $.post( proc_url + "repStoreDailyBankDepo?p=" + "''" + ","+ "''" +"," + store_loc_id.val() + ",'" + is_date.val()+"'",function(d){
+        if (d.length===0) {
+            $(tbl).html("No Result."); 
+            return;
+        }
+        var hInfo =  d[0];
+        var keys = Object.keys(hInfo);
+        var colsLength =keys.length;
+        
+        var h="<table class='zTable fullWidth'><thead><tr><th colspan='12' class='title1 align-c' style=''>Bank Deposits</th></tr><tr>";
+        for(var i=0;i< colsLength;i++){                
+            h+="<th class='align-c'>" + keys[i] + "</th>";
+        }
+        h+="</tr></thead></table>"        
+        $(tbl).html(h);
+        
+        var trCls="odd";
+        for(var y=0;y< d.length;y++){
+             h="<tr class='" + trCls + "'>";
+            if(trCls=="odd") trCls="even"; else trCls ="odd";     
+            for(var x=0;x< colsLength;x++){
+                var info = d[y];
+                var val = info[keys[x]];
+                var new_val = $('<div/>').text(  (isNaN(val)===false?val.toMoney() : val) ).html();
+                h+="<td " + (isNaN(val)===false?"class='align-r'": "") + ">"+ new_val + "</td>";
+                var val2 =  (isNaN(val)===false ? val:0);
+            }
+            h+="</tr>";
+            $(".zTable").append(h);
+        }
+
+    }).fail(function(data) {
+        result =  data.responseText.replace(/^\s+/,"");
+        $(tbl).html(result);
+    })   
+}  

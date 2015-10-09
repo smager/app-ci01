@@ -3,7 +3,7 @@ var proc_url = base_url + "common/executeproc/";
 
 setInputs();
 $(document).ready(function(){
-    p_loc_id.dataBind(base_url + "select_options/code/locations");
+    p_loc_id.dataBind(base_url + "select_options/code/user_locations?p=user_id=" + userInfo.user_id);
     p_store_id.dataBind(base_url + "select_options/code/stores");
     p_month.dataBind(base_url + "select_options/code/months_full");
     p_year.val( new Date().getFullYear() );
@@ -32,8 +32,9 @@ $("#btnGo").click(function(){
     
 });   
 
-
-
+$("#btnPrint").click(function(){
+    window.print();
+});  
 
 function DisplayReport(){
     $(tbl).html(""); 

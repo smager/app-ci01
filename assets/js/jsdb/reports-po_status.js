@@ -3,7 +3,7 @@ var proc_url = base_url + "common/executeproc/";
 
 setInputs();
 $(document).ready(function(){
-    p_loc_id.dataBind(base_url + "select_options/code/locations");
+    p_loc_id.dataBind(base_url + "select_options/code/user_locations?p=user_id=" + userInfo.user_id);
     p_supplier_id.dataBind(base_url + "select_options/code/suppliers");
     p_month.dataBind(base_url + "select_options/code/months_full");
     p_status_code.dataBind(base_url + "select_options/code/status");
@@ -25,8 +25,9 @@ $("#btnGo").click(function(){
     DisplayReport();
 });   
 
-
-
+$("#btnPrint").click(function(){
+    window.print();
+});  
 
 function DisplayReport(){
     $(tbl).html(""); 

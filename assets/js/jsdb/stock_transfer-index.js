@@ -1,7 +1,7 @@
 var supplyBrands;
 
 $(document).ready(function(){
-    $("#p_loc_id,#p_loc_id_to").dataBind( base_url + "select_options/code/locations");
+    $("#p_loc_id").dataBind( base_url + "select_options/code/user_locations?p=user_id=" + userInfo.user_id);
     initInputs();
     onLocationChange();
     displayBlankRows(true);
@@ -9,6 +9,7 @@ $(document).ready(function(){
     setSupplyBrands();
     markMandatory();
 });
+
 $("form[id=frm]").submit(function(){
      if( zsi.form.checkMandatory()!==true) return false;
      
@@ -168,8 +169,12 @@ function onSupplyBrandChange(){
 function onLocationChange(){
     loc_id.change(function(){
         if(this.value==='') return false;
+        
+        
+        $("#p_loc_id_to").dataBind( base_url + "select_options/code/user_locations?p=user_id=" + userInfo.user_id + ",loc_id<>" + this.value);
+
         $("select[name='p_loc_supply_brand_id[]']").dataBind({ 
-             url: base_url + "select_options/code/loc_supply_brands_bycode?where=loc_id=" + this.value + " and stock_qty>0"
+             url: base_url + "select_options/code/loc_supply_brands_bycode?p=loc_id=" + this.value + ",stock_qty>0"
             ,isUniqueOptions:true
             ,onAllComplete: function(){
                    onSupplyBrandChange();

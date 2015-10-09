@@ -3,12 +3,6 @@ var bs = zsi.bs.ctrl;
 $(document).ready(function(){
     $("#frm").attr("action",base_url + "users/update").attr("method","post");
     
-    var bsButton = zsi.bs.button;
-    $(".buttonGroup").append( 
-          bsButton({name:"Save",type:"submit"})
-        + bsButton({name:'Delete',onclick:"checkDelete('"  +  base_url  + "users/delete');"}) 
-    );
-
     displayRecords();
     
     //get dialog template
@@ -43,7 +37,6 @@ function displayRecords(){
             }            
             ,function(d){ return bs({name:"empl_id[]",type:"select",value: d.empl_id}); }
             ,function(d){ return bs({name:"user_name[]",value: d.user_name}); }
-            ,function(d){ return bs({name:"user_password[]",value: d.user_password}); }
             ,function(d){ return bs({name:"role_id[]",type:"select",value: d.role_id}); }
             ,function(d){ return bs({name:"active[]",type:"yesno",value: d.active}); }
             ,function(d){ return '<a href="javascript:manageItems('+ d.user_id +');">Location Access</a>'; }
@@ -83,10 +76,9 @@ function displayBlankRows(){
             }            
             ,function(d){ return bs({name:"empl_id[]",type:"select"}); }
             ,function(d){ return bs({name:"user_name[]"}); }
-            ,function(d){ return bs({name:"user_password[]"}); }
             ,function(d){ return bs({name:"role_id[]",type:"select"}); }
             ,function(d){ return bs({name:"active[]",type:"yesno",value:0}); }
-            ,function(d){ return ""; }
+            ,function(d){ return "";}
         ]
         ,onComplete : function(){
             $("select[name='p_empl_id[]']").dataBind( base_url + "select_options/code/employees");

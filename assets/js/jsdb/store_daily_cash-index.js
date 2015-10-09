@@ -1,5 +1,3 @@
-var ctrlSel = zsi.control.SelectList;
-    
 var p_store_daily_cash_id = $("#p_store_daily_cash_id");
 var p_store_loc_id        = $("#p_store_loc_id");
 var p_tran_date           = $("#p_tran_date"); 
@@ -143,7 +141,7 @@ function getStoreDailyCashDetailData(){
     
     
 $(document).ready(function(){
-   ctrlSel( base_url + "select_options/code/store_locs","select[name='p_store_loc_id']","","N");
+   $("select[name='p_store_loc_id']").dataBind( base_url + "select_options/code/user_store_locations?p=user_id=" + userInfo.user_id);
 });    
      
      

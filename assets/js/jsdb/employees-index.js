@@ -1,16 +1,33 @@
-var bs = zsi.bs.ctrl;
+var bsButton = zsi.bs.button;
+var bs = zsi.bs.ctrl;    
+var proc_url = base_url + "common/executeproc/";
 
-$("#frm").submit(function(){ this.action = controller_url + "update"; });
+setInputs();
+function setInputs(){
+    loc_id = $("#p_loc_id");
+    store_loc_id = $("#p_store_loc_id");
+}
 
 $(document).ready(function(){
-    displayRecords();
+    $("#p_loc_id").dataBind( base_url + "select_options/code/user_locations?p=user_id=" + userInfo.user_id);
+    $("#frm").attr("action",base_url + "employees/update").attr("method","post");
+    onLocationChange();
+    
+    $(".buttonGroup").append( 
+          bsButton({name:"Save",type:"submit"})
+        + bsButton({name:'Delete',onclick:"checkDelete(false);"}) 
+    );
 });   
+
+$("#btnGo").click(function(){
+    displayRecords();
+});
 
 function displayRecords(){   
     var rownum=0;
     zsi.json.loadGrid({
          table  : "#grid"
-        ,url   : controller_url +  "getdata"
+        ,url   : proc_url +  "getemployees?p=" + "0" + loc_id.val() + "," + "0" + store_loc_id.val() + ",0" 
         ,td_body: [ 
             function(d){
                 return     bs({name:"empl_id[]",type:"hidden",value: d.empl_id})
@@ -55,6 +72,12 @@ function displayBlankRows(){
   $("select[name='p_store_loc_id[]']").dataBind( base_url + "select_options/code/store_locs");
 }
 
+function onLocationChange(){
+    loc_id.change(function(){
+        if(this.value==='') return false;
+        $("#p_store_loc_id").dataBind( base_url + "select_options/code/user_store_locations?p=user_id=" + userInfo.user_id + ",loc_id=" + this.value);
+    });
+} 
     
     
 function checkDelete(l_cmd) {

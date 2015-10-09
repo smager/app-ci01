@@ -113,7 +113,7 @@ function removeDR(id){
 
 function loadSelectOptions(po_id){
     var obj = $("select[name='p_po_dtl_id[]']").dataBind({
-         url             : base_url + "select_options/code/po_dtlswithbal?where=po_id=" + po_id
+         url             : base_url + "select_options/code/po_dtlswithbal?p=po_id=" + po_id
         ,onEachComplete  : function(){
             var selVal = this.value;
             var supply_brand = $(this.parentNode).next().children("select[name='p_supply_brand_id[]']");

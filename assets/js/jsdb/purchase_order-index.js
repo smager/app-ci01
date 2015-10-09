@@ -1,7 +1,7 @@
 var supply;
 $(document).ready(function(){
     $("#p_supplier_id").dataBind( base_url + "select_options/code/suppliers");
-    $("#p_loc_id").dataBind( base_url + "select_options/procedure/getUserLocations/" + userInfo.user_id);
+    $("#p_loc_id").dataBind( base_url + "select_options/code/user_locations?p=user_id=" + userInfo.user_id);
     initInputs();
     setSupply();
     onLocationChange();
@@ -178,7 +178,7 @@ function onLocationChange(){
             return false;
         }
         $("select[name='p_loc_supply_id[]']").dataBind({ 
-             url: base_url + "select_options/code/loc_supplies_po?where=loc_id=" + this.value + " and supplier_id=" + supplier_id.val()
+             url: base_url + "select_options/code/loc_supplies_po?p=loc_id=" + this.value + ",supplier_id=" + supplier_id.val()
             ,isUniqueOptions:true
             ,onAllComplete: function(){
                 markMandatory();

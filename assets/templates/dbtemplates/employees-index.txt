@@ -1,4 +1,27 @@
 <form method="post" id="frm">
+<div class="col-xs-11">
+    <div class="form-horizontal ">
+        <div class="form-group  ">
+              
+            <label class=" col-xs-2 control-label">Area</label>
+            <div class=" col-xs-2"> 
+                <select name="p_loc_id" id="p_loc_id" class="form-control input-sm"></select>
+            </div>
+
+            <label class=" col-xs-2 control-label">Store</label>
+            <div class=" col-xs-2"> 
+                <select name="p_store_loc_id" id="p_store_loc_id" class="form-control input-sm"></select>
+            </div>
+            
+            <div class="col-xs-1">
+               <button type="button"  class="btn btn-primary btn-sm" id="btnGo"><span class=" glyphicon glyphicon-folder-open"></span></button>
+            </div>
+           
+
+        </div> 
+    </div>
+</div>   
+<div class="col-xs-12">
 <table id="grid" class="zTable fullWidth">    
 <thead>	
     <tr>
@@ -13,14 +36,6 @@
     </tr>
  </thead>	
  </table>    
-
-<div class="buttonGroup">
-<button type="submit" class="btn btn-primary btn-sm" id="btnSave">
-	<span class="glyphicon glyphicon-floppy-disk"></span> Save
-</button>
-<button onclick="return checkDelete();" class="btn btn-primary btn-sm" id="btnDelete">
-	<span class="glyphicon glyphicon-trash"></span> Delete
-</button>    
+<div class="buttonGroup"></div>
 </div>
-
 </form>

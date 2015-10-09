@@ -3,7 +3,7 @@
     <div class="form-horizontal ">
         <input type="hidden" name="p_st_id" id="p_st_id">
         <div class="form-group  ">  
-            <label class=" col-xs-1 control-label">S.T #</label>
+            <label class=" col-xs-1 control-label">Transfer #</label>
             <div class=" col-xs-1">
                 <input type="text" class="form-control input-sm " id="p_st_no" name="p_st_no">
             </div>  

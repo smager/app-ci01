@@ -3,7 +3,7 @@ var proc_url = base_url + "common/executeproc/";
 
 setInputs();
 $(document).ready(function(){
-    p_loc_id.dataBind(base_url + "select_options/code/locations");
+    p_loc_id.dataBind(base_url + "select_options/code/user_locations?p=user_id=" + userInfo.user_id);
     p_store_id.dataBind(base_url + "select_options/code/stores");
 
 });   
@@ -21,12 +21,13 @@ $("#btnGo").click(function(){
     
 });   
 
-
-
+$("#btnPrint").click(function(){
+    window.print();
+});  
 
 function DisplayReport(){
     $(tbl).html(""); 
-    $.post(proc_url +  "repLocSuppliesReorder?p=" + parseInt("0" + p_loc_id.val()) +"," + p_store_id.val(),function(d){
+    $.post(proc_url +  "repLocSupplies?p=" + parseInt("0" + p_loc_id.val()) +"," + p_store_id.val(),function(d){
         if (d.length===0) {
             $(tbl).html("No Result."); 
             return;

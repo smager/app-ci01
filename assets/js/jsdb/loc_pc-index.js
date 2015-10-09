@@ -1,7 +1,7 @@
 var supply;
 var action_url = base_url + "loc_pc";
 $(document).ready(function(){
-    $("#p_loc_id").dataBind( base_url + "select_options/code/locations");
+    $("#p_loc_id").dataBind( base_url + "select_options/procedure/getUserLocations/" + userInfo.user_id);
     $("#p_store_id").dataBind( base_url + "select_options/code/stores");
     initInputs();
     onLocationChange();
@@ -20,7 +20,7 @@ $("form[id=frm]").submit(function(){
                  ClearHeader();
                  $("#grid").clearGrid();
             }
-            getUnpostedPC(d.loc_id);
+            getUnpostedPC(d.loc_id + "/"+  d.store_id);
             
         } 
         
@@ -41,6 +41,7 @@ $("form[id=frm]").submit(function(){
     pc_no.val('').change();
     pc_date.val('').change();
     loc_id.val('').change();
+    store_id.val('').change();
     posted.val(0);
  }
  
@@ -69,7 +70,7 @@ function markMandatory(){
 }
 function getUnpostedPC(){
      $(".list-group").html('');
-    $.getJSON(base_url + "loc_pc/getunpostedpc/" + loc_id.val(),function(data){
+    $.getJSON(base_url + "loc_pc/getunpostedpc/" + loc_id.val() + "/"+ store_id.val(),function(data){
         $.each(data,function(){
             var params = {
                  loc_pc_id: this.loc_pc_id
@@ -117,15 +118,15 @@ function displayDetails(p){
 
  
 
-function displayRecords(params){       
-    var bs = zsi.bs.ctrl;    
+function displayRecords(params){     
+    var bs = zsi.bs.ctrl;  
     zsi.json.loadGrid({
          table  : "#grid"
         ,url   : base_url + "loc_pc/get_loc_pc/" + params
         ,td_body: [ 
             function(d){
                 return     bs({name:"loc_pc_dtl_id[]",type:"hidden",value: d.loc_pc_dtl_id})
-                        +  bs({name:"loc_supply_brand_id[]",type:"hidden",value: d.loc_supply_brand_id})
+                        +  bs({name:"loc_supply_brand_id[]",type:"hidden",value: d.loc_supply_brand_id});
             }            
             ,function(d){ return d.supply_code;  }
             ,function(d){ return d.brand_name + ' ' + d.cu_desc; }
@@ -144,7 +145,15 @@ function onLocationChange(){
             $("#grid").clearGrid(); 
             return false;
         }
-        getUnpostedPC(this.value);
+    });   
+} 
+
+function onStoreChange(){
+    store_id.change(function(){
+        if(this.value===''){  
+            $("#grid").clearGrid(); 
+            return false;
+        }
     });   
 } 
 
@@ -155,6 +164,7 @@ $("#btnGo").click(function(){
          if(store_id.val()!==''){
              params += "/" + store_id.val();
          }
+        getUnpostedPC();
         displayRecords(params);
      }
 });

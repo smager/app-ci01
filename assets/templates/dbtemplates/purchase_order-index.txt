@@ -50,7 +50,7 @@
     <thead>
         <tr>
             <th style="width: 25px"></th>
-            <th>Item</th>
+            <th>Itemssss</th>
             <th style="text-align: center;">Unit</th>
             <th>Qty</th>
 

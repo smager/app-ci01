@@ -3,7 +3,7 @@ var action_url = base_url + "supply_out";
 var tblPopup = "tblStoreLocSupp";
 setInputs();
 $(document).ready(function(){
-    $("#p_store_loc_id").dataBind(base_url + "select_options/code/store_locs");
+    $("#p_store_loc_id").dataBind(base_url + "select_options/code/user_store_locations?p=user_id=" + userInfo.user_id);
     markMandatory();
 });   
 

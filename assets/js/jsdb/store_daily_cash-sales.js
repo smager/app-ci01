@@ -5,7 +5,7 @@ var p_posted              = $("#p_posted");
 var p_event_id            = $("#p_event_id");
 
 $(document).ready(function(){
-    p_store_loc_id.dataBind( base_url + "select_options/code/store_locs");
+    p_store_loc_id.dataBind( base_url + "select_options/code/user_store_locations?p=user_id=" + userInfo.user_id);
     p_event_id.dataBind( base_url + "select_options/code/events");
     p_tran_date.val( new Date().toShortDate() );
 });    
@@ -46,17 +46,6 @@ function setChangeEvent(){
     
 }
 
-
-p_store_loc_id.change(function(){ 
-    /* if(this.value!==''){
-         p_empl_id.dataBind( base_url + "select_options/code/sales_staffs?where=store_loc_id=" + this.value);
-    }
-    
-   if(this.value!=='' && new Date(p_tran_date.val()).isValid()){    
-        getStoreDailyCashData();
-    } 
-    */
-});    
 
 function getStoreDailyCashData(){  
     var l_data  = { 'store_loc_id' : p_store_loc_id.val(), 'tran_date': p_tran_date.val() }; 

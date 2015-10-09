@@ -13,7 +13,7 @@ table tr.total td#totalTitle{
         <input type="hidden" name="p_store_daily_cash_id" id="p_store_daily_cash_id" value="3">
         <input type="hidden" value="cashbox" name="p_tran_type" id="p_tran_type">
         <div class="form-group  ">  
-            <label class=" col-xs-1 control-label">Location</label>
+            <label class=" col-xs-1 control-label">Store</label>
             <div class=" col-xs-3"> 
                 <select class="form-control input-sm" id="p_store_loc_id" name="p_store_loc_id"></select>
             </div>  

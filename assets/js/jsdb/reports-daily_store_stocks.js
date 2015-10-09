@@ -8,8 +8,12 @@ $(document).ready(function(){
 
 $("#btnGo").click(function(){
     displayRecords();
-});   
- 
+});  
+
+$("#btnPrint").click(function(){
+    window.print();
+});
+
 function setInputs(){
     store_loc_id = $("#p_store_loc_id");
     stock_date = $("#p_stock_date");

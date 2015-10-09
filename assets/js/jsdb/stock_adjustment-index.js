@@ -159,7 +159,7 @@ function ShowHideSupplyItems(loc_id,storeLocId,_selectedValue){
     
    if (l_loc_id !== 0 && l_store_loc_id===0){
         loc_supply_brand_id.dataBind({ 
-             url:base_url + "select_options/code/loc_supply_brands_bycode?where=loc_id=" + l_loc_id
+             url:base_url + "select_options/code/loc_supply_brands_bycode?p=loc_id=" + l_loc_id
             ,selectedValue :   _selectedValue
         });
       
@@ -174,7 +174,7 @@ function ShowHideSupplyItems(loc_id,storeLocId,_selectedValue){
        }
        else{
             store_loc_supply_daily_id.dataBind({ 
-                 url: base_url + "select_options/code/store_loc_supply_daily?where=store_loc_id=" + l_store_loc_id 
+                 url: base_url + "select_options/code/store_loc_supply_daily?p=store_loc_id=" + l_store_loc_id 
                                + ' and stock_date=str_to_date("' + adjmt_date.val() + '","%m/%d/%Y")' 
                 ,selectedValue :   _selectedValue
             });
@@ -190,7 +190,7 @@ function ShowHideSupplyItems(loc_id,storeLocId,_selectedValue){
 
 
 function displayStoreLocation(id){
-        store_loc_id.dataBind( base_url + "select_options/code/store_locs?where=loc_id=" + id);
+        store_loc_id.dataBind( base_url + "select_options/code/store_locs?p=loc_id=" + id);
 }
 
 

@@ -8,8 +8,8 @@ body{
 }
 
 .pageTitle {
+    background-color: #d31743;
     background-image: linear-gradient(to bottom, #d31743 0%, #d8506d 25%, #d92b52 51%, #d84363 100%);	
-    /*background-image: linear-gradient(to bottom, #ed315a 0px, #d92b52 100%);*/
     color: white;
     font-size: 11pt;
     height: 27px;
@@ -37,7 +37,7 @@ table.zTable tr.total td {
 }    
 table.zTable tr th{
     vertical-align: inherit;
-    /*background-image:linear-gradient(to bottom, #b9313c 0px, #b21e28 100%);*/    
+    background-color:#428bca;    
     background-image:linear-gradient(to bottom, #428bca 0px, #2d6ca2 100%);    
     padding-bottom: 4px;
     padding-top: 4px;

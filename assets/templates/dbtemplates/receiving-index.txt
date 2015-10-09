@@ -8,12 +8,12 @@
             <label class=" col-xs-1 control-label">P.O. #</label>
             <div class=" col-xs-2"> <select class="form-control input-sm" id="p_po_filter" name="p_po_filter"></select>
             </div>  
-            <label class=" col-xs-1 control-label">Supplier</label>
+            <label class=" col-xs-2 control-label">Supplier</label>
             <div class=" col-xs-2">
                 <p class="form-control-static" id="p_supplier_name" >N/A</p>
             </div>  
             
-            <label class=" col-xs-1 control-label">Location</label>
+            <label class=" col-xs-2 control-label">Location</label>
             <div class=" col-xs-2">
                 <p class="form-control-static" id="p_loc_id" >N/A</p>
             </div>
@@ -25,13 +25,13 @@
                 <input type="text" class="form-control input-sm " id="p_dr_no" name="p_dr_no">
             </div>  
             
-            <label class=" col-xs-1 control-label">Date</label>
+            <label class=" col-xs-2 control-label">Date</label>
             <div class=" col-xs-2">
                 <input type="text" placeholder="mm/dd/yyyy" class="form-control input-sm " id="p_dr_date" name="p_dr_date">
             </div>
             
-            <label class=" col-xs-1 control-label">Posted</label>
-            <div class="col-xs-1">
+            <label class=" col-xs-2 control-label">Posted</label>
+            <div class="col-xs-2">
                 <select class="form-control input-sm" id="p_posted" name="p_posted">
                     <option value="0">No</option><option value="1">Yes</option>
                 </select>
@@ -58,7 +58,7 @@
             <th>Supply</th>
             <th>Brand/Unit</th>
             <th>Qty</th>
-            <th style="text-align:center;">Current Bal.</th>
+            <th style="text-align:center;">Ordered Bal.</th>
             <th style="text-align:center;">Ending Bal.</th>
         </tr>
     </thead>        
