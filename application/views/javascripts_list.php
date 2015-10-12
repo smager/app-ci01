@@ -50,6 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php menu(); ?> 
     
 <div class="container page">
+<div class="pageTitle">JavaScripts </div>
 
 <?php if($this->input->get("page_url")==''){ ?>        
     <form id="frm" action="<?php echo base_url('javascripts/update');?>" method="post" >

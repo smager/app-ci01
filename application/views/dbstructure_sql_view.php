@@ -44,6 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <body>
 <?php menu(); ?>     
 <div class="container page">
+<div class="pageTitle">SQL Console  </div>
 <form id="frm" action="<?php echo base_url() . $this->router->fetch_class() . '/update';?>" method="post" >    
 <div class="container-fluid">    
 <div class="form-horizontal">

@@ -24,6 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <body>
 <?php menu(); ?>     
 <div class="container page">
+<div class="pageTitle">Database Structure </div>
 <?php
 
     echo "<a href='". base_url() . $this->router->fetch_class() . "'>Tables & Views</a>"; 

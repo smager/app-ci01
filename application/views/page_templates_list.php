@@ -47,6 +47,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <?php menu(); ?> 
     
 <div class="container page">
+<div class="pageTitle">Page Templates</div>
 <?php if($this->input->get("page_url")==''){ ?>             
     <form id="frm" action="<?php echo base_url('page_templates/update');?>" method="post" >        
         <div class="form-horizontal ">

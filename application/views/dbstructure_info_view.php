@@ -11,7 +11,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </head>
 <body>
 <?php menu(); ?>     
-<div class="container page">
+<div class="container page
+<div class="pageTitle">Database Structure : View Mode </div>
 <?php
     echo $info;  
 ?>    

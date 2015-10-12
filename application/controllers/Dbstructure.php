@@ -220,6 +220,7 @@ class dbstructure extends Base_Controller {
         $overwrite      = $post['p_overwrite'];
         $dbstruct_id=0;
         $isFound        =false;
+
         //check source exist;
         $query= $this->db->query("select dbstruct_id from $table where object_name='$object_name' limit 1");
         if($query->num_rows() > 0){
@@ -249,18 +250,16 @@ class dbstructure extends Base_Controller {
             $this->db->update($table, $data);
         }         
         
-        
-        echo $dbstruct_id;
-        if($isFound){
-            if($overwrite==1){
-                if($object_type=='table'){
-                    $this->db->query("DROP TABLE IF EXISTS $object_name");
-                }else if($object_type=='function' || $object_type=='procedure'){
-                    $this->db->query("DROP $object_type IF EXISTS $object_name");
-                }
+        if($overwrite==1){
+            if($object_type=='table'){
+                $this->db->query("DROP TABLE IF EXISTS $object_name");
+            }else if($object_type=='function' || $object_type=='procedure'){
+                $this->db->query("DROP $object_type IF EXISTS $object_name");
             }
-            
         }
+        
+        //create cotent to physical db objects.
+        return $this->db->query($content);
 	}    
    
     
