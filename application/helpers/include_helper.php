@@ -168,8 +168,8 @@ function includeFooter(){
     $url = $ci->router->fetch_class() . '/' . $ci->router->fetch_method();
  if( isset( $ci->session->userdata['current_user'] ) ==true ){  
     if (strtolower(current_user()->roleInfo->role_code)=="dev") {    
-        echo "<div class='debugPanel'>";
-        echo "<label>Web Editor Manager : </label>";    
+        echo "<div class='debugPanel container'>";
+        echo "<label>Web Editor Manager : &nbsp;</label>";    
         echo "<a href='" .base_url("page_templates"). "?page_url=" .$url. "' target='_blank'>Edit Page Template</a>";
         echo " | <a href='" .base_url("javascripts"). "?page_url=" .$url. "' target='_blank'>Edit Javascript</a>";
         echo " | <a href='" .base_url("source"). "' target='_blank'>Edit System Source</a>";
