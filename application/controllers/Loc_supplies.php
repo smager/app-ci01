@@ -6,10 +6,6 @@ class loc_supplies extends Base_Controller {
         parent::__construct();
         $this->load->model('loc_supplies_model'); 
     }
-    
-    public function getdata_json($id){    
-        jsonOut($this->loc_supplies_model->getdata_ad($id)->result());        
-    }
 
     public function get_loc_supply_brands($loc_supply_id){    
         jsonOut($this->loc_supplies_model->get_loc_supply_brands($loc_supply_id)->result());        
