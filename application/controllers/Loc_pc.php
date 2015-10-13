@@ -18,9 +18,9 @@ class loc_pc extends Base_Controller {
     }
 
 
-    public function getunpostedpc($loc_id=0){
+    public function getunpostedpc($loc_id=0,$store_id=0){
 
-        jsonOut($this->loc_pc_model->get_unposted_pc($loc_id)->result());
+        jsonOut($this->loc_pc_model->get_unposted_pc($loc_id,$store_id=0)->result());
     }
 
 

@@ -1018,7 +1018,8 @@ AND a.conv_unit_id = c.unit_id;
 
 CREATE OR REPLACE VIEW supplies_v AS
 select *, getUnitSDesc(unit_id) unit_desc, getSupplyType(supply_type_id) supply_type 
-from  supplies;
+from  supplies
+ORDER BY seq_no;
 
 CREATE OR REPLACE VIEW store_supplies_v AS
 select *, getUnitSDesc(unit_id) unit_desc, getSupplyType(supply_type_id) supply_type 

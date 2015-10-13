@@ -17,8 +17,8 @@ class loc_pc_model extends CI_Model{
     }
     */
 
-     function get_unposted_pc($loc_id){
-        $query = $this->db->query("call getLocPC_Unposted($loc_id);");
+     function get_unposted_pc($loc_id,$store_id){
+        $query = $this->db->query("call getLocPC_Unposted($loc_id,$store_id);");
         return $query;
     }
 
@@ -44,7 +44,7 @@ class loc_pc_model extends CI_Model{
         // posted=true;
         if($post["p_posted"]==true){
             $pc_date=$post["p_pc_date"];
-            $sql = "call loc_pc_post($loc_pc_id,'$pc_date')";
+            $sql = "call loc_pc_post($loc_pc_id)";
             $this->db->query($sql);
         }
 

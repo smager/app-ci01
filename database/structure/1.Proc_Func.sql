@@ -1,4 +1,4 @@
-/*Procedure, Function*/in
+/*Procedure, Function*/
 
  CREATE FUNCTION getlatestrevid(p_filename varchar(100)) returns varchar(100)
  DETERMINISTIC
@@ -664,10 +664,15 @@ BEGIN
 
 END;
    
-CREATE PROCEDURE getLocPC_Unposted(p_loc_id int(5))
+CREATE PROCEDURE getLocPC_Unposted(p_loc_id int(5), p_store_id int(5))
 BEGIN
-select * from loc_pc where posted=0
-and loc_id=p_loc_id;
+IF IFNULL(p_store_id,0) =0 THEN
+   select * from loc_pc where posted=0
+   and loc_id=p_loc_id;
+ELSE 
+   select * from loc_pc where posted=0
+   and loc_id=p_loc_id AND store_id=p_store_id;
+END IF;
 END;
 
 CREATE PROCEDURE getLocPC(p_loc_id INT, p_store_id INT, p_loc_pc_id INT ) 
@@ -821,7 +826,7 @@ FROM supply_brands a
 WHERE NOT EXISTS (SELECT supply_brand_id FROM loc_supply_brands b WHERE b.loc_supply_id =  getLocSupplyId(p_loc_id, a.supply_id));
 END;
 
-CREATE PROCEDURE loc_pc_post(p_loc_pc_id int(5), p_date varchar(20))
+CREATE PROCEDURE loc_pc_post(p_loc_pc_id int(5))
 BEGIN
 DECLARE l_found VARCHAR(5);
       UPDATE loc_supply_brands a, loc_pc_dtls b 
@@ -1113,11 +1118,11 @@ BEGIN
    DEALLOCATE PREPARE stmt;   
 END; 
 
-CREATE PROCEDURE repLocSupplies(p_loc_id int(5), p_store_id int(5))
+CREATE PROCEDURE repLocSupplies(p_loc_id int(5), p_store_id int(5), p_show int(1))
 BEGIN
-
+IF p_show=1 THEN
    IF IFNULL(p_loc_id,0)<>0 THEN
-      SELECT supply_code as 'Supply', unit_desc as 'Unit', reorder_level as 'Reorder Qty', ttl_stocks as 'On-hand Qty', ordered_qty as 'Ordered Qty' 
+      SELECT supply_code as 'Supply', unit_desc as 'Unit', reorder_level as 'Reorder Qty', ttl_stocks as 'On-hand Qty', ifnull(ordered_qty,0) as 'Ordered Qty' 
         FROM loc_supplies_v 
        WHERE (ttl_stocks + ordered_qty) <= reorder_level
          AND loc_id=p_loc_id
@@ -1128,7 +1133,20 @@ BEGIN
        WHERE (ttl_stocks + ordered_qty) <= reorder_level
          AND store_id = p_store_id;
    END IF;
+ELSE
+   IF IFNULL(p_loc_id,0)<>0 THEN
+      SELECT supply_code as 'Supply', unit_desc as 'Unit', reorder_level as 'Reorder Qty', ttl_stocks as 'On-hand Qty', ifnull(ordered_qty,0) as 'Ordered Qty' 
+        FROM loc_supplies_v 
+       WHERE loc_id=p_loc_id
+         AND store_id = p_store_id;
+   ELSE
+      SELECT getLocation(loc_id) as 'Area', supply_code as 'Supply', unit_desc as 'Unit', reorder_level as 'Reorder Level', ttl_stocks as 'On-hand Qty', ordered_qty as 'Ordered Qty' 
+        FROM loc_supplies_v 
+       WHERE store_id = p_store_id;
+   END IF;
+END IF;
 END;
+
  
 CREATE PROCEDURE getSupplies(p_store_id int(5))
 BEGIN
