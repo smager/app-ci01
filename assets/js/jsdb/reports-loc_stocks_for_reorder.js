@@ -12,6 +12,7 @@ $(document).ready(function(){
 function setInputs(){
     p_loc_id = $("#p_loc_id");
     p_store_id = $("#p_store_id");
+    p_show = $("#p_show");
 }
 
 
@@ -27,7 +28,7 @@ $("#btnPrint").click(function(){
 
 function DisplayReport(){
     $(tbl).html(""); 
-    $.post(proc_url +  "repLocSupplies?p=" + parseInt("0" + p_loc_id.val()) +"," + p_store_id.val(),function(d){
+    $.post(proc_url +  "repLocSupplies?p=" + parseInt("0" + p_loc_id.val()) +"," + p_store_id.val()+"," + p_show.val(),function(d){
         if (d.length===0) {
             $(tbl).html("No Result."); 
             return;

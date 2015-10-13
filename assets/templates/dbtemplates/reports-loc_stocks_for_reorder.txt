@@ -14,6 +14,14 @@
                 <select name="p_loc_id" id="p_loc_id" class="form-control input-sm"></select>
             </div>
 
+            <label class=" col-xs-1 control-label">Show</label>
+            <div class=" col-xs-2"> 
+                <select name="p_show" id="p_show" class="form-control input-sm">
+                    <option value=0>All</option>
+                    <option value=1>Re-order Only</option>
+                </select>
+            </div>
+            
             <div class="col-xs-1">
                 <button type="button"  class="btn btn-primary btn-sm" id="btnGo"><span class="glyphicon glyphicon-search"></span></button>
                 <button type="button"  class="btn btn-primary btn-sm" id="btnPrint"><span class="glyphicon glyphicon-print"></span></button>

@@ -1,4 +1,6 @@
-var bs = zsi.bs.ctrl;
+var bs          = zsi.bs.ctrl;
+var proc_url    = base_url + "common/executeproc/";
+var tblName     = "tblProdSupp";
 
 function displayClear(v){
     var r='';
@@ -13,25 +15,13 @@ $("#frm").submit(function(){ this.action = controller_url + "update"; });
 function manageItems(p_id){
     
     $("input[name='p_loc_id']").val(p_id);
-    zsi.form.displayLOV({
-         table  : "#tblProdSupp"
-        ,url   : base_url + "loc_supplies/getdata_json/" + p_id
-        ,params : ["loc_supply_id","supply_id"] 
-        ,column_data: [
-             function(d){ return d.supply_code; }
-            , function(d){ return d.unit_desc; } 
-            ,function(d){ 
-                return bs({name:"reorder_level[]",value: displayClear(d.reorder_level)}); 
-            }
-            ,function(d){ 
-                return bs({name:"max_level[]",value: displayClear(d.max_level)}); 
-            }  
-        ]
-        ,onComplete:function(){
-            $('#modalWindow').modal("show");
-        }
-    });
+    $('#modalWindow').modal("show");
+    $("#p_store_loc_id").val("");
+   clearGrid();
     
+}
+function clearGrid(){
+    $("#" + tblName).clearGrid();
 }
 
 $(document).ready(function(){
@@ -46,7 +36,15 @@ $(document).ready(function(){
                         , title: "Add/Remove Supply"
                         , footer:   '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
                                   + '<button type="button" onclick="submitSelectedItems();" class="btn btn-primary">Save</button>'
-                        , body: '<table id="tblProdSupp" class="table row">'
+                        , body: 
+                        
+                        '<div class="form-group  ">'  
+                            + '<label class=" col-xs-1 control-label">Store</label>'
+                            + '<div class=" col-xs-6"> '
+                            +     '<select name="p_store_loc_id" id="p_store_loc_id" class="form-control input-sm"> </select>'
+                            + '</div>'
+                        + '</div><br />'
+                        +'<table id="' + tblName + '" class="table row">'
                                 + '<thead>'
                                     + '<tr><th width="20"></th><th>Names</th><th>Unit</th><th>Re-order Qty</th><th>Max Qty</th></tr>'
                                 + '</thead>'
@@ -55,11 +53,37 @@ $(document).ready(function(){
         var html    = template(context);     
         $("body").append(html);
         $(".modal-body").append('<input type="hidden" name="p_loc_id">');
+        $("#p_store_loc_id").change(function(){
+            
+            if( this.value==="") {
+                clearGrid();
+                return false;
+            }
+            zsi.form.displayLOV({
+                 table  : "#" + tblName
+                ,url   :  proc_url +  "getStoreLocSuppliesByStore?p=" + "0" + $("input[name='p_loc_id']").val() + "," + this.value
+                ,params : ["loc_supply_id","supply_id"] 
+                ,column_data: [
+                     function(d){ return d.supply_code; }
+                    , function(d){ return d.unit_desc; } 
+                    ,function(d){ 
+                        return bs({name:"reorder_level[]",value: displayClear(d.reorder_level)}); 
+                    }
+                    ,function(d){ 
+                        return bs({name:"max_level[]",value: displayClear(d.max_level)}); 
+                    }  
+                ]
+                ,onComplete:function(){
+                    $('#modalWindow').modal("show");
+                }
+            });
+    
+        }).dataBind(base_url + "select_options/code/stores");
         
     });
 });
 
-
+ 
 function displayRecords(){       
     zsi.json.loadGrid({
          table  : "#grid"
