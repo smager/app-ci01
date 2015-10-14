@@ -61,7 +61,7 @@ $(document).ready(function(){
             }
             zsi.form.displayLOV({
                  table  : "#" + tblName
-                ,url   :  proc_url +  "getStoreLocSuppliesByStorex?p=" + "0" + $("input[name='p_loc_id']").val() + "," + this.value
+                ,url   :  proc_url +  "getStoreLocSuppliesByStore?p=" + "0" + $("input[name='p_loc_id']").val() + "," + this.value
                 ,params : ["loc_supply_id","supply_id"] 
                 ,column_data: [
                      function(d){ return d.supply_code; }
