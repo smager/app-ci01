@@ -17,7 +17,7 @@ function displayRecords(){
                 return     bs({name:"error_no[]",type:"hidden",value: d.error_no})
                         +  bs({name:"cb[]",type:"checkbox"});
             }            
-            ,function(d){ return d.url; }
+            ,function(d){ return "<a target='_blank' href='" + d.url + "'>"  + d.url.replace(base_url,"") + "</a>" ; }
             ,function(d){ return d.error_type; }
             ,function(d){ return d.error_message; }
             ,function(d){ return d.occurence; }
