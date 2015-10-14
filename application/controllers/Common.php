@@ -43,5 +43,38 @@ class common extends Base_Controller {
 	    $query = $this->db->query($str);
 	   jsonOut($query->result());
 	} 	
+
+	public function errors_update()        
+	{
+        
+        $d=$this->input->get();
+        if( $d['p_url'] !==""){ 
+        
+            $query = $this->db->query("SELECT url  FROM errors WHERE UPPER(url) = UPPER('" . $d['p_url']  . "');");  
+            $occurence = $query->num_rows();
+            $data = array(
+                         'url'          => $d['p_url']
+                        ,'error_type'    => $d['p_error_type']
+                        ,'error_message' => $d['p_error_message']
+                    );
+        
+            if($occurence==0){
+                //insert      
+                $data['occurence'] =1;
+                $data['created_by'] =current_user()->empl_id;
+                $this->db->set('created_date', 'NOW()', FALSE);
+                $this->db->insert('errors', $data);
+            }else{
+                //update
+                $data['occurence'] =$occurence + 1;
+                $data['updated_by'] =current_user()->empl_id;
+                $this->db->set('updated_date', 'NOW()', FALSE);
+                $this->db->where('url',  $d['p_url']);
+                $this->db->update('errors', $data);                
+                
+            }
+        }
+        
+    }
 	
 }

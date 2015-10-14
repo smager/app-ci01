@@ -12,6 +12,12 @@ class systems extends Base_Controller {
         check_login();
 		$this->load->view('default_view');
 	}
+	
+	public function error_list()
+	{
+        check_login();
+		$this->load->view('default_view');
+	}	
     
 	public function getdata()
 	{
@@ -45,5 +51,10 @@ class systems extends Base_Controller {
         
         $this->systems_model->delete($this->input->post());
 	}   
-    
+	
+    public function errors_delete()
+	{
+        $this->common_model->delete($this->input->post(),"errors","error_no");        
+	}   
+
 }

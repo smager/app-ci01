@@ -109,7 +109,8 @@ function monitorAjaxResponse(){
    
    $(document).ajaxError(function(event, request, settings ){   
       var retryLimit=2;
-      var error_url="errors_update";
+      var error_url= base_url + "common/errors_update";
+      console.log("error url:" + error_url);
       var errorObject = {};
       errorObject.event =event;
       errorObject.request =request;
@@ -125,7 +126,7 @@ function monitorAjaxResponse(){
          return false;
       }
 
-      if(request.responseText==""){
+      if(request.responseText===""){
          console.log("zsi.Ajax.Request Status = %cNo Data (warning!) %c, url: " + settings.url, "color:orange;", "color:#000;");         
          $.post( error_url + "?p_error_type=W&p_error_message=" + escape("No Response Data") + "&p_url="  + escape(settings.url)  , function() {
             console.log( "Warning submited." );
