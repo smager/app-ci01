@@ -330,7 +330,7 @@ zsi.initInputTypesAndFormats = function(){
 
                      $(selectorCheckboxName).each(function(){
                            var _value =   $(this.parentNode).children(_hidden).val();
-                           if(_value == undefined) _value = this.value; /* patch for no hidden field*/
+                           if(_value == ud) _value = this.value; /* patch for no hidden field*/
                            if(params!="") params = params + separatorValue;
                            params = params + parameterValue + _value;
                      });
@@ -485,7 +485,7 @@ zsi.form.__objMandatoryGroupIndexValues[groupIndex]="N";
 
      }else{ /* single */
          if(l_obj[0]){
-            if(l_obj[0].value==undefined || $.trim(l_obj[0].value)==""){
+            if(l_obj[0].value==ud || $.trim(l_obj[0].value)==""){
                l_obj[0].focus();
                alert("Enter " + d[x] + ".");
                return false;
@@ -625,7 +625,7 @@ var e;
 
    function changeborder(o,border){
       jo = $(o);
-      if(jo.val() == undefined || jo.val()==""){
+      if(jo.val() == ud || jo.val()==""){
          jo.css("border-left",border);
          jo.css("border-right",border);
       }else{
@@ -723,9 +723,9 @@ zsi.form.displayLOV = function(p){
     var td_data = [];
     var td_prop;
     
-    if(typeof p.show_checkbox==="undefined") p.show_checkbox=true;
+    if(typeof p.show_checkbox===ud) p.show_checkbox=true;
     td_data.push(function(d){
-                var isNew = (typeof d ==="undefined"?true:false);
+                var isNew = (typeof d ==="ud"?true:false);
                 var inputs= '<input name="p_' + p.params[0] + '[]"  type="hidden"  value="' + (isNew!==true?d[p.params[0]]:"") + '">' 
                      + '<input name="p_' + p.params[1] + '[]" type="hidden" value="' + (isNew!==true?d[p.params[1]]:"") + '" >'    
                      + '<input name="p_isCheck[]" type="hidden" value="' +  (isNew!==true?((d[p.params[0]])? 1:0):"")  + '" >';
@@ -736,11 +736,11 @@ zsi.form.displayLOV = function(p){
     
     td_data = td_data.concat(p.column_data);        
     var params  ={ table : p.table, td_body:td_data}; 
-    if(typeof p.url!=="undefined") params.url=p.url;
-    if(typeof p.limit!=="undefined") params.limit=p.limit;
-    if(typeof p.onComplete!=="undefined") params.onComplete=p.onComplete;
-    if(typeof p.isNew!=="undefined") params.isNew=p.isNew;
-    if(typeof p.td_properties!=="undefined") params.td_properties = p.td_properties;    
+    if(typeof p.url!==ud) params.url=p.url;
+    if(typeof p.limit!==ud) params.limit=p.limit;
+    if(typeof p.onComplete!==ud) params.onComplete=p.onComplete;
+    if(typeof p.isNew!==ud) params.isNew=p.isNew;
+    if(typeof p.td_properties!==ud) params.td_properties = p.td_properties;    
     zsi.json.loadGrid(params);
     clickCB = function(o){
             var td = o.parentNode;
@@ -866,7 +866,7 @@ zsi.json.checkValueExist = function(p_url, p_target,p_table, p_field){
 }
      
 zsi.json.loadGrid = function(o){  
-    var isOnEC= (typeof o.onEachComplete !== "undefined");
+    var isOnEC= (typeof o.onEachComplete !== ud);
     if (isOnEC){    
         var strFunc = o.onEachComplete.toString();
       args = strFunc
@@ -892,8 +892,8 @@ zsi.json.loadGrid = function(o){
         r +="<tr rowObj class='"  + oe + "'>";
             for(var x=0;x<o.td_body.length;x++){
                 var l_prop='';
-                if (typeof o.td_properties !== "undefined"){
-                    if (typeof o.td_properties[x] !== "undefined") l_prop = o.td_properties[x]; 
+                if (typeof o.td_properties !== ud){
+                    if (typeof o.td_properties[x] !== ud) l_prop = o.td_properties[x]; 
                 } 
                 r +="<td " + l_prop + " >" + o.td_body[x](data) + "</td>";                                                         
             }
@@ -913,7 +913,7 @@ zsi.json.loadGrid = function(o){
             o.onEachComplete(tr,data,callBackDone);
         }
     }
-    if(typeof o.isNew !== "undefined"){
+    if(typeof o.isNew !== ud){
         if(o.isNew==true) l_grid.clearGrid();  
     } 
     
@@ -924,15 +924,15 @@ zsi.json.loadGrid = function(o){
              $.each(data, function () {
                  trItem(this)
              });
-             if (typeof o.onEachComplete === "undefined") if(o.onComplete) o.onComplete();
+             if (typeof o.onEachComplete === ud) if(o.onComplete) o.onComplete();
         });    
     }
     else{
-        if(typeof o.limit === "undefined") o.limit=5;
+        if(typeof o.limit === ud) o.limit=5;
         for(var y=0;y<o.limit;y++){
             trItem();
         }
-        if (typeof o.onEachComplete === "undefined") if(o.onComplete) o.onComplete();
+        if (typeof o.onEachComplete === ud) if(o.onComplete) o.onComplete();
     }
     
 }
@@ -954,10 +954,10 @@ zsi.bs.ctrl = function(o){
         var str ='';
         var cls = 'class="form-control input-sm"';
         
-        if (typeof p.class !=="undefined") cls = 'class="' + p.class + '"';
+        if (typeof p.class !==ud) cls = 'class="' + p.class + '"';
         str +='<select name="p_' + p.name + '" id="p_' + p.name + '" ' + cls +   '>';
-        if (typeof p.value !=="undefined") v = p.value;
-        if(typeof p.mandatory !=="undefined"){
+        if (typeof p.value !==ud) v = p.value;
+        if(typeof p.mandatory !==ud){
             if(p.mandatory.toLowerCase()=='n') str += '<option value=""></option>';
         }
         str += '<option ' + (v==1 ? 'selected':'' ) +  ' value="1">Yes</option>';
@@ -966,10 +966,10 @@ zsi.bs.ctrl = function(o){
         return str;
     }    
 
-    if(typeof o.class!=="undefined") l_class=' class="' + o.class + '"';         
-    if(typeof o.value!=="undefined") l_value=' value="' + o.value + '"';
+    if(typeof o.class!==ud) l_class=' class="' + o.class + '"';         
+    if(typeof o.value!==ud) l_value=' value="' + o.value + '"';
     
-    if(typeof o.type!=="undefined"){
+    if(typeof o.type!==ud){
         var t = o.type.toLowerCase();
         
         if(t=='yesno') return yesno(o);
@@ -983,10 +983,10 @@ zsi.bs.ctrl = function(o){
         if(t=='select' || t =='textarea'){
             l_type="";
             l_endTag='</' + l_tag + '>';
-            if(t=='select' && typeof o.value!=="undefined"){ 
+            if(t=='select' && typeof o.value!==ud){ 
                 l_selected_value = " selectedvalue=" + o.value;
             }
-            if(o.type =='textarea' && typeof o.value!=="undefined"){
+            if(o.type =='textarea' && typeof o.value!==ud){
                 l_value="";
                 l_in_value=o.value;
             }
@@ -1002,9 +1002,9 @@ zsi.bs.button =function(p){
     var l_type =' type="button"';
     var l_onclick='';
     
-    if(typeof p.type !== "undefined") l_type = ' type="' + p.type + '"';
-    if(typeof p.class !== "undefined") l_class = ' class="' + p.class + '"';
-    if(typeof p.onclick !== "undefined") l_onclick = ' onclick="' + p.onclick + '"';
+    if(typeof p.type !== ud) l_type = ' type="' + p.type + '"';
+    if(typeof p.class !== ud) l_class = ' class="' + p.class + '"';
+    if(typeof p.onclick !== ud) l_onclick = ' onclick="' + p.onclick + '"';
     switch(p.name.toLowerCase()){
         case 'search': l_icon='search';break;
         case 'add': 
@@ -1052,7 +1052,7 @@ $.fn.dataBind = function(){
     var p=a[0];
     if(typeof a[0] ==="string"){
          p={}; p.url = a[0]; 
-        if(typeof a[1] !=="undefined") p.onAllComplete = a[1];
+        if(typeof a[1] !==ud) p.onAllComplete = a[1];
     }
     var obj=this;
    $.getJSON(p.url, function( _data ) {
@@ -1072,8 +1072,8 @@ $.fn.dataBind = function(){
 
 $.fn.fillSelect = function(o) {
     //params: data,selectedValue,onLoadComplete;
-    if(typeof o.isRequired ==="undefined")  o.isRequired=false;
-    if(typeof o.selectedValue ==="undefined")  o.selectedValue='';
+    if(typeof o.isRequired ===ud)  o.isRequired=false;
+    if(typeof o.selectedValue ===ud)  o.selectedValue='';
     this.clearSelect();
 
     if(this.length>1){

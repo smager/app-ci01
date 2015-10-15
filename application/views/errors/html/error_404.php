@@ -40,7 +40,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
       </div>
 </div>
 
-<script src="javascripts/source?p_url=loadmenu&p_revision=5"></script>
+<script src="javascripts/source?p_url=zsi_init&p_revision=1"></script>
 
 <div class="container page">
     <div class="login-panel col-md-12">
