@@ -243,7 +243,7 @@ function menu(){
 
 <?php 
  if( isset( $ci->session->userdata['current_user'] ) ==true ){    
-     includePageJS('loadmenu');  
+     includePageJS('zsi_init');  
  }    
 ?>
 

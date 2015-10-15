@@ -1,4 +1,3 @@
-var ctrlSel = zsi.control.SelectList;  
 var bsButton = zsi.bs.button;
 var bs = zsi.bs.ctrl;    
 var g_supply_id;
@@ -143,8 +142,8 @@ function displayBlankRows(){
             ,function(d){ return ""; }
         ]
         ,onComplete : function(){
-             ctrlSel( base_url + "select_options/code/supply_types","select[name='p_supply_type_id[]']","","N");
-             ctrlSel( base_url + "select_options/code/units","select[name='p_unit_id[]']","","N");
+             $("select[name='p_supply_type_id[]']").dataBind(base_url + "select_options/code/supply_types");
+             $("select[name='p_unit_id[]']").dataBind( base_url + "select_options/code/units");
 
         }
     });    

@@ -30,8 +30,8 @@ class common extends Base_Controller {
 	{
         $str = "SELECT count(*) as value FROM $table WHERE lower($field)=lower('$value')";
         $query = $this->db->query($str);         
-        $result ='{"exist":false}';
-        if ($query->row()->value > 0 )  $result  = '{"exist":true}';
+        $result = array("exist"=>false);
+        if ($query->row()->value > 0 )  $result = array("exist"=>true);
         jsonOut($result);
     }
     

@@ -1,4 +1,3 @@
-var ctrlSel = zsi.control.SelectList;  
 var bsButton = zsi.bs.button;
 var bs = zsi.bs.ctrl;    
 var g_supply_id;

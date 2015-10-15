@@ -1,5 +1,6 @@
 /* JS Package Names or Namespaces */
    var zsi           = {};
+   zsi.config        = {};
    zsi.form          = {};
    zsi.table         = {};
    zsi.table.dhtmlx  = {};
@@ -44,16 +45,20 @@ Number.prototype.toMoney = function(){
     return this.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
 };
 
+ zsi.init =function(o){
+     zsi.config =o;
+     zsi.monitorAjaxResponse();    
+ }
+ 
 /* Page Initialization */
 $(document).ready(function(){
-   monitorAjaxResponse();      
    initDatePicker();
    initTabNavigation();
    initFormAdjust();
-   initDeleteRecord();
    zsi.initInputTypesAndFormats();
 
 });
+
 
  zsi.ShowHideProgressWindow =  function (isShow){
     var pw = $(".progressWindow");
@@ -66,30 +71,25 @@ $(document).ready(function(){
    }
  }
  
-zsi.ShowHideErrorWindow=function(isShow){
-     var pw = $(".errorWindow");
-    if(isShow){
-       pw.centerWidth();
-       pw.css("display","block");
-    }else{
-       pw.hide("slow");      
-    }
+zsi.ShowErrorWindow=function(){
+    var pw = $(".errorWindow");
+    pw.centerWidth();
+    pw.css("display","block");
+    setTimeout(function(){
+            pw.hide("slow");      
+    },5000);   
+ };
  
- }
- 
-function monitorAjaxResponse(){
+zsi.monitorAjaxResponse = function(){
     $(document).ajaxStart(function(){});      
     $( document ).ajaxSend(function(event,request,settings) {
         if(typeof zsi_request_count === 'undefined') zsi_request_count=0;
-        if(zsi._strValueExist(settings.url,"checkDataExist") ) return;
-        if(zsi._strValueExist(settings.url,"employee_search_json") ) return;  
-    
-        var isExclude=false;
-        if(typeof zsi.excludeUrl!=='undefined' ){
-            if(settings.url.toLowerCase().indexOf(zsi.excludeUrl.toLowerCase()) > -1) isExclude=true;
-        } 
-        if(isExclude===false) zsi_request_count++;
-
+        
+        var eAW = zsi.config.excludeAjaxWatch;    
+        for(var x=0; x<eAW.length;x++){
+            if(zsi._strValueExist(settings.url, eAW[x] ) ) return;
+        }
+        zsi_request_count++;
         zsi.ShowHideProgressWindow(true);
     });
 
@@ -107,10 +107,10 @@ function monitorAjaxResponse(){
       //console.log("zsi.Ajax.Request Status=Success, url: "+ settings.url);
    });      
    
-   $(document).ajaxError(function(event, request, settings ){   
+   $(document).ajaxError(function(event, request, settings ){  
+      var error_url = (typeof zsi.config.errorUpdateURL!== 'undefined'? zsi.config.errorUpdateURL:"")  ;
+      var noErrURLMsg = "No error URL found. Error not submitted.";
       var retryLimit=2;
-      var error_url= base_url + "common/errors_update";
-      console.log("error url:" + error_url);
       var errorObject = {};
       errorObject.event =event;
       errorObject.request =request;
@@ -118,19 +118,21 @@ function monitorAjaxResponse(){
       
       CloseProgressWindow();
 
-      if(typeof zsi.excludeUrl!=='undefined' ){
-          if(settings.url.toLowerCase().indexOf(zsi.excludeUrl.toLowerCase()) > -1) return;
-      }    
-      if( zsi._strValueExist(settings.url,error_url) ){
-         console.log("url: " + settings.url);         
-         return false;
+      if(error_url){
+          if( zsi._strValueExist(settings.url,error_url) ){
+             console.log("url: " + settings.url);         
+             return false;
+          }
       }
 
       if(request.responseText===""){
-         console.log("zsi.Ajax.Request Status = %cNo Data (warning!) %c, url: " + settings.url, "color:orange;", "color:#000;");         
-         $.post( error_url + "?p_error_type=W&p_error_message=" + escape("No Response Data") + "&p_url="  + escape(settings.url)  , function() {
-            console.log( "Warning submited." );
-         });
+         console.log("zsi.Ajax.Request Status = %cNo Data (warning!) %c, url: " + settings.url, "color:orange;", "color:#000;");  
+        if(error_url==="")
+            console.log(noErrURLMsg);
+        else
+             $.post( error_url + "?p_error_type=W&p_error_message=" + escape("No Response Data") + "&p_url="  + escape(settings.url)  , function() {
+                console.log( "Warning submited." );
+             });
       }
       else{
          console.log("zsi.Ajax.Request Status = Failed %c, url: " + settings.url, "color:red;", "color:#000;");
@@ -149,13 +151,15 @@ function monitorAjaxResponse(){
          if(settings.retryCounter>retryLimit){
             console.log("retry limit is reached");
             
-            $.post( error_url + "?p_error_type=E&p_error_message=" + escape(request.responseText) + "&p_url="  + escape(settings.url)  , function() {
-               console.log( "Error submited." );
-                  zsi.ShowHideErrorWindow(true);                  
-                  setTimeout(function(){
-                     zsi.ShowHideErrorWindow(false);
-                  },5000);                        
-            });
+            if(error_url===""){
+                console.log(noErrURLMsg);
+                zsi.ShowErrorWindow();
+            }
+            else
+                $.post( error_url + "?p_error_type=E&p_error_message=" + escape(request.responseText) + "&p_url="  + escape(settings.url)  , function() {
+                    console.log( "Error submited." );
+                    zsi.ShowErrorWindow();                       
+                });
             
          }
         
@@ -260,25 +264,6 @@ function initFormAdjust(){
       $(document.body).css("margin-left","10px");
       $(document.body).css("margin-right","10px");
    }
-}
-
-function initDeleteRecord(){
-   $("a[id=delete-row]").click(function(){
-      var value = $(this).attr("value");
-      var table = $(this).attr("table");
-      var tr = $(this.parentNode.parentNode);
-
-      if(confirm("Are you sure you want to delete this Item?")) {
-         $.post("s004_delete?p_table=" + table + "&p_field=seq_no&p_value=" + value,
-            function(d){
-               tr.remove();
-               if(zsi.table.onDeleteRow) zsi.table.onDeleteRow();
-            }).fail(function(d) {
-               alert("Sorry, the curent transaction is not successfull.");
-         });
-      }
-
-   });
 }
 
 zsi.initInputTypesAndFormats = function(){
@@ -420,22 +405,6 @@ zsi.page.DisplayRecordPage   = function(p_page_no,p_rows,p_numrec){
    $(".pagestatus").html("Showing records from <i>" + l_record_from + "</i> to <i>" + l_record_to + "</i>");
 
 }
-/*------------------------------------------------------------------------------------------*/
-/*Example:
-  SelectList("common/get_select_data","#p_vaccine_code",2,"N",callbackfunc);
-*/
-
-zsi.control.SelectList = function(p_url,p_selector,p_selval,p_req,p_onLoadComplete){
-    var _isRequired = (p_req.toLowerCase()=="y"?true:false);
-   $.getJSON(p_url, function( _data ) {
-       var params = {data: _data,selectedValue: p_selval,isRequired: _isRequired,onLoadComplete: p_onLoadComplete};
-      if(p_selector instanceof jQuery)
-          p_selector.fillSelect(params);
-      else
-         $(p_selector).fillSelect(params);
-   });
-}
-
 
 /*--[zsi.form]------------------------------------------------------------------------------*/
 zsi.form.checkNumber = function(e) {
@@ -846,7 +815,7 @@ zsi.json.groupByColumnIndex = function(data,column_index){
 }  
 
 
-zsi.json.checkValueExist = function(p_url, p_target,p_table, p_field){  
+zsi.json.checkValueExist = function(p_url, p_target,p_table, p_field){
    $(p_target).keyup(function(){
       var l_obj=this;
       if($.trim(this.value)==""){

@@ -1,9 +1,5 @@
 var bs = zsi.bs.ctrl;
-
- zsi.json.checkValueExist(base_url + "common/checkdataexist", "input[name='p_bank_acctno[]']","bank_ref","bank_acctno"); 
-
 $("#frm").submit(function(){ this.action = controller_url + "update"; });
-
 $(document).ready(function(){
     displayRecords();
 });
@@ -28,6 +24,7 @@ function displayRecords(){
         ]
         ,onComplete : function(){
             displayBlankRows();
+            zsi.json.checkValueExist(base_url + "common/checkdataexist", "input[name='p_bank_acctno[]']","bank_ref","bank_acctno"); 
         }
     });    
 }
