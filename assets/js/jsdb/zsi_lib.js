@@ -1,15 +1,17 @@
 /* JS Package Names or Namespaces */
-   var zsi           = {};
-   zsi.config        = {};
-   zsi.form          = {};
-   zsi.table         = {};
-   zsi.table.dhtmlx  = {};
-   zsi.page          = {};
-   zsi.control       = {};
-   zsi.calendar      = {};
-   zsi.url           = {};
-   zsi.json          = {};
-   zsi.bs            = {};
+var zsi           = {};
+zsi.config        = {};
+zsi.form          = {};
+zsi.table         = {};
+zsi.table.dhtmlx  = {};
+zsi.page          = {};
+zsi.control       = {};
+zsi.calendar      = {};
+zsi.url           = {};
+zsi.json          = {};
+zsi.bs            = {};
+
+var ud='undefined';   
 
 /* Prototypes */
 Date.prototype.isValid = function () {
@@ -83,7 +85,7 @@ zsi.ShowErrorWindow=function(){
 zsi.monitorAjaxResponse = function(){
     $(document).ajaxStart(function(){});      
     $( document ).ajaxSend(function(event,request,settings) {
-        if(typeof zsi_request_count === 'undefined') zsi_request_count=0;
+        if(typeof zsi_request_count === ud) zsi_request_count=0;
         
         var eAW = zsi.config.excludeAjaxWatch;    
         for(var x=0; x<eAW.length;x++){
@@ -94,7 +96,7 @@ zsi.monitorAjaxResponse = function(){
     });
 
    $(document).ajaxComplete(function(event,request,settings) {
-      if(typeof zsi_request_count !== 'undefined'){
+      if(typeof zsi_request_count !== ud){
          zsi_request_count--;
          if(zsi_request_count<=0){
             //console.log("no remaining request");
@@ -108,7 +110,7 @@ zsi.monitorAjaxResponse = function(){
    });      
    
    $(document).ajaxError(function(event, request, settings ){  
-      var error_url = (typeof zsi.config.errorUpdateURL!== 'undefined'? zsi.config.errorUpdateURL:"")  ;
+      var error_url = (typeof zsi.config.errorUpdateURL!== ud? zsi.config.errorUpdateURL:"")  ;
       var noErrURLMsg = "No error URL found. Error not submitted.";
       var retryLimit=2;
       var errorObject = {};
@@ -124,7 +126,10 @@ zsi.monitorAjaxResponse = function(){
              return false;
           }
       }
-
+      if(typeof zsi.config.sqlConsoleName !== ud){
+          if( zsi._strValueExist(settings.url,zsi.config.sqlConsoleName) ){return false;}
+      }
+      
       if(request.responseText===""){
          console.log("zsi.Ajax.Request Status = %cNo Data (warning!) %c, url: " + settings.url, "color:orange;", "color:#000;");  
         if(error_url==="")
@@ -169,7 +174,7 @@ zsi.monitorAjaxResponse = function(){
    
    function CloseProgressWindow(){
       setTimeout(function(){
-         if(typeof zsi_request_count!=='undefined'){
+         if(typeof zsi_request_count!==ud){
             if(zsi_request_count<=0){
                zsi.ShowHideProgressWindow(false);
                zsi_request_count=0;

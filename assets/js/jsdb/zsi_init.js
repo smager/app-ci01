@@ -1,8 +1,9 @@
 //initialize Settings.
 zsi.init({
       baseURL : base_url
-     ,errorUpdateURL :  base_url + "common/errors_update"
-     ,excludeAjaxWatch:["checkDataExist","employe_search_json"]
+     ,errorUpdateURL    :  base_url + "common/errors_update"
+     ,sqlConsoleName    :  "runsql"
+     ,excludeAjaxWatch  :  ["checkDataExist","employe_search_json"]
 });
 
 
