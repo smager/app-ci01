@@ -28,6 +28,7 @@ class common extends Base_Controller {
 
 	public function checkDataExist($table,$field,$value)
 	{
+	    $value= urldecode($value);
         $str = "SELECT count(*) as value FROM $table WHERE lower($field)=lower('$value')";
         $query = $this->db->query($str);         
         $result = array("exist"=>false);

@@ -1,4 +1,3 @@
- zsi.json.checkValueExist(base_url + "common/checkdataexist", "input[name='p_event_desc[]']","events","event_desc"); 
 $(document).ready(function(){
     markMandatory();    
     displayRecords();
@@ -20,6 +19,7 @@ function displayRecords(){
         ,td_properties: ["","","align='center'"] 
         ,onComplete : function(){
             displayBlankRows(false);
+            zsi.json.checkValueExist(base_url + "common/checkdataexist", "input[name='p_event_desc[]']","events","event_desc"); 
         }
     });    
 }

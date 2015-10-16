@@ -24,7 +24,6 @@ Date.prototype.toShortDate = function () {
     d = (d.length==1? "0" +d:d);
     return m + '/' + d + '/' +  this.getFullYear();
 };  
-
 String.prototype.toDateFormat = function () {
     var val="";
     if(this.indexOf("-") >-1 ){
@@ -36,22 +35,19 @@ String.prototype.toDateFormat = function () {
     }
      return val;
 }; 
-
 String.prototype.toMoney = function(){
     var res = "";
     if(isNaN(this)===false) res = parseFloat(this).toMoney();
     return res;
 };
-
 Number.prototype.toMoney = function(){
     return this.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
 };
-
- zsi.init =function(o){
+/*initialize configuration settings*/
+zsi.init =function(o){
      zsi.config =o;
      zsi.monitorAjaxResponse();    
  }
- 
 /* Page Initialization */
 $(document).ready(function(){
    initDatePicker();
@@ -61,8 +57,7 @@ $(document).ready(function(){
 
 });
 
-
- zsi.ShowHideProgressWindow =  function (isShow){
+zsi.ShowHideProgressWindow =  function (isShow){
     var pw = $(".progressWindow");
    if(isShow){
       pw.centerWidth();
@@ -72,7 +67,7 @@ $(document).ready(function(){
       pw.hide("slow");      
    }
  }
- 
+
 zsi.ShowErrorWindow=function(){
     var pw = $(".errorWindow");
     pw.centerWidth();
@@ -81,7 +76,7 @@ zsi.ShowErrorWindow=function(){
             pw.hide("slow");      
     },5000);   
  };
- 
+
 zsi.monitorAjaxResponse = function(){
     $(document).ajaxStart(function(){});      
     $( document ).ajaxSend(function(event,request,settings) {
@@ -241,7 +236,6 @@ function initDatePicker(){
    
 }
 
-
 function initTabNavigation(){
    $(".nav-tabs li").each(function(){
       $(this).click(function(){
@@ -284,7 +278,6 @@ zsi.initInputTypesAndFormats = function(){
    });
 }
 
-
 /*--[ common functions]---------------------------------------------------------------------*/
    zsi._strValueExist=function(source,value){
       var _result=false;
@@ -292,10 +285,7 @@ zsi.initInputTypesAndFormats = function(){
       if (i>-1) _result=true;
       return _result;
    }
-      
-
 /*--[zsi.table]------------------------------------------------------------------------------*/
-
    zsi.table.getCheckBoxesValues = function(){
 /*Example:
   [3-parameters]:
@@ -353,7 +343,6 @@ zsi.table.dhtmlx.ResizeGrid   = function(p_Window,p_dhtmlGrid,p_less_ht){
    p_dhtmlGrid.enableAutoHeight(true,ht,true);
    p_dhtmlGrid.setSizes();
 }
-
 /*Example:
    zsi.table.dhtmlx.Unescape(data,2);
    mygrid.parse(data, "json");
@@ -363,12 +352,11 @@ zsi.table.dhtmlx.Unescape   = function(data,col_index){
       this.data[col_index]=unescape(this.data[col_index]);
    });
 }
-
 /*------------------------------------------------------------------------------------------*/
 /*Example:
   <input type="checkbox" name="p_cb" onclick="zsi.table.setCheckBox(this,l_tran_no );">
 */
-   zsi.table.setCheckBox = function(obj, cbValue){
+zsi.table.setCheckBox = function(obj, cbValue){
    var _hidden= "input[type=hidden]";
       var _input =   $(obj.parentNode).children(_hidden);
       if(_input.attr("type")!='hidden') { alert(_hidden + " not found"); return;}
@@ -380,7 +368,6 @@ zsi.table.dhtmlx.Unescape   = function(data,col_index){
             _input.val("");
       }
    }
-
 /*------------------------------------------------------------------------------------------*/
 /*Example:
    var jsonData = $.parseJSON(mygrid.xmlLoader.xmlDoc.responseText);
@@ -410,7 +397,6 @@ zsi.page.DisplayRecordPage   = function(p_page_no,p_rows,p_numrec){
    $(".pagestatus").html("Showing records from <i>" + l_record_from + "</i> to <i>" + l_record_to + "</i>");
 
 }
-
 /*--[zsi.form]------------------------------------------------------------------------------*/
 zsi.form.checkNumber = function(e) {
    var keynum;
@@ -556,22 +542,19 @@ zsi.form.checkMandatory=function(){
 }
 
 zsi.form.markMandatory=function(om){
-//clear colored box;
-$("input,select,textarea").not("[type=hidden]").each(function(){
-    $(this).css("border","solid 1px #ccc");
-});
-zsi.form.__objMandatory=om;
-for(var x=0;x<om.groupNames.length;x++){
-   if(om.groupNames[x].names.length!=om.groupTitles[x].titles.length){
-      alert("Error!, parameters are not equal.");
-      return false;
-   }
-}
+    //clear colored box;
+    $("input,select,textarea").not("[type=hidden]").each(function(){
+        $(this).css("border","solid 1px #ccc");
+    });
+    zsi.form.__objMandatory=om;
+    for(var x=0;x<om.groupNames.length;x++){
+       if(om.groupNames[x].names.length!=om.groupTitles[x].titles.length){
+          alert("Error!, parameters are not equal.");
+          return false;
+       }
+    }
+    var e;
 
-
-var e;
-
-//setTimeout(function(){
    for(var gn=0;gn< om.groupNames.length;gn++){  /*loop per groupNames*/
       e = om.groupNames[gn].names;
 
@@ -600,7 +583,6 @@ var e;
                   $("*[name='" +  this.name + "'][type!=hidden]").each(function(){
                       if($(this).val()!="") hasValue=true;
                   });
-
                   /* start changing border */
                   $("*[name='" +  this.name + "'][type!=hidden]").each(function(){
                      if(hasValue){
@@ -621,8 +603,6 @@ var e;
       }
    } /* end of group loop */
 
-//},3000);
-
    function changeborder(o,border){
       jo = $(o);
       if(jo.val() == ud || jo.val()==""){
@@ -634,10 +614,9 @@ var e;
    }
 
 }
-
 /* ----[ End Mandatory ]-----  */
 
- zsi.form.checkDate=function(e, d){
+zsi.form.checkDate=function(e, d){
  var l_format_msg=" must be in [mm/dd/yyyy] format.";
     for(var x=0;x<e.length;x++){
        var l_obj = document.getElementsByName(e[x]);
@@ -676,8 +655,7 @@ var e;
     return true;
   }
 
-
- function isValidDate(l_date){
+function isValidDate(l_date){
     var comp = l_date.split('/');
     var m = parseInt(comp[0], 10);
     var d = parseInt(comp[1], 10);
@@ -819,7 +797,6 @@ zsi.json.groupByColumnIndex = function(data,column_index){
    return _result;
 }  
 
-
 zsi.json.checkValueExist = function(p_url, p_target,p_table, p_field){
    $(p_target).keyup(function(){
       var l_obj=this;
@@ -938,7 +915,6 @@ zsi.json.loadGrid = function(o){
 }
 
 /*--[zsi.bs]-------bootstrap--------------------------------------------------------------*/
-
 zsi.bs.ctrl = function(o){
     var l_tag="input";
     var l_name =' name="p_' + o.name + '" id="p_' + o.name + '"';
@@ -1022,9 +998,7 @@ zsi.bs.button =function(p){
     return result;
 }
   
-
 /*----[ extended-JQuery Function ]--------------------------------------------------------------*/
-
 $.fn.clearSelect = function() {
 
     if(this.length>1){
@@ -1120,7 +1094,6 @@ $.fn.fillSelect = function(o) {
    }
 }
  
-
 $.fn.setUniqueOptions=function(){
     var optionData=[];
     var obj = this;
@@ -1202,12 +1175,10 @@ $.fn.setUniqueOptions=function(){
     return this;
     
 }
-/*end of set unique option*/
 
 $.fn.clearGrid = function() {
      $(this).children('tbody').html('');
 }
-
 
 $.fn.serializeExclude = function(p_arr_exclude) {
   var _arr =  this.serializeArray();
@@ -1221,18 +1192,19 @@ $.fn.serializeExclude = function(p_arr_exclude) {
    return str;  
 
 }
+
 $.fn.centerWidth = function () {
     this.css("position","absolute");
     this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
     return this;
 }
+
 $.fn.center = function () {
     this.css("position","absolute");
     this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + $(window).scrollTop()) + "px");
     this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + $(window).scrollLeft()) + "px");
     return this;
 }
-
 
 /*--[zsi.calendar]------------------------------------------------------------------------------*/
 $.fn.loadMonths = function(){
@@ -1256,8 +1228,6 @@ function createCookie(name,value,days) {
 	else var expires = "";
 	document.cookie = name+"="+value+expires+"; path=/";
 }
-	
-//----| readCookie  |---------------------------------------------------------------------------------------------------------------------//
 function readCookie(name) {
 	var nameEQ = name + "=";
 	var ca = document.cookie.split(';');
