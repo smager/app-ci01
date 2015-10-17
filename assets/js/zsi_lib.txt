@@ -1,0 +1,205 @@
+JS Class Name: zsi 
+  - configuartion object: config
+  - Sub Classes:
+	form,table, table.dhtmlx,page,control,calendar,url,json,bs            
+
+#Prototypes:
+Date.prototype.isValid = function () 
+Example:
+
+----------------------------------------------------------------------------------------
+Date.prototype.toShortDate = function ()  
+Example:
+
+----------------------------------------------------------------------------------------
+String.prototype.toDateFormat = function ()  
+Example:
+
+----------------------------------------------------------------------------------------
+String.prototype.toMoney = function() 
+Example:
+
+----------------------------------------------------------------------------------------
+Number.prototype.toMoney = function()
+Example:
+
+----------------------------------------------------------------------------------------
+#End of Prototypes
+
+zsi.init =function(o) 
+Example:
+
+----------------------------------------------------------------------------------------
+
+zsi.ShowHideProgressWindow =  function (isShow) 
+Example:
+
+----------------------------------------------------------------------------------------
+
+zsi.ShowErrorWindow=function() 
+Example:
+
+----------------------------------------------------------------------------------------
+
+zsi.monitorAjaxResponse = function() 
+Example:
+
+----------------------------------------------------------------------------------------
+
+function initDatePicker() 
+Example:
+
+----------------------------------------------------------------------------------------
+
+function initTabNavigation() 
+Example:
+
+----------------------------------------------------------------------------------------
+
+function initFormAdjust() 
+Example:
+
+----------------------------------------------------------------------------------------
+
+zsi.initInputTypesAndFormats = function() 
+Example:
+
+----------------------------------------------------------------------------------------
+zsi.table.getCheckBoxesValues = function()
+Example:
+  [3-parameters]:
+  var x= zsi.table.getCheckBoxesValues("input[name=p_cb]:checked","p_del_ds=","&");
+   result: p_del_ds=1031&p_del_ds=1032&p_del_ds=1027
+
+  [1-parameters]:
+  var x= zsi.table.getCheckBoxesValues("input[name=p_cb]:checked");
+  result:  ["1031", "1027"]
+
+----------------------------------------------------------------------------------------  
+zsi.table.dhtmlx.ResizeGrid   = function(p_Window,p_dhtmlGrid,p_less_ht)
+
+Example:
+   zsi.table.dhtmlx.ResizeGrid(window,mygrid,100);
+ 
+ 
+----------------------------------------------------------------------------------------
+zsi.table.dhtmlx.Unescape   = function(data,col_index)
+Example:
+
+   zsi.table.dhtmlx.Unescape(data,2);
+   mygrid.parse(data, "json");
+
+
+----------------------------------------------------------------------------------------
+zsi.table.setCheckBox = function(obj, cbValue)
+Example:
+  <input type="checkbox" name="p_cb" onclick="zsi.table.setCheckBox(this,l_tran_no );">
+
+----------------------------------------------------------------------------------------
+zsi.page.DisplayRecordPage   = function(p_page_no,p_rows,p_numrec)
+
+Example:
+   var jsonData = $.parseJSON(mygrid.xmlLoader.xmlDoc.responseText);
+   zsi.page.DisplayRecordPage(jsonData.page_no,jsonData.page_rows,jsonData.row_count);
+
+----------------------------------------------------------------------------------------
+zsi.form.checkNumber = function(e)
+Example:
+
+----------------------------------------------------------------------------------------
+
+zsi.form.isValidNumberFormat = function(o) 
+Example:
+
+----------------------------------------------------------------------------------------
+zsi.form.checkNumberFormat = function(o)
+Example:
+
+----------------------------------------------------------------------------------------
+zsi.form.markMandatory=function(om)
+Example:
+
+----------------------------------------------------------------------------------------
+zsi.form.checkDate=function(e, d)
+Example:
+
+----------------------------------------------------------------------------------------
+function isValidDate(l_date)
+Example:
+
+----------------------------------------------------------------------------------------
+zsi.form.setCriteria=function(p_inputName,p_desc, p_result)
+Example:
+
+----------------------------------------------------------------------------------------
+zsi.form.showAlert= function(p_class)
+Example:
+
+----------------------------------------------------------------------------------------
+zsi.form.displayLOV = function(p)
+Example:
+
+----------------------------------------------------------------------------------------
+zsi.url.getQueryValue = function (source,keyname) 
+Example:
+
+----------------------------------------------------------------------------------------
+zsi.url.removeQueryItem = function (source,keyname)
+Example:
+
+----------------------------------------------------------------------------------------
+zsi.json.groupByColumnIndex = function(data,column_index)
+Example:
+
+----------------------------------------------------------------------------------------
+zsi.json.checkValueExist = function(p_url, p_target,p_table, p_field)     
+Example:
+
+----------------------------------------------------------------------------------------
+zsi.json.loadGrid = function(o)
+Example:
+
+----------------------------------------------------------------------------------------
+zsi.bs.ctrl = function(o)    
+Example:
+
+----------------------------------------------------------------------------------------
+zsi.bs.button =function(p)
+  
+#extended JQuery Function:
+$.fn.clearSelect = function() 
+Example:
+
+----------------------------------------------------------------------------------------
+$.fn.dataBind = function()
+Example:
+
+----------------------------------------------------------------------------------------
+$.fn.fillSelect = function(o) 
+Example:
+
+----------------------------------------------------------------------------------------
+$.fn.setUniqueOptions=function()
+Example:
+
+----------------------------------------------------------------------------------------
+$.fn.clearGrid = function() 
+Example:
+
+----------------------------------------------------------------------------------------
+$.fn.serializeExclude = function(p_arr_exclude) 
+Example:
+
+----------------------------------------------------------------------------------------
+$.fn.centerWidth = function () 
+Example:
+
+----------------------------------------------------------------------------------------
+$.fn.center = function ()
+Example:
+
+----------------------------------------------------------------------------------------
+$.fn.loadMonths = function()
+Example:
+
+----------------------------------------------------------------------------------------

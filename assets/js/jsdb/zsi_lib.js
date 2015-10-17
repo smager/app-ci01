@@ -1,15 +1,10 @@
 /* JS Package Names or Namespaces */
-var zsi           = {};
-zsi.config        = {};
-zsi.form          = {};
-zsi.table         = {};
-zsi.table.dhtmlx  = {};
-zsi.page          = {};
-zsi.control       = {};
-zsi.calendar      = {};
-zsi.url           = {};
-zsi.json          = {};
-zsi.bs            = {};
+var zsi= {
+     config:{},form:{},page:{},control:{},calendar:{},url:{},json:{},bs:{}
+    ,table:{ 
+        dhtmlx:{} 
+    }
+};
 
 var ud='undefined';   
 
@@ -35,56 +30,26 @@ String.prototype.toDateFormat = function () {
     }
      return val;
 }; 
+
 String.prototype.toMoney = function(){
     var res = "";
     if(isNaN(this)===false) res = parseFloat(this).toMoney();
     return res;
 };
+
 Number.prototype.toMoney = function(){
     return this.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
 };
-/*initialize configuration settings*/
-zsi.init =function(o){
-     zsi.config =o;
-     zsi.monitorAjaxResponse();    
- }
-/* Page Initialization */
-$(document).ready(function(){
-   initDatePicker();
-   initTabNavigation();
-   initFormAdjust();
-   zsi.initInputTypesAndFormats();
 
-});
-
-zsi.ShowHideProgressWindow =  function (isShow){
-    var pw = $(".progressWindow");
-   if(isShow){
-      pw.centerWidth();
-      pw.css("display","block");
-   }
-   else{
-      pw.hide("slow");      
-   }
- }
-
-zsi.ShowErrorWindow=function(){
-    var pw = $(".errorWindow");
-    pw.centerWidth();
-    pw.css("display","block");
-    setTimeout(function(){
-            pw.hide("slow");      
-    },5000);   
- };
-
-zsi.monitorAjaxResponse = function(){
+//private functions:
+var __monitorAjaxResponse = function(){
     $(document).ajaxStart(function(){});      
     $( document ).ajaxSend(function(event,request,settings) {
         if(typeof zsi_request_count === ud) zsi_request_count=0;
         
         var eAW = zsi.config.excludeAjaxWatch;    
         for(var x=0; x<eAW.length;x++){
-            if(zsi._strValueExist(settings.url, eAW[x] ) ) return;
+            if(zsi.strExist(settings.url, eAW[x] ) ) return;
         }
         zsi_request_count++;
         zsi.ShowHideProgressWindow(true);
@@ -116,13 +81,13 @@ zsi.monitorAjaxResponse = function(){
       CloseProgressWindow();
 
       if(error_url){
-          if( zsi._strValueExist(settings.url,error_url) ){
+          if( zsi.strExist(settings.url,error_url) ){
              console.log("url: " + settings.url);         
              return false;
           }
       }
       if(typeof zsi.config.sqlConsoleName !== ud){
-          if( zsi._strValueExist(settings.url,zsi.config.sqlConsoleName) ){return false;}
+          if( zsi.strExist(settings.url,zsi.config.sqlConsoleName) ){return false;}
       }
       
       if(request.responseText===""){
@@ -137,8 +102,7 @@ zsi.monitorAjaxResponse = function(){
       else{
          console.log("zsi.Ajax.Request Status = Failed %c, url: " + settings.url, "color:red;", "color:#000;");
          console.log(errorObject);              
-
-
+         
          if(!settings.retryCounter ) settings.retryCounter=0;
          settings.retryCounter++;
 
@@ -162,8 +126,6 @@ zsi.monitorAjaxResponse = function(){
                 });
             
          }
-        
-
       }
    });         
    
@@ -177,25 +139,20 @@ zsi.monitorAjaxResponse = function(){
          }
       },100);      
    }
-}
+};
 
-function initDatePicker(){
+var __initDatePicker=function(){
    var inputDate =$('[id*=date]');
-
    inputDate.attr("placeholder","mm/dd/yyyy");
      //console.log( inputDate.css("width") ) ;
-   
-   
    if(inputDate.length > 0){
-      
       inputDate.datepicker({
               format: 'mm/dd/yyyy'
               ,autoclose:true
       }).on('show', function(e){
 
           var dhtmlxForm=$(".dhtmlx_skin_dhx_skyblue .form-horizontal");
-
-           var l_dp     = $('.datepicker');
+          var l_dp     = $('.datepicker');
 
            if(dhtmlxForm.length>0){
               var l_window = $(document); //$(parent.w1)
@@ -214,29 +171,21 @@ function initDatePicker(){
 
               l_dp.css({top:l_top, left:l_left});
            }
-
-
            var highest = -999;
-
            $("*").each(function() {
                var current = parseInt($(this).css("z-index"), 10);
                if(current && highest < current) highest = current;
            });
-
            l_dp.css("z-index",highest + 1);
-
-
       });
    }
       
    inputDate.keyup(function(){      
          if(this.value.length==2 || this.value.length==5 ) this.value += "/";
    });
-   
-   
-}
+};
 
-function initTabNavigation(){
+var __initTabNavigation=function(){
    $(".nav-tabs li").each(function(){
       $(this).click(function(){
          $(".nav-tabs li").removeClass("active");
@@ -254,49 +203,87 @@ function initTabNavigation(){
       });
 
    });
-}
+};
 
-function initFormAdjust(){
+var __initFormAdjust=function(){
    /*adjustment form with search*/
    var searchIcon=$(".form-group .glyphicon-search");
    if(searchIcon.length>0){
       $(document.body).css("margin-left","10px");
       $(document.body).css("margin-right","10px");
    }
-}
+};
 
+var isValidDate= function(l_date){
+    var comp = l_date.split('/');
+    var m = parseInt(comp[0], 10);
+    var d = parseInt(comp[1], 10);
+    var y = parseInt(comp[2], 10);
+    var date = new Date(y,m-1,d);
+    if (date.getFullYear() == y && date.getMonth() + 1 == m && date.getDate() == d) {
+      return true;
+    }
+    else {
+      return false;
+    }
+};
+
+//end of private functions
+
+/*initialize configuration settings*/
+zsi.init =function(o){
+     zsi.config =o;
+    __monitorAjaxResponse();    
+ }
+
+/* Page Initialization */
+$(document).ready(function(){
+   __initDatePicker();
+   __initTabNavigation();
+   __initFormAdjust();
+   zsi.initInputTypesAndFormats();
+
+});
+
+zsi.ShowHideProgressWindow =  function (isShow){
+    var pw = $(".progressWindow");
+   if(isShow){
+      pw.centerWidth();
+      pw.css("display","block");
+   }
+   else{
+      pw.hide("slow");      
+   }
+ }
+
+zsi.ShowErrorWindow=function(){
+    var pw = $(".errorWindow");
+    pw.centerWidth();
+    pw.css("display","block");
+    setTimeout(function(){
+            pw.hide("slow");      
+    },5000);   
+ };
+ 
 zsi.initInputTypesAndFormats = function(){
    $(".numeric").keypress(function(event){
-   
-         return zsi.form.checkNumber(event,'.,');
+      return zsi.form.checkNumber(event,'.,');
    });
     
    $(".format-decimal").blur(function(){
-              var obj= this;
-              zsi.form.checkNumberFormat(this);
-       
+      var obj= this;
+      zsi.form.checkNumberFormat(this);
    });
 }
 
-/*--[ common functions]---------------------------------------------------------------------*/
-   zsi._strValueExist=function(source,value){
-      var _result=false;
-      var i = source.toLowerCase().indexOf(value.toLowerCase());
-      if (i>-1) _result=true;
-      return _result;
-   }
-/*--[zsi.table]------------------------------------------------------------------------------*/
-   zsi.table.getCheckBoxesValues = function(){
-/*Example:
-  [3-parameters]:
-  var x= zsi.table.getCheckBoxesValues("input[name=p_cb]:checked","p_del_ds=","&");
-   result: p_del_ds=1031&p_del_ds=1032&p_del_ds=1027
+zsi.strExist=function(source,value){
+  var _result=false;
+  var i = source.toLowerCase().indexOf(value.toLowerCase());
+  if (i>-1) _result=true;
+  return _result;
+}
 
-  [1-parameters]:
-  var x= zsi.table.getCheckBoxesValues("input[name=p_cb]:checked");
-  result:  ["1031", "1027"]
-
-*/
+zsi.table.getCheckBoxesValues = function(){
     var args = arguments;
     var result=null;
     var _hidden= "input[type=hidden]";
@@ -304,8 +291,8 @@ zsi.initInputTypesAndFormats = function(){
       case 1: /* return type : Array */
                      var arrayItems = new Array();
                      var i=0;
-                  var selectorCheckboxName=args[0];
-                     $(selectorCheckboxName).each(function(){
+                  var chkBoxName=args[0];
+                     $(chkBoxName).each(function(){
                            arrayItems[i]=$(this.parentNode).children(_hidden).val();
                            i++;
                      });
@@ -314,11 +301,11 @@ zsi.initInputTypesAndFormats = function(){
 
       case 3: /* return type : string */
                   var params="";
-                  var selectorCheckboxName=args[0];
+                  var chkBoxName=args[0];
                   var parameterValue         =args[1];
                   var separatorValue         =args[2];
 
-                     $(selectorCheckboxName).each(function(){
+                     $(chkBoxName).each(function(){
                            var _value =   $(this.parentNode).children(_hidden).val();
                            if(_value == ud) _value = this.value; /* patch for no hidden field*/
                            if(params!="") params = params + separatorValue;
@@ -331,31 +318,22 @@ zsi.initInputTypesAndFormats = function(){
     }
    return result;
 }
-/*------------------------------------------------------------------------------------------*/
-/*Example:
-   zsi.table.dhtmlx.ResizeGrid(window,mygrid,100);
-*/
+
 zsi.table.dhtmlx.ResizeGrid   = function(p_Window,p_dhtmlGrid,p_less_ht){
    var ht=p_Window.innerHeight || p_Window.document.documentElement.clientHeight || p_Window.document.body.clientHeight;
-      //ht = ht - 76;
-      if (p_less_ht==null) ht = ht - 76;
-      else ht = ht - p_less_ht;
+   //ht = ht - 76;
+   if (p_less_ht==null) ht = ht - 76;
+   else ht = ht - p_less_ht;
    p_dhtmlGrid.enableAutoHeight(true,ht,true);
    p_dhtmlGrid.setSizes();
 }
-/*Example:
-   zsi.table.dhtmlx.Unescape(data,2);
-   mygrid.parse(data, "json");
-*/
+
 zsi.table.dhtmlx.Unescape   = function(data,col_index){
    $.each(data.rows,function(){
       this.data[col_index]=unescape(this.data[col_index]);
    });
 }
-/*------------------------------------------------------------------------------------------*/
-/*Example:
-  <input type="checkbox" name="p_cb" onclick="zsi.table.setCheckBox(this,l_tran_no );">
-*/
+
 zsi.table.setCheckBox = function(obj, cbValue){
    var _hidden= "input[type=hidden]";
       var _input =   $(obj.parentNode).children(_hidden);
@@ -367,18 +345,13 @@ zsi.table.setCheckBox = function(obj, cbValue){
       else{
             _input.val("");
       }
-   }
-/*------------------------------------------------------------------------------------------*/
-/*Example:
-   var jsonData = $.parseJSON(mygrid.xmlLoader.xmlDoc.responseText);
-   zsi.page.DisplayRecordPage(jsonData.page_no,jsonData.page_rows,jsonData.row_count);
-*/
+}
+
 zsi.page.DisplayRecordPage   = function(p_page_no,p_rows,p_numrec){
    var l_max_rows       =25;
    var l_last_page    = Math.ceil(p_rows/l_max_rows);
    var l_record_from    = (l_max_rows * (p_page_no-1)) + 1;
    var l_record_to      = parseInt(l_record_from) + parseInt(p_numrec) - 1;
-
    var l_select         = $("select[name=p_page_no]");
    l_select.clearSelect();
    for(var x=0;x<l_last_page;x++){
@@ -388,16 +361,14 @@ zsi.page.DisplayRecordPage   = function(p_page_no,p_rows,p_numrec){
         }
         else{
              l_select.append("<option value='" +  (x+1) + "'>"+ (x+1) +"</option>");
-
         }
-
    }
 
    $("#of").html(' of ' + l_last_page );
    $(".pagestatus").html("Showing records from <i>" + l_record_from + "</i> to <i>" + l_record_to + "</i>");
 
 }
-/*--[zsi.form]------------------------------------------------------------------------------*/
+/*--[zsi.form]--*/
 zsi.form.checkNumber = function(e) {
    var keynum;
    var keychar;
@@ -518,7 +489,6 @@ zsi.form.checkMandatory=function(){
       if (!zsi.form.__checkMandatory( l_om.groupNames[x], l_om.groupTitles[x], x ))
          return false;
    }
-
    /*check  required one indexes */
    if(l_om.required_one_indexes){
       var roi=l_om.required_one_indexes;
@@ -531,13 +501,11 @@ zsi.form.checkMandatory=function(){
             }
          }
       }
-
       if(roi.length == countNoRecords){
          alert("Please enter at least one record.");
          return false;
       }
    }
-
    return true;
 }
 
@@ -612,7 +580,6 @@ zsi.form.markMandatory=function(om){
          jo.css("border","solid 1px #ccc");
       }
    }
-
 }
 /* ----[ End Mandatory ]-----  */
 
@@ -655,20 +622,6 @@ zsi.form.checkDate=function(e, d){
     return true;
   }
 
-function isValidDate(l_date){
-    var comp = l_date.split('/');
-    var m = parseInt(comp[0], 10);
-    var d = parseInt(comp[1], 10);
-    var y = parseInt(comp[2], 10);
-    var date = new Date(y,m-1,d);
-    if (date.getFullYear() == y && date.getMonth() + 1 == m && date.getDate() == d) {
-      return true;
-    }
-    else {
-      return false;
-    }
-}
-
 zsi.form.setCriteria=function(p_inputName,p_desc, p_result){
    var input = $(p_inputName);
    if (input.prop("tagName")=="SELECT"){
@@ -685,7 +638,6 @@ zsi.form.setCriteria=function(p_inputName,p_desc, p_result){
    }
    return p_result;
 }
-
 
 zsi.form.showAlert= function(p_class){   
    var box = $("." + p_class);         
@@ -721,18 +673,17 @@ zsi.form.displayLOV = function(p){
     if(typeof p.td_properties!==ud) params.td_properties = p.td_properties;    
     zsi.json.loadGrid(params);
     clickCB = function(o){
-            var td = o.parentNode;
-            if(o.checked==false) {
-                $(td).children("input[name='p_isCheck[]']").val(0);
-            }else{
-                $(td).children("input[name='p_isCheck[]']").val(1);
-            }
+        var td = o.parentNode;
+        if(o.checked==false) {
+            $(td).children("input[name='p_isCheck[]']").val(0);
+        }else{
+            $(td).children("input[name='p_isCheck[]']").val(1);
+        }
     }   
       
 }
 
-/*--[zsi.url]------------------------------------------------------------------------------*/
-
+/*--[zsi.url]--*/
 zsi.url.getQueryValue = function (source,keyname) {
    source = source.toString().toLowerCase(); 
    keyname = keyname.toLowerCase();
@@ -772,15 +723,13 @@ zsi.url.removeQueryItem = function (source,keyname) {
             if(result)  result +="&"; 
             result += pairs[i];
          }
-         
       }
    }
 
    return result;
 }
 
-/*--[zsi.json]------------------------------------------------------------------------------*/
-
+/*--[zsi.json]--*/
 zsi.json.groupByColumnIndex = function(data,column_index){
    var _result ={};
    var _group=[];
@@ -808,6 +757,7 @@ zsi.json.checkValueExist = function(p_url, p_target,p_table, p_field){
       if(zsi.timer) clearTimeout(zsi.timer);
       zsi.timer = setTimeout(function(){              
          $(l_obj).addClass("loadIconR" );
+         
          $.getJSON(p_url + "/" + p_table + "/" +  p_field + "/" +  l_value
             , function(data) {
                   $(l_obj).removeClass("loadIconR" );
@@ -818,7 +768,6 @@ zsi.json.checkValueExist = function(p_url, p_target,p_table, p_field){
                      showPopup(l_obj,false);                  
                   }
               }
-
          );
 
       }, 1000);         
@@ -914,7 +863,7 @@ zsi.json.loadGrid = function(o){
     
 }
 
-/*--[zsi.bs]-------bootstrap--------------------------------------------------------------*/
+/*--[zsi.bs] bootstrap--*/
 zsi.bs.ctrl = function(o){
     var l_tag="input";
     var l_name =' name="p_' + o.name + '" id="p_' + o.name + '"';
@@ -998,7 +947,7 @@ zsi.bs.button =function(p){
     return result;
 }
   
-/*----[ extended-JQuery Function ]--------------------------------------------------------------*/
+/*--[ extended-JQuery Function ]--*/
 $.fn.clearSelect = function() {
 
     if(this.length>1){
@@ -1173,7 +1122,6 @@ $.fn.setUniqueOptions=function(){
     }
     fire();
     return this;
-    
 }
 
 $.fn.clearGrid = function() {
@@ -1188,9 +1136,7 @@ $.fn.serializeExclude = function(p_arr_exclude) {
          str += (str == '') ? data['name'] + '=' + data['value'] : '&' + data['name'] + '=' + data['value'];
       }
    });
-   
    return str;  
-
 }
 
 $.fn.centerWidth = function () {
@@ -1206,7 +1152,7 @@ $.fn.center = function () {
     return this;
 }
 
-/*--[zsi.calendar]------------------------------------------------------------------------------*/
+/*--[zsi.calendar]--*/
 $.fn.loadMonths = function(){
     var _select  = this[0];
     _select.add(new Option(" ", ""),null);
@@ -1218,7 +1164,7 @@ $.fn.loadMonths = function(){
     }
 }
 
-/*--------[cookie]-----------------------------------------------------------------*/
+/*--[cookie]--*/
 function createCookie(name,value,days) {
 	if (days) {
 		var date = new Date();
