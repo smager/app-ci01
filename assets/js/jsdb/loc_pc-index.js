@@ -90,11 +90,12 @@ function removeloc_pc(id){
       if(confirm("Are you sure you want to delete selected items?")) {
         $.post( base_url + "loc_pc/delete/" + id , function(d){
                 getUnpostedPC(p_loc_id.val(),0);
+                ClearHeader();  
             }).fail(function(d) {
                 alert("Sorry, the curent transaction is not successfull.");
             });
         }
-        ClearHeader();  
+         
 }
 
 function initInputs(){

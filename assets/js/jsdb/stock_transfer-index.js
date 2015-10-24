@@ -122,7 +122,7 @@ function displayDetails(p){
     st_no.val(p.st_no).change();
     st_date.val(p.st_date).change();
     loc_id.val(p.loc_id);//.change();
-    loc_id_to.val(p.loc_id_to);
+    loc_id_to.attr("selectedValue",p.loc_id_to);
     displayRecords(p.st_id);
 }
 
